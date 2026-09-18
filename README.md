@@ -30,7 +30,9 @@ Keys never reach the browser — see `server/README.md`.
 
 ## Where things live
 
-- **Hosted beta:** https://wunder-tutor.pages.dev — Cloudflare Pages. The static app comes from `dist/`; the API runs as a
+- **Marketing site:** https://wundertutor.com (+ www) — Astro + Tailwind + shadcn/ui in `site/`, its own Pages project
+  (`wundertutor-website`). `cd site && npm run dev` / `npm run deploy`. No analytics, no cookies.
+- **Hosted beta app:** https://app.wundertutor.com (also https://wunder-tutor.pages.dev) — Cloudflare Pages. The static app comes from `dist/`; the API runs as a
   Pages Function (`functions/api/[[path]].js`) on the same origin. Deploy with `npm run deploy`.
 - **The hosted API is locked.** It answers only requests carrying the beta access code (`BETA_ACCESS_CODE` secret), which
   a grown-up enters once in **Parent Zone → Beta access**. With no code set it fails closed. Without the code the app still
@@ -57,6 +59,7 @@ src/
   ui/             Pip the mascot, parametric mouth diagram, mic button, kit
 server/           runtime-neutral API core (Azure scoring, Gemini Live voice, Claude tutor) + Node adapter for local dev
 functions/        Cloudflare Pages Function adapter for the same core
+site/             marketing website (Astro, Tailwind v4, shadcn/ui) — a separate package and deployment
 supabase/         schema + RLS for the hosted backend
 ```
 

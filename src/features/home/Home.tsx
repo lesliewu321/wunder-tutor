@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiHealth, type ApiHealth } from '../../speech';
 import { COURSE } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
 import { dueItems, nextLessonId } from '../../engine/learning';
@@ -25,6 +27,10 @@ export function Home() {
   const measured = weakSounds(p.pronunciation).some((s) => s.phoneme === focus);
   const due = dueItems(p, Date.now()).length;
   const review = unit.lessons[unit.lessons.length - 1];
+  const [api, setApi] = useState<ApiHealth | null>(null);
+  useEffect(() => { void apiHealth().then(setApi); }, []);
+  // Never let simulated scores pass for real ones.
+  const practiceMode = api !== null && !api.azure;
 
   return (
     <div className="screen home">
@@ -38,6 +44,13 @@ export function Home() {
           <span className="stat-pill stat-pill--xp" aria-label={`${xp} of ${p.dailyGoalXp} XP today`}><Icon name="bolt" size={18} fill />{xp}<small>/{p.dailyGoalXp}</small></span>
         </div>
       </header>
+
+      {practiceMode && (
+        <button type="button" className="practice-note" onClick={() => nav('/parents')}>
+          <span aria-hidden>🧪</span>
+          <span><b>Practice mode — scores are simulated.</b> {api?.needsCode ? 'A grown-up can enter a beta access code in the Parent Zone to switch on real pronunciation scoring.' : 'Real pronunciation scoring isn’t connected on this device.'}</span>
+        </button>
+      )}
 
       <section className="hero" style={{ ['--hero' as string]: unit.color }}>
         <div className="hero__text">

@@ -1,6 +1,25 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "wunder-tutor", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 5173 }
+    {
+      "name": "wunder-tutor",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "wundertutor-website",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "site",
+        "run",
+        "dev"
+      ],
+      "port": 4321
+    }
   ]
 }

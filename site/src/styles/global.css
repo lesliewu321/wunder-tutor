@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Wunder Tutor brand, expressed through shadcn/ui's tokens so every component picks it up.
+   Same palette as the app (src/styles/tokens.css): cream, deep plum ink, violet, coral, sun, leaf. */
+:root {
+  --radius: 1rem;
+  --background: #fff8ee;
+  --foreground: #2b2140;
+  --card: #ffffff;
+  --card-foreground: #2b2140;
+  --popover: #ffffff;
+  --popover-foreground: #2b2140;
+  --primary: #6c4df5;
+  --primary-foreground: #ffffff;
+  --secondary: #ece7ff;
+  --secondary-foreground: #4a2fd0;
+  --muted: #fdf3e4;
+  --muted-foreground: #6b6280;
+  --accent: #ffe6e2;
+  --accent-foreground: #b83227;
+  --destructive: #d12b3f;
+  --border: #efe4d2;
+  --input: #efe4d2;
+  --ring: #6c4df5;
+
+  --coral: #ff6b5e;
+  --coral-deep: #df4a3e;
+  --sun: #ffc233;
+  --sun-soft: #fff3cf;
+  --leaf: #27b56a;
+  --leaf-soft: #dcf7e8;
+  --sky-soft: #def3fd;
+  --good: #15803f;
+  --okay: #b45f06;
+  --weak: #d12b3f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-coral: var(--coral);
+  --color-coral-deep: var(--coral-deep);
+  --color-sun: var(--sun);
+  --color-sun-soft: var(--sun-soft);
+  --color-leaf: var(--leaf);
+  --color-leaf-soft: var(--leaf-soft);
+  --color-sky-soft: var(--sky-soft);
+  --color-good: var(--good);
+  --color-okay: var(--okay);
+  --color-weak: var(--weak);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+  --font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+  --font-sans: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { scroll-behavior: smooth; }
+  body { @apply bg-background text-foreground font-sans antialiased; font-weight: 600; }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; line-height: 1.1; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  :focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

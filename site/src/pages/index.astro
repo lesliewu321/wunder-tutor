@@ -1,0 +1,179 @@
+---
+import Base from '@/layouts/Base.astro';
+import Pip from '@/components/Pip.astro';
+import PhoneDemo from '@/components/PhoneDemo.tsx';
+import AgeTabs from '@/components/AgeTabs.tsx';
+import Faq, { FAQ } from '@/components/Faq.tsx';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { SITE } from '@/lib/site';
+
+const steps = [
+  { n: 1, icon: '👂', title: 'Listen', text: 'A clear teacher voice says the word or sentence — at normal speed, or slowly.' },
+  { n: 2, icon: '🎤', title: 'Speak', text: 'One big button. Tap it, say it, and it stops by itself when your child finishes.' },
+  { n: 3, icon: '🎯', title: 'See', text: 'One score, and the exact word that slipped lights up straight away.' },
+  { n: 4, icon: '👅', title: 'Fix', text: 'Pip names the sound, says what happened, and shows what to do with your mouth.' },
+  { n: 5, icon: '📈', title: 'Retry', text: 'One tap to try again. Before and after, side by side — hear both, see the jump.' },
+];
+
+const features = [
+  { icon: '🔬', tone: 'bg-secondary', title: 'Feedback on the exact sound', text: '“Your ‘th’ sounded closer to ‘t’.” Not “try again” — the precise sound, in words a child understands.' },
+  { icon: '👄', tone: 'bg-accent', title: 'A mouth that shows how', text: 'An animated guide for lips, tongue, teeth, airflow and voice — for the sounds that simply don’t exist in your home language.' },
+  { icon: '🧠', tone: 'bg-sun-soft', title: 'Pip remembers', text: 'Sounds that keep tripping your child up come back — in reviews, in a daily two-minute focus, and in a quick drill when they’re needed.' },
+  { icon: '🪜', tone: 'bg-leaf-soft', title: 'The Pronunciation Lab', text: 'Climb a ladder for each tricky sound: syllables → words → phrases → a full sentence. Weakest sounds first.' },
+  { icon: '💬', tone: 'bg-sky-soft', title: 'Speak with Pip', text: 'Order at a café, visit the zoo, make a new friend. The chat keeps flowing, and the pronunciation tips wait until the end.' },
+  { icon: '⏱️', tone: 'bg-muted', title: 'Three to seven minutes', text: 'Short lessons, gentle streaks and personal bests. Progress is rewarded — difficulty is never punished.' },
+];
+
+const privacy = [
+  { icon: '🎙️', title: 'The mic is on only while the button is red', text: 'Your child taps to start. It stops by itself, and the microphone is released after every single try.' },
+  { icon: '📱', title: 'Replay recordings stay on the device', text: 'They let your child hear “before” and “now”. Scores are stored separately from voice. Switch recordings off whenever you like.' },
+  { icon: '🙈', title: 'Nicknames only', text: 'No real name, no email for your child, no photos, no free-text chat with strangers — there are no strangers.' },
+  { icon: '🚫', title: 'No ads. No trackers.', text: 'Nothing is sold, and there is no advertising or third-party analytics in the app or on this site.' },
+  { icon: '🗑️', title: 'You hold the delete button', text: 'In the Parent Zone you can delete recordings, the pronunciation history, a profile, or everything — instantly.' },
+  { icon: '🔎', title: 'Plain about who processes what', text: 'Short voice clips go to Microsoft Azure to be scored. Only lesson text goes to Google to make the teacher’s voice. That’s the whole list.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-b from-secondary to-transparent blur-3xl" aria-hidden="true"></div>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-12 md:grid-cols-[1.1fr_0.9fr] md:pb-24 md:pt-20">
+      <div>
+        <Badge className="mb-5 rounded-full bg-sun-soft px-3 py-1 text-[0.8rem] font-extrabold text-[#8a5a00] hover:bg-sun-soft">Beta · English for ages 5–15</Badge>
+        <h1 class="text-[2.6rem] leading-[1.05] md:text-6xl">
+          Your child speaks.<br />
+          <span class="text-primary">Pip shows exactly which sound to fix.</span>
+        </h1>
+        <p class="mt-5 max-w-xl text-lg text-muted-foreground md:text-xl">
+          Wunder Tutor is a pronunciation-first English tutor. Say it, see the sound that slipped, learn how to fix it, try again — and <b class="text-foreground">hear the difference</b>.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href={SITE.appUrl} class="inline-flex h-14 items-center gap-2 rounded-2xl bg-coral px-7 font-display text-lg font-extrabold text-white shadow-[0_4px_0_var(--coral-deep)] transition hover:brightness-105 active:translate-y-1 active:shadow-none">
+            Try the beta — free
+          </a>
+          <a href="#how" class="inline-flex h-14 items-center rounded-2xl border-2 border-border bg-white px-6 font-display text-lg font-extrabold text-primary transition hover:bg-secondary">See how it works</a>
+        </div>
+        <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold text-muted-foreground">
+          <li>✓ Nothing to install</li><li>✓ Phone, tablet or laptop</li><li>✓ No ads, no trackers</li>
+        </ul>
+      </div>
+      <PhoneDemo client:load />
+    </div>
+  </section>
+
+  <!-- The difference -->
+  <section class="border-y border-border bg-white">
+    <div class="mx-auto grid max-w-6xl gap-6 px-5 py-14 md:grid-cols-2 md:gap-10">
+      <div class="rounded-3xl bg-muted p-7">
+        <p class="text-sm font-extrabold uppercase tracking-wider text-muted-foreground">Most apps</p>
+        <p class="mt-2 font-display text-2xl font-extrabold text-muted-foreground">“Good job!” <span class="font-sans text-base font-bold">or</span> “Try again.”</p>
+        <p class="mt-3 text-muted-foreground">They check whether speech recognition <i>understood</i> the word. Being understood isn’t the same as saying it well — and “try again” doesn’t tell a child what to change.</p>
+      </div>
+      <div class="rounded-3xl bg-secondary p-7 ring-2 ring-primary/20">
+        <p class="text-sm font-extrabold uppercase tracking-wider text-primary">Wunder Tutor</p>
+        <p class="mt-2 font-display text-2xl font-extrabold">“Your <span class="text-primary">th</span> sounded closer to <span class="text-primary">t</span>.”</p>
+        <p class="mt-3 text-foreground/80">Then the fix, in one sentence: <i>put the tip of your tongue lightly between your teeth and blow.</i> Then a retry — and a score that moves because the sound did.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how" class="scroll-mt-20">
+    <div class="mx-auto max-w-6xl px-5 py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-4xl md:text-5xl">One loop. Every word.</h2>
+        <p class="mt-4 text-lg text-muted-foreground">Listen → speak → see → fix → retry. It takes less than a minute, and it’s the whole product.</p>
+      </div>
+      <ol class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {steps.map((s) => (
+          <li class="relative rounded-3xl bg-card p-6 shadow-sm ring-1 ring-border">
+            <span class="absolute -top-3 left-5 grid size-7 place-items-center rounded-full bg-primary font-display text-sm font-extrabold text-white">{s.n}</span>
+            <div class="text-4xl" aria-hidden="true">{s.icon}</div>
+            <h3 class="mt-3 text-xl">{s.title}</h3>
+            <p class="mt-1.5 text-[0.95rem] leading-relaxed text-muted-foreground">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="bg-white">
+    <div class="mx-auto max-w-6xl px-5 py-20">
+      <h2 class="max-w-2xl text-4xl md:text-5xl">Built around speaking — not tapping.</h2>
+      <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {features.map((f) => (
+          <Card className="rounded-3xl border-border shadow-none">
+            <CardContent className="p-7">
+              <div class={`grid size-14 place-items-center rounded-2xl text-3xl ${f.tone}`} aria-hidden="true">{f.icon}</div>
+              <h3 class="mt-4 text-xl">{f.title}</h3>
+              <p class="mt-2 leading-relaxed text-muted-foreground">{f.text}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Ages -->
+  <section id="ages" class="scroll-mt-20">
+    <div class="mx-auto max-w-5xl px-5 py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-4xl md:text-5xl">A six-year-old and a fourteen-year-old are not the same learner.</h2>
+        <p class="mt-4 text-lg text-muted-foreground">Tell Pip your child’s age and the words, the look, the reading level — even how feedback is delivered — change to fit.</p>
+      </div>
+      <div class="mt-10"><AgeTabs client:visible /></div>
+    </div>
+  </section>
+
+  <!-- Parents -->
+  <section id="parents" class="scroll-mt-20 bg-foreground text-background">
+    <div class="mx-auto max-w-6xl px-5 py-20">
+      <div class="max-w-2xl">
+        <p class="text-sm font-extrabold uppercase tracking-wider text-sun">For parents</p>
+        <h2 class="mt-2 text-4xl md:text-5xl">A child’s voice is sensitive. We treat it that way.</h2>
+        <p class="mt-4 text-lg text-background/75">You set the app up, you give consent for the microphone, and everything that matters sits behind a grown-ups-only Parent Zone.</p>
+      </div>
+      <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {privacy.map((p) => (
+          <div class="rounded-3xl bg-white/[0.07] p-6 ring-1 ring-white/10">
+            <div class="text-3xl" aria-hidden="true">{p.icon}</div>
+            <h3 class="mt-3 text-lg text-background">{p.title}</h3>
+            <p class="mt-1.5 text-[0.95rem] leading-relaxed text-background/70">{p.text}</p>
+          </div>
+        ))}
+      </div>
+      <p class="mt-8 text-sm text-background/60">The details are in our <a href="/privacy" class="font-extrabold text-sun underline underline-offset-4">privacy notice</a>, written to be read.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="scroll-mt-20">
+    <div class="mx-auto max-w-3xl px-5 py-20">
+      <h2 class="text-center text-4xl md:text-5xl">Questions parents ask</h2>
+      <div class="mt-8"><Faq client:visible /></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="px-5 pb-20">
+    <div class="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary via-[#8a5cf6] to-[#b06af0] px-6 py-14 text-center text-white md:py-20">
+      <div class="pointer-events-none absolute -right-16 -top-20 size-72 rounded-full bg-white/10" aria-hidden="true"></div>
+      <div class="relative mx-auto flex max-w-2xl flex-col items-center">
+        <Pip size={104} cheer />
+        <h2 class="mt-4 text-4xl md:text-5xl">Five minutes. One tricky sound. Better by bedtime.</h2>
+        <p class="mt-4 text-lg text-white/85">Open the beta on any device with a microphone. Setup takes a grown-up about a minute.</p>
+        <a href={SITE.appUrl} class="mt-8 inline-flex h-14 items-center rounded-2xl bg-coral px-8 font-display text-lg font-extrabold text-white shadow-[0_4px_0_var(--coral-deep)] transition hover:brightness-105 active:translate-y-1 active:shadow-none">Try the beta — free</a>
+        <p class="mt-4 text-sm text-white/70">Real pronunciation scoring is switched on with a beta access code — <a class="font-extrabold underline underline-offset-4" href={`mailto:${SITE.email}?subject=Wunder%20Tutor%20beta%20access`}>ask us for one</a>. Without it the app runs in practice mode.</p>
+      </div>
+    </div>
+  </section>
+</Base>
