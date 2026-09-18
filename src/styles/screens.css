@@ -214,6 +214,7 @@
 .gate p { color: var(--ink-soft); }
 .gate__icon { width: 76px; height: 76px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; }
 .gate__q { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin: 6px 0; }
+.gate__op { font-size: 0.6em; color: var(--primary); vertical-align: middle; padding: 0 4px; }
 .gate__msg { min-height: 1.4em; color: var(--weak) !important; font-weight: 800; font-size: 0.9rem; }
 
 .learners { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: none; }

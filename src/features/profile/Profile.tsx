@@ -70,11 +70,12 @@ function Gate({ onPass, onCancel }: { onPass: () => void; onCancel: () => void }
     <div className="screen screen--center gate">
       <span className="gate__icon"><Icon name="shield" size={36} /></span>
       <h1>Grown-ups only</h1>
-      <p>To open the Parent Zone, answer this:</p>
+      <p>To open the Parent Zone, answer this multiplication:</p>
       <form onSubmit={(e) => { e.preventDefault(); submit(); }}>
-        <label className="gate__q" htmlFor="gate">{a} × {b} = ?</label>
+        {/* Spelled out: the × glyph in the display font is easy to misread as +. */}
+        <label className="gate__q" htmlFor="gate">{a} <span className="gate__op">times</span> {b} = ?</label>
         <input id="gate" className={`input input--center ${wrong ? 'input--wrong' : ''}`} inputMode="numeric" pattern="[0-9]*" autoFocus value={value} onChange={(e) => { setValue(e.target.value.replace(/\D/g, '')); setWrong(false); }} aria-describedby="gate-msg" />
-        <p id="gate-msg" className="gate__msg" role="status">{wrong ? 'Not quite — try again.' : ' '}</p>
+        <p id="gate-msg" className="gate__msg" role="status">{wrong ? `Not quite — multiply: ${a} times ${b}.` : ' '}</p>
         <Button size="lg" block disabled={!value} onClick={submit}>Open</Button>
         <Button variant="ghost" block onClick={onCancel}>Back</Button>
       </form>
