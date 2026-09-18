@@ -38,3 +38,17 @@ no successful upstream round trip has been seen.
   `Phonemes` / `Syllables` shape inside `Words[]` are unconfirmed over REST.
 - Anthropic: structured-output JSON (`output_config.format`) and `thinking: disabled` on the chosen
   model are unconfirmed; a 400 triggers one retry without them.
+
+## Teacher voice — `POST /api/tts` (Gemini Live, native audio)
+
+Set `GEMINI_API_KEY` (optional: `GEMINI_LIVE_MODEL`, `GEMINI_TTS_VOICE`, `TTS_CACHE_DIR`). Needs Node 22+ (built-in WebSocket client).
+
+- Body: `{ "text": "three red apples", "accent": "en-US" | "en-GB", "slow": false, "kind": "syllable"? }` — text ≤ 200 chars.
+- 200 → `audio/wav` (24 kHz mono, silence-trimmed), header `X-Tts-Cache: hit|miss`. Takes are cached in `server/.cache/tts`.
+- One Live session per uncached phrase: strict "say exactly this" system instruction, `outputAudioTranscription` checked against
+  the request, one firmer retry, then `502 tts_mismatch` (the app falls back to the device voice).
+- Errors: 400 `missing_text` / `text_too_long` / `invalid_text`, 429 `tts_budget_exceeded` (120 generations / 10 min),
+  502 `gemini_rejected` (bad key/model) / `gemini_closed` / `gemini_no_audio`, 503 `gemini_not_configured`, 504 `gemini_timeout`.
+- Only lesson text goes to Google. No child audio is ever sent to this endpoint.
+- This endpoint fronts a paid API and the server has no auth: keep it bound to localhost, or put auth + rate limiting in
+  front of it before deploying.

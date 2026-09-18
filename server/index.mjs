@@ -3,7 +3,8 @@
 // Purpose: keep the Azure Speech and Anthropic credentials on the server so they
 // never reach the browser. The Vite dev server proxies /api/* to this process.
 //
-//   GET  /api/health  -> { ok, azure, claude }
+//   GET  /api/health  -> { ok, azure, claude, gemini }
+//   POST /api/tts     -> teacher voice via Gemini Live native audio ({ text, accent, slow, kind } in, WAV out)
 //   POST /api/assess  -> Azure pronunciation assessment (raw WAV in, Azure JSON out)
 //   POST /api/tutor   -> Claude conversation partner ({ reply, suggestions, done })
 //
@@ -15,6 +16,7 @@ import http from 'node:http';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, TtsError } from './tts.mjs';
 
 // ---------------------------------------------------------------- env loading
 
@@ -60,8 +62,17 @@ const AZURE_SPEECH_ENDPOINT = env('AZURE_SPEECH_ENDPOINT').replace(/\/+$/, '');
 const ANTHROPIC_API_KEY = env('ANTHROPIC_API_KEY');
 const CLAUDE_MODEL = env('CLAUDE_MODEL') || 'claude-sonnet-5';
 
+const GEMINI_API_KEY = env('GEMINI_API_KEY');
+const GEMINI_LIVE_MODEL = env('GEMINI_LIVE_MODEL') || DEFAULT_LIVE_MODEL;
+const GEMINI_TTS_VOICE = env('GEMINI_TTS_VOICE') || DEFAULT_VOICE;
+
 const azureConfigured = Boolean(AZURE_SPEECH_KEY && (AZURE_SPEECH_REGION || AZURE_SPEECH_ENDPOINT));
 const claudeConfigured = Boolean(ANTHROPIC_API_KEY);
+// The Live API is reached over the runtime's built-in WebSocket client (Node 22+).
+const geminiConfigured = Boolean(GEMINI_API_KEY && typeof WebSocket === 'function');
+const tts = geminiConfigured
+  ? createTts({ apiKey: GEMINI_API_KEY, model: GEMINI_LIVE_MODEL, voiceName: GEMINI_TTS_VOICE, endpoint: env('GEMINI_LIVE_ENDPOINT') || undefined, cacheDir: env('TTS_CACHE_DIR') || resolve(projectRoot, 'server', '.cache', 'tts') })
+  : null;
 
 const MAX_BODY_BYTES = 5 * 1024 * 1024;
 const AZURE_TIMEOUT_MS = 15_000;
@@ -438,6 +449,33 @@ async function handleTutor(req, res) {
   sendJson(res, 200, result);
 }
 
+// ---------------------------------------------------------------- /api/tts
+
+async function handleTts(req, res) {
+  if (!tts) throw new HttpError(503, 'gemini_not_configured');
+  let input;
+  try {
+    input = JSON.parse((await readBody(req)).toString('utf8') || '{}');
+  } catch {
+    throw new HttpError(400, 'invalid_json');
+  }
+  try {
+    const { wav, cached } = await tts.speak(input);
+    res.writeHead(200, {
+      'Content-Type': 'audio/wav',
+      'Content-Length': wav.length,
+      // The same phrase always yields the same take, so the browser may keep it.
+      'Cache-Control': 'private, max-age=31536000, immutable',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Tts-Cache': cached ? 'hit' : 'miss',
+    });
+    res.end(wav);
+  } catch (err) {
+    if (err instanceof TtsError) throw new HttpError(err.status, err.code, err.detail ? { detail: err.detail } : undefined);
+    throw err;
+  }
+}
+
 // ---------------------------------------------------------------- router
 
 const server = http.createServer(async (req, res) => {
@@ -445,12 +483,15 @@ const server = http.createServer(async (req, res) => {
   const route = `${req.method} ${url.pathname.replace(/\/+$/, '') || '/'}`;
   try {
     if (route === 'GET /api/health') {
-      sendJson(res, 200, { ok: true, azure: azureConfigured, claude: claudeConfigured });
+      // ttsVersion lets devices drop cached teacher takes when the model or voice changes.
+      sendJson(res, 200, { ok: true, azure: azureConfigured, claude: claudeConfigured, gemini: geminiConfigured, ttsVersion: geminiConfigured ? `${GEMINI_LIVE_MODEL}/${GEMINI_TTS_VOICE}` : null });
     } else if (route === 'POST /api/assess') {
       await handleAssess(req, res, url);
     } else if (route === 'POST /api/tutor') {
       await handleTutor(req, res);
-    } else if (['/api/health', '/api/assess', '/api/tutor'].includes(url.pathname.replace(/\/+$/, ''))) {
+    } else if (route === 'POST /api/tts') {
+      await handleTts(req, res);
+    } else if (['/api/health', '/api/assess', '/api/tutor', '/api/tts'].includes(url.pathname.replace(/\/+$/, ''))) {
       sendJson(res, 405, { error: 'method_not_allowed' });
     } else {
       sendJson(res, 404, { error: 'not_found' });
@@ -482,6 +523,7 @@ server.listen(PORT, HOST, () => {
   console.log(`Wunder Tutor API proxy listening on http://${HOST}:${PORT}`);
   console.log(`  .env file: ${envFileLoaded ? 'loaded' : 'not found (using process environment)'}`);
   console.log(`  azure speech: ${azureConfigured ? 'configured' : 'NOT configured'}`);
+  console.log(`  gemini live voice: ${geminiConfigured ? `configured (model ${GEMINI_LIVE_MODEL}, voice ${GEMINI_TTS_VOICE})` : GEMINI_API_KEY ? 'key set, but this Node has no WebSocket client (need Node 22+)' : 'NOT configured'}`);
   console.log(`  claude: ${claudeConfigured ? `configured (model ${CLAUDE_MODEL})` : 'NOT configured'}`);
 });
 

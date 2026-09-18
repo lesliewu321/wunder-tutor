@@ -95,7 +95,7 @@ export function ParentZone() {
   const store = useStore();
   const [danger, setDanger] = useState<Danger>(null);
   const [recordings, setRecordings] = useState<number | null>(null);
-  const [services, setServices] = useState<{ azure: boolean; claude: boolean } | null>(null);
+  const [services, setServices] = useState<{ azure: boolean; claude: boolean; gemini: boolean } | null>(null);
 
   const refresh = () => void audioRepo.count(`${p.id}/`).then(setRecordings);
   useEffect(() => { if (open) { refresh(); void apiHealth().then(setServices); } }, [open, p.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -148,7 +148,7 @@ export function ParentZone() {
       <section>
         <h2 className="section-title">Voice &amp; privacy</h2>
         {toggle('storeRecordings', 'Keep recordings on this device', 'Lets your child replay “before” and “now”. Only the newest 3 per phrase are kept. Off = audio is discarded right after scoring.')}
-        <p className="fineprint fineprint--left">{recordings == null ? 'Counting recordings…' : `${recordings} recording${recordings === 1 ? '' : 's'} stored for ${p.name}. Recordings never leave this device${services?.azure ? ' except to be scored by the speech service, which does not keep them' : ''}.`}</p>
+        <p className="fineprint fineprint--left">{recordings == null ? 'Counting recordings…' : `${recordings} recording${recordings === 1 ? '' : 's'} stored for ${p.name}. Recordings never leave this device${services?.azure ? ' except to be scored by the speech service, which does not keep them' : ''}.${services?.gemini ? ' The teacher’s voice is made from lesson text only — your child’s voice is never sent for that.' : ''}`}</p>
         <div className="danger-list">
           <button type="button" onClick={() => setDanger('recordings')}><Icon name="trash" size={20} />Delete recordings</button>
           <button type="button" onClick={() => setDanger('history')}><Icon name="trash" size={20} />Delete pronunciation history</button>
@@ -174,6 +174,7 @@ export function ParentZone() {
             </select>
           </label>
           <div className="select-row"><span>Pronunciation scoring</span><b>{services == null ? '…' : services.azure ? 'Azure Speech' : 'Built-in practice model'}</b></div>
+          <div className="select-row"><span>Teacher voice</span><b>{services == null ? '…' : services.gemini ? 'Gemini Live (native audio)' : 'This device’s voice'}</b></div>
           <div className="select-row"><span>Conversation tutor</span><b>{services == null ? '…' : services.claude ? 'Claude (live)' : 'Scripted'}</b></div>
         </div>
       </section>

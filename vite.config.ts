@@ -16,7 +16,7 @@ export default defineConfig({
             if (!('writeHead' in res) || res.headersSent) return;
             const health = req.url?.startsWith('/api/health');
             res.writeHead(health ? 200 : 503, { 'Content-Type': 'application/json' });
-            res.end(health ? '{"ok":false,"azure":false,"claude":false}' : '{"error":"api_proxy_not_running"}');
+            res.end(health ? '{"ok":false,"azure":false,"claude":false,"gemini":false}' : '{"error":"api_proxy_not_running"}');
           });
         },
       },

@@ -38,6 +38,12 @@ export function LessonPlayer() {
 
   useEffect(() => () => stopPlayback(), []);
 
+  // Fetch the next teacher take while the child is busy with this one, so Listen is instant.
+  useEffect(() => {
+    const next = queue[index + 1];
+    if (next?.type === 'speak') voice.prefetch(next.item.say ?? next.item.text, { accent: profile.accent, kind: next.item.kind });
+  }, [queue, index, profile.accent]);
+
   if (!lesson) {
     return <div className="screen screen--center"><p>We couldn’t find that lesson.</p><Button onClick={() => nav('/')}>Back home</Button></div>;
   }

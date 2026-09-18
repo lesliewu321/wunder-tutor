@@ -84,7 +84,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     try {
       if (kind === 'normal' || kind === 'slow') {
         if (!voice.available()) throw new Error('playback-unavailable');
-        await voice.speak(item.say ?? item.text, { accent: profile.accent, slow: kind === 'slow' });
+        await voice.speak(item.say ?? item.text, { accent: profile.accent, slow: kind === 'slow', kind: item.kind });
       } else {
         const blob = (kind === 'now' ? current : previous)?.audio;
         if (!blob) { toast(demoMic ? 'The demo microphone doesn’t record sound' : 'No recording for this try', '🎧'); return; }
