@@ -1,0 +1,94 @@
+import { useNavigate } from 'react-router-dom';
+import { COURSE } from '../../content/course';
+import { phonemeInfo } from '../../content/phonemes';
+import { dueItems, nextLessonId } from '../../engine/learning';
+import { liveStreak, todayXp } from '../../engine/rewards';
+import { focusSound, weakSounds } from '../../intelligence/profile';
+import { useActiveProfile } from '../../state/store';
+import { Icon } from '../../ui/Icon';
+import { Button, ProgressBar } from '../../ui/kit';
+import { Mascot } from '../../ui/Mascot';
+
+export function Home() {
+  const nav = useNavigate();
+  const p = useActiveProfile();
+  const unit = COURSE.units[0];
+  const ids = unit.lessons.map((l) => l.id);
+  const nextId = nextLessonId(p, ids);
+  const next = unit.lessons.find((l) => l.id === nextId);
+  const doneCount = ids.filter((id) => p.lessonsCompleted[id]).length;
+  const streak = liveStreak(p.streak);
+  const xp = todayXp(p);
+  const goalPct = Math.min(1, xp / p.dailyGoalXp);
+  const focus = focusSound(p.pronunciation, p.homeLanguage);
+  const focusInfo = phonemeInfo(focus);
+  const measured = weakSounds(p.pronunciation).some((s) => s.phoneme === focus);
+  const due = dueItems(p, Date.now()).length;
+  const review = unit.lessons[unit.lessons.length - 1];
+
+  return (
+    <div className="screen home">
+      <header className="home__top">
+        <button type="button" className="home__me" onClick={() => nav('/me')} aria-label="My profile">
+          <span className="home__avatar">{p.avatar}</span>
+          <span><small>{greeting()}</small><b>{p.name}</b></span>
+        </button>
+        <div className="home__stats">
+          <span className={`stat-pill ${streak ? 'stat-pill--hot' : ''}`} aria-label={`${streak} day streak`}><Icon name="flame" size={18} fill={!!streak} />{streak}</span>
+          <span className="stat-pill stat-pill--xp" aria-label={`${xp} of ${p.dailyGoalXp} XP today`}><Icon name="bolt" size={18} fill />{xp}<small>/{p.dailyGoalXp}</small></span>
+        </div>
+      </header>
+
+      <section className="hero" style={{ ['--hero' as string]: unit.color }}>
+        <div className="hero__text">
+          <span className="hero__unit">{COURSE.title} · Unit 1</span>
+          <h1>{unit.title}</h1>
+          <p>{next ? <>Next: <b>{next.icon} {next.title}</b></> : due ? <>{due} things are ready to review</> : <>Unit finished — keep your sounds sharp!</>}</p>
+          <div className="hero__progress"><ProgressBar value={doneCount / ids.length} tone="sun" /><span>{doneCount}/{ids.length}</span></div>
+        </div>
+        <Mascot mood="happy" size={104} className="hero__pip" />
+        <Button variant="coral" size="lg" block onClick={() => nav(`/lesson/${next?.id ?? review.id}`)}>{doneCount === 0 ? 'Start learning' : next ? 'Continue learning' : 'Review'}</Button>
+      </section>
+
+      <button type="button" className="focus-card" onClick={() => nav(`/lab/${encodeURIComponent(focus)}`)}>
+        <span className="focus-card__sound">{focusInfo.label}</span>
+        <span className="focus-card__text">
+          <small>Today’s pronunciation focus</small>
+          <b>{focusInfo.name}</b>
+          <em>{measured ? `Pip noticed this one in “${focusInfo.example}”` : `Often tricky — like in “${focusInfo.example}”`}</em>
+        </span>
+        <span className="focus-card__go">2 min<Icon name="chevron" size={18} /></span>
+      </button>
+
+      <div className="daily"><div className="daily__row"><b>Today’s goal</b><span>{goalPct >= 1 ? 'Done! 🎉' : `${p.dailyGoalXp - xp} XP to go`}</span></div><ProgressBar value={goalPct} tone="leaf" /></div>
+
+      <section className="path" aria-label="Lessons">
+        <h2 className="section-title">{unit.icon} {unit.title}</h2>
+        <ol className="path__list">
+          {unit.lessons.map((l, i) => {
+            const done = p.lessonsCompleted[l.id];
+            const unlocked = i === 0 || !!p.lessonsCompleted[unit.lessons[i - 1].id];
+            const current = l.id === nextId;
+            return (
+              <li key={l.id}>
+                <button type="button" className={`node ${done ? 'node--done' : current ? 'node--current' : unlocked ? '' : 'node--locked'}`} disabled={!unlocked} onClick={() => nav(`/lesson/${l.id}`)}>
+                  <span className="node__icon">{unlocked ? l.icon : <Icon name="lock" size={22} />}</span>
+                  <span className="node__text"><b>{l.title}</b><small>{done ? 'Tap to practise again' : current ? 'Up next' : unlocked ? 'Ready' : 'Finish the lesson before'}</small></span>
+                  {done ? <span className="node__stars" aria-label={`${done.stars} stars`}>{'★'.repeat(done.stars)}<i>{'★'.repeat(3 - done.stars)}</i></span> : current ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+        {COURSE.units.slice(1).map((u) => (
+          <div key={u.id} className="unit-locked"><span className="unit-locked__icon">{u.icon}</span><span><b>{u.title}</b><small>{u.subtitle}</small></span><Icon name="lock" size={20} /></div>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+const greeting = (): string => {
+  const h = new Date().getHours();
+  return h < 12 ? 'Good morning,' : h < 18 ? 'Hello,' : 'Good evening,';
+};
