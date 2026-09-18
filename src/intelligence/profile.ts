@@ -8,7 +8,8 @@ import { wordKey } from '../content/lexicon';
 const ALPHA = 0.3;
 export const WEAK_BELOW = 78;
 export const MASTERED_AT = 88;
-const MASTERED_MIN_COUNT = 5;
+const MASTERED_MIN_COUNT = 6;
+const MASTERED_MIN_DAYS = 2;
 
 export const emptyProfile = (): PronunciationProfile => ({ phonemes: {}, words: {}, days: {} });
 
@@ -41,14 +42,15 @@ export const applyAssessment = (
     const prev = phonemes[id];
     const stat: PhonemeStat = prev
       ? { ...prev, heardAs: { ...prev.heardAs } }
-      : { phoneme: id, ema: obs.score, first: obs.score, best: obs.score, count: 0, lowCount: 0, lastSeen: now, heardAs: {} };
+      : { phoneme: id, ema: obs.score, first: obs.score, best: obs.score, count: 0, lowCount: 0, lastSeen: now, days: 0, heardAs: {} };
     stat.ema = prev ? prev.ema * (1 - ALPHA) + obs.score * ALPHA : obs.score;
     stat.best = Math.max(stat.best, obs.score);
     stat.count += 1;
+    if (!prev || dayKey(prev.lastSeen) !== dayKey(now)) stat.days = (stat.days ?? 0) + 1;
     stat.lastSeen = now;
     if (obs.score < WEAK_BELOW) stat.lowCount += 1;
     if (obs.heardAs) stat.heardAs[obs.heardAs] = (stat.heardAs[obs.heardAs] ?? 0) + 1;
-    if (!stat.masteredAt && stat.count >= MASTERED_MIN_COUNT && stat.ema >= MASTERED_AT && phonemeInfo(id).difficulty >= 0.3) {
+    if (!stat.masteredAt && stat.count >= MASTERED_MIN_COUNT && (stat.days ?? 0) >= MASTERED_MIN_DAYS && stat.ema >= MASTERED_AT && phonemeInfo(id).difficulty >= 0.3) {
       stat.masteredAt = now;
       events.soundsMastered.push(id);
     } else if (stat.masteredAt && stat.ema < WEAK_BELOW) {

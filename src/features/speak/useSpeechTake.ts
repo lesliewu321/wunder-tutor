@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 import type { Assessment, SpeakItem } from '../../domain/types';
 import { syllableCount } from '../../content/lexicon';
-import { getProvider, SpeechError, type Recording, type SpeechErrorCode } from '../../speech';
+import { getProvider, mockProvider, SpeechError, type Recording, type SpeechErrorCode } from '../../speech';
 import { expectedSpeechMs, MicRecorder, simulatedRecording } from '../../speech/recorder';
 import { stopPlayback } from '../../speech/voice';
 import { useActiveProfile, useStore } from '../../state/store';
@@ -58,7 +58,8 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
     setSlowHint(false);
     const slow = window.setTimeout(() => alive.current && setSlowHint(true), 3500);
     try {
-      const provider = await getProvider();
+      // Simulated takes carry no audio, so they always go to the built-in learner model.
+      const provider = rec.simulated ? mockProvider : await getProvider();
       const st = useStore.getState();
       const fresh = st.profiles[profile.id] ?? profile;
       const assessment = await provider.assess(rec, j.item.text, {

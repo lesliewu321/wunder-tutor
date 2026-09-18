@@ -27,9 +27,13 @@ const RETRY_FACTOR = [1, 0.5, 0.22, 0.12];
 export class MockPronunciationProvider implements PronunciationProvider {
   readonly name = 'mock';
 
+  /** `latency: false` skips the simulated network delay (unit tests). */
+  constructor(private opts: { latency?: boolean } = {}) {}
+
   async assess(rec: Recording, referenceText: string, ctx: AssessContext): Promise<Assessment> {
     const rand = rng(hash(`${ctx.profileId}|${ctx.itemId}|${ctx.attemptIndex}`));
-    await wait(ctx.simulate === 'slow' ? 6500 : 650 + rand() * 500);
+    const delay = 650 + rand() * 500;
+    if (this.opts.latency !== false) await wait(ctx.simulate === 'slow' ? 6500 : delay);
     if (ctx.simulate === 'network') throw new SpeechError('network');
     if (ctx.simulate === 'service') throw new SpeechError('service');
 

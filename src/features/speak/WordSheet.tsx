@@ -12,11 +12,12 @@ interface Props {
   onClose: () => void;
   onListen: (slow: boolean) => void;
   onHearMe: () => void;
+  onHearTip: (text: string) => void;
   onRetry?: () => void;
 }
 
 /** Diagnose → teach for a single word: the exact sound, what happened, what to do with your mouth. */
-export function WordSheet({ word, band, onClose, onListen, onHearMe, onRetry }: Props) {
+export function WordSheet({ word, band, onClose, onListen, onHearMe, onHearTip, onRetry }: Props) {
   const [more, setMore] = useState(false);
   const c = correctionFor(word, band);
   const info = c.phoneme ? phonemeInfo(c.phoneme) : null;
@@ -40,11 +41,12 @@ export function WordSheet({ word, band, onClose, onListen, onHearMe, onRetry }: 
         )}
 
         <div className="teach">
-          {info && c.kind === 'sound' && <div className="teach__mouth"><Mouth pose={info.pose} size={150} /></div>}
-          <div className="teach__text">
-            <p className="teach__problem">{c.problem}</p>
+          <p className="teach__problem">{c.problem}</p>
+          <div className="teach__row">
+            {info && c.kind === 'sound' && <div className="teach__mouth"><Mouth pose={info.pose} size={132} /></div>}
             <p className="teach__tip"><b>Try:</b> {c.tip}</p>
           </div>
+          <button type="button" className="teach__say" onClick={() => onHearTip(c.tip)}><Icon name="speaker" size={18} />Hear Pip say the tip</button>
         </div>
 
         {info && c.kind === 'sound' && (

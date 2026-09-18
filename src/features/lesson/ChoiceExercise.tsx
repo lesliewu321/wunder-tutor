@@ -71,7 +71,7 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
           {options.map((o) => {
             const state = solved && o.id === answer.id ? 'right' : wrong.includes(o.id) ? 'wrong' : '';
             return (
-              <button key={o.id} type="button" className={`option option--${state} ${o.picture && o.kind === 'word' ? '' : 'option--text'}`} onClick={() => choose(o)} disabled={wrong.includes(o.id)}>
+              <button key={o.id} type="button" className={`option option--${state} ${o.picture && o.text.length <= 14 ? '' : 'option--text'}`} onClick={() => choose(o)} disabled={wrong.includes(o.id)}>
                 {o.picture && <span className="option__pic" aria-hidden>{o.picture}</span>}
                 {showText && <span className="option__text">{o.text}</span>}
                 {!showText && <span className="sr-only">{o.text}</span>}

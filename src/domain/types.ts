@@ -118,6 +118,8 @@ export interface PhonemeStat {
   count: number;
   lowCount: number;
   lastSeen: number;
+  /** Number of distinct days this sound was practised — mastery must hold up across days, not within one sitting. */
+  days: number;
   /** Most frequent substitution heard, e.g. θ → s. */
   heardAs: Record<PhonemeId, number>;
   masteredAt?: number;

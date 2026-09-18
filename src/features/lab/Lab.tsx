@@ -17,7 +17,8 @@ const status = (p: ChildProfile, id: PhonemeId) => {
   const s = p.pronunciation.phonemes[id];
   if (!s || s.count < 2) return { key: 'new', label: 'Not checked yet', score: null as number | null };
   const score = Math.round(s.ema);
-  if (s.masteredAt || s.ema >= MASTERED_AT) return { key: 'good', label: 'Mastered', score };
+  if (s.masteredAt) return { key: 'good', label: 'Mastered', score };
+  if (s.ema >= MASTERED_AT) return { key: 'good', label: 'Sounding great', score };
   if (s.ema < WEAK_BELOW) return { key: 'weak', label: 'Needs practice', score };
   return { key: 'okay', label: 'Getting better', score };
 };

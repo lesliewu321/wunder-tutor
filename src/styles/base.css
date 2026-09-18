@@ -156,7 +156,7 @@ small { font-size: 0.8em; font-weight: 600; color: var(--ink-soft); display: blo
 .ring svg { display: block; }
 .ring__track { fill: none; stroke: var(--line); stroke-width: 11; }
 .ring__value { fill: none; stroke-width: 11; stroke-linecap: round; transition: stroke 0.3s; }
-.ring--good .ring__value { stroke: var(--good); } .ring--okay .ring__value { stroke: var(--okay); } .ring--weak .ring__value { stroke: var(--weak); }
+.ring--good .ring__value { stroke: var(--leaf); } .ring--okay .ring__value { stroke: #f0a020; } .ring--weak .ring__value { stroke: var(--coral); }
 .ring__label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .ring__num { font-family: var(--font-display); font-weight: 800; font-size: 2.5rem; line-height: 1; }
 .ring__of { font-size: 0.68rem; color: var(--ink-soft); font-weight: 700; margin-top: 2px; }

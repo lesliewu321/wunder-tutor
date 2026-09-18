@@ -4,7 +4,7 @@ import type { Accent, Goal, HomeLanguage, Level } from '../../domain/types';
 import { ASSESSMENT_ITEMS } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
 import { HOME_LANGUAGES } from '../../content/translations';
-import { labOrder, weakSounds } from '../../intelligence/profile';
+import { labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { micSupported } from '../../speech/recorder';
 import { voice } from '../../speech/voice';
 import { bandForAge, useProfile, useStore } from '../../state/store';
@@ -205,9 +205,10 @@ export function Onboarding() {
     case 'plan': {
       const profile = useStore.getState().profiles[useStore.getState().activeId ?? ''];
       if (!profile) return <Navigate to="/" replace />;
-      const weak = weakSounds(profile.pronunciation).map((s) => s.phoneme);
-      const focus = (weak.length ? weak : labOrder(profile.pronunciation, profile.homeLanguage)).slice(0, 3);
-      const strong = Object.values(profile.pronunciation.phonemes).filter((s) => s.ema >= 88 && phonemeInfo(s.phoneme).difficulty >= 0.25).slice(0, 3);
+      // One low take is enough evidence for a starting plan; home-language predictions fill any gaps.
+      const heardLow = Object.values(profile.pronunciation.phonemes).filter((s) => s.ema < WEAK_BELOW && phonemeInfo(s.phoneme).difficulty >= 0.3).sort((a, b) => a.ema - b.ema).map((s) => s.phoneme);
+      const focus = [...new Set([...heardLow, ...labOrder(profile.pronunciation, profile.homeLanguage)])].slice(0, 3);
+      const strong = Object.values(profile.pronunciation.phonemes).filter((s) => s.ema >= 88 && phonemeInfo(s.phoneme).difficulty >= 0.35 && !focus.includes(s.phoneme)).slice(0, 3);
       return shell(
         <>
           <div className="card plan">

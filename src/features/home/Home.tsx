@@ -73,7 +73,7 @@ export function Home() {
               <li key={l.id}>
                 <button type="button" className={`node ${done ? 'node--done' : current ? 'node--current' : unlocked ? '' : 'node--locked'}`} disabled={!unlocked} onClick={() => nav(`/lesson/${l.id}`)}>
                   <span className="node__icon">{unlocked ? l.icon : <Icon name="lock" size={22} />}</span>
-                  <span className="node__text"><b>{l.title}</b><small>{done ? 'Tap to practise again' : current ? 'Up next' : unlocked ? 'Ready' : 'Finish the lesson before'}</small></span>
+                  <span className="node__text"><b>{l.title}</b><small>{done ? 'Tap to practise again' : current ? 'Up next' : unlocked ? 'Ready' : `Finish “${unit.lessons[i - 1].title}” first`}</small></span>
                   {done ? <span className="node__stars" aria-label={`${done.stars} stars`}>{'★'.repeat(done.stars)}<i>{'★'.repeat(3 - done.stars)}</i></span> : current ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
                 </button>
               </li>

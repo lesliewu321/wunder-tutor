@@ -4,12 +4,12 @@ import { dayKey } from '../intelligence/profile';
 
 // Light gamification: rewards effort and improvement, never raw talent.
 
-export const XP = { attempt: 2, mastered: 10, firstTry: 5, lesson: 20, conversation: 25, labStage: 8 } as const;
+export const XP = { attempt: 1, mastered: 5, firstTry: 2, lesson: 10, conversation: 15, labStage: 5 } as const;
 
 export const DAILY_GOALS = [
-  { xp: 30, label: 'Easy', detail: 'about 3 minutes' },
-  { xp: 60, label: 'Steady', detail: 'about 6 minutes' },
-  { xp: 100, label: 'Super', detail: 'about 10 minutes' },
+  { xp: 30, label: 'Easy', detail: 'a few minutes' },
+  { xp: 60, label: 'Steady', detail: 'one lesson' },
+  { xp: 100, label: 'Super', detail: 'a lesson + extra' },
 ];
 
 export const bumpStreak = (streak: ChildProfile['streak'], now: number): ChildProfile['streak'] => {

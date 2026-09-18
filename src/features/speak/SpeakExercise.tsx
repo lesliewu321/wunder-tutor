@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Assessment, Attempt, PhonemeId, SpeakItem } from '../../domain/types';
+import type { AgeBand, Assessment, Attempt, PhonemeId, SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
 import { translationFor } from '../../content/translations';
 import { isMastered, MAX_TRIES } from '../../engine/learning';
 import type { SpeechErrorCode } from '../../speech';
 import { playBlob, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile, useStore } from '../../state/store';
-import { correctionFor, focusWordIndex, headline, tier } from '../../tutor/feedback';
+import { correctionFor, focusWordIndex, GOOD, headline, tier } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
 import { Button, ScoreRing, toast } from '../../ui/kit';
 import { Mascot, type Mood } from '../../ui/Mascot';
@@ -105,6 +105,18 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item.id]);
 
+  // Young children can't read a correction — Pip says it out loud. Older learners can tap to hear it.
+  const sayTip = useCallback((text: string) => {
+    stopPlayback();
+    void voice.speak(text, { accent: profile.accent }).catch(() => undefined);
+  }, [profile.accent]);
+  const tipToSay = current && view === 'result' && band === 'little' ? spokenTip(current.assessment, band) : null;
+  useEffect(() => {
+    if (!tipToSay) return;
+    const t = window.setTimeout(() => sayTip(tipToSay), 1100);
+    return () => clearTimeout(t);
+  }, [tipToSay, takes.length, sayTip]);
+
   const startListening = () => {
     setError(null);
     setSheetWord(null);
@@ -116,7 +128,8 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   const finish = () => {
     const best = Math.max(...takes.map((t) => t.assessment.overall));
     const everMastered = takes.some((t) => isMastered(t.assessment, band));
-    finishItem(item, best, everMastered, takes.length);
+    // The onboarding check only seeds the pronunciation profile; it doesn't count as studying the item.
+    if (mode !== 'check') finishItem(item, best, everMastered, takes.length);
     const first = takes[0].assessment;
     const fi = focusWordIndex(first);
     const c = fi >= 0 ? correctionFor(first.words[fi], band) : null;
@@ -129,6 +142,9 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   const focus = current && focusIdx >= 0 ? correctionFor(current.assessment.words[focusIdx], band) : null;
   const single = !!current && current.assessment.words.length === 1;
   const focusPhonemeScore = current && focusIdx >= 0 ? Math.min(...current.assessment.words[focusIdx].phonemes.map((ph) => ph.score), 100) : undefined;
+  const fixed = current && previous ? soundFixed(previous.assessment, current.assessment, band) : null;
+  // Worth another go: a clearly weak word, or anything short of mastery. An 81 inside an 89 sentence is not.
+  const fixable = !!focus && focus.kind !== 'fine' && (focus.score < 80 || !mastered);
   const delta = current && previous ? current.assessment.overall - previous.assessment.overall : undefined;
   const veryLow = !!current && current.assessment.overall < 40;
 
@@ -185,14 +201,14 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
             <div className="result__top">
               <ScoreRing key={takes.length} score={current.assessment.overall} size={band === 'little' ? 132 : 120} stars={band === 'little'} />
               <div className="result__summary">
-                <h2 className="result__headline">{headline(current.assessment.overall, band, delta)}</h2>
+                <h2 className="result__headline">{headline(current.assessment.overall, band, delta, fixable)}</h2>
                 {previous ? (
                   <div className={`delta ${delta! > 0 ? 'delta--up' : delta! < 0 ? 'delta--down' : ''}`}>
                     <span>Before <b>{previous.assessment.overall}</b></span><Icon name="chevron" size={16} /><span>Now <b>{current.assessment.overall}</b></span>
                     <em>{delta! > 0 ? `+${delta}` : delta}</em>
                   </div>
                 ) : (
-                  <p className="result__sub">{focus && focus.kind !== 'fine' ? 'Tap the coloured word to see how to fix it.' : 'Every word was clear.'}</p>
+                  <p className="result__sub">{focus && focus.kind !== 'fine' ? (band === 'little' ? 'Listen to Pip’s tip!' : 'Tap the coloured word to see how to fix it.') : 'Every word was clear.'}</p>
                 )}
               </div>
             </div>
@@ -209,7 +225,14 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                 <span className="fix__more">Show me how <Icon name="chevron" size={16} /></span>
               </button>
             ) : (
-              <div className="fix fix--good fix--static"><p className="fix__problem">Clear and confident — nothing to fix here.</p></div>
+              <div className="fix fix--good fix--static">
+                {fixed ? (
+                  <>
+                    <div className="fix__head"><span className="fix__word">The “{phonemeInfo(fixed.phoneme).label}” sound</span><span className="fix__score fix__score--good">{fixed.before} → {fixed.now}</span></div>
+                    <p className="fix__problem">You fixed it! Every word is clear now.</p>
+                  </>
+                ) : <p className="fix__problem">Clear and confident — nothing to fix here.</p>}
+              </div>
             )}
 
             <div className="compare" role="group" aria-label="Listen and compare">
@@ -240,15 +263,16 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         {phase === 'result' && current && (
           <div className="speak__actions">
             {!mastered && outOfTries && <p className="speak__kind">{mode === 'check' ? 'Good to know — Pip will help you with this.' : 'Good effort! We’ll practise this one again later.'}</p>}
-            {mastered || outOfTries ? (
+            {outOfTries || (mastered && !fixable) ? (
               <>
                 <Button variant="leaf" size="lg" block onClick={finish}>{continueLabel}</Button>
                 {!outOfTries && current.assessment.overall < 95 && <Button variant="ghost" icon="retry" block onClick={startListening}>Try for a higher score</Button>}
               </>
             ) : (
               <>
-                <Button variant="coral" size="lg" icon="mic" block onClick={startListening}>Try again</Button>
-                {takes.length >= 2 && <Button variant="ghost" block onClick={finish}>Skip for now</Button>}
+                {/* A concrete fix is on screen → retrying is the main action, even if the score already passes. */}
+                <Button variant="coral" size="lg" icon="mic" block onClick={startListening}>{mastered ? 'Try the fix' : 'Try again'}</Button>
+                {mastered ? <Button variant="ghost" block onClick={finish}>{continueLabel}</Button> : takes.length >= 2 && <Button variant="ghost" block onClick={finish}>Skip for now</Button>}
               </>
             )}
           </div>
@@ -260,12 +284,33 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
           word={current.assessment.words[sheetWord]} band={band} onClose={() => setSheetWord(null)}
           onListen={(slow) => void voice.speak(current.assessment.words[sheetWord].word, { accent: profile.accent, slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
           onHearMe={() => void play('now')}
+          onHearTip={sayTip}
           onRetry={outOfTries ? undefined : startListening}
         />
       )}
     </div>
   );
 }
+
+const spokenTip = (a: Assessment, band: AgeBand): string | null => {
+  const i = focusWordIndex(a);
+  if (i < 0) return a.overall >= GOOD ? 'Great job!' : null;
+  const c = correctionFor(a.words[i], band);
+  return c.kind === 'fine' ? 'Great job!' : c.tip;
+};
+
+/** The sound the last correction targeted, if this take improved it — so the learner sees exactly what got better. */
+const soundFixed = (before: Assessment, now: Assessment, band: AgeBand): { phoneme: PhonemeId; before: number; now: number } | null => {
+  const i = focusWordIndex(before);
+  if (i < 0) return null;
+  const c = correctionFor(before.words[i], band);
+  if (!c.phoneme) return null;
+  const was = Math.min(...before.words[i].phonemes.filter((p) => p.phoneme === c.phoneme).map((p) => p.score));
+  const scores = (now.words[i]?.phonemes ?? []).filter((p) => p.phoneme === c.phoneme).map((p) => p.score);
+  if (!scores.length) return null;
+  const is = Math.min(...scores);
+  return is - was >= 5 ? { phoneme: c.phoneme, before: was, now: is } : null;
+};
 
 /** Show the word as written in the prompt (capitals, punctuation) rather than the provider's normalised token. */
 const displayWord = (text: string, index: number, fallback: string): string => text.split(/\s+/)[index] ?? fallback;

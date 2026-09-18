@@ -86,7 +86,7 @@ export function Progress() {
       <section>
         <h2 className="section-title">Mastered sounds</h2>
         {mastered.length ? <div className="badges">{mastered.map((s) => <span key={s.phoneme} className="sound-badge sound-badge--good"><b>{phonemeInfo(s.phoneme).label}</b><small>{phonemeInfo(s.phoneme).example}</small></span>)}</div>
-          : <p className="muted-card">Say a tricky sound clearly five times and it lands here.</p>}
+          : <p className="muted-card">Keep a tricky sound clear on two different days and it lands here.</p>}
       </section>
 
       {bests.length > 0 && (

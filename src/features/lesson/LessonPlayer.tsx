@@ -61,7 +61,8 @@ export function LessonPlayer() {
 
     // Struggling → isolate the sound: mouth guide, then syllable → word, before moving on.
     const sound = r.troubleSound;
-    if (sound && LADDERS[sound] && !drilled.current.has(sound) && !('type' in ex && isDrill(ex as Exercise)) && (r.tries >= 2 || !r.mastered)) {
+    // One drill per lesson keeps it inside the 3–7 minute budget; other weak sounds resurface via review and the Lab.
+    if (sound && LADDERS[sound] && drilled.current.size === 0 && !('type' in ex && isDrill(ex as Exercise)) && (r.tries >= 2 || !r.mastered)) {
       drilled.current.add(sound);
       next = [...queue.slice(0, index + 1), { id: `intro-${sound}`, type: 'drill-intro', sound }, ...drillFor(sound, ex.item.text), ...queue.slice(index + 1)];
     }

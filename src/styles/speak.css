@@ -85,7 +85,10 @@
 .fix__tip { color: var(--ink-soft); margin-top: 4px; font-size: 0.96rem; }
 .fix__tip b { color: var(--primary); }
 .fix__more { display: inline-flex; align-items: center; gap: 2px; margin-top: 8px; color: var(--primary); font-weight: 800; font-size: 0.9rem; }
-.compare { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.compare { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.compare .pill { justify-content: center; padding: 0 6px; font-size: 0.86rem; gap: 5px; min-width: 0; }
+.compare .pill svg { flex: none; }
+.fix__score--good { color: var(--good) !important; }
 
 /* ---------- Word sheet ---------- */
 .wordsheet { display: flex; flex-direction: column; gap: 14px; }
@@ -97,10 +100,11 @@
 .sound small { color: inherit; opacity: 0.85; font-size: 0.7rem; }
 .sound--okay { background: var(--okay-soft); color: var(--okay); } .sound--weak { background: var(--weak-soft); color: var(--weak); }
 .sound--focus { box-shadow: 0 0 0 3px currentColor; }
-.teach { display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-radius: var(--r-lg); padding: 12px; }
+.teach { display: flex; flex-direction: column; gap: 10px; background: var(--surface-2); border-radius: var(--r-lg); padding: 14px; }
+.teach__row { display: flex; align-items: center; gap: 12px; }
 .teach__mouth { flex: none; background: var(--surface); border-radius: var(--r-md); }
-.teach__problem { font-weight: 800; }
-.teach__tip { margin-top: 6px; color: var(--ink-soft); font-size: 0.96rem; }
+.teach__problem { font-weight: 800; font-size: 1.08rem; }
+.teach__tip { color: var(--ink-soft); font-size: 0.98rem; }
 .teach__tip b { color: var(--primary); }
 .steps { display: flex; flex-direction: column; gap: 8px; }
 .steps li { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.96rem; }
@@ -169,7 +173,7 @@
 .complete__stage h1 { font-size: 2.1rem; }
 .complete__lesson { color: var(--ink-soft); margin-top: -8px; }
 .complete__stars { font-size: 3rem; line-height: 1; color: var(--line); letter-spacing: 4px; }
-.complete__stars .on { color: var(--sun); display: inline-block; animation: pop 0.6s var(--ease-spring) both; text-shadow: 0 3px 0 var(--sun-deep); }
+.complete__stars .on { color: var(--sun); display: inline-block; animation: pop 0.6s var(--ease-spring) both; text-shadow: 0 3px 0 #e29f00; }
 .complete__dock { position: sticky; bottom: 0; z-index: 3; display: flex; flex-direction: column; gap: 6px; padding: 12px 0 calc(22px + var(--safe-b)); background: linear-gradient(to top, var(--bg) 80%, transparent); }
 .stat-row { display: flex; gap: 10px; width: 100%; }
 .stat { flex: 1; background: var(--surface); border-radius: var(--r-md); padding: 12px 8px; text-align: center; box-shadow: var(--shadow-card); border-bottom: 4px solid var(--primary); }
@@ -180,3 +184,40 @@
 .callout__icon { font-size: 1.9rem; flex: none; }
 .callout p { color: var(--ink-soft); font-size: 0.92rem; }
 .callout--badge { background: var(--sun-soft); }
+
+.teach__say { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: var(--primary); font-weight: 800; font-size: 0.92rem; }
+
+/* ---------- Short phones: keep prompt, feedback and mic on one screen ---------- */
+.dialogue--speaking .prompt__pic, .dialogue--speaking .prompt__meaning { display: none; }
+.dialogue--speaking .bubble { font-size: 0.92rem; padding: 10px 14px; }
+.dialogue--speaking .bubble-row__who { font-size: 2rem; }
+.dialogue--speaking .prompt { padding: 16px 14px 14px; }
+
+@media (max-height: 700px) {
+  .prompt { padding: 14px 14px 12px; gap: 6px; }
+  .prompt__pic { font-size: 3.2rem; }
+  .prompt--sentence .prompt__pic, .prompt--phrase .prompt__pic { font-size: 2.4rem; }
+  .prompt__text { font-size: 2.1rem; }
+  .prompt--phrase .prompt__text { font-size: 1.7rem; }
+  .prompt--sentence .prompt__text { font-size: 1.4rem; }
+  .speak__coach { min-height: 0; }
+  .speak__coach .mascot { display: none; }
+  .speak__status { max-width: none; border-radius: 16px; text-align: center; }
+  .speak__dock { gap: 8px; padding-bottom: calc(14px + var(--safe-b)); }
+  .mic { width: 88px !important; height: 88px !important; }
+  .ring { width: 92px !important; height: 92px !important; }
+  .ring svg { width: 100%; height: 100%; }
+  .ring__num { font-size: 1.9rem; }
+  .ring__of { display: none; }
+  .result { gap: 8px; }
+  .result__headline { font-size: 1.2rem; }
+  .fix { padding: 10px 14px; }
+  .fix__more { margin-top: 4px; }
+  .speak__stage { gap: 10px; }
+  .btn--lg { min-height: 54px; }
+  .choice__stage { gap: 10px; }
+  .bigplay { width: 84px; height: 84px; }
+  .option { min-height: 92px; }
+  .option__pic { font-size: 2.4rem; }
+  .choice__dock { min-height: 120px; }
+}

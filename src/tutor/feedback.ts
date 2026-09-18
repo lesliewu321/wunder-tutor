@@ -1,6 +1,9 @@
 import type { AgeBand, Assessment, PhonemeId, WordScore } from '../domain/types';
 import { phonemeInfo, soundLabel, tipFor } from '../content/phonemes';
 
+/** Substitutions that aren't English sounds get a plain description instead of a symbol. */
+const FOREIGN_SOUNDS: Record<string, string> = { 'ɾ': 'a quick tapped R', 'ʁ': 'a throaty R', 'x': 'a throaty, scratchy H' };
+
 export const GOOD = 85;
 export const OKAY = 65;
 
@@ -42,8 +45,9 @@ export const correctionFor = (w: WordScore, band: AgeBand): Correction => {
   let problem = info.problem;
   if (worst.heardAs === '∅') problem = `The ${me} sound was missing.`;
   else if (worst.heardAs) {
-    const other = band === 'teen' && worst.heardAs.length <= 2 && !'ɾʁx'.includes(worst.heardAs) ? `/${worst.heardAs}/` : `“${soundLabel(worst.heardAs)}”`;
-    problem = band === 'little' ? `Your ${me} sounded like ${other}.` : `Your ${me} sounded closer to ${other}.`;
+    const foreign = FOREIGN_SOUNDS[worst.heardAs];
+    const other = foreign ?? (band === 'teen' ? `/${worst.heardAs}/` : `“${soundLabel(worst.heardAs)}”`);
+    problem = band === 'little' || foreign ? `Your ${me} sounded like ${other}.` : `Your ${me} sounded closer to ${other}.`;
   }
   return {
     word: w.word, score: w.score, kind: 'sound', phoneme: worst.phoneme, heardAs: worst.heardAs,
@@ -59,8 +63,12 @@ export const focusWordIndex = (a: Assessment): number => {
   return idx;
 };
 
-export const headline = (score: number, band: AgeBand, delta?: number): string => {
-  if (delta != null && delta >= 8) return band === 'little' ? 'Wow, much better!' : `Up ${delta} points — you fixed it!`;
+export const headline = (score: number, band: AgeBand, delta?: number, stillFixable = false): string => {
+  if (delta != null && delta >= 8) {
+    if (score >= GOOD && !stillFixable) return band === 'little' ? 'Wow, you fixed it!' : `Up ${delta} points — you fixed it!`;
+    return band === 'little' ? 'Better! Keep going!' : `Up ${delta} points — getting closer!`;
+  }
+  if (score >= GOOD && stillFixable) return band === 'little' ? 'So close! One fix.' : 'Strong — one word to polish.';
   if (score >= 95) return band === 'little' ? 'Perfect!' : 'Spot on!';
   if (score >= GOOD) return band === 'little' ? 'Great talking!' : 'Great pronunciation!';
   if (score >= OKAY) return band === 'little' ? 'Good try! One fix.' : 'Nearly there — one thing to fix.';

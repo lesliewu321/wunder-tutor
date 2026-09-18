@@ -5,7 +5,7 @@
   --surface-2: #fdf3e4;
   --ink: #2b2140;
   --ink-soft: #6b6280;
-  --ink-faint: #a39cb3;
+  --ink-faint: #857d97;
   --line: #efe4d2;
 
   --primary: #6c4df5;
@@ -15,7 +15,7 @@
   --coral-deep: #df4a3e;
   --coral-soft: #ffe6e2;
   --sun: #ffc233;
-  --sun-deep: #e29f00;
+  --sun-deep: #a86f00;
   --sun-soft: #fff3cf;
   --leaf: #27b56a;
   --leaf-deep: #1b9554;
@@ -23,11 +23,12 @@
   --sky: #35b5f2;
   --sky-soft: #def3fd;
 
-  --good: #1fa862;
+  /* Score colours are used for small text too, so they meet 4.5:1 on white. */
+  --good: #15803f;
   --good-soft: #dcf7e8;
-  --okay: #e8920a;
+  --okay: #b45f06;
   --okay-soft: #fff0d4;
-  --weak: #ee4b5a;
+  --weak: #d12b3f;
   --weak-soft: #ffe3e6;
 
   --font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
