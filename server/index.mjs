@@ -28,6 +28,9 @@ function loadEnvFile(path) {
   } catch {
     return false; // no .env — rely on the process environment
   }
+  // Collect first so duplicates resolve sensibly: a later line wins, and an empty placeholder
+  // (`KEY=` left over from .env.example) never shadows a filled-in value elsewhere in the file.
+  const fromFile = new Map();
   for (const line of raw.replace(/^﻿/, '').split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#')) continue;
@@ -41,6 +44,10 @@ function loadEnvFile(path) {
     } else {
       value = value.replace(/\s+#.*$/, '').trim(); // strip trailing inline comment
     }
+    if (value !== '' || !fromFile.has(key)) fromFile.set(key, value);
+  }
+  // The real process environment always wins over the file.
+  for (const [key, value] of fromFile) {
     if (process.env[key] === undefined) process.env[key] = value;
   }
   return true;

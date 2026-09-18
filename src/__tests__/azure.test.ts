@@ -42,3 +42,47 @@ describe('Azure pronunciation adapter', () => {
     expect(() => mapAzure({ RecognitionStatus: 'Success', NBest: [] }, 'three', 0)).toThrowError(expect.objectContaining({ code: 'no-speech' }));
   });
 });
+
+// ---- Real responses captured from a live eastasia Speech resource (synthetic teacher audio as the "learner") ----
+import perfectThree from './fixtures/azure-three.json';
+import cleanSentence from './fixtures/azure-sentence.json';
+import wrongWord from './fixtures/azure-wrongword.json';
+import skippedWords from './fixtures/azure-omission.json';
+import { isMastered } from '../engine/learning';
+
+describe('Azure — live response fixtures', () => {
+  it('scores a perfect single word by its sounds, not by one-word prosody', () => {
+    expect(perfectThree.NBest[0].PronScore).toBeLessThan(90); // what Azure reports
+    const a = mapAzure(perfectThree, 'three', 0);
+    expect(a.overall).toBe(100);
+    expect(a.words[0].phonemes.map((p) => p.phoneme)).toEqual(['θ', 'r', 'i']);
+    expect(focusWordIndex(a)).toBe(-1);
+    expect(isMastered(a, 'teen')).toBe(true);
+  });
+
+  it('keeps sentence-level scoring and finds nothing to fix in a clean reading', () => {
+    const a = mapAzure(cleanSentence, 'I would like a cup of hot chocolate.', 0);
+    expect(a.overall).toBe(96);
+    expect(a.words).toHaveLength(8);
+    expect(focusWordIndex(a)).toBe(-1); // "chocolate" 94 with an unreleased final t is not a teaching moment
+    expect(isMastered(a, 'teen')).toBe(true);
+  });
+
+  it('does not let a wrong sound pass just because the word-level score is lenient', () => {
+    const a = mapAzure(wrongWord, 'tree', 0); // the audio actually says "three"
+    expect(a.words[0].score).toBe(80);
+    expect(a.overall).toBe(80); // above the junior bar of 76…
+    expect(isMastered(a, 'junior')).toBe(false); // …but the first sound scored 25
+    const c = correctionFor(a.words[focusWordIndex(a)], 'junior');
+    expect(c.phoneme).toBe('t');
+    expect(c.kind).toBe('sound');
+  });
+
+  it('surfaces skipped words first and blocks mastery', () => {
+    const a = mapAzure(skippedWords, 'I would like a big cup of hot chocolate with milk.', 0);
+    expect(a.words.filter((w) => w.errorType === 'omission').map((w) => w.word)).toEqual(['big', 'with', 'milk']);
+    expect(a.completeness).toBe(73);
+    expect(correctionFor(a.words[focusWordIndex(a)], 'junior').kind).toBe('omission');
+    expect(isMastered(a, 'little')).toBe(false);
+  });
+});

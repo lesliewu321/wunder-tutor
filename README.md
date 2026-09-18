@@ -21,8 +21,8 @@ on the "I can't hear you yet" screen).
 
 | Layer | Today | Going live |
 | --- | --- | --- |
-| Pronunciation scoring | `MockPronunciationProvider` — a learner model (home-language difficulty, retry and long-term improvement). Real signal checks: silence, noise, cut-off speech. | Put `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION` in `.env`, run `npm run server`. The app detects it via `/api/health` and switches to `AzurePronunciationProvider`. **Not yet exercised against a live key.** |
-| Reference ("teacher") voice | Device speech synthesis, by accent (US/UK), normal + slow | Put `GEMINI_API_KEY` in `.env`, run `npm run server`. `POST /api/tts` opens a **Gemini Live (native audio)** session per phrase (`gemini-3.1-flash-live-preview`), checks the model's own transcript so it can never ad-lib a reference pronunciation, and caches the WAV on the server disk and on the device. Falls back to the device voice on any failure. Verified against a fake Live server; **not yet run against a live key.** |
+| Pronunciation scoring | `MockPronunciationProvider` — a learner model (home-language difficulty, retry and long-term improvement). Real signal checks: silence, noise, cut-off speech. | Put `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION` in `.env`, run `npm run server`. The app detects it via `/api/health` and switches to `AzurePronunciationProvider`. **Verified live** (eastasia): word / syllable / IPA phoneme scores, omissions and prosody; real responses are test fixtures. |
+| Reference ("teacher") voice | Device speech synthesis, by accent (US/UK), normal + slow | Put `GEMINI_API_KEY` in `.env`, run `npm run server`. `POST /api/tts` opens a **Gemini Live (native audio)** session per phrase (`gemini-3.1-flash-live-preview`), checks the model's own transcript so it can never ad-lib a reference pronunciation, and caches the WAV on the server disk and on the device. Falls back to the device voice on any failure. **Verified live**: ~1–2 s per new phrase, instant once cached. |
 | Conversation tutor | `ScriptedTutor` (3 scenarios × 3 age bands) | `ANTHROPIC_API_KEY` in `.env` → `ClaudeTutor` through the same proxy, child-safe system prompt, scripted fallback |
 | Persistence | On-device: state in localStorage, recordings in IndexedDB (kept apart on purpose) | `supabase/schema.sql` (RLS, parent-owned children, recordings separate from scores). Nothing is applied anywhere yet. |
 
@@ -70,7 +70,7 @@ non-readers; teens see IPA and optional phonetic detail).
 
 ## Known limitations
 
-- Azure, Gemini Live and Claude adapters follow the documented contracts (the Gemini setup shape is the one already verified in wunder-manager) but have not been run against live keys from this app.
+- Azure scoring and the Gemini Live voice have been run against live keys, but only with synthetic audio as the "learner" — not yet with a real child's voice through a real microphone. The Claude tutor has not been run live.
 - A Live model is conversational, not a TTS engine: takes are accepted only when their transcript matches, but *how* it pronounces an isolated syllable or a slow sentence needs a listening check once a key is in.
 - Without a Gemini key, reference audio is device TTS — quality varies by device, and isolated syllables are approximations.
 - The mock model's scores are simulated; with the demo microphone they are not related to real speech at all.

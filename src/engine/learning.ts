@@ -11,8 +11,16 @@ export const MASTERY: Record<AgeBand, number> = { little: 70, junior: 76, teen: 
 export const MAX_TRIES = 3;
 export const FAST_TRACK_SCORE = 90;
 
+/** A sound this far off is the wrong sound, whatever the word-level average says. */
+export const WRONG_SOUND_BELOW = 35;
+
 export const isMastered = (a: Assessment, band: AgeBand): boolean =>
-  a.overall >= MASTERY[band] && a.words.every((w) => w.errorType !== 'omission' && w.score >= MASTERY[band] - 22);
+  a.overall >= MASTERY[band] &&
+  a.words.every((w) =>
+    w.errorType !== 'omission' && w.score >= MASTERY[band] - 22 &&
+    // Real scorers are lenient at word level: "tree" for "three" scores 80 with /θ/ at 25. That is not mastery.
+    // Only applied to words the scorer itself did not rate as good, so a noisy phoneme in a clean word is ignored.
+    (w.score >= 85 || w.phonemes.every((ph) => ph.score >= WRONG_SOUND_BELOW)));
 
 const HOUR = 3600000;
 const BOX_INTERVAL = [0.15 * HOUR, 24 * HOUR, 3 * 24 * HOUR, 7 * 24 * HOUR, 21 * 24 * HOUR];
