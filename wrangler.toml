@@ -1,0 +1,17 @@
+# Cloudflare Pages: static app from dist/ + the API as Pages Functions (functions/api/[[path]].js).
+# Deploy: npm run deploy
+#
+# Secrets are NOT in this file. Set them once per project (you will be prompted for each value):
+#   npx wrangler pages secret put AZURE_SPEECH_KEY
+#   npx wrangler pages secret put AZURE_SPEECH_REGION
+#   npx wrangler pages secret put GEMINI_API_KEY
+#   npx wrangler pages secret put BETA_ACCESS_CODE     # any passphrase you choose; testers enter it in the Parent Zone
+name = "wunder-tutor"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-06-01"
+compatibility_flags = ["nodejs_compat"] # Buffer and node:crypto for server/tts.mjs
+
+# Accepted teacher takes, so each phrase is generated (and paid for) once across all devices.
+[[kv_namespaces]]
+binding = "TTS_CACHE"
+id = "138ec3dd03034f40ab92a58125cd6b07"

@@ -1,4 +1,5 @@
 import type { Assessment, WordErrorType, WordScore } from '../domain/types';
+import { apiFetch } from './health';
 import { SpeechError, type AssessContext, type PronunciationProvider, type Recording } from './types';
 
 // Azure Speech Pronunciation Assessment via the server-side proxy (server/index.mjs), which holds
@@ -73,7 +74,7 @@ export class AzurePronunciationProvider implements PronunciationProvider {
     const timer = setTimeout(() => ctl.abort(), 20000);
     let res: Response;
     try {
-      res = await fetch(`/api/assess?text=${encodeURIComponent(referenceText)}&locale=${ctx.accent}`, {
+      res = await apiFetch(`/api/assess?text=${encodeURIComponent(referenceText)}&locale=${ctx.accent}`, {
         method: 'POST', headers: { 'Content-Type': 'audio/wav' }, body: rec.wav, signal: ctl.signal,
       });
     } catch (e) {

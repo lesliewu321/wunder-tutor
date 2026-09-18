@@ -30,10 +30,17 @@ Keys never reach the browser — see `server/README.md`.
 
 ## Where things live
 
-Nothing is hosted yet. The app and the API proxy run locally (`npm run dev`, `npm run server`). Learner state is in the
-browser's localStorage, recordings and cached teacher takes in IndexedDB — per device, no accounts, no cloud. Keys live only
-in a local `.env`. `supabase/schema.sql` is a file, not a project. Shipping needs: static hosting for `dist/`, a Node host
-(or serverless functions) for `server/`, and a Supabase project when accounts and cross-device sync are wanted.
+- **Hosted beta:** https://wunder-tutor.pages.dev — Cloudflare Pages. The static app comes from `dist/`; the API runs as a
+  Pages Function (`functions/api/[[path]].js`) on the same origin. Deploy with `npm run deploy`.
+- **The hosted API is locked.** It answers only requests carrying the beta access code (`BETA_ACCESS_CODE` secret), which
+  a grown-up enters once in **Parent Zone → Beta access**. With no code set it fails closed. Without the code the app still
+  works, in its built-in practice mode.
+- **Secrets** live in Cloudflare (`npx wrangler pages secret put NAME`) and, for local dev, in a gitignored `.env`.
+- **Teacher takes** are cached in the `TTS_CACHE` KV namespace (hosted), `server/.cache/tts` (local) and on each device.
+- **Learner data** is still per-device: state in localStorage, recordings in IndexedDB. No accounts, no sync yet —
+  `supabase/schema.sql` is a file, not a project.
+- **Local dev:** `npm run dev` + `npm run server` (Node adapter, same core). `npm run cf:dev` runs the Pages Function
+  locally in Cloudflare's runtime.
 
 ## Architecture
 
@@ -48,7 +55,8 @@ src/
   data/ state/    repository seam + zustand store
   features/       onboarding · home · lesson · speak (the core loop) · lab · practice · progress · profile
   ui/             Pip the mascot, parametric mouth diagram, mic button, kit
-server/           zero-dependency API proxy (Azure Speech scoring, Gemini Live teacher voice, Claude tutor)
+server/           runtime-neutral API core (Azure scoring, Gemini Live voice, Claude tutor) + Node adapter for local dev
+functions/        Cloudflare Pages Function adapter for the same core
 supabase/         schema + RLS for the hosted backend
 ```
 

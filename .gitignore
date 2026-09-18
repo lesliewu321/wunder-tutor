@@ -8,3 +8,5 @@ dist
 .vite
 *.tsbuildinfo
 server/.cache
+.wrangler
+.dev.vars

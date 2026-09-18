@@ -1,6 +1,6 @@
 import type { AgeBand } from '../domain/types';
 import type { Scenario } from '../content/scenarios';
-import { apiHealth } from '../speech';
+import { apiFetch, apiHealth } from '../speech';
 
 export interface TutorTurn { role: 'tutor' | 'child'; text: string }
 
@@ -38,7 +38,7 @@ export class ClaudeTutor implements ConversationTutor {
 
   async next(scenario: Scenario, band: AgeBand, history: TutorTurn[], pronunciationNotes?: string): Promise<TutorReply> {
     try {
-      const res = await fetch('/api/tutor', {
+      const res = await apiFetch('/api/tutor', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           scenario: { title: scenario.title, setting: scenario.setting, tutorRole: scenario.tutorRole, goals: scenario.goals },

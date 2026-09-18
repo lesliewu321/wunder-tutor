@@ -1,7 +1,4 @@
-import { mkdtemp, readdir, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { buildInstruction, createTts, pcmToWav, transcriptMatches, trimSilence } from './tts.mjs';
 
 /** A stand-in for the Live API socket: replies to setup, then "speaks" whatever the script says. */
@@ -27,14 +24,13 @@ function fakeLive(script) {
         reply({ serverContent: { turnComplete: true } });
       },
     };
-    queueMicrotask(() => emit('open', {}));
+    setTimeout(() => emit('open', {}), 0); // like a real socket: 'open' arrives as a later task
     return ws;
   };
   return { connect, log };
 }
 
-let dir;
-afterEach(async () => { if (dir) await rm(dir, { recursive: true, force: true }); dir = undefined; });
+const memoryCache = () => { const m = new Map(); return { m, get: async (k) => m.get(k), put: async (k, v) => { m.set(k, v); } }; };
 
 describe('Gemini Live teacher voice', () => {
   it('asks for exactly the phrase, in the chosen accent and speed', async () => {
@@ -67,19 +63,27 @@ describe('Gemini Live teacher voice', () => {
     await expect(tts.speak({ text: 'thank you', accent: 'en-US' })).rejects.toMatchObject({ code: 'tts_mismatch' });
   });
 
-  it('generates each phrase once: disk cache and in-flight de-duplication', async () => {
-    dir = await mkdtemp(join(tmpdir(), 'wunder-tts-'));
+  it('generates each phrase once: durable cache and in-flight de-duplication', async () => {
+    const cache = memoryCache();
     const live = fakeLive((prompt) => prompt.replace('SAY: ', ''));
-    const tts = createTts({ apiKey: 'k', connect: live.connect, cacheDir: dir });
+    const tts = createTts({ apiKey: 'k', connect: live.connect, cache });
     const [a, b] = await Promise.all([tts.speak({ text: 'water', accent: 'en-US' }), tts.speak({ text: 'water', accent: 'en-US' })]);
     expect(live.log.sessions).toBe(1);
     expect(a.wav.equals(b.wav)).toBe(true);
 
-    const again = await createTts({ apiKey: 'k', connect: live.connect, cacheDir: dir }).speak({ text: 'water', accent: 'en-US' });
+    const again = await createTts({ apiKey: 'k', connect: live.connect, cache }).speak({ text: 'water', accent: 'en-US' });
     expect(again.cached).toBe(true);
     expect(live.log.sessions).toBe(1);
     await tts.speak({ text: 'water', accent: 'en-US', slow: true }); // a different take
-    expect((await readdir(dir)).length).toBe(2);
+    expect(cache.m.size).toBe(2);
+  });
+
+  it('works with sockets that are already open when handed over (Cloudflare fetch-upgrade)', async () => {
+    const live = fakeLive((prompt) => prompt.replace('SAY: ', ''));
+    const connect = async (url) => ({ socket: live.connect(url), alreadyOpen: true });
+    const { wav } = await createTts({ apiKey: 'k', connect }).speak({ text: 'milk', accent: 'en-US' });
+    expect(wav.subarray(0, 4).toString()).toBe('RIFF');
+    expect(live.log.setups).toHaveLength(1);
   });
 
   it('validates input and enforces a generation budget', async () => {

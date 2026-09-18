@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "server": "node server/index.mjs"
+    "server": "node server/index.mjs",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name wunder-tutor --branch main --commit-dirty=true",
+    "cf:dev": "npm run build && wrangler pages dev dist --port 8788"
   },
   "dependencies": {
     "idb-keyval": "^6.2.1",

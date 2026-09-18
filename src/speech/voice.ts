@@ -1,6 +1,6 @@
 import { createStore, get, set } from 'idb-keyval';
 import type { Accent, SpeakItem } from '../domain/types';
-import { apiHealth } from './health';
+import { apiFetch, apiHealth } from './health';
 
 export interface SpeakOptions {
   accent: Accent;
@@ -124,7 +124,7 @@ class GeminiTakes {
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), 30000);
     try {
-      const res = await fetch('/api/tts', {
+      const res = await apiFetch('/api/tts', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
         body: JSON.stringify({ text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined }),
       });

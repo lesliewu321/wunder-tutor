@@ -10,9 +10,9 @@
 // Only lesson text is ever sent to Google from here — never a child's voice.
 // Setup / message shapes follow https://ai.google.dev/gemini-api/docs/live-guide (raw WebSocket).
 
+// Runtime-neutral: runs under Node and Cloudflare Workers (nodejs_compat supplies Buffer and node:crypto).
+// Storage and the WebSocket dialer are injected — see server/index.mjs and functions/api/[[path]].js.
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 
 const DEFAULT_ENDPOINT =
   'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent';
@@ -107,19 +107,24 @@ const decodeFrame = (data) => (typeof data === 'string' ? data : Buffer.from(dat
 
 /**
  * Opens a Live session, speaks one line, returns raw PCM + the model's transcript of itself.
- * `connect` is injectable for tests; by default it is the runtime's WebSocket (Node 22+).
+ * `connect(url)` is injectable: it may return a socket, a promise of one, or `{ socket, alreadyOpen: true }`
+ * (Cloudflare's fetch-upgrade sockets are open by the time they are handed over). Default: the runtime's
+ * WebSocket (Node 22+).
  */
-export function synthesizeOnce({ apiKey, model, voiceName, text, accent, slow, kind, endpoint, connect, timeoutMs = 25_000, firm = false }) {
+export async function synthesizeOnce({ apiKey, model, voiceName, text, accent, slow, kind, endpoint, connect, timeoutMs = 25_000, firm = false }) {
+  const open = connect ?? ((url) => new WebSocket(url));
+  let ws;
+  let alreadyOpen = false;
+  try {
+    const dialled = await open(`${endpoint || DEFAULT_ENDPOINT}?key=${encodeURIComponent(apiKey)}`);
+    ws = dialled?.socket ?? dialled;
+    alreadyOpen = dialled?.alreadyOpen === true;
+  } catch {
+    throw new TtsError('gemini_connect_failed');
+  }
+  try { if ('binaryType' in ws) ws.binaryType = 'arraybuffer'; } catch { /* read-only on some runtimes */ }
+
   return new Promise((resolvePromise, reject) => {
-    const open = connect ?? ((url) => new WebSocket(url));
-    let ws;
-    try {
-      ws = open(`${endpoint || DEFAULT_ENDPOINT}?key=${encodeURIComponent(apiKey)}`);
-    } catch {
-      reject(new TtsError('gemini_connect_failed'));
-      return;
-    }
-    if ('binaryType' in ws) ws.binaryType = 'arraybuffer';
 
     const chunks = [];
     let transcript = '';
@@ -134,7 +139,7 @@ export function synthesizeOnce({ apiKey, model, voiceName, text, accent, slow, k
     };
     const timer = setTimeout(() => finish(new TtsError('gemini_timeout', 504)), timeoutMs);
 
-    ws.addEventListener('open', () => {
+    const sendSetup = () => {
       ws.send(JSON.stringify({
         setup: {
           model: `models/${model}`,
@@ -148,7 +153,9 @@ export function synthesizeOnce({ apiKey, model, voiceName, text, accent, slow, k
           outputAudioTranscription: {},
         },
       }));
-    });
+    };
+    // A socket may already be open by the time it reaches us (fetch-upgrade, or a fast local dial).
+    if (alreadyOpen || ws.readyState === 1) sendSetup(); else ws.addEventListener('open', sendSetup);
 
     ws.addEventListener('message', (event) => {
       let msg;
@@ -185,7 +192,11 @@ export function synthesizeOnce({ apiKey, model, voiceName, text, accent, slow, k
 
 // ------------------------------------------------------------------ service: validation, cache, retry, budget
 
-export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cacheDir, endpoint, connect, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
+/**
+ * @param {{ get(key: string): Promise<Uint8Array|Buffer|null|undefined>, put(key: string, wav: Buffer): Promise<void> }} [opts.cache]
+ *   Durable store for accepted takes (disk under Node, KV on Cloudflare). Optional.
+ */
+export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
   const inflight = new Map();
   let windowStart = Date.now();
   let generated = 0;
@@ -212,19 +223,17 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     if (!/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
     const req = { text, accent: input.accent === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: input.kind === 'syllable' ? 'syllable' : undefined };
     const key = keyFor(req);
-    const file = cacheDir ? join(cacheDir, `${key}.wav`) : null;
-
-    if (file) {
-      try { return { wav: await readFile(file), cached: true }; } catch { /* not cached yet */ }
+    if (cache) {
+      try {
+        const hit = await cache.get(key);
+        if (hit?.length) return { wav: Buffer.from(hit), cached: true };
+      } catch { /* cache unavailable — generate */ }
     }
     if (!inflight.has(key)) {
       inflight.set(key, (async () => {
         try {
           const wav = await generate(req);
-          if (file) {
-            await mkdir(cacheDir, { recursive: true });
-            await writeFile(file, wav);
-          }
+          if (cache) await cache.put(key, wav).catch(() => undefined); // a failed write must not lose the take
           return wav;
         } finally {
           inflight.delete(key);

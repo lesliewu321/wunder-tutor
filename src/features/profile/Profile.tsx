@@ -4,7 +4,7 @@ import type { Accent, ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
 import { HOME_LANGUAGES } from '../../content/translations';
 import { DAILY_GOALS, liveStreak } from '../../engine/rewards';
-import { apiHealth } from '../../speech';
+import { apiHealth, getAccessCode, setAccessCode, type ApiHealth } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
@@ -96,7 +96,8 @@ export function ParentZone() {
   const store = useStore();
   const [danger, setDanger] = useState<Danger>(null);
   const [recordings, setRecordings] = useState<number | null>(null);
-  const [services, setServices] = useState<{ azure: boolean; claude: boolean; gemini: boolean } | null>(null);
+  const [services, setServices] = useState<ApiHealth | null>(null);
+  const [code, setCode] = useState(getAccessCode);
 
   const refresh = () => void audioRepo.count(`${p.id}/`).then(setRecordings);
   useEffect(() => { if (open) { refresh(); void apiHealth().then(setServices); } }, [open, p.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -164,6 +165,20 @@ export function ParentZone() {
           {(['auto', 'light', 'dark'] as const).map((t) => <button key={t} type="button" className={settings.theme === t ? 'is-on' : ''} aria-pressed={settings.theme === t} onClick={() => setSettings({ theme: t })}>{t === 'auto' ? 'Match device' : t === 'light' ? 'Light' : 'Dark'}</button>)}
         </div>
       </section>
+
+      {services?.needsCode && (
+        <section>
+          <h2 className="section-title">Beta access</h2>
+          <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); setAccessCode(code); window.location.reload(); }}>
+            <p className={services.authorized ? 'access access--ok' : 'access'}>
+              {services.authorized ? 'Access code accepted — real pronunciation scoring and the teacher voice are on.' : getAccessCode() ? 'That code wasn’t accepted. Check it and try again.' : 'Enter your beta access code to switch on real pronunciation scoring and the teacher voice. Without it the app uses its built-in practice mode.'}
+            </p>
+            <label className="sr-only" htmlFor="access-code">Beta access code</label>
+            <input id="access-code" className="input" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="Access code" />
+            <Button type="submit" block disabled={!code.trim() || (services.authorized && code.trim() === getAccessCode())}>Save code</Button>
+          </form>
+        </section>
+      )}
 
       <section>
         <h2 className="section-title">Demo &amp; diagnostics</h2>
