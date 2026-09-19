@@ -1,8 +1,15 @@
+import { execSync } from 'node:child_process';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+/** Build date and commit, shown in Settings so a tester can say exactly which version they have. */
+const version = (() => {
+  try { return `${new Date().toISOString().slice(0, 10)} · ${execSync('git rev-parse --short HEAD').toString().trim()}`; } catch { return 'dev'; }
+})();
+
 export default defineConfig({
   plugins: [react()],
+  define: { __APP_VERSION__: JSON.stringify(version) },
   server: {
     // A preview runner may assign a free port through PORT; 5173 otherwise.
     port: Number(process.env.PORT) || 5173,

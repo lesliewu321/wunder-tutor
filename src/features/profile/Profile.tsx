@@ -240,6 +240,7 @@ export function ParentZone() {
           <div className="select-row"><span>Pronunciation scoring</span><b>{services == null ? '…' : services.azure ? 'Azure Speech' : 'Built-in practice model'}</b></div>
           <div className="select-row"><span>Teacher voice</span><b>{services == null ? '…' : services.gemini ? 'Gemini Live (native audio)' : 'This device’s voice'}</b></div>
           <div className="select-row"><span>Conversation tutor</span><b>{services == null ? '…' : services.claude ? 'Claude (live)' : 'Scripted'}</b></div>
+          <div className="select-row"><span>App version</span><b>{__APP_VERSION__}</b></div>
         </div>
       </section>
 
