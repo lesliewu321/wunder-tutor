@@ -1,7 +1,7 @@
 # Wunder Tutor
 
 A pronunciation-first tutor for **English** (American by default, British optional) and **Mandarin (Putonghua)**.
-Built first for Hong Kong children aged 5–15 (Cantonese at home), with a grown-up mode so parents can learn too.
+Built first for Hong Kong children and teens aged 5–17 (Cantonese at home), with a grown-up mode so parents can learn too.
 A PWA for phones, and a home learning platform on tablets.
 
 **Speak → see exactly which sound (or tone) was off → learn how to fix it → retry → hear and see the improvement.**
@@ -102,7 +102,7 @@ Nothing above `speech/` imports a vendor type; replacing Azure means writing one
 
 ## Learners
 
-Age sets a band — **Little (5–7)**, **Junior (8–11)**, **Teen (12–15)**, **Grown-up (16+)** — which changes content
+Age sets a band — **Little (5–7)**, **Junior (8–11)**, **Teen (12–17)**, **Grown-up (18+)** — which changes content
 (words → phrases → sentences), copy, type scale, mastery bar, and how feedback is delivered (Pip *says* the tip for
 non-readers; teens and grown-ups see phonetic symbols and optional detail). Grown-ups get teen content with a plainer
 look: no mascot while speaking, no confetti, plain unit names ("Food & Drink"), and adult wording in setup.

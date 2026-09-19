@@ -11,7 +11,8 @@ import { ALL_LESSONS } from '../content/course';
 import { setDisplayScript } from '../content/zh/script';
 import { nextVoice } from '../speech/pitch';
 
-export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : age <= 15 ? 'teen' : 'adult');
+/** Little 5–7, Junior 8–11, Teen 12–17, Grown-up 18+. */
+export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : age <= 17 ? 'teen' : 'adult');
 
 export interface NewProfileInput {
   name: string; avatar: string; age: number; homeLanguage: HomeLanguage; level: Level; goal: Goal; accent: Accent;

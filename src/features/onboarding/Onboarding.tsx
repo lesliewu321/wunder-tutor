@@ -163,7 +163,7 @@ export function Onboarding() {
           {!adult && (
             <>
               <h2 className="field-label">Age</h2>
-              <div className="ages">{Array.from({ length: 11 }, (_, i) => i + 5).map((n) => <button key={n} type="button" className={`age ${age === n ? 'is-on' : ''}`} onClick={() => setAge(n)} aria-pressed={age === n}>{n}</button>)}</div>
+              <div className="ages">{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <button key={n} type="button" className={`age ${age === n ? 'is-on' : ''}`} onClick={() => setAge(n)} aria-pressed={age === n}>{n}</button>)}</div>
               {age && <p className="hint">{{ little: 'Picture-led lessons with single words and tiny phrases.', junior: 'Playful lessons with short sentences.', teen: 'A cleaner look with full, natural sentences.', adult: '' }[bandForAge(age)]}</p>}
             </>
           )}

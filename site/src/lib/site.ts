@@ -7,5 +7,5 @@ export const SITE = {
   email: 'hello@wundertutor.com',
   tagline: 'Speak English with confidence — one sound at a time.',
   description:
-    'Wunder Tutor is a pronunciation-first English tutor for children aged 5–15. Your child speaks, sees exactly which sound slipped, learns how to fix it, tries again — and hears the difference.',
+    'Wunder Tutor is a pronunciation-first English tutor for children aged 5–17. Your child speaks, sees exactly which sound slipped, learns how to fix it, tries again — and hears the difference.',
 };

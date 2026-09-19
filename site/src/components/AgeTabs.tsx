@@ -14,7 +14,7 @@ const BANDS = [
     points: ['Playful, but not babyish', 'Meaning shown with every new phrase', 'Listening games: three or tree?', 'Short café and zoo conversations'],
   },
   {
-    id: 'teen', label: 'Teen', ages: '12–15', emoji: '☕',
+    id: 'teen', label: 'Teen', ages: '12–17', emoji: '☕',
     sample: 'I would like a cup of hot chocolate.', sampleNote: 'Natural, full sentences',
     tip: '“Rest your tongue tip lightly between your teeth and push air forward. No voice.”',
     points: ['A cleaner, calmer look', 'Phonetic symbols like /θ/ and /r/', 'Optional deeper detail on each sound', 'A higher bar for “mastered”'],

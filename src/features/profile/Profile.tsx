@@ -14,7 +14,7 @@ import { Button, Sheet, toast, TopBar } from '../../ui/kit';
 
 /** Written in Simplified; shown in the learner's script. */
 const COURSE_NAME: Record<CourseId, string> = { en: 'English', zh: '普通话' };
-const BAND_LABEL = { little: 'Little explorer · 5–7', junior: 'Junior · 8–11', teen: 'Teen · 12–15', adult: 'Grown-up learner' } as const;
+const BAND_LABEL = { little: 'Little explorer · 5–7', junior: 'Junior · 8–11', teen: 'Teen · 12–17', adult: 'Grown-up learner' } as const;
 
 export function Me() {
   const nav = useNavigate();
@@ -164,7 +164,7 @@ export function ParentZone() {
         <h2 className="section-title">{p.name}’s learning</h2>
         <div className="form-card">
           <label className="select-row"><span>Age</span>
-            <select value={p.band === 'adult' ? 18 : p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 11 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}<option value={18}>Grown-up</option></select>
+            <select value={p.band === 'adult' ? 18 : p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}<option value={18}>Grown-up</option></select>
           </label>
           <div className="select-row"><span>Courses</span>
             <span className="course-toggles">

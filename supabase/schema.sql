@@ -2,7 +2,7 @@
 -- Wunder Tutor — Supabase / Postgres schema (single migration, NOT yet applied)
 -- =============================================================================
 --
--- THIS DATABASE HOLDS CHILDREN'S DATA (learners aged roughly 5–15).
+-- THIS DATABASE HOLDS CHILDREN'S DATA (learners aged roughly 5–17).
 -- It is designed for COPPA (US) and GDPR Art. 8 / UK Age-Appropriate Design Code
 -- ("GDPR-K") obligations. The rules below are design constraints, not suggestions:
 --

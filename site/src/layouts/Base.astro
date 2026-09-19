@@ -5,13 +5,13 @@ import { SITE } from '@/lib/site';
 
 interface Props { title?: string; description?: string; noindex?: boolean }
 const { title, description = SITE.description, noindex = false } = Astro.props;
-const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — English pronunciation tutor for kids 5–15`;
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — English pronunciation tutor for kids 5–17`;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImage = new URL('/og.png', SITE.url).href;
 
 const nav = [
   { href: '/#how', label: 'How it works' },
-  { href: '/#ages', label: 'Ages 5–15' },
+  { href: '/#ages', label: 'Ages 5–17' },
   { href: '/#parents', label: 'For parents' },
   { href: '/#faq', label: 'FAQ' },
 ];

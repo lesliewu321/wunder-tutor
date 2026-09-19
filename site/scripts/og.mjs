@@ -20,7 +20,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
     <tspan x="80" y="356" fill="#6c4df5">Pip shows exactly</tspan>
     <tspan x="80" y="442" fill="#6c4df5">which sound to fix.</tspan>
   </text>
-  <text x="80" y="530" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="32" fill="#6b6280">English pronunciation tutor · ages 5–15</text>
+  <text x="80" y="530" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="32" fill="#6b6280">English pronunciation tutor · ages 5–17</text>
 </svg>`;
 await sharp(Buffer.from(svg)).png().toFile(new URL('../public/og.png', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
 console.log('public/og.png written');

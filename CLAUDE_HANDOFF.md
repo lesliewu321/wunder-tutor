@@ -8,8 +8,8 @@ for how accuracy is measured.
 A pronunciation-first language tutor. Core loop:
 **listen → speak → score → see the exact sound (or tone) that slipped → how to fix it → retry → before/after.**
 
-- **Audience:** Hong Kong children 5–15 first (Cantonese at home), learning **English** and **Mandarin (Putonghua)**.
-  A **grown-up mode** (16+) so adults aren't put off and parents can learn too. **Tablets matter as much as phones**
+- **Audience:** Hong Kong children and teens 5–17 first (Cantonese at home), learning **English** and **Mandarin (Putonghua)**.
+  A **grown-up mode** (18+) so adults aren't put off and parents can learn too. **Tablets matter as much as phones**
   (a learning platform at home).
 - **Leslie's primary goal: pronunciation feedback as accurate as possible.** Hence **US English is the default accent**
   (Azure is most detailed for en-US); British and Mandarin made as accurate as the scorer allows. Worked with the
@@ -57,7 +57,7 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
 - **Mandarin course:** unit "Yummy Food 好吃的" (grown-ups see "Food & Drink 飲食"), 7 lessons × 3 bands, a first-time
   Mandarin speaking check (`/check/zh`), tone pictures (Chao contours), per-character feedback ("Your 麵 (miàn)
   sounded like tone 1. It needs tone 4…"). Items carry Simplified (sent to Azure) and Traditional (shown).
-- **Four bands:** little 5–7, junior 8–11, teen 12–15, **adult 16+** (`contentBand()` maps adult→teen content;
+- **Four bands:** little 5–7, junior 8–11, teen 12–17, **adult 18+** (teen widened to 17 at Leslie's request, 2026-09-19) (`contentBand()` maps adult→teen content;
   `isGrownUp()` = teen or adult). Adults: no mascot while speaking, no confetti, plain unit names, adult wording.
 - **Tablet:** `src/styles/tablet.css` — side rail ≥760 px, two-column Home ≥1000 px, side-by-side speaking in
   landscape, sheets as centred dialogs. Checked at 820×1180, 1180×820, 375×812 and in dark mode.

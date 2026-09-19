@@ -11,7 +11,7 @@
 .avatars { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
 .avatar-pick { aspect-ratio: 1; border-radius: 50%; font-size: 1.7rem; background: var(--surface); border: 3px solid var(--line); transition: all 0.15s var(--ease-spring); }
 .avatar-pick.is-on { border-color: var(--primary); background: var(--primary-soft); transform: scale(1.1); }
-.ages { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.ages { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
 .age { text-align: center; min-height: 48px; border-radius: 14px; background: var(--surface); border: 2px solid var(--line); font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; }
 .age.is-on { border-color: var(--primary); background: var(--primary); color: #fff; }
 .privacy { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
