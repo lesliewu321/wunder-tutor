@@ -59,8 +59,17 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   sounded like tone 1. It needs tone 4…"). Items carry Simplified (sent to Azure) and Traditional (shown).
 - **Four bands:** little 5–7, junior 8–11, teen 12–17, **adult 18+** (teen widened to 17 at Leslie's request, 2026-09-19) (`contentBand()` maps adult→teen content;
   `isGrownUp()` = teen or adult). Adults: no mascot while speaking, no confetti, plain unit names, adult wording.
-- **Tablet:** `src/styles/tablet.css` — side rail ≥760 px, two-column Home ≥1000 px, side-by-side speaking in
-  landscape, sheets as centred dialogs. Checked at 820×1180, 1180×820, 375×812 and in dark mode.
+- **Tablet:** `src/styles/tablet.css` — side rail ≥740×600, two-column Home ≥1000 px, side-by-side speaking in
+  landscape, sheets as centred dialogs. Checked at 820×1180, 1180×820, 744×1133, 375×812 and in dark mode.
+- **Say it right** (Speak tab → `/say`, `src/features/say/`): type or photograph any text → sentences → hear, say,
+  corrected (same speaking screen, `mode="free"`: not added to the review schedule). Photos and Chinese text go to
+  `POST /api/read` (`server/read.mjs`, Gemini 3.8 Flash, per-character {t, s, py} checked by `checkChineseLine`).
+  Measured: no wrong characters on photographed pages (clean / phone-like / harsh); pinyin 107/107 course lines, 99.5%
+  of syllables on tricky 多音字 sentences. English typed text is split on the device (works in practice mode).
+- **Cheaper scoring:** takes are trimmed to speech ± margin before upload (`speechWindow`, ~42% less audio, no word
+  cut in 2,541 test takes); phrases/sentences check likely mistakes on each word's clip in a second parallel round
+  (`CLIP_CHECKS`: Mandarin sound slips named 27% → 58%, British swaps 0% → 88%, ~35% cheaper checks). Roughly half the
+  earlier cost overall.
 
 ## Accuracy (synthetic labelled set — `eval/README.md`)
 
@@ -110,9 +119,9 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
 
 ## Open items
 
-1. **Cost at scale:** each take is scored 1–6× (likely-mistake checks + British dual scoring) → ~10 s of billed Azure
-   audio per 2.5 s take. Scoring only the checked word for the extra scorings would roughly halve it. Decide before
-   scale; Azure commitment tiers help too.
+1. **Cost at scale:** halved on 2026-09-19 (trimming + word clips, see above); a take still costs up to ~2–4× its
+   trimmed length. Next levers: Azure commitment tiers (~60% off at volume); skip checks for sounds a learner has
+   mastered.
 2. **Volunteers** (Leslie is recruiting children; trying adult mode first): parents use Share recordings for testing →
    files go in `eval/volunteers/` (gitignored) → `npx vite-node eval/volunteers.ts` → label `manifest.csv` → measure.
    Real scoring on the hosted app needs the right beta access code (item 3).
@@ -132,7 +141,6 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
 
 - Create the Wunder Tutor **Supabase** project ($10/month on org `lesliewu321`) — accounts + sync. Not approved yet.
 - **Native apps** via Capacitor (Leslie has a Mac + iPhone, Apple Developer and Google Play accounts).
-- **"Say it right"** companion (type or photograph any text → hear it → say it → corrected; no translation for now).
 - SpeechSuper trial for Mandarin sounds. Mandarin: pinyin always shown or fading? First cohort beginners or school
   learners?
 - Suggested stack for 1M users (discussed, nothing bought): Capacitor, RevenueCat + Stripe, FCM push, Cloudflare R2,
@@ -167,7 +175,12 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
   script in step); `phonemeInfo()` returns Traditional guides for 'hant'. A test fails if a new guide character has
   no Traditional mapping.
 - Gemini sometimes returns glitched takes (5 ms, or 30 s) — the eval excludes them.
-- `node_modules` lives inside Dropbox (slow sync) — suggested excluding it; not done.
+- `node_modules` lives inside Dropbox (slow sync) — suggested excluding it; not done. `eval/.cache` (~250 MB of
+  thousands of small files, regenerable for a few dollars) too: while evals write it, Dropbox syncing slows the dev
+  server to a crawl. Suggest Leslie excludes both from Dropbox sync.
+- **vite-node stalls on repeated outbound connections on this machine** (plain Node doesn't): Gemini/Azure-heavy eval
+  scripts run as plain Node `.mjs`, or plan their calls (`--plan`) and hand them to `node eval/run-jobs.mjs`.
+- The app's API check (`apiHealth`) waits up to 8 s: shorter, a slow phone silently fell into simulated scores.
 
 ## How Leslie works
 

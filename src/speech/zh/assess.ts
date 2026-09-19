@@ -23,7 +23,10 @@ export interface ZhAlternativeResult {
   py: string;
   char: string;
   part: 'initial' | 'final';
+  /** The take (or, with `base`, just this character's clip) scored against the likely mistake. */
   json: AzureZhResponse;
+  /** Clip mode: the character's clip scored against the real character — the mistake is compared with this. */
+  base?: AzureZhResponse;
 }
 
 export interface ZhAssessOptions {
@@ -121,7 +124,9 @@ export function assessZh(json: AzureZhResponse, ref: { text: string; py: string;
   const tones = py.map((s) => parseSyllable(s).tone);
   const surface = surfaceTones(tones, chars, breaks);
   const { perChar } = readCharacters(json, chars);
-  const altReadings = (opts.alts ?? []).map((a) => ({ ...a, reading: readCharacters(a.json, chars).perChar[a.index] }));
+  const altReadings = (opts.alts ?? []).map((a) => a.base
+    ? { ...a, reading: readCharacters(a.json, [a.char]).perChar[0], baseScore: readCharacters(a.base, [chars[a.index]]).perChar[0]?.score }
+    : { ...a, reading: readCharacters(a.json, chars).perChar[a.index], baseScore: undefined as number | undefined });
   const margin = opts.altMargin ?? ZH_ALT_MARGIN;
   const speaker = opts.speaker ?? null;
   const toneParams = opts.toneParams ?? DEFAULT_TONE_PARAMS;
@@ -144,7 +149,7 @@ export function assessZh(json: AzureZhResponse, ref: { text: string; py: string;
         if (a.index !== i || !a.reading || a.reading.error === 'omission') return false;
         const trust = SWAP_TRUST[swapKind(py[i], a.py)] ?? {};
         if (trust.off || (trust.maxTarget != null && r.score >= trust.maxTarget)) return false;
-        return a.reading.score >= r.score + margin + (trust.extraMargin ?? 0) && a.reading.score >= 70;
+        return a.reading.score >= (a.baseScore ?? r.score) + margin + (trust.extraMargin ?? 0) && a.reading.score >= 70;
       })
       .sort((a, b) => b.reading!.score - a.reading!.score)[0];
     if (better) zh.heardAs = better.py;

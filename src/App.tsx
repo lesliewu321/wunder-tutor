@@ -12,6 +12,7 @@ import { useProfile, useStore } from './state/store';
 import { isGrownUp } from './domain/types';
 import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
+import { SayIt } from './features/say/SayIt';
 
 const TABS: { to: string; label: string; icon: IconName; center?: boolean }[] = [
   { to: '/', label: 'Learn', icon: 'home' },
@@ -84,6 +85,7 @@ export function App() {
             <Route path="lab/:sound/:stage" element={<LabStagePlayer />} />
             <Route path="lesson/:lessonId" element={<LessonPlayer />} />
             <Route path="speak/:scenarioId" element={<Conversation />} />
+            <Route path="say" element={<SayIt />} />
             <Route path="parents" element={<ParentZone />} />
             <Route path="check/:course" element={<CourseCheck />} />
           </Route>

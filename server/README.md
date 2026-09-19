@@ -43,6 +43,13 @@ public deployment with no code set fails closed.
   check rather than silencing the teacher. Errors: 400 `missing_text|text_too_long|invalid_text`, 429
   `tts_budget_exceeded` (120 generations / 10 min), 502 `gemini_rejected|gemini_closed|gemini_no_audio`, 503
   `gemini_not_configured`, 504 `gemini_timeout`. Only lesson text goes to Google; no learner audio.
+- `POST /api/read`: "Say it right". Body = a photo (`image/jpeg|png|webp`, the app sends a ≤1600 px JPEG) or JSON
+  `{ "text": "…" }` (≤ 2000 chars) → `{ language: "en"|"zh"|"other"|"none", lines: [{ text, traditional?, simplified?,
+  pinyin? }] }`. Gemini (`GEMINI_READ_MODEL`, default `gemini-3.8-flash`) reads with a strict JSON schema; Chinese
+  comes back character by character ({t, s, py}) and a line keeps its pinyin only if the entries spell the sentence as
+  written (numbers are written out: 3 → 三). A failing Chinese line gets one retry as text. 30 requests / 10 min per
+  client. Errors: 400 `missing_text|text_too_long|missing_image`, 503 `gemini_not_configured`, 502
+  `read_upstream|read_unparseable`, 504 `read_timeout`. The image or text goes to Google; nothing is stored.
 - `POST /api/tutor` with `{ scenario:{title,setting,tutorRole,goals[]}, band, history:[{role:"tutor"|"child",text}], pronunciationNotes? }`
   → `{ reply, suggestions (0-2 strings), done }`. Child-safety rules live in the system prompt; emojis are stripped;
   `done` is forced after 8 child turns. Errors: 400 `invalid_json|invalid_scenario|invalid_band|invalid_history`,
@@ -64,5 +71,9 @@ tts 120 / 5 min, tutor 40 / 5 min, access-code guesses 12 / 10 min.
 
 Azure bills audio time: about US$1.00/h speech-to-text + $0.30/h pronunciation assessment (eastasia, pay-as-you-go).
 Because of the accuracy checks, one learner take is scored 1–6 times (US: main + up to 3 likely mistakes; British:
-main + US + up to 3; Mandarin: main + up to 5), so a 2.5 s take bills roughly 10 s of audio. Scoring only the one
-word being checked for the extra scorings (a second, shorter request) would roughly halve that.
+main + US + up to 3; Mandarin: main + up to 5). Two things keep that down (2026-09-19):
+- The app trims the pauses around the speech before sending (`speechWindow`, generous margins): ~42% less audio on
+  every scoring; no scored word was ever cut in 2,541 test takes, quiet or noisy.
+- Phrases and sentences are checked on each word's own clip (a second, parallel round): the checks cost ~35% less and
+  are more accurate (Mandarin sound slips named 27% → 58%, British swaps 0% → 88%).
+Together roughly half the earlier cost: ~US$3.5–4 a month for a learner doing 50 takes a day (pay-as-you-go).

@@ -1,11 +1,12 @@
 import type { Accent, Assessment, PhonemeId, PhonemeScore, WordErrorType, WordScore } from '../domain/types';
 import { englishAlternatives, type EnAlternative } from '../content/alternatives-en';
-import { alignmentCandidates } from '../content/lexicon';
+import { alignmentCandidates, tokenize } from '../content/lexicon';
 import { alternativeRequests } from '../content/zh/alternatives';
 import { apiFetch } from './health';
 import { speakerMedian, type PitchTrack } from './pitch';
 import { SpeechError, type AssessContext, type PronunciationProvider, type Recording } from './types';
-import { assessZh, type AzureZhResponse } from './zh/assess';
+import { assessZh, readCharacters, type AzureZhResponse } from './zh/assess';
+import { cutWav } from './wav';
 import type { SpeakerRef } from './zh/tone';
 
 // Azure Speech Pronunciation Assessment via the server-side proxy (server/index.mjs), which holds
@@ -17,7 +18,7 @@ interface AzureCandidate { Phoneme?: string; Score?: number }
 interface AzurePhoneme { Phoneme?: string; AccuracyScore?: number; NBestPhonemes?: AzureCandidate[]; PronunciationAssessment?: { AccuracyScore?: number; NBestPhonemes?: AzureCandidate[] } }
 interface AzureSyllable { Syllable?: string; Grapheme?: string; AccuracyScore?: number; PronunciationAssessment?: { AccuracyScore?: number } }
 interface AzureWord {
-  Word: string; AccuracyScore?: number; ErrorType?: string;
+  Word: string; AccuracyScore?: number; ErrorType?: string; Offset?: number; Duration?: number;
   PronunciationAssessment?: { AccuracyScore?: number; ErrorType?: string };
   Syllables?: AzureSyllable[]; Phonemes?: AzurePhoneme[];
 }
@@ -128,7 +129,13 @@ export const mergeUsConsonants = (gb: WordScore[], usAll: WordScore[]): WordScor
 /** How much better a likely mistake must fit a word than the real text before we say that's what was said. */
 export const EN_ALT_MARGIN = 7;
 
-export interface EnAltResult { alt: EnAlternative; json: AzureResponse | null | undefined }
+export interface EnAltResult {
+  alt: EnAlternative;
+  /** The take (or, with `base`, just the word's clip) scored against the likely mistake. */
+  json: AzureResponse | null | undefined;
+  /** Clip mode: the word's clip scored against the real word — the mistake is compared with this, not the whole take. */
+  base?: AzureResponse | null;
+}
 
 const rawWordScore = (json: AzureResponse | null | undefined, wi: number): number | null => {
   const w = json?.NBest?.[0]?.Words?.filter((x) => errorType(x.ErrorType ?? x.PronunciationAssessment?.ErrorType) !== 'insertion')[wi];
@@ -142,10 +149,10 @@ const rawWordScore = (json: AzureResponse | null | undefined, wi: number): numbe
  */
 export const applyEnglishAlternatives = (words: WordScore[], main: AzureResponse, alts: EnAltResult[], margin = EN_ALT_MARGIN): WordScore[] => {
   const best = new Map<number, { alt: EnAlternative; lead: number }>();
-  for (const { alt, json } of alts) {
+  for (const { alt, json, base } of alts) {
     if (json?.RecognitionStatus !== 'Success') continue;
-    const m = rawWordScore(main, alt.wordIndex);
-    const a = rawWordScore(json, alt.wordIndex);
+    const m = base !== undefined ? rawWordScore(base, 0) : rawWordScore(main, alt.wordIndex);
+    const a = rawWordScore(json, base !== undefined ? 0 : alt.wordIndex);
     if (m == null || a == null || a < 60 || a - m < margin) continue;
     const prev = best.get(alt.wordIndex);
     if (!prev || a - m > prev.lead) best.set(alt.wordIndex, { alt, lead: a - m });
@@ -216,48 +223,107 @@ const normalise = (ph: string): string => {
   return map[p] ?? p;
 };
 
+/**
+ * Phrases and sentences: check likely mistakes on each word's own clip instead of re-scoring the whole take — Azure
+ * bills by the second. Single words are one clip already. eval/clips.ts (2026-09-19), whole take → clip: Mandarin
+ * sound slips named 27% → 58% (0.04 s either side), British swaps 0% → 88%, US 84% → 78–81% (1 case in 32), no new
+ * false alarms, ~35% cheaper. Mandarin characters are clearly separate syllables: a tight clip works best.
+ */
+export const CLIP_CHECKS = { on: true, pad: { zh: 0.04, en: 0.08 } };
+
+type AssessBody = AzureResponse & { main?: AzureResponse; us?: AzureResponse | null; alts?: (AzureResponse | null)[] };
+
+const TICKS_PER_S = 10_000_000;
+
+/** Where each reference word was heard in the take, in seconds (from the main scoring), by word position. */
+export const wordSpans = (json: AzureResponse): ({ from: number; to: number } | null)[] =>
+  (json.NBest?.[0]?.Words ?? [])
+    .filter((w) => errorType(w.ErrorType ?? w.PronunciationAssessment?.ErrorType) !== 'insertion')
+    .map((w) => (w.Offset != null && w.Duration && errorType(w.ErrorType ?? w.PronunciationAssessment?.ErrorType) !== 'omission'
+      ? { from: w.Offset / TICKS_PER_S, to: (w.Offset + w.Duration) / TICKS_PER_S } : null));
+
+async function postAssess(params: URLSearchParams, body: Blob | ArrayBuffer, ms: number): Promise<AssessBody> {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
+  let res: Response;
+  try {
+    res = await apiFetch(`/api/assess?${params}`, { method: 'POST', headers: { 'Content-Type': 'audio/wav' }, body, signal: ctl.signal });
+  } catch (e) {
+    throw new SpeechError((e as Error).name === 'AbortError' ? 'timeout' : 'network');
+  } finally {
+    clearTimeout(timer);
+  }
+  if (res.status === 504) throw new SpeechError('timeout');
+  if (!res.ok) throw new SpeechError('service', `assess ${res.status}`);
+  return (await res.json()) as AssessBody;
+}
+
 export class AzurePronunciationProvider implements PronunciationProvider {
   readonly name = 'azure';
 
   async assess(rec: Recording, referenceText: string, ctx: AssessContext): Promise<Assessment> {
     if (!rec.wav) throw new SpeechError('service', 'no audio to assess');
     const zh = ctx.locale === 'zh-CN' && ctx.zh ? ctx.zh : null;
-    // Extra scorings run in parallel on the server, so accuracy costs no extra waiting:
-    //  the same take against likely mistakes ("what did it sound like instead"), and for British takes the same take
-    //  as US English (named sounds, and "heard as" for sounds both accents share).
+    // Extra scorings for accuracy: the take against likely mistakes ("what did it sound like instead"), and for
+    // British takes the same take as US English (named sounds, and "heard as" for sounds both accents share).
     const alts = zh ? alternativeRequests(referenceText, zh.py, ctx.focus) : [];
     const enAlts = zh ? [] : englishAlternatives(referenceText, ctx.focus, ctx.accent, ctx.homeLanguage);
     const altTexts = zh ? alts.map((a) => a.text) : enAlts.map((a) => a.text);
+    const units = zh ? [...referenceText].filter((c) => /\p{Script=Han}/u.test(c)) : tokenize(referenceText);
+    // More than one word: score the take first, then each checked word's clip (in parallel) — see CLIP_CHECKS.
+    const clips = CLIP_CHECKS.on && units.length > 1 && !!rec.pcm && altTexts.length > 0;
     const params = new URLSearchParams({ text: referenceText, locale: ctx.locale });
     if (ctx.locale === 'en-US') params.set('nbest', '5');
     if (ctx.locale === 'en-GB') params.set('dual', '1');
-    if (altTexts.length) params.set('alts', JSON.stringify(altTexts));
+    if (altTexts.length && !clips) params.set('alts', JSON.stringify(altTexts));
 
-    const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), 20000);
-    let res: Response;
-    try {
-      res = await apiFetch(`/api/assess?${params}`, { method: 'POST', headers: { 'Content-Type': 'audio/wav' }, body: rec.wav, signal: ctl.signal });
-    } catch (e) {
-      throw new SpeechError((e as Error).name === 'AbortError' ? 'timeout' : 'network');
-    } finally {
-      clearTimeout(timer);
-    }
-    if (res.status === 504) throw new SpeechError('timeout');
-    if (!res.ok) throw new SpeechError('service', `assess ${res.status}`);
-    const body = (await res.json()) as AzureResponse & { main?: AzureResponse; us?: AzureResponse | null; alts?: (AzureResponse | null)[] };
+    const body = await postAssess(params, rec.wav, 20000);
     const main = body.main ?? body;
+
+    // Clip checks: per word, its clip scored against the real word and against each likely mistake. A failure here
+    // only loses the "sounded like" hints; the main score stands.
+    const clipped = new Map<number, AssessBody | null>();
+    if (clips && main.RecognitionStatus === 'Success') {
+      const spans = zh ? readCharacterSpans(main as AzureZhResponse, units) : wordSpans(main);
+      const indexes = [...new Set(zh ? alts.map((a) => a.index) : enAlts.map((a) => a.wordIndex))];
+      await Promise.all(indexes.map(async (i) => {
+        const span = spans[i];
+        if (!span) return;
+        const mistakes = zh ? alts.filter((a) => a.index === i).map((a) => a.char) : enAlts.filter((a) => a.wordIndex === i).map((a) => tokenize(a.text)[i]);
+        const p = new URLSearchParams({ text: units[i], locale: ctx.locale, alts: JSON.stringify(mistakes) });
+        const pad = zh ? CLIP_CHECKS.pad.zh : CLIP_CHECKS.pad.en;
+        try { clipped.set(i, await postAssess(p, cutWav(rec.pcm!, span.from - pad, span.to + pad), 8000)); } catch { clipped.set(i, null); }
+      }));
+    }
 
     if (zh) {
       const speaker = ctx.speaker ?? (rec.pitch ? thisTake(rec.pitch) : null);
+      const zhAlts = clips
+        ? alts.flatMap((a) => {
+          const c = clipped.get(a.index);
+          const k = alts.filter((x) => x.index === a.index).indexOf(a);
+          const json = c?.alts?.[k];
+          return c?.main && json ? [{ index: a.index, py: a.py, char: a.char, part: a.part, json: json as AzureZhResponse, base: c.main as AzureZhResponse }] : [];
+        })
+        : alts.flatMap((a, i) => (body.alts?.[i] ? [{ index: a.index, py: a.py, char: a.char, part: a.part, json: body.alts[i] as AzureZhResponse }] : []));
       return assessZh(main as AzureZhResponse, { text: referenceText, py: zh.py, hant: zh.hant }, {
-        durationMs: rec.analysis.durationMs, pitch: rec.pitch, speaker, script: ctx.script,
-        alts: alts.flatMap((a, i) => (body.alts?.[i] ? [{ index: a.index, py: a.py, char: a.char, part: a.part, json: body.alts[i] as AzureZhResponse }] : [])),
+        durationMs: rec.analysis.durationMs, pitch: rec.pitch, speaker, script: ctx.script, alts: zhAlts,
       });
     }
-    return mapAzure(main, referenceText, rec.analysis.durationMs, ctx.accent, body.us ?? undefined, enAlts.map((alt, i) => ({ alt, json: body.alts?.[i] })));
+    const enResults: EnAltResult[] = clips
+      ? enAlts.flatMap((alt) => {
+        const c = clipped.get(alt.wordIndex);
+        const k = enAlts.filter((x) => x.wordIndex === alt.wordIndex).indexOf(alt);
+        return c?.main ? [{ alt, json: c.alts?.[k], base: c.main }] : [];
+      })
+      : enAlts.map((alt, i) => ({ alt, json: body.alts?.[i] }));
+    return mapAzure(main, referenceText, rec.analysis.durationMs, ctx.accent, body.us ?? undefined, enResults);
   }
 }
+
+/** Where each character was heard in a Mandarin take, in seconds. */
+const readCharacterSpans = (json: AzureZhResponse, chars: string[]): ({ from: number; to: number } | null)[] =>
+  readCharacters(json, chars).perChar.map((r) => (r.offsetMs != null && r.durationMs ? { from: r.offsetMs / 1000, to: (r.offsetMs + r.durationMs) / 1000 } : null));
 
 /** First Mandarin takes, before we know the child's voice: judge against this take's own middle pitch. */
 const thisTake = (pitch: PitchTrack): SpeakerRef | null => {

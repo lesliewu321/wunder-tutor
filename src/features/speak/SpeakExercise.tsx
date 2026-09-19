@@ -36,7 +36,8 @@ interface Props {
   onDone: (r: SpeakResult) => void;
   continueLabel?: string;
   /** 'check' = one take per item (onboarding speaking check): feedback is shown but no retry is asked for. */
-  mode?: 'practice' | 'check';
+  /** 'free' = any text (Say it right): full feedback and retries, but not added to the review schedule. */
+  mode?: 'practice' | 'check' | 'free';
 }
 
 type View = 'ready' | 'result' | 'error';
@@ -134,7 +135,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     const best = Math.max(...takes.map((t) => t.assessment.overall));
     const everMastered = takes.some((t) => isMastered(t.assessment, band));
     // The onboarding check only seeds the pronunciation profile; it doesn't count as studying the item.
-    if (mode !== 'check') finishItem(item, best, everMastered, takes.length);
+    if (mode === 'practice') finishItem(item, best, everMastered, takes.length);
     const first = takes[0].assessment;
     const fi = focusWordIndex(first);
     const c = fi >= 0 ? correctionFor(first.words[fi], band, profile.homeLanguage) : null;

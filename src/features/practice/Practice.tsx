@@ -23,6 +23,11 @@ export function PracticeHome() {
     <div className="screen practice">
       <TopBar title={p.band === 'adult' ? 'Conversation practice' : 'Speak with Pip'} />
       <div className="practice__intro"><Mascot mood="talking" size={92} /><p className="lead">Pick a place and have a real conversation out loud. {p.band === 'adult' ? 'Tips come at the end.' : 'Pip keeps chatting — tips come at the end.'}</p></div>
+      <button type="button" className="row-link row-link--say" onClick={() => nav('/say')}>
+        <span className="row-link__icon"><Icon name="camera" /></span>
+        <span><b>Say it right</b><small>{p.band === 'little' || p.band === 'junior' ? 'Snap a page from your book and say it like the teacher' : 'Type or photograph any text — hear it, say it, get corrected'}</small></span>
+        <Icon name="chevron" size={20} />
+      </button>
       {p.course === 'zh' && <p className="hint hint--left">These conversations are in English for now. Putonghua conversations are coming — keep practising tones in your lessons and the Lab.</p>}
       <ul className="scenario-list">
         {SCENARIOS.map((s) => {

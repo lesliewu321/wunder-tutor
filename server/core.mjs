@@ -5,11 +5,13 @@
 //   POST /api/assess  -> Azure pronunciation assessment (raw 16 kHz WAV in, Azure JSON out)
 //   POST /api/tts     -> teacher voice via Gemini Live native audio ({ text, accent, slow, kind } in, WAV out)
 //   POST /api/tutor   -> Claude conversation partner ({ reply, suggestions, done })
+//   POST /api/read    -> "Say it right": a photo (image/*) or typed text ({ text }) → sentences to practise (+ pinyin)
 //
 // API keys stay on the server. Nothing here logs a key, an access code, audio, or a request body.
 
 import { HttpError } from './http-error.mjs';
 import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, TtsError } from './tts.mjs';
+import { DEFAULT_READ_MODEL, readText } from './read.mjs';
 import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, TUTOR_SCHEMA, validateTutorInput } from './tutor.mjs';
 
 const MAX_BODY_BYTES = 5 * 1024 * 1024;
@@ -126,6 +128,7 @@ export function createApi(rawEnv, deps = {}) {
   const GEMINI_API_KEY = env('GEMINI_API_KEY');
   const GEMINI_LIVE_MODEL = env('GEMINI_LIVE_MODEL') || DEFAULT_LIVE_MODEL;
   const GEMINI_TTS_VOICE = env('GEMINI_TTS_VOICE') || DEFAULT_VOICE;
+  const GEMINI_READ_MODEL = env('GEMINI_READ_MODEL') || DEFAULT_READ_MODEL;
   const ACCESS_CODE = env('BETA_ACCESS_CODE');
 
   const canDial = deps.canDialWebSocket ?? (Boolean(deps.connectWebSocket) || typeof WebSocket === 'function');
@@ -136,6 +139,7 @@ export function createApi(rawEnv, deps = {}) {
     needsCode: Boolean(ACCESS_CODE) || deps.requireAccessCode === true,
     claudeModel: CLAUDE_MODEL,
     ttsVersion: `${GEMINI_LIVE_MODEL}/${GEMINI_TTS_VOICE}`,
+    read: Boolean(GEMINI_API_KEY),
   };
 
   /** Quality gate for new Mandarin teacher takes: the take must score as the text, syllable by syllable. */
@@ -161,6 +165,7 @@ export function createApi(rawEnv, deps = {}) {
   const allowAssess = createLimiter(400, 5 * 60_000);
   const allowTts = createLimiter(120, 5 * 60_000);
   const allowTutor = createLimiter(40, 5 * 60_000);
+  const allowRead = createLimiter(30, 10 * 60_000);
   const allowCodeGuess = createLimiter(12, 10 * 60_000);
 
   // ---------------------------------------------------------------- /api/assess
@@ -249,6 +254,27 @@ export function createApi(rawEnv, deps = {}) {
   }
 
   // ---------------------------------------------------------------- /api/tts
+  // ---------------------------------------------------------------- /api/read
+  // A photo of a page (raw image/jpeg|png|webp body) or typed text ({ "text": "…" }) → the sentences to practise.
+  // Only the image or text goes to Google; nothing is stored.
+  const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+  async function handleRead(request) {
+    if (!GEMINI_API_KEY) throw new HttpError(503, 'gemini_not_configured');
+    const type = (request.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
+    let input;
+    if (IMAGE_TYPES.has(type)) {
+      const bytes = await readBody(request);
+      if (bytes.length < 100) throw new HttpError(400, 'missing_image');
+      input = { image: { bytes, mime: type } };
+    } else {
+      const { text } = await readJson(request);
+      if (typeof text !== 'string' || !text.trim()) throw new HttpError(400, 'missing_text');
+      if (text.length > 2000) throw new HttpError(400, 'text_too_long', { maxChars: 2000 });
+      input = { text };
+    }
+    return json(200, await readText({ apiKey: GEMINI_API_KEY, model: GEMINI_READ_MODEL, ...input }));
+  }
+
   async function handleTts(request) {
     if (!tts) throw new HttpError(503, 'gemini_not_configured');
     const input = await readJson(request);
@@ -315,7 +341,7 @@ export function createApi(rawEnv, deps = {}) {
   }
 
   // ---------------------------------------------------------------- router
-  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts']);
+  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read']);
 
   /** @param {Request} request  @param {{ clientId?: string }} [ctx] */
   async function handle(request, ctx = {}) {
@@ -338,6 +364,7 @@ export function createApi(rawEnv, deps = {}) {
           ok: true, needsCode: status.needsCode, authorized,
           azure: open && status.azure, claude: open && status.claude, gemini: open && status.gemini,
           ttsVersion: open && status.gemini ? status.ttsVersion : null,
+          read: open && status.read,
         });
       }
       if (!ROUTES.has(path)) return json(404, { error: 'not_found' });
@@ -346,6 +373,10 @@ export function createApi(rawEnv, deps = {}) {
 
       if (path === '/api/assess') {
         return await handleAssess(request, url, client);
+      }
+      if (path === '/api/read') {
+        if (!allowRead(client)) throw new HttpError(429, 'rate_limited');
+        return await handleRead(request);
       }
       if (path === '/api/tts') {
         if (!allowTts(client)) throw new HttpError(429, 'rate_limited');

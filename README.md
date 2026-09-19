@@ -110,6 +110,16 @@ look: no mascot while speaking, no confetti, plain unit names ("Food & Drink"), 
 Each learner picks courses (English, 普通話 Putonghua or both), an English accent (American default: the most detailed
 feedback), and for Mandarin, Traditional (default) or Simplified characters. Azure is always sent Simplified.
 
+## Say it right (type or photograph any text)
+
+Speak tab → **Say it right**: type or paste text, or take / choose a photo of a page (a book, a menu, a sign). The app
+lists its sentences; tap one to hear it, say it and get the same feedback as a lesson. English typed text is split on
+the device; photos and Chinese text go to `POST /api/read`, where Gemini reads the page and — for Chinese — gives each
+character in both scripts with its pinyin as read in context, which the server checks before it is used. Measured
+(`eval/README.md`): printed pages read with no wrong characters, clean or photographed at an angle in poor light;
+Chinese pinyin right for 107/107 course lines and 99.5% of syllables in tricky sentences (多音字 like 還 hái/huán).
+Needs the API (beta access code); photos are read, then discarded. Not added to the review schedule.
+
 ## Tablets
 
 From 760 px wide the app becomes a home learning screen: a side navigation rail, wider screens, grids for sounds,

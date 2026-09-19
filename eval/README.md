@@ -29,6 +29,11 @@ npx vite-node eval/report-zh.ts --cv    # Mandarin report; --cv = tone model nev
 npx vite-node eval/train-tone.ts        # tone model: leave-one-voice-out accuracy; --write regenerates src/speech/zh/toneModel.ts
 npx vite-node eval/sweep-zh.ts          # Mandarin thresholds: false alarms vs detection, single characters vs phrases
 npx vite-node eval/cold-zh.ts           # a new learner (no voice profile yet) vs a known voice
+npx vite-node eval/trim-check.ts        # trimming pauses: does any scored word fall outside what is kept?
+npx vite-node eval/clips.ts --plan      # word-clip checks: cut clips, list scorings → node eval/run-jobs.mjs → rerun
+                                         #   without --plan for the comparison (--pad=0.04 / 0.08 / 0.15)
+npx vite-node eval/dump-zh-items.ts     # then: node eval/read-check.mjs [--set=polyphones] — Chinese reading + pinyin
+node eval/ocr-check.mjs                 # photos of printed pages (clean / phone-like / harsh): characters read wrongly
 npx vite-node eval/alt-types-zh.ts      # each kind of "sounded like" swap: right vs false alarms (sets SWAP_TRUST)
 npx vite-node eval/teacher-check.ts     # tone check on the teacher's own recordings (Kore voice)
 npx vite-node eval/tone-shapes.ts       # measured pitch shape of each tone, per voice and position
@@ -53,6 +58,17 @@ phrases** — only 46% caught (single characters 88%), partly because Azure mark
 confusions Azure cannot hear at all (村 cūn / 春 chūn both 100) — a second scorer such as SpeechSuper would be the
 next step. Azure also can't tell ü from i for many voices, so those swaps are never named (`SWAP_TRUST`,
 `alt-types-zh.ts`). `sweep-zh.ts` shows the false-alarm/detection trade-off for the Mandarin thresholds.
+
+Say it right (reading text, `server/read.mjs`, Gemini 3.8 Flash): typed Chinese course lines 107/107 with Simplified,
+syllables and tones right (after telling it which syllables are light: 謝謝 xièxie); 30 tricky sentences (還 hái/huán,
+長 zhǎng/cháng, 得 de/děi…) 99.5% of syllables right; photographed pages (English, Traditional, Simplified; clean,
+tilted/grainy, and harsh with shadow and heavy blur) read with **no** wrong characters, 3–7 s a page.
+
+Cost checks: trimming pauses keeps every scored word (2,541 takes) and saves ~42%; word-clip checks for phrases and
+sentences — see server/README.md.
+
+**Network note:** on this machine vite-node stalls on repeated outbound connections (plain Node doesn't), so the scripts
+that make many API calls either run under plain Node (`.mjs`) or plan their calls and hand them to `run-jobs.mjs`.
 
 ## Real voices (volunteers)
 

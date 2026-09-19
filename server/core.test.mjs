@@ -68,3 +68,12 @@ describe('assess helpers', () => {
     expect((await res.json()).error).toBe('invalid_alts');
   });
 });
+
+describe('reading text', () => {
+  it('needs a Gemini key and something to read', async () => {
+    expect((await post(createApi({ AZURE_SPEECH_KEY: 'k', AZURE_SPEECH_REGION: 'eastasia' }), '/api/read', JSON.stringify({ text: 'hi' }), { 'content-type': 'application/json' })).status).toBe(503);
+    const api = createApi(KEYS);
+    expect((await post(api, '/api/read', JSON.stringify({ text: '  ' }), { 'content-type': 'application/json' })).status).toBe(400);
+    expect((await post(api, '/api/read', new Uint8Array(10), { 'content-type': 'image/jpeg' })).status).toBe(400);
+  });
+});

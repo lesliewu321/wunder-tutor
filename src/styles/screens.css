@@ -270,3 +270,19 @@
 .course-toggles { display: flex; gap: 6px; }
 .chip--sm { min-height: 36px; padding: 0 12px; font-size: 0.9rem; }
 .home__cols, .home__main { display: flex; flex-direction: column; gap: 16px; }
+
+/* ---------- Say it right: type or photograph any text ---------- */
+.row-link--say { margin: 4px 0 6px; text-align: left; }
+.say__input { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.say__text { min-height: 120px; padding: 12px 14px; resize: vertical; line-height: 1.45; font-family: var(--font-body); }
+.say__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.say__lines { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+.say__line { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: var(--surface); border-radius: var(--r-lg); padding: 14px 16px; box-shadow: var(--shadow-card); color: var(--ink-faint); }
+.say__line:disabled { opacity: 0.55; }
+.say__line small { flex: none; font-size: 0.8rem; }
+.say__line-text { flex: 1; min-width: 0; color: var(--ink); font-weight: 700; font-size: 1.1rem; line-height: 1.4; }
+.say__actions .btn { white-space: nowrap; padding-left: 10px; padding-right: 10px; font-size: 0.95rem; gap: 6px; }
+/* Chinese sentences in the list: characters big enough for their pinyin to sit neatly over each one. */
+.say__line-text .zh { font-size: 1.45rem; line-height: 2.1; }
+.say__line-text .zh__py { font-size: 0.5em; }
+.say__line-text .zh__char { padding: 0 0.05em; }

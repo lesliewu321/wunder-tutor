@@ -1,4 +1,5 @@
 import { trackPitch, type PitchTrack } from './pitch';
+import { encodeWav, speechWindow } from './wav';
 import { SpeechError, type AudioAnalysis, type Recording } from './types';
 
 export interface RecorderOptions {
@@ -94,19 +95,23 @@ export class MicRecorder {
     let analysis: AudioAnalysis = { durationMs, speechMs: 0, peak: 0, speechRms: 0, noiseRms: 0 };
     let wav: Blob | undefined;
     let pitch: PitchTrack | null = null;
+    let pcm: Float32Array | undefined;
     try {
       const decoded = await decode(blob);
       analysis = analyse(decoded.getChannelData(0), decoded.sampleRate);
       const out = await toWav16k(decoded);
-      wav = out.wav;
+      // The scorer bills for every second it hears: send the speech with a safe margin, not the pauses around it.
+      const [from, to] = speechWindow(out.pcm);
+      pcm = out.pcm.subarray(from, to);
+      wav = new Blob([encodeWav(pcm)], { type: 'audio/wav' });
       // Measured on exactly the audio the scorer receives, so its syllable timings line up with this track.
-      try { pitch = trackPitch(out.pcm, 16000); } catch { pitch = null; }
+      try { pitch = trackPitch(pcm, 16000); } catch { pitch = null; }
     } catch {
       // Some browsers cannot decode their own MediaRecorder output; fall back to duration only
       // and let the provider judge the audio.
       analysis = { durationMs, speechMs: durationMs * 0.6, peak: 0.5, speechRms: 0.1, noiseRms: 0.005 };
     }
-    return { blob, wav, pitch, analysis, simulated: false };
+    return { blob, wav, pcm, pitch, analysis, simulated: false };
   }
 
   /** Abort without producing a recording (child left the screen, pressed back, …). */
@@ -162,17 +167,7 @@ const toWav16k = async (buffer: AudioBuffer): Promise<{ wav: Blob; pcm: Float32A
   src.connect(offline.destination);
   src.start();
   const pcm = (await offline.startRendering()).getChannelData(0);
-  const view = new DataView(new ArrayBuffer(44 + pcm.length * 2));
-  const str = (o: number, s: string) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
-  str(0, 'RIFF'); view.setUint32(4, 36 + pcm.length * 2, true); str(8, 'WAVE'); str(12, 'fmt ');
-  view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
-  view.setUint32(24, rate, true); view.setUint32(28, rate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
-  str(36, 'data'); view.setUint32(40, pcm.length * 2, true);
-  for (let i = 0; i < pcm.length; i++) {
-    const s = Math.max(-1, Math.min(1, pcm[i]));
-    view.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
-  }
-  return { wav: new Blob([view], { type: 'audio/wav' }), pcm };
+  return { wav: new Blob([encodeWav(pcm, rate)], { type: 'audio/wav' }), pcm };
 };
 
 /** A stored recording (whatever the browser recorded) as 16 kHz mono WAV — for sharing recordings for testing. */

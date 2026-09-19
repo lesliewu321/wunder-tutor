@@ -129,12 +129,19 @@ export async function assess({ wav, reference, locale, extra = {} }) {
   const key = sha({ audio: sha(wav.toString('base64')), params, locale });
   const file = join(CACHE, 'azure', `${key}.json`);
   if (existsSync(file)) return JSON.parse(readFileSync(file, 'utf8'));
+  if (process.env.EVAL_OFFLINE) throw new Error('not cached (offline run)');
   let last;
-  for (let attempt = 0; attempt < 4; attempt++) {
-    const res = await fetch(`https://${env.AZURE_SPEECH_REGION}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=${locale}&format=detailed`, {
-      method: 'POST', body: wav,
-      headers: { 'Ocp-Apim-Subscription-Key': env.AZURE_SPEECH_KEY, 'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000', Accept: 'application/json', 'Pronunciation-Assessment': Buffer.from(JSON.stringify(params)).toString('base64') },
-    });
+  for (let attempt = 0; attempt < 5; attempt++) {
+    let res;
+    try {
+      res = await fetch(`https://${env.AZURE_SPEECH_REGION}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=${locale}&format=detailed`, {
+        method: 'POST', body: wav, signal: AbortSignal.timeout(20000),
+        headers: { 'Ocp-Apim-Subscription-Key': env.AZURE_SPEECH_KEY, 'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000', Accept: 'application/json', 'Pronunciation-Assessment': Buffer.from(JSON.stringify(params)).toString('base64') },
+      });
+    } catch (e) {
+      // A dropped or stalled connection: try again rather than lose the case.
+      last = e; await new Promise((r) => setTimeout(r, 1500 * (attempt + 1))); continue;
+    }
     if (res.status === 429 || res.status >= 500) { last = new Error(`azure ${res.status}`); await new Promise((r) => setTimeout(r, 2000 * (attempt + 1))); continue; }
     if (!res.ok) throw new Error(`azure ${res.status}`);
     const json = await res.json();

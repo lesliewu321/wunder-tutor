@@ -12,6 +12,14 @@
       "autoPort": true
     },
     {
+      "name": "wunder-api",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "server/index.mjs"
+      ],
+      "port": 8787
+    },
+    {
       "name": "wundertutor-website",
       "runtimeExecutable": "npm",
       "runtimeArgs": [

@@ -10,9 +10,11 @@ export interface ApiHealth {
   needsCode: boolean;
   /** …and the code stored on this device was accepted. */
   authorized: boolean;
+  /** "Say it right" can read photos and prepare typed text (Gemini). */
+  read: boolean;
 }
 
-const NONE: ApiHealth = { azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false };
+const NONE: ApiHealth = { azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, read: false };
 const CODE_KEY = 'wunder-tutor/access-code';
 const ACCESS_HEADER = 'x-wunder-access';
 
@@ -39,14 +41,15 @@ export const apiHealth = (): Promise<ApiHealth> => {
   health ??= (async () => {
     try {
       const ctl = new AbortController();
-      const t = setTimeout(() => ctl.abort(), 2500);
+      // Generous: on a slow phone connection a short wait would silently drop the learner into simulated scores.
+      const t = setTimeout(() => ctl.abort(), 8000);
       const res = await apiFetch('/api/health', { signal: ctl.signal });
       clearTimeout(t);
       if (!res.ok || !res.headers.get('content-type')?.includes('json')) return NONE;
       const j = await res.json();
       return {
         azure: !!j.azure, claude: !!j.claude, gemini: !!j.gemini, ttsVersion: typeof j.ttsVersion === 'string' ? j.ttsVersion : '',
-        needsCode: !!j.needsCode, authorized: !!j.authorized,
+        needsCode: !!j.needsCode, authorized: !!j.authorized, read: !!j.read,
       };
     } catch {
       return NONE;

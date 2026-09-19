@@ -33,6 +33,8 @@ export interface Recording {
   blob?: Blob;
   /** 16 kHz mono PCM WAV for the assessment provider. */
   wav?: Blob;
+  /** The same audio as samples (speech plus a margin — the pauses around it are trimmed). */
+  pcm?: Float32Array;
   /** Pitch of the take, measured on the device (the same 16 kHz audio the scorer hears) — for Mandarin tones. */
   pitch?: PitchTrack | null;
   analysis: AudioAnalysis;

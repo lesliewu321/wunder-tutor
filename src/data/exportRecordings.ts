@@ -66,9 +66,12 @@ export async function buildRecordingExport(
       const blob = await load(a.audioKey);
       if (!blob) { skipped++; continue; }
       const wav = new Uint8Array(await (await toWav(blob)).arrayBuffer());
+      // Course items are looked up; "Say it right" text isn't in the course, so it is described by its own take.
       const item = ITEM_INDEX[a.itemId];
+      const chinese = /\p{Script=Han}/u.test(a.text);
+      const py = item?.zh?.py ?? (chinese ? a.assessment.words.map((w) => w.syllables[0]?.zh?.py).filter(Boolean).join(' ') || undefined : undefined);
       takes.push({
-        itemId: a.itemId, text: a.text, py: item?.zh?.py, locale: item?.lang ?? profile.accent, context: a.context,
+        itemId: a.itemId, text: a.text, py, locale: item?.lang ?? (chinese ? 'zh-CN' : profile.accent), context: a.context,
         at: new Date(a.createdAt).toISOString(), assessment: a.assessment, wav: base64(wav),
       });
     } catch { skipped++; }
