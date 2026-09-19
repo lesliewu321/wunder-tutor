@@ -303,8 +303,18 @@ const fromEasy = (category: 'consonant' | 'vowel') => (e: Easy): PhonemeInfo => 
   };
 };
 
+// Hong Kong Cantonese speakers: the usual trouble spots in English, and what tends to come out instead.
+const CANTONESE: Record<PhonemeId, { boost: number; heardAs?: PhonemeId }> = {
+  'θ': { boost: 0.12, heardAs: 'f' }, 'ð': { boost: 0.12, heardAs: 'd' }, v: { boost: 0.2, heardAs: 'w' }, r: { boost: 0.14, heardAs: 'w' },
+  n: { boost: 0.3, heardAs: 'l' }, l: { boost: 0.14, heardAs: 'n' }, z: { boost: 0.22, heardAs: 's' }, 'ʃ': { boost: 0.18, heardAs: 's' },
+  'ʒ': { boost: 0.15, heardAs: 'ʃ' }, 'æ': { boost: 0.12, heardAs: 'ɛ' }, 'ɪ': { boost: 0.12, heardAs: 'i' }, 'ʊ': { boost: 0.08, heardAs: 'u' },
+  t: { boost: 0.14, heardAs: '∅' }, d: { boost: 0.16, heardAs: '∅' }, k: { boost: 0.12, heardAs: '∅' }, p: { boost: 0.08, heardAs: '∅' },
+  's': { boost: 0.06, heardAs: '∅' }, 'dʒ': { boost: 0.08, heardAs: 'tʃ' }, 'eɪ': { boost: 0.06, heardAs: 'ɛ' },
+};
+
 export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries(
-  [...list, ...easyConsonants.map(fromEasy('consonant')), ...vowels.map(fromEasy('vowel'))].map((p) => [p.id, p]),
+  [...list, ...easyConsonants.map(fromEasy('consonant')), ...vowels.map(fromEasy('vowel'))]
+    .map((p) => [p.id, CANTONESE[p.id] ? { ...p, l1: { ...p.l1, yue: CANTONESE[p.id] } } : p]),
 );
 
 export const phonemeInfo = (id: PhonemeId): PhonemeInfo =>

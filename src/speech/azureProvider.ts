@@ -1,4 +1,5 @@
-import type { Assessment, WordErrorType, WordScore } from '../domain/types';
+import type { Accent, Assessment, PhonemeScore, WordErrorType, WordScore } from '../domain/types';
+import { alignmentCandidates } from '../content/lexicon';
 import { apiFetch } from './health';
 import { SpeechError, type AssessContext, type PronunciationProvider, type Recording } from './types';
 
@@ -27,7 +28,20 @@ const errorType = (t?: string): WordErrorType => {
   }
 };
 
-export const mapAzure = (json: AzureResponse, referenceText: string, fallbackDurationMs: number): Assessment => {
+/**
+ * Azure scores every phoneme in every locale but only *names* them for en-US. For British English the scores arrive
+ * in order with empty names, so we line them up with our own pronunciation of the word. Silent-R slots are dropped:
+ * a British learner must never be coached on an R they are right not to say. No confident alignment → leave unnamed,
+ * and the feedback layer falls back to word-level advice rather than naming the wrong sound.
+ */
+const namePhonemes = (word: string, scored: PhonemeScore[], accent: Accent): PhonemeScore[] => {
+  if (!scored.length || scored.some((p) => p.phoneme)) return scored;
+  const fit = alignmentCandidates(word, accent).find((c) => c.phonemes.length === scored.length);
+  if (!fit) return scored;
+  return scored.map((p, i) => ({ ...p, phoneme: fit.phonemes[i] })).filter((_, i) => !fit.silent[i]);
+};
+
+export const mapAzure = (json: AzureResponse, referenceText: string, fallbackDurationMs: number, accent: Accent = 'en-US'): Assessment => {
   if (json.RecognitionStatus && json.RecognitionStatus !== 'Success') {
     throw new SpeechError(/silence|nomatch/i.test(json.RecognitionStatus) ? 'no-speech' : 'service', json.RecognitionStatus);
   }
@@ -39,7 +53,7 @@ export const mapAzure = (json: AzureResponse, referenceText: string, fallbackDur
     score: Math.round(w.AccuracyScore ?? w.PronunciationAssessment?.AccuracyScore ?? 0),
     errorType: errorType(w.ErrorType ?? w.PronunciationAssessment?.ErrorType),
     syllables: (w.Syllables ?? []).map((y) => ({ text: y.Grapheme ?? y.Syllable ?? '', score: Math.round(y.AccuracyScore ?? y.PronunciationAssessment?.AccuracyScore ?? 0) })),
-    phonemes: (w.Phonemes ?? []).map((p) => ({ phoneme: normalise(p.Phoneme ?? ''), score: Math.round(p.AccuracyScore ?? p.PronunciationAssessment?.AccuracyScore ?? 0) })),
+    phonemes: namePhonemes(w.Word, (w.Phonemes ?? []).map((p) => ({ phoneme: normalise(p.Phoneme ?? ''), score: Math.round(p.AccuracyScore ?? p.PronunciationAssessment?.AccuracyScore ?? 0) })), accent),
   }));
   // PronScore folds in prosody, which is meaningless for one word: a perfect "three" came back as
   // accuracy 100 / PronScore 88. For single words the accuracy of the sounds is the score.
@@ -84,6 +98,6 @@ export class AzurePronunciationProvider implements PronunciationProvider {
     }
     if (res.status === 504) throw new SpeechError('timeout');
     if (!res.ok) throw new SpeechError('service', `assess ${res.status}`);
-    return mapAzure((await res.json()) as AzureResponse, referenceText, rec.analysis.durationMs);
+    return mapAzure((await res.json()) as AzureResponse, referenceText, rec.analysis.durationMs, ctx.accent);
   }
 }

@@ -4,7 +4,8 @@
 
 export type AgeBand = 'little' | 'junior' | 'teen';
 export type Accent = 'en-US' | 'en-GB';
-export type HomeLanguage = 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'hi' | 'ar' | 'other';
+/** 'yue' = Cantonese, 'zh' = Mandarin — their speakers make different mistakes in English, so they are kept apart. */
+export type HomeLanguage = 'yue' | 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'hi' | 'ar' | 'other';
 export type Level = 'new' | 'some' | 'confident';
 export type Goal = 'school' | 'travel' | 'fun' | 'friends';
 

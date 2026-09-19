@@ -105,7 +105,7 @@ export function Conversation() {
       let next = [...lines, mine];
       // Let the conversation flow: at most two gentle tips, and only for a clearly mispronounced word.
       const fi = focusWordIndex(assessment);
-      const c = fi >= 0 ? correctionFor(assessment.words[fi], p.band) : null;
+      const c = fi >= 0 ? correctionFor(assessment.words[fi], p.band, p.homeLanguage) : null;
       let note: string | undefined;
       if (c && c.kind === 'sound' && c.score < 60 && tips.current < 2) {
         tips.current += 1;

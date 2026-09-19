@@ -1,4 +1,4 @@
-import type { AgeBand, Assessment, PhonemeId, WordScore } from '../domain/types';
+import type { AgeBand, Assessment, HomeLanguage, PhonemeId, WordScore } from '../domain/types';
 import { phonemeInfo, soundLabel, tipFor } from '../content/phonemes';
 
 /** Substitutions that aren't English sounds get a plain description instead of a symbol. */
@@ -13,7 +13,8 @@ export const tier = (score: number): Tier => (score >= GOOD ? 'good' : score >= 
 export interface Correction {
   word: string;
   score: number;
-  kind: 'sound' | 'omission' | 'insertion' | 'fine';
+  /** 'word' = the scorer marked the word down but we can't say which sound (unnamed and not alignable). */
+  kind: 'sound' | 'word' | 'omission' | 'insertion' | 'fine';
   phoneme?: PhonemeId;
   heardAs?: PhonemeId;
   /** What went wrong, in one short sentence. */
@@ -25,7 +26,7 @@ export interface Correction {
 }
 
 /** Turn provider numbers into something a child can act on: exact sound, what happened, what to do. */
-export const correctionFor = (w: WordScore, band: AgeBand): Correction => {
+export const correctionFor = (w: WordScore, band: AgeBand, home?: HomeLanguage): Correction => {
   if (w.errorType === 'omission') {
     return {
       word: w.word, score: w.score, kind: 'omission',
@@ -37,8 +38,17 @@ export const correctionFor = (w: WordScore, band: AgeBand): Correction => {
     return { word: w.word, score: w.score, kind: 'insertion', problem: `I heard an extra word: “${w.word}”.`, tip: 'Say just the words on the screen.' };
   }
   const worst = [...w.phonemes].sort((a, b) => a.score - b.score)[0];
-  if (!worst || worst.score >= GOOD) {
+  // A clean word is fine. A word the scorer marked down is not, even if every sound individually looks passable.
+  if (!worst || (worst.score >= GOOD && w.score >= GOOD)) {
     return { word: w.word, score: w.score, kind: 'fine', problem: 'This word sounded clear.', tip: 'Keep saying it just like that!' };
+  }
+  if (!worst.phoneme) {
+    // Never guess a sound's name. Honest word-level advice beats confident advice about the wrong sound.
+    return {
+      word: w.word, score: w.score, kind: 'word',
+      problem: band === 'little' ? `“${w.word}” wasn’t quite clear.` : `“${w.word}” wasn’t quite clear yet.`,
+      tip: 'Tap Slow, listen to each part of the word, then say it just as slowly.',
+    };
   }
   const info = phonemeInfo(worst.phoneme);
   const me = band === 'teen' ? `/${worst.phoneme}/` : `“${info.label}”`;
@@ -48,6 +58,16 @@ export const correctionFor = (w: WordScore, band: AgeBand): Correction => {
     const foreign = FOREIGN_SOUNDS[worst.heardAs];
     const other = foreign ?? (band === 'teen' ? `/${worst.heardAs}/` : `“${soundLabel(worst.heardAs)}”`);
     problem = band === 'little' || foreign ? `Your ${me} sounded like ${other}.` : `Your ${me} sounded closer to ${other}.`;
+  } else {
+    // The scorer knows the sound was off but not what came out instead (Azure only reports that for en-US).
+    // The learner's home language tells us the usual culprit — offered as a likelihood, never as a fact.
+    const usual = home ? info.l1?.[home]?.heardAs : undefined;
+    if (usual && usual !== '∅' && !FOREIGN_SOUNDS[usual]) {
+      const other = band === 'teen' ? `/${usual}/` : `“${soundLabel(usual)}”`;
+      problem = band === 'little' ? `Your ${me} wasn’t clear. Careful — it likes to turn into ${other}!` : `Your ${me} wasn’t clear. Careful — it easily turns into ${other}.`;
+    } else if (usual === '∅') {
+      problem = `Your ${me} wasn’t clear — make sure it doesn’t disappear.`;
+    }
   }
   return {
     word: w.word, score: w.score, kind: 'sound', phoneme: worst.phoneme, heardAs: worst.heardAs,

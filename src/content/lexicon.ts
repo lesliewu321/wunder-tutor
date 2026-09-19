@@ -39,6 +39,11 @@ const RAW: Record<string, string> = {
   la: 'la|l ɑ', lee: 'lee|l i', loo: 'loo|l u',
 };
 
+/** Words whose British pronunciation differs by more than R-dropping. */
+const RAW_GB: Record<string, string> = {
+  restaurant: 'res.taurant|r ɛ s . t r ɑ n t',
+};
+
 export interface SyllablePhones { text: string; phonemes: PhonemeId[] }
 export interface WordPhones { word: string; key: string; syllables: SyllablePhones[] }
 
@@ -85,13 +90,42 @@ export const tokenize = (text: string): string[] =>
 
 export const wordPhones = (word: string, accent: Accent): WordPhones => {
   const key = wordKey(word);
-  const raw = RAW[key];
+  const raw = (accent === 'en-GB' && RAW_GB[key]) || RAW[key];
   const map = (phs: string[]) => phs.map((p) => forAccent(p, accent)).filter((p): p is string => !!p);
   if (!raw) return { word, key, syllables: [{ text: word, phonemes: map(guess(key)) }] };
   const [sylText, phones] = raw.split('|');
   const texts = sylText.split('.');
   const groups = phones.split(' . ').map((g) => map(g.trim().split(/\s+/)));
   return { word, key, syllables: groups.map((phonemes, i) => ({ text: texts[i] ?? '', phonemes })) };
+};
+
+export interface AlignmentCandidate { phonemes: PhonemeId[]; /** Slots a scorer may report but that must never be coached (a British silent R). */ silent: boolean[] }
+
+/**
+ * Phoneme sequences a scorer might have used for a word, for putting names on unnamed per-phoneme scores
+ * (Azure names phonemes only for en-US). Measured against Azure en-GB on the lesson vocabulary: 93% of words
+ * match the British sequence outright; the rest keep a slot for post-vocalic R ("turn" = t ɜ r n), which is the
+ * second candidate here. Unknown words return nothing — a guessed spelling-to-sound mapping must not name sounds.
+ */
+export const alignmentCandidates = (word: string, accent: Accent): AlignmentCandidate[] => {
+  const key = wordKey(word);
+  const raw = (accent === 'en-GB' && RAW_GB[key]) || RAW[key];
+  if (!raw) return [];
+  const tokens = raw.split('|')[1].split(/\s+/).filter((t) => t && t !== '.');
+  const plain = tokens.map((t) => forAccent(t, accent)).filter((t): t is string => !!t);
+  const out: AlignmentCandidate[] = [{ phonemes: plain, silent: plain.map(() => false) }];
+  if (accent === 'en-GB') {
+    const phonemes: string[] = [];
+    const silent: boolean[] = [];
+    for (const t of tokens) {
+      if (t === 'r~') { phonemes.push('r'); silent.push(true); }
+      else if (t === 'ɚ') { phonemes.push('ə', 'r'); silent.push(false, true); }
+      else if (t === 'ɝ') { phonemes.push('ɜ', 'r'); silent.push(false, true); }
+      else { phonemes.push(t); silent.push(false); }
+    }
+    if (phonemes.length !== plain.length) out.push({ phonemes, silent });
+  }
+  return out;
 };
 
 export const textPhones = (text: string, accent: Accent): WordPhones[] => tokenize(text).map((w) => wordPhones(w, accent));

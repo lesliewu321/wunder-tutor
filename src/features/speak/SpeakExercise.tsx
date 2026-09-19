@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { AgeBand, Assessment, Attempt, PhonemeId, SpeakItem } from '../../domain/types';
+import type { AgeBand, Assessment, Attempt, HomeLanguage, PhonemeId, SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
 import { translationFor } from '../../content/translations';
 import { isMastered, MAX_TRIES } from '../../engine/learning';
@@ -110,7 +110,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     stopPlayback();
     void voice.speak(text, { accent: profile.accent }).catch(() => undefined);
   }, [profile.accent]);
-  const tipToSay = current && view === 'result' && band === 'little' ? spokenTip(current.assessment, band) : null;
+  const tipToSay = current && view === 'result' && band === 'little' ? spokenTip(current.assessment, band, profile.homeLanguage) : null;
   useEffect(() => {
     if (!tipToSay) return;
     const t = window.setTimeout(() => sayTip(tipToSay), 1100);
@@ -132,14 +132,14 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     if (mode !== 'check') finishItem(item, best, everMastered, takes.length);
     const first = takes[0].assessment;
     const fi = focusWordIndex(first);
-    const c = fi >= 0 ? correctionFor(first.words[fi], band) : null;
+    const c = fi >= 0 ? correctionFor(first.words[fi], band, profile.homeLanguage) : null;
     onDone({ best, first: first.overall, mastered: everMastered, tries: takes.length, troubleSound: takes.length > 1 || !everMastered ? c?.phoneme : undefined });
   };
 
   const busy = take.phase !== 'idle';
   const phase: View | 'listening' | 'processing' = take.phase === 'idle' ? view : take.phase;
   const focusIdx = current ? focusWordIndex(current.assessment) : -1;
-  const focus = current && focusIdx >= 0 ? correctionFor(current.assessment.words[focusIdx], band) : null;
+  const focus = current && focusIdx >= 0 ? correctionFor(current.assessment.words[focusIdx], band, profile.homeLanguage) : null;
   const single = !!current && current.assessment.words.length === 1;
   const focusPhonemeScore = current && focusIdx >= 0 ? Math.min(...current.assessment.words[focusIdx].phonemes.map((ph) => ph.score), 100) : undefined;
   const fixed = current && previous ? soundFixed(previous.assessment, current.assessment, band) : null;
@@ -281,7 +281,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
 
       {current && sheetWord != null && phase === 'result' && (
         <WordSheet
-          word={current.assessment.words[sheetWord]} band={band} onClose={() => setSheetWord(null)}
+          word={current.assessment.words[sheetWord]} band={band} home={profile.homeLanguage} onClose={() => setSheetWord(null)}
           onListen={(slow) => void voice.speak(current.assessment.words[sheetWord].word, { accent: profile.accent, slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
           onHearMe={() => void play('now')}
           onHearTip={sayTip}
@@ -292,10 +292,10 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   );
 }
 
-const spokenTip = (a: Assessment, band: AgeBand): string | null => {
+const spokenTip = (a: Assessment, band: AgeBand, home?: HomeLanguage): string | null => {
   const i = focusWordIndex(a);
   if (i < 0) return a.overall >= GOOD ? 'Great job!' : null;
-  const c = correctionFor(a.words[i], band);
+  const c = correctionFor(a.words[i], band, home);
   return c.kind === 'fine' ? 'Great job!' : c.tip;
 };
 

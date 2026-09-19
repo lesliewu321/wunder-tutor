@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { AgeBand, WordScore } from '../../domain/types';
+import type { AgeBand, HomeLanguage, WordScore } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
 import { correctionFor, tier } from '../../tutor/feedback';
 import { Button, Sheet } from '../../ui/kit';
@@ -9,6 +9,7 @@ import { Mouth } from '../../ui/Mouth';
 interface Props {
   word: WordScore;
   band: AgeBand;
+  home?: HomeLanguage;
   onClose: () => void;
   onListen: (slow: boolean) => void;
   onHearMe: () => void;
@@ -17,9 +18,9 @@ interface Props {
 }
 
 /** Diagnose → teach for a single word: the exact sound, what happened, what to do with your mouth. */
-export function WordSheet({ word, band, onClose, onListen, onHearMe, onHearTip, onRetry }: Props) {
+export function WordSheet({ word, band, home, onClose, onListen, onHearMe, onHearTip, onRetry }: Props) {
   const [more, setMore] = useState(false);
-  const c = correctionFor(word, band);
+  const c = correctionFor(word, band, home);
   const info = c.phoneme ? phonemeInfo(c.phoneme) : null;
 
   return (

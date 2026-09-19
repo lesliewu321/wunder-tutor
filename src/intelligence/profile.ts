@@ -34,6 +34,7 @@ export const applyAssessment = (
   const seen = new Map<PhonemeId, { score: number; heardAs?: PhonemeId }>();
   for (const w of a.words) {
     for (const p of w.phonemes) {
+      if (!p.phoneme) continue; // unnamed by the scorer and not alignable — nothing to remember
       const cur = seen.get(p.phoneme);
       if (!cur || p.score < cur.score) seen.set(p.phoneme, { score: p.score, heardAs: p.heardAs });
     }

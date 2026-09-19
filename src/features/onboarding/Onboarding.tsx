@@ -44,7 +44,7 @@ export function Onboarding() {
   const [age, setAge] = useState<number | null>(null);
   const [level, setLevel] = useState<Level | null>(null);
   const [goal, setGoal] = useState<Goal | null>(null);
-  const [accent, setAccent] = useState<Accent>('en-US');
+  const [accent, setAccent] = useState<Accent>('en-GB'); // Hong Kong schools teach British English
   const [keepRecordings, setKeepRecordings] = useState(settings.storeRecordings);
   const [agreed, setAgreed] = useState(false);
   const [checkIndex, setCheckIndex] = useState(0);
@@ -154,7 +154,7 @@ export function Onboarding() {
     case 'accent':
       return shell(
         <div className="stack">
-          {([['en-US', 'US', 'American English', 'water sounds like “wah-der”'], ['en-GB', 'UK', 'British English', 'water sounds like “waw-tuh”']] as const).map(([id, flag, title, detail]) => (
+          {([['en-GB', 'UK', 'British English', 'water sounds like “waw-tuh”'], ['en-US', 'US', 'American English', 'water sounds like “wah-der”']] as const).map(([id, flag, title, detail]) => (
             <button key={id} type="button" className={`tile tile--wide ${accent === id ? 'is-on' : ''}`} aria-pressed={accent === id}
               onClick={() => { setAccent(id); void voice.speak('Hello! I would like some water, please.', { accent: id }).catch(() => undefined); }}>
               <span className="code-badge">{flag}</span><span><b>{title}</b><small>{detail}</small></span><span className="tile__aside" aria-hidden>🔈</span>

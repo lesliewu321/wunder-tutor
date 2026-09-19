@@ -86,3 +86,61 @@ describe('Azure — live response fixtures', () => {
     expect(isMastered(a, 'little')).toBe(false);
   });
 });
+
+// ---- British English: Azure scores every sound but names none of them (live en-GB responses) ----
+import gbSentence from './fixtures/azure-gb-sentence.json';
+import gbThirsty from './fixtures/azure-gb-thirsty.json';
+import gbThreeSaidFree from './fixtures/azure-gb-three-said-free.json';
+import { alignmentCandidates } from '../content/lexicon';
+import { applyAssessment, emptyProfile } from '../intelligence/profile';
+
+describe('Azure — British English alignment', () => {
+  it('confirms the premise: en-GB phonemes arrive unnamed', () => {
+    const raw = gbSentence.NBest[0].Words.flatMap((w) => w.Phonemes.map((p) => p.Phoneme));
+    expect(raw.every((name) => !name)).toBe(true);
+  });
+
+  it('names them from our own British pronunciations', () => {
+    const a = mapAzure(gbSentence, 'Can I have some water, please?', 0, 'en-GB');
+    const sounds = Object.fromEntries(a.words.map((w) => [w.word.toLowerCase(), w.phonemes.map((p) => p.phoneme).join(' ')]));
+    expect(sounds.can).toBe('k æ n');
+    expect(sounds.have).toBe('h æ v');
+    expect(sounds.please).toBe('p l i z');
+    expect(a.words.flatMap((w) => w.phonemes).every((p) => p.phoneme)).toBe(true);
+  });
+
+  it('never coaches a British learner on a silent R', () => {
+    // Azure's en-GB model keeps a slot for post-vocalic R: "water" has 5 scores, "thirsty" 6.
+    const water = mapAzure(gbSentence, 'Can I have some water, please?', 0, 'en-GB').words.find((w) => w.word.toLowerCase() === 'water')!;
+    expect(gbSentence.NBest[0].Words.find((w) => w.Word.toLowerCase() === 'water')!.Phonemes).toHaveLength(5);
+    expect(water.phonemes.map((p) => p.phoneme)).toEqual(['w', 'ɔ', 't', 'ə']);
+
+    const thirsty = mapAzure(gbThirsty, 'thirsty', 0, 'en-GB').words[0];
+    expect(thirsty.phonemes.map((p) => p.phoneme)).toEqual(['θ', 'ɜ', 's', 't', 'i']);
+    expect(alignmentCandidates('turn', 'en-GB').map((c) => c.phonemes.join(' '))).toEqual(['t ɜ n', 't ɜ r n']);
+    expect(alignmentCandidates('turn', 'en-US')).toHaveLength(1);
+  });
+
+  it('catches the classic Hong Kong "free" for "three" and says so honestly', () => {
+    const a = mapAzure(gbThreeSaidFree, 'three', 0, 'en-GB');
+    expect(a.words[0].phonemes[0].phoneme).toBe('θ');
+    expect(a.words[0].phonemes[0].score).toBeLessThan(a.words[0].phonemes[1].score); // the first sound is the weak one
+    expect(isMastered(a, 'junior')).toBe(false);
+
+    const c = correctionFor(a.words[0], 'junior', 'yue');
+    expect(c).toMatchObject({ kind: 'sound', phoneme: 'θ' });
+    expect(c.problem).toBe('Your “th” wasn’t clear. Careful — it easily turns into “f”.'); // likelihood, not a claim about what was heard
+    expect(c.tip).toMatch(/between your teeth/);
+    // A Mandarin-speaking child gets the Mandarin pattern instead.
+    expect(correctionFor(a.words[0], 'junior', 'zh').problem).toContain('“s”');
+  });
+
+  it('gives honest word-level advice when a sound cannot be named, and remembers nothing false', () => {
+    const unknown = mapAzure({ RecognitionStatus: 'Success', NBest: [{ AccuracyScore: 55, PronScore: 55, Words: [{ Word: 'zebra', AccuracyScore: 55, ErrorType: 'None', Phonemes: [{ AccuracyScore: 40 }, { AccuracyScore: 90 }] }] }] }, 'zebra', 0, 'en-GB');
+    expect(unknown.words[0].phonemes.map((p) => p.phoneme)).toEqual(['', '']);
+    const c = correctionFor(unknown.words[0], 'junior', 'yue');
+    expect(c.kind).toBe('word');
+    expect(c.phoneme).toBeUndefined();
+    expect(Object.keys(applyAssessment(emptyProfile(), unknown, 0, false).profile.phonemes)).toEqual([]);
+  });
+});
