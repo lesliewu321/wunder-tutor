@@ -21,8 +21,8 @@ A pronunciation-first language tutor. Core loop:
 
 | Thing | Where |
 | --- | --- |
-| Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — **7 commits not pushed** (push only when Leslie asks) |
-| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Not redeployed since the Mandarin work** — hosted app is older than `main` |
+| Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — pushed 2026-09-19 at Leslie's request (push only when asked) |
+| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. Deployed 2026-09-19 with adult mode, tablet layout and the Mandarin course (`npm run deploy`; a GitHub push does NOT deploy) |
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
@@ -113,7 +113,9 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
 1. **Cost at scale:** each take is scored 1–6× (likely-mistake checks + British dual scoring) → ~10 s of billed Azure
    audio per 2.5 s take. Scoring only the checked word for the extra scorings would roughly halve it. Decide before
    scale; Azure commitment tiers help too.
-2. **Redeploy** the hosted app (`npm run deploy`) once Leslie wants the Mandarin course online.
+2. **Volunteers** (Leslie is recruiting children; trying adult mode first): parents use Share recordings for testing →
+   files go in `eval/volunteers/` (gitignored) → `npx vite-node eval/volunteers.ts` → label `manifest.csv` → measure.
+   Real scoring on the hosted app needs the right beta access code (item 3).
 3. **`BETA_ACCESS_CODE` on Cloudflare may be wrong** (masked value ~84 chars ≈ the Azure key length). Until a known
    passphrase is set and entered in Parent Zone → Beta access, the hosted app runs in practice mode.
 4. `hello@wundertutor.com` printed on the site but no mailbox (suggest Cloudflare Email Routing).

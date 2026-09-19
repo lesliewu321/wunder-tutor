@@ -123,6 +123,9 @@ path), and in landscape the speaking screen sits side by side (what to say and t
 - The mic is live only while the button is red; it releases after every take.
 - Recordings stay on the device (newest 3 per phrase), stored separately from scores. They can be turned off,
   deleted alone, deleted with all pronunciation history, or wiped with the profile/account.
+- **Share recordings for testing** (Parent Zone / Settings & privacy): after a consent tick, a grown-up can save the
+  learner's recordings, the text and the app's scores to one file — no name, a learner code instead — and choose to
+  send it to the Wunder Tutor team. Nothing is uploaded by the app. `eval/volunteers.ts` unpacks such files.
 
 ## Known limitations
 

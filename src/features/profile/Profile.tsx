@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { settingsName, type Accent, type AgeBand, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
+import { buildRecordingExport, CONSENT_TEXT } from '../../data/exportRecordings';
+import { blobToWav16k } from '../../speech/recorder';
 import { HOME_LANGUAGES } from '../../content/translations';
 import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, liveStreak } from '../../engine/rewards';
@@ -101,6 +103,10 @@ export function ParentZone() {
   const [recordings, setRecordings] = useState<number | null>(null);
   const [services, setServices] = useState<ApiHealth | null>(null);
   const [code, setCode] = useState(getAccessCode);
+  const attempts = useStore((s) => s.attempts);
+  const [sharing, setSharing] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [making, setMaking] = useState(false);
 
   const refresh = () => void audioRepo.count(`${p.id}/`).then(setRecordings);
   useEffect(() => { if (open) { refresh(); void apiHealth().then(setServices); } }, [open, p.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -112,6 +118,25 @@ export function ParentZone() {
     history: { title: 'Delete pronunciation history?', body: `Recordings, scores, weak-sound memory and review schedule for ${p.name} are erased. Lessons completed, XP and badges are kept.`, cta: 'Delete history', run: async () => { await store.deletePronunciationHistory(p.id); toast('Pronunciation history deleted', '🗑️'); refresh(); } },
     profile: { title: `Delete ${p.name}’s profile?`, body: 'Everything about this learner is erased from this device. This can’t be undone.', cta: 'Delete profile', run: async () => { await store.deleteProfile(p.id); nav('/', { replace: true }); } },
     everything: { title: 'Delete the whole account?', body: 'Every learner, recording, score and setting is erased from this device. This can’t be undone.', cta: 'Delete everything', run: async () => { await store.deleteEverything(); nav('/welcome', { replace: true }); } },
+  };
+
+  const adult = p.band === 'adult';
+  const shareFile = async () => {
+    setMaking(true);
+    try {
+      const out = await buildRecordingExport(p, attempts, (k) => audioRepo.load(k), blobToWav16k);
+      if (!out.takes) { toast('No recordings could be read on this device', '🎧'); return; }
+      const url = URL.createObjectURL(out.file);
+      const a = document.createElement('a');
+      a.href = url; a.download = out.name; document.body.appendChild(a); a.click(); a.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      setSharing(false);
+      toast(`Saved ${out.takes} recording${out.takes === 1 ? '' : 's'} to a file`, '📁');
+    } catch {
+      toast('Couldn’t make the file on this device', '⚠️');
+    } finally {
+      setMaking(false);
+    }
   };
 
   const toggle = (key: keyof ParentSettings, label: string, detail: string) => (
@@ -169,7 +194,11 @@ export function ParentZone() {
       <section>
         <h2 className="section-title">Voice &amp; privacy</h2>
         {toggle('storeRecordings', 'Keep recordings on this device', 'Lets learners replay “before” and “now”. Only the newest 3 per phrase are kept. Off = audio is discarded right after scoring.')}
-        <p className="fineprint fineprint--left">{recordings == null ? 'Counting recordings…' : `${recordings} recording${recordings === 1 ? '' : 's'} stored for ${p.name}. Recordings never leave this device${services?.azure ? ' except to be scored by the speech service, which does not keep them' : ''}.${services?.gemini ? ' The teacher’s voice is made from lesson text only — learners’ voices are never sent for that.' : ''}`}</p>
+        <p className="fineprint fineprint--left">{recordings == null ? 'Counting recordings…' : `${recordings} recording${recordings === 1 ? '' : 's'} stored for ${p.name}. Recordings never leave this device${services?.azure ? ' except to be scored by the speech service, which does not keep them' : ''} — unless you choose to share them below.${services?.gemini ? ' The teacher’s voice is made from lesson text only — learners’ voices are never sent for that.' : ''}`}</p>
+        <button type="button" className="row-link row-link--share" disabled={!recordings} onClick={() => { setAgreed(false); setSharing(true); }}>
+          <span className="row-link__icon"><Icon name="share" /></span>
+          <span><b>Share recordings for testing</b><small>{recordings ? 'Help check the app on real voices: make a file you can send to the Wunder Tutor team' : 'Nothing to share yet — recordings appear here after speaking practice'}</small></span>
+        </button>
         <div className="danger-list">
           <button type="button" onClick={() => setDanger('recordings')}><Icon name="trash" size={20} />Delete recordings</button>
           <button type="button" onClick={() => setDanger('history')}><Icon name="trash" size={20} />Delete pronunciation history</button>
@@ -213,6 +242,18 @@ export function ParentZone() {
           <div className="select-row"><span>Conversation tutor</span><b>{services == null ? '…' : services.claude ? 'Claude (live)' : 'Scripted'}</b></div>
         </div>
       </section>
+
+      <Sheet open={sharing} onClose={() => setSharing(false)} label="Share recordings for testing">
+        <div className="confirm confirm--left">
+          <span className="confirm__icon"><Icon name="share" size={30} /></span>
+          <h2>{adult ? 'Share your recordings?' : `Share ${p.name}’s recordings?`}</h2>
+          <p>This makes one file on this device with {recordings} practice recording{recordings === 1 ? '' : 's'}, what {adult ? 'you were' : `${p.name} was`} asked to say, and the app’s scores. It includes {adult ? 'your' : `${p.name}’s`} age, home language and settings — <b>no name</b>.</p>
+          <p>Nothing is sent. You choose who to give the file to. The Wunder Tutor team uses it only to test and improve how the app checks pronunciation.</p>
+          <label className="switch-row switch-row--card"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span><small>{CONSENT_TEXT}</small></span></label>
+          <Button variant="primary" size="lg" block disabled={!agreed || making} onClick={() => void shareFile()}>{making ? 'Making the file…' : 'Make the file'}</Button>
+          <Button variant="ghost" block onClick={() => setSharing(false)}>Cancel</Button>
+        </div>
+      </Sheet>
 
       <Sheet open={!!danger} onClose={() => setDanger(null)} label="Confirm delete">
         {danger && (

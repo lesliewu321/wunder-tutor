@@ -54,6 +54,15 @@ confusions Azure cannot hear at all (村 cūn / 春 chūn both 100) — a second
 next step. Azure also can't tell ü from i for many voices, so those swaps are never named (`SWAP_TRUST`,
 `alt-types-zh.ts`). `sweep-zh.ts` shows the false-alarm/detection trade-off for the Mandarin thresholds.
 
+## Real voices (volunteers)
+
+Parents of volunteer children (or adult volunteers) use **Parent Zone / Settings & privacy → Share recordings for
+testing**: after a consent tick the app saves one `.json` file (recordings as 16 kHz WAV, what was asked, the app's
+scores, age, home language — no name). Put the files in `eval/volunteers/` (**gitignored — children's voices must
+never be committed**) and run `npx vite-node eval/volunteers.ts`: each learner gets a folder of WAVs and a
+`manifest.csv` with the app's verdict per word and a column for a human label (correct? what was wrong?). Labelled
+real takes are what the numbers above still lack.
+
 ## Caveats
 
 These are synthetic adult voices, not children. The tone model was trained on three synthetic voices. The numbers

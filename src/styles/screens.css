@@ -215,6 +215,14 @@
 .row-link > span:nth-child(2) { flex: 1; color: var(--ink); }
 .row-link b { display: block; font-family: var(--font-display); font-size: 1.1rem; }
 .row-link__icon { width: 48px; height: 48px; border-radius: 16px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; }
+.row-link small { display: block; color: var(--ink-soft); font-size: 0.85rem; line-height: 1.35; margin-top: 2px; }
+.row-link--share { margin: 6px 0 12px; text-align: left; }
+.row-link--share:disabled { opacity: 0.6; }
+/* A confirm sheet with more to read: paragraphs left-aligned, heading and icon centred. */
+.confirm--left { text-align: left; align-items: stretch; }
+.confirm--left h2, .confirm--left .confirm__icon { align-self: center; text-align: center; }
+.confirm--left .confirm__icon { background: var(--primary-soft); color: var(--primary); }
+.confirm--left .switch-row small { font-size: 0.85rem; line-height: 1.4; color: var(--ink); }
 
 .gate form { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 8px; }
 .gate p { color: var(--ink-soft); }

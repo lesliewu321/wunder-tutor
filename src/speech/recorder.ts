@@ -175,6 +175,9 @@ const toWav16k = async (buffer: AudioBuffer): Promise<{ wav: Blob; pcm: Float32A
   return { wav: new Blob([view], { type: 'audio/wav' }), pcm };
 };
 
+/** A stored recording (whatever the browser recorded) as 16 kHz mono WAV — for sharing recordings for testing. */
+export const blobToWav16k = async (blob: Blob): Promise<Blob> => (await toWav16k(await decode(blob))).wav;
+
 /** How long a fluent speaker needs for a text — used for max recording time and simulated takes. */
 export const expectedSpeechMs = (syllables: number): number => 450 + syllables * 260;
 

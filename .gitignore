@@ -12,3 +12,6 @@ server/.cache
 .dev.vars
 .astro
 eval/.cache
+
+# Volunteers' recordings (children's voices) — never commit
+eval/volunteers
