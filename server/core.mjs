@@ -109,6 +109,20 @@ function createLimiter(max, windowMs) {
   };
 }
 
+/** Counts only failures (wrong access codes): a client that keeps guessing is locked out for the window. */
+function createFailureCounter(max, windowMs) {
+  const fails = new Map();
+  return {
+    blocked(id) { const e = fails.get(id); return !!e && Date.now() - e.start <= windowMs && e.count >= max; },
+    fail(id) {
+      const now = Date.now();
+      if (fails.size > 5000) fails.clear();
+      const e = fails.get(id);
+      if (!e || now - e.start > windowMs) fails.set(id, { start: now, count: 1 }); else e.count += 1;
+    },
+  };
+}
+
 /**
  * @param {Record<string, string|undefined>} rawEnv  AZURE_SPEECH_KEY, AZURE_SPEECH_REGION, AZURE_SPEECH_ENDPOINT,
  *   GEMINI_API_KEY, GEMINI_LIVE_MODEL, GEMINI_TTS_VOICE, GEMINI_LIVE_ENDPOINT, ANTHROPIC_API_KEY, CLAUDE_MODEL,
@@ -166,7 +180,8 @@ export function createApi(rawEnv, deps = {}) {
   const allowTts = createLimiter(120, 5 * 60_000);
   const allowTutor = createLimiter(40, 5 * 60_000);
   const allowRead = createLimiter(30, 10 * 60_000);
-  const allowCodeGuess = createLimiter(12, 10 * 60_000);
+  // Wrong codes only: the right code rides on every request and must never count as a guess.
+  const codeGuesses = createFailureCounter(12, 10 * 60_000);
 
   // ---------------------------------------------------------------- /api/assess
   // Verified live (eastasia, 2026-09): regional stt host, PhonemeAlphabet IPA honoured over REST, scores flat on NBest[0],
@@ -353,8 +368,9 @@ export function createApi(rawEnv, deps = {}) {
       const offered = request.headers.get(ACCESS_HEADER) ?? '';
       let authorized = !ACCESS_CODE && deps.requireAccessCode !== true;
       if (ACCESS_CODE && offered) {
-        if (!allowCodeGuess(client)) throw new HttpError(429, 'too_many_attempts');
+        if (codeGuesses.blocked(client)) throw new HttpError(429, 'too_many_attempts');
         authorized = sameSecret(offered, ACCESS_CODE);
+        if (!authorized) codeGuesses.fail(client);
       }
 
       if (route === 'GET /api/health') {

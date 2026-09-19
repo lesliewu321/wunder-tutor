@@ -32,6 +32,14 @@ describe('API access control', () => {
     expect(last.status).toBe(429);
   });
 
+  it('never counts the right code as a guess, however busy the learner is', async () => {
+    const api = createApi({ ...KEYS, BETA_ACCESS_CODE: 'open-sesame' });
+    let last;
+    for (let i = 0; i < 40; i++) last = await get(api, '/api/health', { 'x-wunder-access': 'open-sesame' });
+    expect(last.status).toBe(200);
+    expect((await last.json()).authorized).toBe(true);
+  });
+
   it('rejects oversized bodies, unknown routes and wrong methods', async () => {
     const api = createApi(KEYS);
     expect((await post(api, '/api/assess?text=milk', new Uint8Array(10), { 'content-length': String(6 * 1024 * 1024) })).status).toBe(413);
