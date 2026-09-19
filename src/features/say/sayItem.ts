@@ -16,6 +16,11 @@ const hash = (s: string): string => {
 const kindOf = (units: number): SpeakItem['kind'] => (units <= 1 ? 'word' : units <= 4 ? 'phrase' : 'sentence');
 
 export function sayItem(line: ReadLine, p: ChildProfile): SpeakItem | null {
+  // A line the checks can't handle is shown as "can't check", never a broken screen.
+  try { return build(line, p); } catch { return null; }
+}
+
+function build(line: ReadLine, p: ChildProfile): SpeakItem | null {
   if (line.pinyin && line.simplified && line.traditional) {
     const syllables = line.pinyin.split(' ');
     const units = new Set(syllables.flatMap((s) => { const u = unitsFor(s); return [u.initial, u.final, `zh:t${s.slice(-1)}`].filter(Boolean) as string[]; }));
@@ -25,6 +30,7 @@ export function sayItem(line: ReadLine, p: ChildProfile): SpeakItem | null {
       kind: kindOf(syllables.length), focus: focus as PhonemeId[],
     };
   }
+  if (line.lang && line.lang !== 'en') return null; // another language, or Chinese without checked pinyin
   if (/\p{Script=Han}/u.test(line.text)) return null; // Chinese without checked pinyin: can't be scored fairly
   const words = tokenize(line.text);
   if (!words.length) return null;

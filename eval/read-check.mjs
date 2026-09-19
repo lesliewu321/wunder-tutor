@@ -39,7 +39,11 @@ for (let b = 0; b < items.length; b += BATCH) {
         break;
       }
     }
-    if (!line?.pinyin) { wrong.push(`UNUSABLE ${it.hant} → ${JSON.stringify(line ?? null)}`); continue; }
+    if (!line?.pinyin) {
+      const near = got.lines.filter((l) => [...it.hant].some((c) => l.text.includes(c))).map((l) => `${l.text} [${l.lang}${l.pinyin ? ` ${l.pinyin}` : ''}]`);
+      wrong.push(`UNUSABLE ${it.hant} → ${line ? 'no pinyin' : 'not found'}; read as: ${near.join(' / ') || '(nothing)'}`);
+      continue;
+    }
     usable++;
     if (line.simplified === it.text) simpOk++; else wrong.push(`SIMPLIFIED ${it.hant}: got ${line.simplified}, want ${it.text}`);
     const want = it.py.split(' '), have = line.pinyin.split(' ');

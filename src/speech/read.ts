@@ -5,6 +5,8 @@ import { apiFetch } from './health';
 export interface ReadLine {
   /** As written (on the page, or as typed). */
   text: string;
+  /** The sentence's language, from the reader (typed English has none): only "en" and checked Chinese are practised. */
+  lang?: 'en' | 'zh' | 'other';
   /** Chinese lines that passed the checks: both scripts and the pinyin (numbered, one syllable per character). */
   traditional?: string;
   simplified?: string;
@@ -14,31 +16,36 @@ export interface ReadLine {
 export interface Reading { language: 'en' | 'zh' | 'other' | 'none'; lines: ReadLine[] }
 
 export class ReadError extends Error {
-  constructor(readonly code: 'offline' | 'busy' | 'unavailable' | 'failed') { super(code); }
+  constructor(readonly code: 'offline' | 'busy' | 'unavailable' | 'photo' | 'failed') { super(code); }
 }
 
 /** Photos are shrunk before upload: the text stays sharp and the upload stays small. */
 const MAX_SIDE = 1600;
 
 export async function shrinkPhoto(file: Blob): Promise<Blob> {
-  const bmp = await createImageBitmap(file);
+  let bmp: ImageBitmap;
+  try { bmp = await createImageBitmap(file); } catch { throw new ReadError('photo'); } // e.g. HEIC outside Safari
   const scale = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
   const canvas = document.createElement('canvas');
   canvas.width = Math.max(1, Math.round(bmp.width * scale));
   canvas.height = Math.max(1, Math.round(bmp.height * scale));
-  canvas.getContext('2d')!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+  const g = canvas.getContext('2d')!;
+  g.fillStyle = '#fff'; // a transparent PNG would otherwise turn black
+  g.fillRect(0, 0, canvas.width, canvas.height);
+  g.drawImage(bmp, 0, 0, canvas.width, canvas.height);
   bmp.close?.();
   return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new ReadError('failed'))), 'image/jpeg', 0.85));
 }
 
 async function post(body: Blob | string, type: string): Promise<Reading> {
   const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), 45000);
+  // Longer than the server's own limit (40 s), so a slow page ends with the server's answer, not ours.
+  const timer = setTimeout(() => ctl.abort(), 60000);
   let res: Response;
   try {
     res = await apiFetch('/api/read', { method: 'POST', headers: { 'Content-Type': type }, body, signal: ctl.signal });
   } catch {
-    throw new ReadError('offline');
+    throw new ReadError(ctl.signal.aborted ? 'failed' : 'offline');
   } finally {
     clearTimeout(timer);
   }

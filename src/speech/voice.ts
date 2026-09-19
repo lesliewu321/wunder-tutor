@@ -12,6 +12,8 @@ export interface SpeakOptions {
   slow?: boolean;
   /** Isolated syllables ("rah", "thee") need different handling from words and sentences. */
   kind?: SpeakItem['kind'];
+  /** A learner's own text (Say it right): spoken, but not kept in the server's shared cache. */
+  ephemeral?: boolean;
 }
 
 /** Reference ("teacher") audio. Implementations: Gemini Live native audio, device speech synthesis. */
@@ -142,7 +144,7 @@ class GeminiTakes {
     try {
       const res = await apiFetch('/api/tts', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
-        body: JSON.stringify({ text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined }),
+        body: JSON.stringify({ text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined, ephemeral: opts.ephemeral || undefined }),
       });
       if (!res.ok || !res.headers.get('content-type')?.startsWith('audio/')) throw new Error(`tts ${res.status}`);
       const blob = await res.blob();

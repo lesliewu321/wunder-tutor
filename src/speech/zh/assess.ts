@@ -96,6 +96,14 @@ export const unitsFor = (py: string): { initial?: string; final?: string } => {
   return { initial, final };
 };
 
+/** Does the scorer's own reading of a character ("shan 4") fit the syllable we expect, with one of these tones? */
+const labelFits = (label: string | undefined, py: string, tones: number[]): boolean => {
+  if (!label) return true; // no label: nothing says it read something else
+  const m = /^([a-zü]+)\s*([1-5])$/i.exec(label.trim().replace(/v/g, 'ü'));
+  if (!m) return true;
+  return m[1].toLowerCase() === parseSyllable(py).base && tones.includes(Number(m[2]));
+};
+
 /** Where a syllable sits, which changes how far its tone moves. */
 export const toneContext = (i: number, n: number, breaks: Set<number>): ToneContext => (n === 1 ? 'alone' : i === n - 1 || breaks.has(i) ? 'final' : 'mid');
 
@@ -124,9 +132,17 @@ export function assessZh(json: AzureZhResponse, ref: { text: string; py: string;
   const tones = py.map((s) => parseSyllable(s).tone);
   const surface = surfaceTones(tones, chars, breaks);
   const { perChar } = readCharacters(json, chars);
-  const altReadings = (opts.alts ?? []).map((a) => a.base
-    ? { ...a, reading: readCharacters(a.json, [a.char]).perChar[0], baseScore: readCharacters(a.base, [chars[a.index]]).perChar[0]?.score }
-    : { ...a, reading: readCharacters(a.json, chars).perChar[a.index], baseScore: undefined as number | undefined });
+  const altReadings = (opts.alts ?? []).map((a) => {
+    if (!a.base) return { ...a, reading: readCharacters(a.json, chars).perChar[a.index], baseScore: undefined as number | undefined };
+    // Clip mode: the clip scored as the real character is the yardstick — but only a clean one. A glitch (no scores,
+    // nothing heard) or the scorer reading the character differently out of context (扇 shàn for shān) says nothing
+    // about the learner, so that likely mistake is not judged at all.
+    const base = readCharacters(a.base, [chars[a.index]]).perChar[0];
+    const hasScores = a.base.RecognitionStatus === 'Success' && (a.base.NBest?.[0]?.AccuracyScore != null || a.base.NBest?.[0]?.PronunciationAssessment != null);
+    const reads = labelFits(base?.label, py[a.index], [...surface[a.index].accept, tones[a.index]]);
+    const usable = hasScores && !!base && base.error !== 'omission' && reads;
+    return { ...a, reading: usable ? readCharacters(a.json, [a.char]).perChar[0] : undefined, baseScore: usable ? base.score : undefined };
+  });
   const margin = opts.altMargin ?? ZH_ALT_MARGIN;
   const speaker = opts.speaker ?? null;
   const toneParams = opts.toneParams ?? DEFAULT_TONE_PARAMS;

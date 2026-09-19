@@ -9,7 +9,7 @@ import { localeOf, playBlob, stopPlayback, voice } from '../../speech/voice';
 import { markSyllable } from '../../content/zh/pinyin';
 import { hanChars } from '../../content/zh/script';
 import { useActiveProfile, useStore } from '../../state/store';
-import { correctionFor, focusWordIndex, GOOD, headline, tier } from '../../tutor/feedback';
+import { correctionFor, focusWordIndex, GOOD, headline, tier, writtenWords } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
 import { Button, ScoreRing, toast } from '../../ui/kit';
 import { Mascot, type Mood } from '../../ui/Mascot';
@@ -90,7 +90,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     try {
       if (kind === 'normal' || kind === 'slow') {
         if (!voice.available()) throw new Error('playback-unavailable');
-        await voice.speak(item.say ?? item.text, { accent: localeOf(item, profile.accent), slow: kind === 'slow', kind: item.kind });
+        await voice.speak(item.say ?? item.text, { accent: localeOf(item, profile.accent), slow: kind === 'slow', kind: item.kind, ephemeral: mode === 'free' || undefined });
       } else {
         const blob = (kind === 'now' ? current : previous)?.audio;
         if (!blob) { toast(demoMic ? 'The demo microphone doesn’t record sound' : 'No recording for this try', '🎧'); return; }
@@ -145,6 +145,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   const busy = take.phase !== 'idle';
   const phase: View | 'listening' | 'processing' = take.phase === 'idle' ? view : take.phase;
   const focusIdx = current ? focusWordIndex(current.assessment) : -1;
+  const shown = current && !item.zh ? writtenWords(item.text, current.assessment.words) : [];
   const focus = current && focusIdx >= 0 ? correctionFor(current.assessment.words[focusIdx], band, profile.homeLanguage) : null;
   const single = !!current && current.assessment.words.length === 1;
   const focusPhonemeScore = current && focusIdx >= 0 ? Math.min(...current.assessment.words[focusIdx].phonemes.map((ph) => ph.score), 100) : undefined;
@@ -184,7 +185,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                 ? current.assessment.words.map((w, i) => (
                   <button key={i} type="button" className={`word word--${w.errorType === 'omission' ? 'missing' : tier(w.score)} ${i === focusIdx ? 'word--focus' : ''}`}
                     onClick={() => setSheetWord(i)} aria-label={`${w.word}, score ${w.score}. Tap for help`}>
-                    {displayWord(item.text, i, w.word)}
+                    {shown[i] ?? w.word}
                   </button>
                 ))
                 : item.text}
@@ -277,7 +278,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         )}
         {phase === 'result' && current && (
           <div className="speak__actions">
-            {!mastered && outOfTries && <p className="speak__kind">{mode === 'check' ? (band === 'adult' ? 'Good to know — this will come up in your lessons.' : 'Good to know — Pip will help you with this.') : 'Good effort! We’ll practise this one again later.'}</p>}
+            {!mastered && outOfTries && <p className="speak__kind">{mode === 'check' ? (band === 'adult' ? 'Good to know — this will come up in your lessons.' : 'Good to know — Pip will help you with this.') : (mode === 'free' ? 'Good effort! Try it again whenever you like.' : 'Good effort! We’ll practise this one again later.')}</p>}
             {outOfTries || (mastered && !fixable) ? (
               <>
                 <Button variant="leaf" size="lg" block onClick={finish}>{continueLabel}</Button>
@@ -298,7 +299,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         <WordSheet
           word={current.assessment.words[sheetWord]} band={band} home={profile.homeLanguage} onClose={() => setSheetWord(null)}
           // Mandarin: say the scorer's (Simplified) character — the word shown may be Traditional.
-          onListen={(slow) => void voice.speak((item.zh && hanChars(item.text)[sheetWord]) || current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
+          onListen={(slow) => void voice.speak((item.zh && hanChars(item.text)[sheetWord]) || current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow, ephemeral: mode === 'free' || undefined }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
           onHearMe={() => void play('now')}
           onHearTip={sayTip}
           onRetry={outOfTries ? undefined : startListening}
@@ -328,5 +329,3 @@ const soundFixed = (before: Assessment, now: Assessment, band: AgeBand): { phone
   return is - was >= 5 ? { phoneme: c.phoneme, before: was, now: is } : null;
 };
 
-/** Show the word as written in the prompt (capitals, punctuation) rather than the provider's normalised token. */
-const displayWord = (text: string, index: number, fallback: string): string => text.split(/\s+/)[index] ?? fallback;

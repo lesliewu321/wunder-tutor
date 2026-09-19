@@ -3,6 +3,7 @@ import type { ChildProfile } from '../domain/types';
 import { emptyProfile } from '../intelligence/profile';
 import { splitSentences } from '../speech/read';
 import { sayItem } from '../features/say/sayItem';
+import { writtenWords } from '../tutor/feedback';
 
 const learner = (weak: Record<string, number> = {}): ChildProfile => {
   const pron = emptyProfile();
@@ -31,5 +32,27 @@ describe('Say it right', () => {
     const it = sayItem({ text: '這個蘋果很好吃！', traditional: '這個蘋果很好吃！', simplified: '这个苹果很好吃！', pinyin: 'zhe4 ge4 ping2 guo3 hen3 hao3 chi1' }, learner({ 'zh:t3': 40 }))!;
     expect(it).toMatchObject({ text: '这个苹果很好吃！', lang: 'zh-CN', zh: { hant: '這個蘋果很好吃！', py: 'zhe4 ge4 ping2 guo3 hen3 hao3 chi1' }, kind: 'sentence', focus: ['zh:t3'] });
     expect(sayItem({ text: '這個蘋果很好吃！' }, learner())).toBeNull();
+  });
+});
+
+describe('Say it right — lines it cannot check', () => {
+  it('never throws: a syllable the parser rejects just makes the line "can\'t check"', () => {
+    expect(sayItem({ text: '嗯，好的。', traditional: '嗯，好的。', simplified: '嗯，好的。', pinyin: 'n2 hao3 de5' }, learner())).toBeNull();
+  });
+  it('practises English only when the reader says the sentence is English', () => {
+    expect(sayItem({ text: 'Fried rice', lang: 'en' }, learner())).not.toBeNull();
+    expect(sayItem({ text: 'Bon appétit !', lang: 'other' }, learner())).toBeNull();
+    expect(sayItem({ text: 'ni hao', lang: 'zh' }, learner())).toBeNull(); // pinyin written out: not English
+  });
+});
+
+describe('Say it right — showing the scores on the words as written', () => {
+  const w = (word: string, errorType: 'none' | 'insertion' = 'none') => ({ word, errorType });
+  it('keeps capitals and punctuation, skips a dash, and keeps an extra word the scorer heard', () => {
+    expect(writtenWords('Mr. Lee — likes 3 cats.', [w('mr'), w('lee'), w('um', 'insertion'), w('likes'), w('three'), w('cats')]))
+      .toEqual(['Mr.', 'Lee', 'um', 'likes', '3', 'cats.']);
+  });
+  it('shows the scorer\'s words when the text can\'t be lined up', () => {
+    expect(writtenWords('A well-known song', [w('a'), w('well'), w('known'), w('song')])).toEqual(['a', 'well', 'known', 'song']);
   });
 });

@@ -286,3 +286,4 @@
 .say__line-text .zh { font-size: 1.45rem; line-height: 2.1; }
 .say__line-text .zh__py { font-size: 0.5em; }
 .say__line-text .zh__char { padding: 0 0.05em; }
+.say__actions--one { grid-template-columns: 1fr; }

@@ -61,7 +61,8 @@ export async function buildRecordingExport(
   const takes: ExportTake[] = [];
   let skipped = 0;
   for (const a of attempts) {
-    if (a.profileId !== profile.id || !a.audioKey) continue;
+    // "Say it right" text is the learner's own (a photographed page may hold names): not shared.
+    if (a.profileId !== profile.id || !a.audioKey || a.itemId.startsWith('say:')) continue;
     try {
       const blob = await load(a.audioKey);
       if (!blob) { skipped++; continue; }

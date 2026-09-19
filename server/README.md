@@ -35,21 +35,26 @@ public deployment with no code set fails closed.
   - Each extra scoring is billed as the full audio again (see *Cost* below).
   - Errors: 400 `missing_text|text_too_long|unsupported_locale|missing_audio|invalid_alts`, 503
     `azure_not_configured`, 502 `{error:"azure_upstream",status}`, 504 `azure_timeout` (15 s).
-- `POST /api/tts` with `{ text, locale?: "en-US"|"en-GB"|"zh-CN", accent?, slow?, kind? }` → `audio/wav` (24 kHz mono,
+- `POST /api/tts` with `{ text, locale?: "en-US"|"en-GB"|"zh-CN", accent?, slow?, kind?, ephemeral? }` → `audio/wav` (24 kHz mono,
   silence-trimmed), header `X-Tts-Cache: hit|miss`. One Gemini Live session per uncached phrase with a strict "say
   exactly this" instruction; the model's own transcript must match the text (Chinese: character overlap, no Latin
   words), one firmer retry, else `502 tts_mismatch` and the app uses the device voice. New **Mandarin** takes must also
   score as the text on Azure (≥ 85 overall, every syllable ≥ 70) before they are cached — a scorer outage skips that
   check rather than silencing the teacher. Errors: 400 `missing_text|text_too_long|invalid_text`, 429
   `tts_budget_exceeded` (120 generations / 10 min), 502 `gemini_rejected|gemini_closed|gemini_no_audio`, 503
-  `gemini_not_configured`, 504 `gemini_timeout`. Only lesson text goes to Google; no learner audio.
+  `gemini_not_configured`, 504 `gemini_timeout`. `ephemeral: true` (a learner's own "Say it right" sentence) is
+  spoken but never stored in the shared cache, and is capped at 40 requests / 10 min per client (429 `rate_limited`).
+  Only text goes to Google; never learner audio.
 - `POST /api/read`: "Say it right". Body = a photo (`image/jpeg|png|webp`, the app sends a ≤1600 px JPEG) or JSON
-  `{ "text": "…" }` (≤ 2000 chars) → `{ language: "en"|"zh"|"other"|"none", lines: [{ text, traditional?, simplified?,
-  pinyin? }] }`. Gemini (`GEMINI_READ_MODEL`, default `gemini-3.8-flash`) reads with a strict JSON schema; Chinese
+  `{ "text": "…" }` (≤ 2000 chars) → `{ language: "en"|"zh"|"other"|"none", lines: [{ text, lang: "en"|"zh"|"other",
+  traditional?, simplified?, pinyin? }] }`. Every sentence has its own language, so a bilingual page (a Hong Kong menu or
+  sign) keeps both; the page `language` follows from its sentences ("other" = nothing in English or Chinese). Typed line
+  breaks are kept. Gemini (`GEMINI_READ_MODEL`, default `gemini-3.8-flash`) reads with a strict JSON schema; Chinese
   comes back character by character ({t, s, py}) and a line keeps its pinyin only if the entries spell the sentence as
   written (numbers are written out: 3 → 三). A failing Chinese line gets one retry as text. 30 requests / 10 min per
   client. Errors: 400 `missing_text|text_too_long|missing_image`, 503 `gemini_not_configured`, 502
-  `read_upstream|read_unparseable`, 504 `read_timeout`. The image or text goes to Google; nothing is stored.
+  `read_upstream|read_unparseable`, 504 `read_timeout` (40 s for the whole read). The image or text goes to Google;
+  Wunder Tutor stores neither.
 - `POST /api/tutor` with `{ scenario:{title,setting,tutorRole,goals[]}, band, history:[{role:"tutor"|"child",text}], pronunciationNotes? }`
   → `{ reply, suggestions (0-2 strings), done }`. Child-safety rules live in the system prompt; emojis are stripped;
   `done` is forced after 8 child turns. Errors: 400 `invalid_json|invalid_scenario|invalid_band|invalid_history`,

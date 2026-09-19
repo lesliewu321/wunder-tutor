@@ -7,7 +7,8 @@
 //   3. accepted audio is cached on disk, so every learner hears the same take and each phrase is
 //      generated (and paid for) once.
 //
-// Only lesson text is ever sent to Google from here — never a child's voice.
+// Only text is ever sent to Google from here — lesson text, or a sentence a learner chose to practise ("Say it
+// right") — never a child's voice. A learner's own sentences are spoken but never stored in the shared cache.
 // Setup / message shapes follow https://ai.google.dev/gemini-api/docs/live-guide (raw WebSocket).
 
 // Runtime-neutral: runs under Node and Cloudflare Workers (nodejs_compat supplies Buffer and node:crypto).
@@ -273,7 +274,9 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     if (zh ? !han(text).length : !/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
     const req = { text, accent: zh ? 'zh-CN' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !zh && input.kind === 'syllable' ? 'syllable' : undefined };
     const key = keyFor(req);
-    if (cache) {
+    // A learner's own text (a photographed page may hold a name) is not written to the shared cache.
+    const keep = cache && !input.ephemeral;
+    if (keep) {
       try {
         const hit = await cache.get(key);
         if (hit?.length) return { wav: Buffer.from(hit), cached: true };
@@ -283,7 +286,7 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
       inflight.set(key, (async () => {
         try {
           const wav = await generate(req);
-          if (cache) await cache.put(key, wav).catch(() => undefined); // a failed write must not lose the take
+          if (keep) await cache.put(key, wav).catch(() => undefined); // a failed write must not lose the take
           return wav;
         } finally {
           inflight.delete(key);

@@ -13,6 +13,18 @@ export const OKAY = 65;
 export type Tier = 'good' | 'okay' | 'weak';
 export const tier = (score: number): Tier => (score >= GOOD ? 'good' : score >= OKAY ? 'okay' : 'weak');
 
+/**
+ * The scored words as written in the prompt (capitals, punctuation) rather than the scorer's own tokens ("mr",
+ * "three"). Extra words the scorer heard keep their own spelling, and a dash or "&" isn't a word. When the text
+ * can't be lined up with the scores (a hyphenated word scored as two), the scorer's words are shown instead.
+ */
+export const writtenWords = (text: string, words: readonly Pick<WordScore, 'word' | 'errorType'>[]): string[] => {
+  const written = text.split(/\s+/).filter((t) => /[\p{L}\p{N}]/u.test(t));
+  if (written.length !== words.filter((w) => w.errorType !== 'insertion').length) return words.map((w) => w.word);
+  let k = 0;
+  return words.map((w) => (w.errorType === 'insertion' ? w.word : written[k++]));
+};
+
 export interface Correction {
   word: string;
   score: number;

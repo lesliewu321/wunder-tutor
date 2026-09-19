@@ -180,6 +180,9 @@ export function createApi(rawEnv, deps = {}) {
   const allowTts = createLimiter(120, 5 * 60_000);
   const allowTutor = createLimiter(40, 5 * 60_000);
   const allowRead = createLimiter(30, 10 * 60_000);
+  // New teacher takes for a learner's own sentences are generated per request: a per-client cap keeps one busy
+  // page-photographer from spending everyone's voice budget.
+  const allowOwnTextTts = createLimiter(40, 10 * 60_000);
   // Wrong codes only: the right code rides on every request and must never count as a guess.
   const codeGuesses = createFailureCounter(12, 10 * 60_000);
 
@@ -271,7 +274,7 @@ export function createApi(rawEnv, deps = {}) {
   // ---------------------------------------------------------------- /api/tts
   // ---------------------------------------------------------------- /api/read
   // A photo of a page (raw image/jpeg|png|webp body) or typed text ({ "text": "…" }) → the sentences to practise.
-  // Only the image or text goes to Google; nothing is stored.
+  // Only the image or text goes to Google; Wunder Tutor stores neither.
   const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
   async function handleRead(request) {
     if (!GEMINI_API_KEY) throw new HttpError(503, 'gemini_not_configured');
@@ -290,9 +293,10 @@ export function createApi(rawEnv, deps = {}) {
     return json(200, await readText({ apiKey: GEMINI_API_KEY, model: GEMINI_READ_MODEL, ...input }));
   }
 
-  async function handleTts(request) {
+  async function handleTts(request, client) {
     if (!tts) throw new HttpError(503, 'gemini_not_configured');
     const input = await readJson(request);
+    if (input?.ephemeral && !allowOwnTextTts(client)) throw new HttpError(429, 'rate_limited');
     try {
       const { wav, cached } = await tts.speak(input);
       return new Response(wav, {
@@ -396,7 +400,7 @@ export function createApi(rawEnv, deps = {}) {
       }
       if (path === '/api/tts') {
         if (!allowTts(client)) throw new HttpError(429, 'rate_limited');
-        return await handleTts(request);
+        return await handleTts(request, client);
       }
       if (!allowTutor(client)) throw new HttpError(429, 'rate_limited');
       return await handleTutor(request);

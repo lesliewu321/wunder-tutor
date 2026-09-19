@@ -64,8 +64,13 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
 - **Say it right** (Speak tab → `/say`, `src/features/say/`): type or photograph any text → sentences → hear, say,
   corrected (same speaking screen, `mode="free"`: not added to the review schedule). Photos and Chinese text go to
   `POST /api/read` (`server/read.mjs`, Gemini 3.8 Flash, per-character {t, s, py} checked by `checkChineseLine`).
-  Measured: no wrong characters on photographed pages (clean / phone-like / harsh); pinyin 107/107 course lines, 99.5%
-  of syllables on tricky 多音字 sentences. English typed text is split on the device (works in practice mode).
+  Measured: no wrong characters on photographed pages (clean / phone-like / harsh); pinyin 107/107 course lines, 100%
+  of syllables on tricky 多音字 sentences (得 děi needed a line in the prompt). Every sentence carries its own `lang`
+  (bilingual HK menus/signs keep both languages; French/Japanese lines are shown, not practised). English typed text
+  is split on the device (works in practice mode). The page survives the back button (`?s=` + sessionStorage), the
+  camera button shows only on touch devices, unreadable files (HEIC on a computer) get their own message, transparent
+  PNGs get a white background, the app waits 60 s (server budget 40 s). A learner's own sentences are spoken with
+  `ephemeral` (never in the shared TTS cache, 40 / 10 min per client) and left out of the recordings export.
 - **Cheaper scoring:** takes are trimmed to speech ± margin before upload (`speechWindow`, ~42% less audio, no word
   cut in 2,541 test takes); phrases/sentences check likely mistakes on each word's clip in a second parallel round
   (`CLIP_CHECKS`: Mandarin sound slips named 27% → 58%, British swaps 0% → 88%, ~35% cheaper checks). Roughly half the
@@ -107,6 +112,20 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
   the Simplified character to the voice; grown-ups never see Pip, get "Settings & privacy", ticks instead of stars;
   the Mandarin unit badge exists; dialogs keep focus, trap Tab and have a Close button; recorder can't hang.
 
+### Second pass: Say it right + cost fix (2026-09-19)
+
+A third review (reading, privacy, scoring changes) — all fixed, then re-measured:
+- Reading: 嗯 "n2" crashed a line (now "can't check"); lines with kana or Latin never get pinyin; per-sentence
+  `lang` (a page-wide label sent a bilingual page back as "other"); 得 děi prompt line; typed line breaks kept.
+- Scoring: a failed or out-of-context base clip no longer counts as 0 (a clean base must fit the label, else the
+  whole-take score stands); unknown English words get a syllable guess for the recording time limit.
+- Privacy: a learner's own sentences are spoken with `ephemeral` (never in the shared TTS cache), capped per client,
+  and left out of the recordings export; the screen says plainly that Google may keep text briefly under its terms.
+- App: back button returns to the sentence list; practice-mode banner when scores are simulated; camera button only
+  on touch devices; clear messages for unreadable files and slow reads; a failed API check isn't remembered; scores
+  line up with the words as written even when the scorer hears an extra word (`writtenWords`); an error screen
+  instead of a blank page (`ErrorBoundary`); the service worker never caches HTML as a script.
+
 ## Verified live
 
 - Azure en-US / en-GB / zh-CN (eastasia) and Gemini Live teacher voice (English + Mandarin), from Node and Workers.
@@ -125,8 +144,9 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
 2. **Volunteers** (Leslie is recruiting children; trying adult mode first): parents use Share recordings for testing →
    files go in `eval/volunteers/` (gitignored) → `npx vite-node eval/volunteers.ts` → label `manifest.csv` → measure.
    Real scoring on the hosted app needs the right beta access code (item 3).
-3. **`BETA_ACCESS_CODE` on Cloudflare may be wrong** (masked value ~84 chars ≈ the Azure key length). Until a known
-   passphrase is set and entered in Parent Zone → Beta access, the hosted app runs in practice mode.
+3. **`BETA_ACCESS_CODE`**: Leslie set a new passphrase on 2026-09-19 (`wrangler pages secret put`, run twice — the
+   second value is live). Enter it in Parent Zone / Settings & privacy → Beta access; without it the hosted app runs
+   in practice mode and can't read photos. Never ask Leslie to type it in chat.
 4. `hello@wundertutor.com` printed on the site but no mailbox (suggest Cloudflare Email Routing).
 5. Privacy notice is a plain-language draft; law of record includes HK **PDPO**. Adult learners share the
    parent-oriented Parent Zone/consent flow.

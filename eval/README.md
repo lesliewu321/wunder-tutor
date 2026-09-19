@@ -60,9 +60,15 @@ next step. Azure also can't tell ü from i for many voices, so those swaps are n
 `alt-types-zh.ts`). `sweep-zh.ts` shows the false-alarm/detection trade-off for the Mandarin thresholds.
 
 Say it right (reading text, `server/read.mjs`, Gemini 3.8 Flash): typed Chinese course lines 107/107 with Simplified,
-syllables and tones right (after telling it which syllables are light: 謝謝 xièxie); 30 tricky sentences (還 hái/huán,
-長 zhǎng/cháng, 得 de/děi…) 99.5% of syllables right; photographed pages (English, Traditional, Simplified; clean,
-tilted/grainy, and harsh with shadow and heavy blur) read with **no** wrong characters, 3–7 s a page.
+syllables and tones right (after telling it which syllables are light: 謝謝 xièxie; 4 runs); 30 tricky sentences (還
+hái/huán, 長 zhǎng/cháng, 得 de/děi…) 100% of syllables right. 得 meaning "must" came back as a non-syllable "de3"
+every time until the prompt named it (0/4 → 16/16 on fresh sentences, 8 of them unseen). Typed one-per-line lists were
+sometimes joined into one sentence (1 run in 4) until typed line breaks were declared final. Photographed pages
+(English, Traditional, Simplified; clean, tilted/grainy, and harsh with shadow and heavy blur) read with **no** wrong
+characters and all 83 + 50 syllables right, 2–6 s a page. Mixed pages: a Hong Kong menu (English and Chinese lines), bilingual
+signs ("Exit 出口" → two sentences), French beside English, and Japanese — every sentence found with its language (a
+page-wide label had once sent a bilingual page back as "other"), Chinese pinyin all right, French and Japanese never
+offered.
 
 Cost checks: trimming pauses keeps every scored word (2,541 takes) and saves ~42%; word-clip checks for phrases and
 sentences — see server/README.md.

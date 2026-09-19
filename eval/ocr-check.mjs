@@ -1,8 +1,9 @@
 // "Say it right" — reading a photo of a page. Pages with known text (English, Traditional and Simplified Chinese) are
 // rendered as images, clean and "phone photo" (tilted, blurred, uneven light, grain, JPEG), then read by the
 // production reader (server/read.mjs). Measures characters read wrongly (edit distance) and, for Chinese, whether the
-// pinyin that comes back is right. Plain Node (vite-node's network stalls on Gemini here):
-//   node eval/ocr-check.mjs [--model=gemini-3.8-flash] [--thinking=low]
+// pinyin that comes back is right. Mixed-language pages (a Hong Kong menu, bilingual signs, French beside English,
+// Japanese) check that every sentence comes back with its own language. Plain Node (vite-node stalls on Gemini here):
+//   node eval/ocr-check.mjs [--pages=hk-menu,hk-sign] [--model=gemini-3.8-flash] [--thinking=low]
 import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -31,7 +32,18 @@ const PAGES = [
   ] },
   { id: 'zh-hant', font: 'Microsoft JhengHei', size: 40, lang: 'zh', lines: poly.slice(0, 14).map((p) => p.hant), py: poly.slice(0, 14) },
   { id: 'zh-hans', font: 'Microsoft YaHei', size: 40, lang: 'zh', lines: course.map((c) => c.text), py: course.map((c) => ({ hant: c.text, py: c.py })) },
-];
+  // Pages that mix languages, as Hong Kong menus, signs and school books do. `want`: every sentence the reader should
+  // return, with its language (and pinyin for Chinese). A sign line "Exit 出口" should come back as two sentences.
+  { id: 'hk-menu', font: 'Microsoft JhengHei', size: 38, lines: ['Char siu rice', '叉燒飯', 'Wonton noodles', '雲吞麵', 'Hot milk tea', '熱奶茶', 'Pineapple bun', '菠蘿包', 'Egg tart', '蛋撻', 'Iced lemon tea', '凍檸茶'],
+    want: [['Char siu rice', 'en'], ['叉燒飯', 'zh', 'cha1 shao1 fan4'], ['Wonton noodles', 'en'], ['雲吞麵', 'zh', 'yun2 tun1 mian4'], ['Hot milk tea', 'en'], ['熱奶茶', 'zh', 're4 nai3 cha2'],
+      ['Pineapple bun', 'en'], ['菠蘿包', 'zh', 'bo1 luo2 bao1'], ['Egg tart', 'en'], ['蛋撻', 'zh', 'dan4 ta4'], ['Iced lemon tea', 'en'], ['凍檸茶', 'zh', 'dong4 ning2 cha2']] },
+  { id: 'hk-sign', font: 'Microsoft JhengHei', size: 40, lines: ['Exit 出口', 'Toilets 洗手間', 'Please queue here 請在此排隊', 'No smoking 不准吸煙'],
+    want: [['Exit', 'en'], ['出口', 'zh', 'chu1 kou3'], ['Toilets', 'en'], ['洗手間', 'zh', 'xi3 shou3 jian1'], ['Please queue here', 'en'], ['請在此排隊', 'zh', 'qing3 zai4 ci3 pai2 dui4'], ['No smoking', 'en'], ['不准吸煙', 'zh', 'bu4 zhun3 xi1 yan1']] },
+  { id: 'fr-en', font: 'Georgia', size: 36, lines: ['Bonjour, je m’appelle Marie.', 'Hello, my name is Marie.', 'Où est la gare ?', 'Where is the train station?'],
+    want: [['Bonjour, je m’appelle Marie.', 'other'], ['Hello, my name is Marie.', 'en'], ['Où est la gare ?', 'other'], ['Where is the train station?', 'en']] },
+  { id: 'ja', font: 'Yu Gothic', size: 40, lines: ['私は学生です。', '今日はいい天気ですね。', '猫が好きです。'],
+    want: [['私は学生です。', 'other'], ['今日はいい天気ですね。', 'other'], ['猫が好きです。', 'other']] },
+].filter((p) => !arg('pages') || arg('pages').split(',').includes(p.id));
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const render = (page) => {
@@ -83,6 +95,19 @@ for (const page of PAGES) {
     let got;
     try { got = await readText({ apiKey: env.GEMINI_API_KEY, model, thinking, image: { bytes: new Uint8Array(bytes), mime: variant === 'clean' ? 'image/png' : 'image/jpeg' } }); } catch (e) { console.log(`${page.id} ${variant}: error`, e.body ?? e.message); continue; }
     const secs = ((Date.now() - t0) / 1000).toFixed(1);
+    if (page.want) {
+      // Each wanted sentence: found (same letters), with the right language, and (Chinese) the right pinyin.
+      const key = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+      const found = page.want.map(([text, lang, py]) => ({ text, lang, py, got: got.lines.find((l) => key(l.text) === key(text)) }));
+      const hit = found.filter((f) => f.got), langOk = hit.filter((f) => f.got.lang === f.lang);
+      const zh = found.filter((f) => f.py), pyOk = zh.filter((f) => f.got?.pinyin === f.py);
+      const offered = got.lines.filter((l) => l.lang === 'en' || l.pinyin).length;
+      console.log(`${page.id.padEnd(8)} ${variant.padEnd(5)}: page ${got.language}, sentences found ${hit.length}/${found.length}, language right ${langOk.length}/${hit.length}`
+        + `${zh.length ? `, pinyin right ${pyOk.length}/${zh.length}` : ''}, ${offered} of ${got.lines.length} offered for practice (${secs} s)`);
+      for (const f of found.filter((x) => !x.got || x.got.lang !== x.lang || (x.py && x.got.pinyin !== x.py))) console.log(`    ${f.text}: ${f.got ? `${f.got.lang} ${f.got.pinyin ?? ''}` : 'not found'}`);
+      if (hit.length < found.length) console.log(`    read: ${got.lines.map((l) => `${l.text} [${l.lang}]`).join(' / ')}`);
+      continue;
+    }
     const truth = norm(page.lines.join(page.lang === 'zh' ? '' : ' '), page.lang);
     const read = norm(got.lines.map((l) => l.text).join(page.lang === 'zh' ? '' : ' '), page.lang);
     const cer = lev(read, truth) / Math.max(1, [...truth].length);
@@ -93,6 +118,9 @@ for (const page of PAGES) {
       const ok = want.filter((w, i) => have[i] === w).length;
       const unusable = got.lines.filter((l) => !l.pinyin).length;
       pyNote = `; pinyin ${ok}/${want.length} syllables right${unusable ? `, ${unusable} line(s) unusable` : ''}`;
+      const chars = [...page.lines.join('')].filter((c) => /\p{Script=Han}/u.test(c));
+      const wrong = want.map((w, i) => (have[i] === w ? '' : `${chars[i] ?? '?'} ${have[i] ?? '–'} (want ${w})`)).filter(Boolean);
+      if (wrong.length) pyNote += ` — ${wrong.slice(0, 4).join(', ')}`;
     }
     console.log(`${page.id.padEnd(8)} ${variant.padEnd(5)}: language ${got.language}, ${got.lines.length} lines, characters wrong ${(100 * cer).toFixed(1)}%${pyNote} (${secs} s)`);
     if (cer > 0) console.log(`    read: ${read.slice(0, 160)}\n    want: ${truth.slice(0, 160)}`);

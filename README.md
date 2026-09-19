@@ -117,8 +117,10 @@ lists its sentences; tap one to hear it, say it and get the same feedback as a l
 the device; photos and Chinese text go to `POST /api/read`, where Gemini reads the page and — for Chinese — gives each
 character in both scripts with its pinyin as read in context, which the server checks before it is used. Measured
 (`eval/README.md`): printed pages read with no wrong characters, clean or photographed at an angle in poor light;
-Chinese pinyin right for 107/107 course lines and 99.5% of syllables in tricky sentences (多音字 like 還 hái/huán).
-Needs the API (beta access code); photos are read, then discarded. Not added to the review schedule.
+Chinese pinyin right for 107/107 course lines and all syllables in tricky sentences (多音字 like 還 hái/huán, 得 děi);
+bilingual pages (a Hong Kong menu or sign) keep both languages, and lines in other languages are shown but not
+practised. Needs the API (beta access code). Wunder Tutor keeps neither the photo nor the text. Not added to the
+review schedule.
 
 ## Tablets
 

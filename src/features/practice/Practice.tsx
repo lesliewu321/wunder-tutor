@@ -7,7 +7,7 @@ import { findScenario, SCENARIOS } from '../../content/scenarios';
 import type { SpeechErrorCode } from '../../speech';
 import { stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile, useStore } from '../../state/store';
-import { correctionFor, focusWordIndex, tier } from '../../tutor/feedback';
+import { correctionFor, focusWordIndex, tier, writtenWords } from '../../tutor/feedback';
 import { getTutor, type TutorTurn } from '../../tutor/tutor';
 import { Icon } from '../../ui/Icon';
 import { Button, IconButton, Sheet, toast, TopBar } from '../../ui/kit';
@@ -146,7 +146,10 @@ export function Conversation() {
         ) : (
           <div key={i} className="line line--child">
             <div className="bubble bubble--me">
-              {l.assessment ? l.assessment.words.map((w, j) => <span key={j} className={`w w--${w.errorType === 'omission' ? 'weak' : tier(w.score)}`}>{l.text.split(/\s+/)[j] ?? w.word} </span>) : l.text}
+              {l.assessment ? writtenWords(l.text, l.assessment.words).map((word, j) => {
+                const w = l.assessment!.words[j];
+                return <span key={j} className={`w w--${w.errorType === 'omission' ? 'weak' : tier(w.score)}`}>{word} </span>;
+              }) : l.text}
             </div>
             {l.assessment && <span className={`chip-score chip-score--${tier(l.assessment.overall)}`}>{l.assessment.overall}</span>}
           </div>

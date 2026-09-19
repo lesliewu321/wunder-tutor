@@ -151,6 +151,17 @@ export const textPhones = (text: string, accent: Accent): WordPhones[] => tokeni
 export const phonemesIn = (text: string, accent: Accent): PhonemeId[] =>
   textPhones(text, accent).flatMap((w) => w.syllables.flatMap((s) => s.phonemes));
 
-/** Syllables in a text: English words by the lexicon, Chinese one per character. */
+/**
+ * Syllables in a word the lexicon doesn't know, from its vowel groups ("hippopotamuses" → 5, a silent final e not
+ * counted): any text can be practised (Say it right), and the recording time limit must not cut a slow reader off.
+ */
+const guessSyllables = (word: string): number => {
+  const w = word.toLowerCase().replace(/[^a-z]/g, '');
+  const groups = w.match(/[aeiouy]+/g)?.length ?? 1;
+  return Math.max(1, groups - (w.length > 3 && /[^aeiouyl]e$/.test(w) ? 1 : 0));
+};
+
+/** Syllables in a text: English words by the lexicon (or their vowels), Chinese one per character. */
 export const syllableCount = (text: string): number =>
-  [...text].filter((c) => /\p{Script=Han}/u.test(c)).length + textPhones(text, 'en-US').reduce((n, w) => n + w.syllables.length, 0);
+  [...text].filter((c) => /\p{Script=Han}/u.test(c)).length
+  + textPhones(text, 'en-US').reduce((n, w) => n + (RAW[w.key] ? w.syllables.length : guessSyllables(w.word)), 0);

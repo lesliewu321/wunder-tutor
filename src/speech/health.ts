@@ -45,6 +45,7 @@ export const apiHealth = (): Promise<ApiHealth> => {
       const t = setTimeout(() => ctl.abort(), 8000);
       const res = await apiFetch('/api/health', { signal: ctl.signal });
       clearTimeout(t);
+      if (res.status >= 500) throw new Error(`health ${res.status}`);
       if (!res.ok || !res.headers.get('content-type')?.includes('json')) return NONE;
       const j = await res.json();
       return {
@@ -52,6 +53,8 @@ export const apiHealth = (): Promise<ApiHealth> => {
         needsCode: !!j.needsCode, authorized: !!j.authorized, read: !!j.read,
       };
     } catch {
+      // Offline, too slow, or a passing server fault: not remembered, so the next screen asks again.
+      health = null;
       return NONE;
     }
   })();
