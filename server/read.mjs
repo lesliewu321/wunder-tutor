@@ -1,8 +1,11 @@
 // "Say it right": a photo of a page (or typed text) → the sentences to practise. For Chinese also the Simplified form
 // the scorer needs, the Traditional form Hong Kong learners read, and the pinyin the tone checks need — read in
-// context (好吃 hǎo chī, 银行 yín háng). Gemini reads; every answer is checked before it is used: one pinyin syllable
-// per character, the same characters in both scripts. A line that fails the checks is returned without pinyin, and
-// the app won't offer it for Mandarin practice. Wunder Tutor stores neither the photo nor the text.
+// context (好吃 hǎo chī, 银行 yín háng). Two steps: Gemini first finds the sentences and each one's language, then gives
+// the Chinese ones their characters and pinyin, a few sentences per request, side by side. (All of it in one answer
+// took 14 s for a 280-character page and could run past the answer-size limit on a full textbook page.) Every answer
+// is checked before it is used: one pinyin syllable per character, the same characters in both scripts. A sentence
+// that fails the checks is returned without pinyin, and the app won't offer it for Mandarin practice. Wunder Tutor
+// stores neither the photo nor the text.
 
 import { HttpError } from './http-error.mjs';
 
@@ -10,11 +13,17 @@ export const DEFAULT_READ_MODEL = 'gemini-3.8-flash';
 const MAX_LINES = 40;
 const MAX_LINE_CHARS = 160;
 const MAX_TEXT_CHARS = 2000;
-/** The whole read, retry included, finishes well inside the app's wait (60 s). */
+/** The whole read, pinyin and its retry included, finishes well inside the app's wait (60 s). */
 const BUDGET_MS = 40_000;
 const MAX_OUTPUT_TOKENS = 8192;
+/**
+ * Pinyin requests: at most 6 at once (a Cloudflare Worker opens 6 connections at a time), each of about 45 Chinese
+ * characters; a very long page gets bigger requests rather than more of them.
+ */
+const MAX_BATCHES = 6;
+const BATCH_CHARS = 45;
 
-const INSTRUCTION = [
+const READ_INSTRUCTION = [
   'You prepare text for a pronunciation-practice app used by children and adults in Hong Kong.',
   'Return the text as sentences to practise, in reading order. Keep every word exactly as written: do not correct,',
   'translate, summarise or add anything. Leave out page numbers, running headers and anything that is not text to read.',
@@ -23,7 +32,12 @@ const INSTRUCTION = [
   'language in its own sentences. No readable text: no sentences.',
   'Each sentence: text = the sentence exactly as written; lang = its language: "en" English, "zh" Chinese, "other"',
   '  anything else (French, Japanese, …).',
-  'Chinese only — chars: one entry for every Chinese character of the sentence, in order (skip punctuation):',
+].join('\n');
+
+const PINYIN_INSTRUCTION = [
+  'You give the pinyin of Chinese sentences for a pronunciation-practice app used by children and adults in Hong Kong.',
+  'For every numbered sentence: n = its number; chars = one entry for every Chinese character of the sentence, in',
+  'order (skip punctuation):',
   '  t = the character in Traditional script, s = the same character in Simplified script,',
   '  py = its numbered pinyin as read in this sentence (多音字 by context), ü as v, tone 1–4, or 5 for a syllable that',
   '  standard Putonghua says light (neutral), as a dictionary marks it: 谢谢 xie4 xie5, 喜欢 xi3 huan5, 奶奶 nai3 nai5,',
@@ -36,28 +50,33 @@ const INSTRUCTION = [
 // Each sentence carries its own language: a page-wide label was unstable on bilingual pages (the same menu came back
 // "zh" one time and "other" the next, and "other" turned the whole page away).
 const LANGS = ['en', 'zh', 'other'];
-const SCHEMA = {
+const READ_SCHEMA = {
   type: 'OBJECT',
   properties: {
     lines: {
       type: 'ARRAY',
-      items: {
-        type: 'OBJECT',
-        properties: {
-          text: { type: 'STRING' },
-          lang: { type: 'STRING', enum: LANGS },
-          chars: { type: 'ARRAY', items: { type: 'OBJECT', properties: { t: { type: 'STRING' }, s: { type: 'STRING' }, py: { type: 'STRING' } }, required: ['t', 's', 'py'] } },
-        },
-        required: ['text', 'lang'],
-      },
+      items: { type: 'OBJECT', properties: { text: { type: 'STRING' }, lang: { type: 'STRING', enum: LANGS } }, required: ['text', 'lang'] },
     },
   },
   required: ['lines'],
+};
+const CHARS = { type: 'ARRAY', items: { type: 'OBJECT', properties: { t: { type: 'STRING' }, s: { type: 'STRING' }, py: { type: 'STRING' } }, required: ['t', 's', 'py'] } };
+const PINYIN_SCHEMA = {
+  type: 'OBJECT',
+  properties: {
+    sentences: { type: 'ARRAY', items: { type: 'OBJECT', properties: { n: { type: 'INTEGER' }, chars: CHARS }, required: ['n', 'chars'] } },
+  },
+  required: ['sentences'],
 };
 
 const HAN = /\p{Script=Han}/u;
 /** A letter of any other script: Latin, kana, hangul… */
 const OTHER_LETTER = /(?!\p{Script=Han})\p{L}/u;
+/**
+ * Spelling slips the model keeps making, with the tone right: "de3" isn't a Mandarin syllable — 得 read with tone 3
+ * is always děi ("must"). Seen in 2 of 32 fresh sentences even with the prompt line.
+ */
+const SLIPS = { '得de3': 'dei3' };
 
 /**
  * A Chinese line is usable only if every character has exactly one entry, each entry is one character in each script
@@ -67,7 +86,10 @@ export function checkChineseLine(line) {
   const text = String(line.text ?? '').trim();
   const chars = Array.isArray(line.chars) ? line.chars : [];
   const t = chars.map((c) => String(c?.t ?? '').trim()), s = chars.map((c) => String(c?.s ?? '').trim());
-  const py = chars.map((c) => String(c?.py ?? '').trim().toLowerCase().replace(/ü/g, 'v'));
+  const py = chars.map((c, i) => {
+    const x = String(c?.py ?? '').trim().toLowerCase().replace(/ü/g, 'v');
+    return SLIPS[`${s[i]}${x}`] ?? x;
+  });
   const wellFormed = chars.length > 0
     && t.every((c) => [...c].length === 1 && HAN.test(c)) && s.every((c) => [...c].length === 1 && HAN.test(c))
     && py.every((x) => /^[a-z]{0,2}[aeiouv][a-z]{0,4}[1-5]$/.test(x));
@@ -107,24 +129,50 @@ function respell(text, t, s) {
   return k === t.length ? { trad: trad.trim(), simp: simp.trim() } : null;
 }
 
-/**
- * Normalise and check the model's answer. Only Chinese sentences are given pinyin; the app practises "en" sentences
- * as English and never practises "other" ones. The page's `language` follows from its sentences: "none" (nothing to
- * read), "other" (nothing in English or Chinese), else "zh" if any sentence is Chinese, else "en".
- */
-export function cleanReading(raw) {
+/** The sentences found, normalised and capped. A sentence without a known language: "zh" if it has characters. */
+export function cleanLines(raw) {
   let total = 0;
   const lines = [];
   for (const l of Array.isArray(raw?.lines) ? raw.lines : []) {
-    const text = String(l?.text ?? l?.traditional ?? l?.simplified ?? '').replace(/\s+/g, ' ').trim().slice(0, MAX_LINE_CHARS);
+    const text = String(l?.text ?? '').replace(/\s+/g, ' ').trim().slice(0, MAX_LINE_CHARS);
     if (!text) continue;
     if (lines.length >= MAX_LINES || total + text.length > MAX_TEXT_CHARS) break;
     total += text.length;
-    const lang = LANGS.includes(l?.lang) ? l.lang : HAN.test(text) ? 'zh' : 'en';
-    lines.push(lang === 'zh' ? { ...checkChineseLine({ ...l, text }), lang } : { text, lang });
+    lines.push({ text, lang: LANGS.includes(l?.lang) ? l.lang : HAN.test(text) ? 'zh' : 'en' });
   }
-  const language = !lines.length ? 'none' : lines.some((l) => l.lang === 'zh') ? 'zh' : lines.some((l) => l.lang === 'en') ? 'en' : 'other';
-  return { language, lines };
+  return lines;
+}
+
+/** "none" (nothing to read), "other" (nothing in English or Chinese), else "zh" if any sentence is Chinese, else "en". */
+export const pageLanguage = (lines) =>
+  !lines.length ? 'none' : lines.some((l) => l.lang === 'zh') ? 'zh' : lines.some((l) => l.lang === 'en') ? 'en' : 'other';
+
+/** Chinese sentences that could pass the checks (one with English or kana in it never will). */
+const needsPinyin = (l) => l.lang === 'zh' && !l.pinyin && HAN.test(l.text) && !OTHER_LETTER.test(l.text);
+const hanCount = (text) => [...text].filter((c) => HAN.test(c)).length;
+
+/** Sentences grouped for the pinyin requests, in order. */
+export function pinyinBatches(lines) {
+  const total = lines.reduce((n, l) => n + hanCount(l.text), 0);
+  const size = Math.max(BATCH_CHARS, Math.ceil(total / MAX_BATCHES));
+  const batches = [];
+  let cur = [], n = 0;
+  for (const l of lines) {
+    const c = hanCount(l.text);
+    if (cur.length && n + c > size) { batches.push(cur); cur = []; n = 0; }
+    cur.push(l);
+    n += c;
+  }
+  if (cur.length) batches.push(cur);
+  return batches;
+}
+
+/** Fill in a batch's sentences from the model's answer; a sentence whose entries fail the checks stays without. */
+export function applyPinyin(batch, answer) {
+  for (const s of Array.isArray(answer?.sentences) ? answer.sentences : []) {
+    const line = batch[Number(s?.n) - 1];
+    if (line && !line.pinyin) Object.assign(line, checkChineseLine({ text: line.text, chars: s.chars }));
+  }
 }
 
 const toBase64 = (bytes) => {
@@ -134,48 +182,57 @@ const toBase64 = (bytes) => {
 };
 
 /**
- * Ask Gemini to read an image (`image: { bytes, mime }`) or prepare typed `text`. Chinese lines that fail the checks
- * get one more try, as typed text; any still failing come back without pinyin.
- * @returns {Promise<{ language: string, lines: { text: string, traditional?: string, simplified?: string, pinyin?: string }[] }>}
+ * Read an image (`image: { bytes, mime }`) or prepare typed `text`. Chinese sentences that fail the checks get one
+ * more try while there is time; any still failing come back without pinyin.
+ * @returns {Promise<{ language: string, lines: { text: string, lang: string, traditional?: string, simplified?: string, pinyin?: string }[] }>}
  */
-export async function readText(opts) {
+export async function readText({ apiKey, model = DEFAULT_READ_MODEL, image, text, thinking = 'low', fetchImpl = fetch }) {
   const started = Date.now();
-  const first = await readOnce({ ...opts, budget: BUDGET_MS });
-  // Lines that also hold English (or kana) won't pass a second time either; retry only lines that might.
-  const failed = first.lines.filter((l) => l.lang === 'zh' && !l.pinyin && HAN.test(l.text) && !OTHER_LETTER.test(l.text));
-  const left = BUDGET_MS - (Date.now() - started);
-  if (!failed.length || left < 10_000) return first;
-  let again;
-  try { again = await readOnce({ ...opts, image: undefined, text: failed.map((l) => l.text).join('\n'), budget: left }); } catch { return first; }
-  const fixed = new Map(again.lines.filter((l) => l.pinyin).map((l) => [l.text.replace(/\s/g, ''), l]));
-  return { ...first, lines: first.lines.map((l) => (l.pinyin ? l : fixed.get(l.text.replace(/\s/g, '')) ?? l)) };
-}
+  const left = () => BUDGET_MS - (Date.now() - started);
+  const ask = (instruction, schema, parts) => askGemini({ apiKey, model, thinking, fetchImpl, instruction, schema, parts, budget: left() });
 
-async function readOnce({ apiKey, model = DEFAULT_READ_MODEL, image, text, thinking = 'low', fetchImpl = fetch, budget = BUDGET_MS }) {
   const parts = image
     ? [{ inlineData: { mimeType: image.mime, data: toBase64(image.bytes) } }, { text: 'Read the text in this photo.' }]
     // Typed line breaks are the learner's own (a list of words, a poem): kept, unlike a printed page's wrapping.
     : [{ text: `Prepare this text, typed by a learner. Each of their lines stays separate: never join a line to the next.\n${String(text).slice(0, MAX_TEXT_CHARS)}` }];
+  const lines = cleanLines(await ask(READ_INSTRUCTION, READ_SCHEMA, parts));
+
+  let todo = lines.filter(needsPinyin);
+  for (let round = 0; round < 2 && todo.length && left() > (round ? 10_000 : 3_000); round++) {
+    await Promise.all(pinyinBatches(todo).map(async (batch) => {
+      try {
+        applyPinyin(batch, await ask(PINYIN_INSTRUCTION, PINYIN_SCHEMA, [{ text: batch.map((l, i) => `${i + 1}. ${l.text}`).join('\n') }]));
+      } catch { /* these sentences stay without pinyin (or get the retry) */ }
+    }));
+    todo = todo.filter(needsPinyin);
+  }
+  return { language: pageLanguage(lines), lines };
+}
+
+async function askGemini({ apiKey, model, thinking, fetchImpl, instruction, schema, parts, budget }) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), budget);
-  let res;
+  const timer = setTimeout(() => controller.abort(), Math.max(1, budget));
+  let res, raw;
   try {
     res = await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
       method: 'POST', signal: controller.signal,
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: INSTRUCTION }] },
+        systemInstruction: { parts: [{ text: instruction }] },
         contents: [{ role: 'user', parts }],
-        generationConfig: { temperature: 0, maxOutputTokens: MAX_OUTPUT_TOKENS, responseMimeType: 'application/json', responseSchema: SCHEMA, thinkingConfig: { thinkingLevel: thinking } },
+        generationConfig: { temperature: 0, maxOutputTokens: MAX_OUTPUT_TOKENS, responseMimeType: 'application/json', responseSchema: schema, thinkingConfig: { thinkingLevel: thinking } },
       }),
     });
+    raw = await res.text();
   } catch {
     throw new HttpError(controller.signal.aborted ? 504 : 502, controller.signal.aborted ? 'read_timeout' : 'read_upstream');
   } finally {
     clearTimeout(timer);
   }
   if (!res.ok) throw new HttpError(502, 'read_upstream', { status: res.status });
-  const body = await res.json().catch(() => null);
-  const out = body?.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
-  try { return cleanReading(JSON.parse(out)); } catch { throw new HttpError(502, 'read_unparseable'); }
+  let body = null;
+  try { body = JSON.parse(raw); } catch { /* reported below */ }
+  const candidate = body?.candidates?.[0];
+  const out = candidate?.content?.parts?.filter((p) => !p.thought).map((p) => p.text ?? '').join('') ?? '';
+  try { return JSON.parse(out); } catch { throw new HttpError(502, 'read_unparseable', { finish: candidate?.finishReason ?? body?.promptFeedback?.blockReason ?? null }); }
 }

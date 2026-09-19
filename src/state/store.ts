@@ -10,6 +10,7 @@ import { achievement, bumpStreak, XP } from '../engine/rewards';
 import { ALL_LESSONS } from '../content/course';
 import { setDisplayScript } from '../content/zh/script';
 import { nextVoice } from '../speech/pitch';
+import { forgetBook } from '../features/say/page';
 
 /** Little 5–7, Junior 8–11, Teen 12–17, Grown-up 18+. */
 export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : age <= 17 ? 'teen' : 'adult');
@@ -202,6 +203,7 @@ export const useStore = create<AppState>()(
 
       async deletePronunciationHistory(profileId) {
         await audioRepo.clear(`${profileId}/`);
+        forgetBook(profileId);
         set((s) => {
           const p = s.profiles[profileId];
           if (!p) return s;
@@ -214,6 +216,7 @@ export const useStore = create<AppState>()(
 
       async deleteProfile(profileId) {
         await audioRepo.clear(`${profileId}/`);
+        forgetBook(profileId);
         set((s) => {
           const { [profileId]: _gone, ...rest } = s.profiles;
           const ids = Object.keys(rest);
@@ -223,6 +226,7 @@ export const useStore = create<AppState>()(
 
       async deleteEverything() {
         await audioRepo.clear('');
+        Object.keys(get().profiles).forEach(forgetBook);
         set({ profiles: {}, activeId: null, attempts: [], settings: defaultSettings });
       },
     }),

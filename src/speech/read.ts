@@ -16,46 +16,75 @@ export interface ReadLine {
 export interface Reading { language: 'en' | 'zh' | 'other' | 'none'; lines: ReadLine[] }
 
 export class ReadError extends Error {
-  constructor(readonly code: 'offline' | 'busy' | 'unavailable' | 'photo' | 'failed') { super(code); }
+  /** `detail`: the server's reason ("read_timeout"), shown small so a tester's screenshot says what went wrong. */
+  constructor(readonly code: 'offline' | 'busy' | 'unavailable' | 'photo' | 'failed', readonly detail?: string) { super(code); }
 }
 
 /** Photos are shrunk before upload: the text stays sharp and the upload stays small. */
 const MAX_SIDE = 1600;
 
+interface Decoded { image: CanvasImageSource; width: number; height: number; done: () => void }
+
+/**
+ * Open a photo. An <img> is the second try: older iPhones and iPads have no createImageBitmap for files, and a very
+ * large camera photo can be too big for it. A format the browser can't open at all (HEIC on a computer) fails both.
+ */
+async function decode(file: Blob): Promise<Decoded> {
+  try {
+    const bmp = await createImageBitmap(file);
+    return { image: bmp, width: bmp.width, height: bmp.height, done: () => bmp.close?.() };
+  } catch { /* try an <img> */ }
+  const url = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    if (!img.naturalWidth) throw new Error('empty');
+    return { image: img, width: img.naturalWidth, height: img.naturalHeight, done: () => URL.revokeObjectURL(url) };
+  } catch {
+    URL.revokeObjectURL(url);
+    throw new ReadError('photo');
+  }
+}
+
 export async function shrinkPhoto(file: Blob): Promise<Blob> {
-  let bmp: ImageBitmap;
-  try { bmp = await createImageBitmap(file); } catch { throw new ReadError('photo'); } // e.g. HEIC outside Safari
-  const scale = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
+  const photo = await decode(file);
+  const scale = Math.min(1, MAX_SIDE / Math.max(photo.width, photo.height));
   const canvas = document.createElement('canvas');
-  canvas.width = Math.max(1, Math.round(bmp.width * scale));
-  canvas.height = Math.max(1, Math.round(bmp.height * scale));
+  canvas.width = Math.max(1, Math.round(photo.width * scale));
+  canvas.height = Math.max(1, Math.round(photo.height * scale));
   const g = canvas.getContext('2d')!;
   g.fillStyle = '#fff'; // a transparent PNG would otherwise turn black
   g.fillRect(0, 0, canvas.width, canvas.height);
-  g.drawImage(bmp, 0, 0, canvas.width, canvas.height);
-  bmp.close?.();
+  g.drawImage(photo.image, 0, 0, canvas.width, canvas.height);
+  photo.done();
   return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new ReadError('failed'))), 'image/jpeg', 0.85));
 }
 
-async function post(body: Blob | string, type: string): Promise<Reading> {
+/** `cancel`: the learner closed the camera — the request stops. */
+async function post(body: Blob | string, type: string, cancel?: AbortSignal): Promise<Reading> {
   const ctl = new AbortController();
   // Longer than the server's own limit (40 s), so a slow page ends with the server's answer, not ours.
   const timer = setTimeout(() => ctl.abort(), 60000);
+  const stop = () => ctl.abort();
+  cancel?.addEventListener('abort', stop);
   let res: Response;
   try {
     res = await apiFetch('/api/read', { method: 'POST', headers: { 'Content-Type': type }, body, signal: ctl.signal });
   } catch {
-    throw new ReadError(ctl.signal.aborted ? 'failed' : 'offline');
+    throw new ReadError(ctl.signal.aborted ? 'failed' : 'offline', ctl.signal.aborted ? 'app_timeout' : undefined);
   } finally {
     clearTimeout(timer);
+    cancel?.removeEventListener('abort', stop);
   }
+  const reason = async () => ((await res.json().catch(() => null)) as { error?: string } | null)?.error ?? `http_${res.status}`;
   if (res.status === 429) throw new ReadError('busy');
-  if (res.status === 401 || res.status === 503) throw new ReadError('unavailable');
-  if (!res.ok) throw new ReadError('failed');
-  return (await res.json()) as Reading;
+  if (res.status === 401 || res.status === 503) throw new ReadError('unavailable', await reason());
+  if (!res.ok) throw new ReadError('failed', await reason());
+  try { return (await res.json()) as Reading; } catch { throw new ReadError('failed', 'bad_answer'); }
 }
 
-export const readPhoto = async (photo: Blob): Promise<Reading> => post(await shrinkPhoto(photo), 'image/jpeg');
+export const readPhoto = async (photo: Blob, cancel?: AbortSignal): Promise<Reading> => post(await shrinkPhoto(photo), 'image/jpeg', cancel);
 export const prepareText = (text: string): Promise<Reading> => post(JSON.stringify({ text }), 'application/json');
 
 /**

@@ -4,6 +4,7 @@ import { emptyProfile } from '../intelligence/profile';
 import { splitSentences } from '../speech/read';
 import { sayItem } from '../features/say/sayItem';
 import { writtenWords } from '../tutor/feedback';
+import { visibleRegion } from '../features/say/camera';
 
 const learner = (weak: Record<string, number> = {}): ChildProfile => {
   const pron = emptyProfile();
@@ -54,5 +55,18 @@ describe('Say it right — showing the scores on the words as written', () => {
   });
   it('shows the scorer\'s words when the text can\'t be lined up', () => {
     expect(writtenWords('A well-known song', [w('a'), w('well'), w('known'), w('song')])).toEqual(['a', 'well', 'known', 'song']);
+  });
+});
+
+describe('Say it right — the camera', () => {
+  it('keeps exactly what was on screen: the view fills the screen and crops the camera picture', () => {
+    // A 1920×1080 picture on a tall phone screen (390×844): only the middle strip is shown.
+    const r = visibleRegion(1920, 1080, 390, 844);
+    expect(r.sh).toBe(1080);
+    expect(Math.round(r.sw)).toBe(499);
+    expect(Math.round(r.sx)).toBe(710);
+    // A portrait picture on the same screen, and a picture shown whole.
+    expect(visibleRegion(1080, 1920, 390, 844)).toMatchObject({ sy: 0, sh: 1920 });
+    expect(visibleRegion(1280, 720, 640, 360)).toEqual({ sx: 0, sy: 0, sw: 1280, sh: 720 });
   });
 });

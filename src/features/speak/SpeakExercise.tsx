@@ -288,7 +288,8 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
               <>
                 {/* A concrete fix is on screen → retrying is the main action, even if the score already passes. */}
                 <Button variant="coral" size="lg" icon="mic" block onClick={startListening}>{mastered ? 'Try the fix' : 'Try again'}</Button>
-                {mastered ? <Button variant="ghost" block onClick={finish}>{continueLabel}</Button> : takes.length >= 2 && <Button variant="ghost" block onClick={finish}>Skip for now</Button>}
+                {/* The learner's own page ("free"): moving on is always their choice. */}
+                {mastered || mode === 'free' ? <Button variant="ghost" block onClick={finish}>{continueLabel}</Button> : takes.length >= 2 && <Button variant="ghost" block onClick={finish}>Skip for now</Button>}
               </>
             )}
           </div>

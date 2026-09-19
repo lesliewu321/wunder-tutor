@@ -4,8 +4,9 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  # A children's app: the microphone for this origin only, nothing else.
-  Permissions-Policy: microphone=(self), camera=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  # A children's app: the microphone (speaking) and camera ("Say it right" on a computer) for this origin only,
+  # nothing else.
+  Permissions-Policy: microphone=(self), camera=(self), geolocation=(), payment=(), usb=(), interest-cohort=()
 
 # Hashed build assets never change.
 /assets/*

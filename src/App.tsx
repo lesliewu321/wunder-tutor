@@ -13,11 +13,15 @@ import { isGrownUp } from './domain/types';
 import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
 import { SayIt } from './features/say/SayIt';
+import { CameraHost } from './features/say/CameraHost';
+import { openCamera } from './features/say/camera';
 
-const TABS: { to: string; label: string; icon: IconName; center?: boolean }[] = [
+// The big button in the middle is the camera ("Say it right": photograph a page and practise it). In a lesson or a
+// conversation the big button is the microphone instead — those screens have their own.
+const TABS: { to: string; label: string; icon: IconName; camera?: boolean }[] = [
   { to: '/', label: 'Learn', icon: 'home' },
   { to: '/lab', label: 'Lab', icon: 'lab' },
-  { to: '/speak', label: 'Speak', icon: 'mic', center: true },
+  { to: '', label: 'Photo', icon: 'camera', camera: true },
   { to: '/progress', label: 'Progress', icon: 'chart' },
   { to: '/me', label: 'Me', icon: 'user' },
 ];
@@ -32,12 +36,17 @@ function Tabs() {
     <>
       <main className="tab-main"><Outlet /></main>
       <nav className="nav" aria-label="Main">
-        {TABS.map((t) => (
-          <NavLink key={t.to} to={t.to} end={t.to === '/'} className={({ isActive }) => `nav__item ${t.center ? 'nav__item--center' : ''} ${isActive ? 'is-active' : ''}`}>
-            <span className="nav__icon"><Icon name={t.icon} size={t.center ? 28 : 24} /></span>
+        {TABS.map((t) => (t.camera ? (
+          <button key="camera" type="button" className="nav__item nav__item--center" aria-label="Say it right: take a photo of a page" onClick={openCamera}>
+            <span className="nav__icon"><Icon name={t.icon} size={28} /></span>
+            <span className="nav__label">{t.label}</span>
+          </button>
+        ) : (
+          <NavLink key={t.to} to={t.to} end={t.to === '/'} className={({ isActive }) => `nav__item ${isActive ? 'is-active' : ''}`}>
+            <span className="nav__icon"><Icon name={t.icon} size={24} /></span>
             <span className="nav__label">{t.label}</span>
           </NavLink>
-        ))}
+        )))}
       </nav>
     </>
   );
@@ -91,6 +100,7 @@ export function App() {
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <CameraHost />
         <Toaster />
       </div>
     </BrowserRouter>

@@ -70,6 +70,13 @@ signs ("Exit 出口" → two sentences), French beside English, and Japanese —
 page-wide label had once sent a bilingual page back as "other"), Chinese pinyin all right, French and Japanese never
 offered.
 
+Reading in two steps (2026-09-19, after a real phone photo failed): a dense textbook page (279 characters, 17
+sentences) took 14 s in one answer — and a fuller page would run past the answer-size limit. Now the sentences come
+first (~2.4 s), then the pinyin in up to 6 parallel requests (~3–4 s): 5.4–8.3 s for that page, every sentence with
+its pinyin. Re-run afterwards: all photo pages 0% wrong characters and 133/133 syllables; course lines 100% twice;
+tricky sentences 100%; 得 16/16 (a remaining "de3" slip is mended on the server). `node eval/ocr-check.mjs`,
+`node eval/read-check.mjs [--set=polyphones]`.
+
 Cost checks: trimming pauses keeps every scored word (2,541 takes) and saves ~42%; word-clip checks for phrases and
 sentences — see server/README.md.
 

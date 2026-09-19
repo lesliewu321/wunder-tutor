@@ -110,17 +110,22 @@ look: no mascot while speaking, no confetti, plain unit names ("Food & Drink"), 
 Each learner picks courses (English, 普通話 Putonghua or both), an English accent (American default: the most detailed
 feedback), and for Mandarin, Traditional (default) or Simplified characters. Azure is always sent Simplified.
 
-## Say it right (type or photograph any text)
+## Two ways to learn: the course, or a page from a book ("Say it right")
 
-Speak tab → **Say it right**: type or paste text, or take / choose a photo of a page (a book, a menu, a sign). The app
-lists its sentences; tap one to hear it, say it and get the same feedback as a lesson. English typed text is split on
-the device; photos and Chinese text go to `POST /api/read`, where Gemini reads the page and — for Chinese — gives each
-character in both scripts with its pinyin as read in context, which the server checks before it is used. Measured
+Home has two modes: **Course** (the lessons, plus conversations with Pip) and **My book**. The big button in the middle
+of the bottom bar is the camera: point it at a page (a school book, a menu, a sign), take the photo — or pick one from
+the gallery inside the camera — and the page's sentences appear under My book. Tap one to hear it, say it and get the
+same feedback as a lesson. The camera is the same on phones, tablets and computers (shown inside the app, with a torch
+where the phone has one; if the browser blocks it, the phone's own camera app and the gallery still work). Typing is
+the quiet alternative. English typed text is split on the device; photos and Chinese text go to `POST /api/read`, where
+Gemini first finds the sentences, then gives the Chinese ones each character in both scripts with its pinyin as read in
+context (a few sentences per request, side by side), which the server checks before it is used. Measured
 (`eval/README.md`): printed pages read with no wrong characters, clean or photographed at an angle in poor light;
 Chinese pinyin right for 107/107 course lines and all syllables in tricky sentences (多音字 like 還 hái/huán, 得 děi);
 bilingual pages (a Hong Kong menu or sign) keep both languages, and lines in other languages are shown but not
-practised. Needs the API (beta access code). Wunder Tutor keeps neither the photo nor the text. Not added to the
-review schedule.
+practised. A dense Chinese page takes about 6–8 s. Needs the API (beta access code). Wunder Tutor keeps neither the
+photo nor the text on its servers; the page's sentences stay on the device (per learner) until a new photo, and are
+erased with the learner's data. Not added to the review schedule.
 
 ## Tablets
 

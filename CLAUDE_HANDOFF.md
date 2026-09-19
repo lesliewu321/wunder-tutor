@@ -61,15 +61,25 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   `isGrownUp()` = teen or adult). Adults: no mascot while speaking, no confetti, plain unit names, adult wording.
 - **Tablet:** `src/styles/tablet.css` — side rail ≥740×600, two-column Home ≥1000 px, side-by-side speaking in
   landscape, sheets as centred dialogs. Checked at 820×1180, 1180×820, 744×1133, 375×812 and in dark mode.
-- **Say it right** (Speak tab → `/say`, `src/features/say/`): type or photograph any text → sentences → hear, say,
-  corrected (same speaking screen, `mode="free"`: not added to the review schedule). Photos and Chinese text go to
-  `POST /api/read` (`server/read.mjs`, Gemini 3.8 Flash, per-character {t, s, py} checked by `checkChineseLine`).
+- **Two modes on Home** (Leslie's design, 2026-09-19): **Course** (lessons + "Talk with Pip" card → `/speak`) and
+  **My book**. The big centre button of the bottom bar is the **camera** (not a mic: nothing to speak into on Home;
+  lessons and conversations keep their own mic). Mode per learner in localStorage (`src/features/say/page.ts`).
+- **Say it right** (`src/features/say/`): camera (`CameraScreen.tsx`, full screen on every device via getUserMedia:
+  shutter, gallery button inside, torch if the phone has one, photo = exactly what was on screen; blocked → "Use the
+  camera app" (capture input) + gallery). Opened from anywhere with `openCamera()` → `CameraHost` (next to the
+  toasts). A read page is saved per learner (`wunder-tutor/book/<id>`, erased with the learner/all data) and Home
+  switches to My book; each sentence is `/say?s=N` (same speaking screen, `mode="free"`: "Next sentence" always
+  offered, not added to the review schedule). `Permissions-Policy: camera=(self)` (was `camera=()`, which blocked
+  it). Photos and Chinese text go to `POST /api/read` (`server/read.mjs`, Gemini 3.8 Flash, two steps: sentences, then
+  per-character {t, s, py} in ≤ 6 parallel batches, checked by `checkChineseLine`).
   Measured: no wrong characters on photographed pages (clean / phone-like / harsh); pinyin 107/107 course lines, 100%
   of syllables on tricky 多音字 sentences (得 děi needed a line in the prompt). Every sentence carries its own `lang`
   (bilingual HK menus/signs keep both languages; French/Japanese lines are shown, not practised). English typed text
-  is split on the device (works in practice mode). The page survives the back button (`?s=` + sessionStorage), the
-  camera button shows only on touch devices, unreadable files (HEIC on a computer) get their own message, transparent
-  PNGs get a white background, the app waits 60 s (server budget 40 s). A learner's own sentences are spoken with
+  is split on the device (works in practice mode). Unreadable files (HEIC on a computer) get their own message
+  (decode falls back to an <img> for older iPhones/very large photos), transparent PNGs get a white background, the
+  app waits 60 s (server budget 40 s). A failed read shows the server's code in brackets; the server logs
+  `[read] <code> after N s` (tail it with wrangler). Leslie's first real phone photo failed with no code (before this
+  logging); the most likely cause, a dense page's one-answer size/time, is fixed by the two-step read. A learner's own sentences are spoken with
   `ephemeral` (never in the shared TTS cache, 40 / 10 min per client) and left out of the recordings export.
 - **Cheaper scoring:** takes are trimmed to speech ± margin before upload (`speechWindow`, ~42% less audio, no word
   cut in 2,541 test takes); phrases/sentences check likely mistakes on each word's clip in a second parallel round
@@ -206,7 +216,10 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 
 Short messages and screenshots; not a terminal native. Walk through consoles step by step, say exactly where to type,
 and verify from outside afterwards. Prefers a recommendation over open-ended questions. Local commits at milestones;
-push only when asked.
+push only when asked. Tests on an Android phone (Chrome, large system font) and designs by screenshot: e.g. "two modes
+on Home — follow the curriculum, or take a photo from a book", "the centre button should be a camera", "choose a photo
+= a gallery icon inside the camera". UI work is also done "with the gauntlet method" (build, run, screenshot,
+critique, fix, retest).
 
 ## Key files
 

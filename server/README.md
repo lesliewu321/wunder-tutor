@@ -49,12 +49,16 @@ public deployment with no code set fails closed.
   `{ "text": "…" }` (≤ 2000 chars) → `{ language: "en"|"zh"|"other"|"none", lines: [{ text, lang: "en"|"zh"|"other",
   traditional?, simplified?, pinyin? }] }`. Every sentence has its own language, so a bilingual page (a Hong Kong menu or
   sign) keeps both; the page `language` follows from its sentences ("other" = nothing in English or Chinese). Typed line
-  breaks are kept. Gemini (`GEMINI_READ_MODEL`, default `gemini-3.8-flash`) reads with a strict JSON schema; Chinese
-  comes back character by character ({t, s, py}) and a line keeps its pinyin only if the entries spell the sentence as
-  written (numbers are written out: 3 → 三). A failing Chinese line gets one retry as text. 30 requests / 10 min per
-  client. Errors: 400 `missing_text|text_too_long|missing_image`, 503 `gemini_not_configured`, 502
-  `read_upstream|read_unparseable`, 504 `read_timeout` (40 s for the whole read). The image or text goes to Google;
-  Wunder Tutor stores neither.
+  breaks are kept. Gemini (`GEMINI_READ_MODEL`, default `gemini-3.8-flash`) works in two steps with strict JSON
+  schemas: first the sentences and their languages, then the Chinese ones character by character ({t, s, py}) in up to
+  6 requests side by side (~45 characters each; a Worker opens 6 connections at a time). A sentence keeps its pinyin
+  only if the entries spell it as written (numbers are written out: 3 → 三); failing sentences get one more try while
+  there is time. Known model slips are mended (得 "de3" → dei3). 30 requests / 10 min per client. Errors: 400
+  `missing_text|text_too_long|missing_image`, 503 `gemini_not_configured`, 502 `read_upstream` (with Gemini's
+  `status`) `|read_unparseable` (with `finish`, e.g. MAX_TOKENS), 504 `read_timeout` (40 s for the whole read). Each
+  failure is logged as `[read] <code> after N s, photo N KB` (never the content) — see it live with
+  `npx wrangler pages deployment tail --project-name wunder-tutor`. The app shows the code in brackets. The image or
+  text goes to Google; Wunder Tutor stores neither.
 - `POST /api/tutor` with `{ scenario:{title,setting,tutorRole,goals[]}, band, history:[{role:"tutor"|"child",text}], pronunciationNotes? }`
   → `{ reply, suggestions (0-2 strings), done }`. Child-safety rules live in the system prompt; emojis are stripped;
   `done` is forced after 8 child turns. Errors: 400 `invalid_json|invalid_scenario|invalid_band|invalid_history`,

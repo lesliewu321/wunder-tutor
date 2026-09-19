@@ -12,6 +12,8 @@ import type { CourseId } from '../../domain/types';
 import { Icon } from '../../ui/Icon';
 import { Button, ProgressBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
+import { BookHome } from '../say/BookHome';
+import { useBook } from '../say/page';
 
 export function Home() {
   const nav = useNavigate();
@@ -31,6 +33,7 @@ export function Home() {
   const measured = weakSoundsIn(p.pronunciation, p.course).some((s) => s.phoneme === focus);
   const due = dueItems(p, Date.now()).filter((d) => d.itemId.startsWith('zh-') === (p.course === 'zh')).length;
   const review = unit.lessons[unit.lessons.length - 1];
+  const { mode, setMode, page } = useBook(p.id);
   const [api, setApi] = useState<ApiHealth | null>(null);
   useEffect(() => { void apiHealth().then(setApi); }, []);
   // Never let simulated scores pass for real ones.
@@ -49,6 +52,19 @@ export function Home() {
         </div>
       </header>
 
+      {/* Two ways to learn: follow the course, or practise a page from a book. */}
+      <div className="modes" role="tablist" aria-label="How to learn">
+        <button type="button" role="tab" aria-selected={mode === 'course'} className={`mode ${mode === 'course' ? 'is-on' : ''}`} onClick={() => setMode('course')}>
+          <span className="mode__icon" aria-hidden><Icon name="home" size={22} /></span>
+          <span className="mode__text"><b>Course</b><small>{p.band === 'little' ? 'Lessons' : 'Step-by-step lessons'}</small></span>
+        </button>
+        <button type="button" role="tab" aria-selected={mode === 'book'} className={`mode ${mode === 'book' ? 'is-on' : ''}`} onClick={() => setMode('book')}>
+          <span className="mode__icon" aria-hidden><Icon name="book" size={22} /></span>
+          <span className="mode__text"><b>My book</b><small>{page ? `${page.reading.lines.length} sentences` : 'Snap a page'}</small></span>
+        </button>
+      </div>
+
+      {mode === 'book' ? <BookHome p={p} /> : <>
       <div className="segmented segmented--course" role="group" aria-label="Course">
         {(Object.entries(COURSE_LABEL) as [CourseId, string][]).map(([id, label]) => (
           <button key={id} type="button" className={p.course === id ? 'is-on' : ''} aria-pressed={p.course === id} onClick={() => setCourse(id)}>
@@ -95,6 +111,12 @@ export function Home() {
       </button>
 
       <div className="daily"><div className="daily__row"><b>Today’s goal</b><span>{goalPct >= 1 ? 'Done! 🎉' : `${p.dailyGoalXp - xp} XP to go`}</span></div><ProgressBar value={goalPct} tone="leaf" /></div>
+
+      <button type="button" className="row-link" onClick={() => nav('/speak')}>
+        <span className="row-link__icon"><Icon name="chat" /></span>
+        <span><b>{p.band === 'adult' ? 'Conversation practice' : 'Talk with Pip'}</b><small>Have a real conversation out loud — at a café, the zoo, with a new friend</small></span>
+        <Icon name="chevron" size={20} />
+      </button>
       </div>
 
       <section className="path" aria-label="Lessons">
@@ -120,6 +142,7 @@ export function Home() {
         ))}
       </section>
       </div>
+      </>}
     </div>
   );
 }

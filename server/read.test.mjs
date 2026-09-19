@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkChineseLine, cleanReading } from './read.mjs';
+import { applyPinyin, checkChineseLine, cleanLines, pageLanguage, pinyinBatches, readText } from './read.mjs';
 
 const chars = (spec) => spec.map(([t, s, py]) => ({ t, s, py }));
 
@@ -11,6 +11,10 @@ describe('reading text for practice', () => {
     expect(checkChineseLine({ text: '我想喝水。', chars: chars([['我', '我', 'wo3'], ['想', '想', 'xiang3']]) }).pinyin).toBeUndefined();
     expect(checkChineseLine({ text: '我想', chars: chars([['我', '我', 'wo3'], ['想', '想', 'xiang']]) }).pinyin).toBeUndefined();
     expect(checkChineseLine({ text: '我想', chars: chars([['你', '你', 'ni3'], ['想', '想', 'xiang3']]) }).pinyin).toBeUndefined();
+  });
+
+  it('mends a syllable that does not exist when the tone gives the reading away: 得 de3 → dei3', () => {
+    expect(checkChineseLine({ text: '我得走了。', chars: chars([['我', '我', 'wo3'], ['得', '得', 'de3'], ['走', '走', 'zou3'], ['了', '了', 'le5']]) }).pinyin).toBe('wo3 dei3 zou3 le5');
   });
 
   it('writes numbers out as they are read', () => {
@@ -27,33 +31,62 @@ describe('reading text for practice', () => {
   });
 
   it('keeps the answer to a sensible size', () => {
-    const r = cleanReading({ lines: Array.from({ length: 80 }, (_, i) => ({ text: `Line ${i}.`, lang: 'en' })) });
-    expect(r.lines.length).toBe(40);
-    expect(cleanReading({ lines: [] }).language).toBe('none');
-    expect(cleanReading(null).language).toBe('none');
+    expect(cleanLines({ lines: Array.from({ length: 80 }, (_, i) => ({ text: `Line ${i}.`, lang: 'en' })) }).length).toBe(40);
+    expect(pageLanguage(cleanLines({ lines: [] }))).toBe('none');
+    expect(pageLanguage(cleanLines(null))).toBe('none');
   });
 
   it('gives every sentence its own language, so a bilingual page (a Hong Kong menu) is kept', () => {
-    const r = cleanReading({ lines: [
-      { text: 'Fried rice', lang: 'en' },
-      { text: '炒飯', lang: 'zh', chars: chars([['炒', '炒', 'chao3'], ['飯', '饭', 'fan4']]) },
-      { text: 'Bon appétit !', lang: 'other' },
-      { text: 'Tea', lang: 'klingon' },
+    const lines = cleanLines({ lines: [
+      { text: 'Fried rice', lang: 'en' }, { text: '炒飯', lang: 'zh' }, { text: 'Bon appétit !', lang: 'other' }, { text: 'Tea', lang: 'klingon' },
     ] });
-    expect(r.language).toBe('zh');
-    expect(r.lines).toEqual([
+    applyPinyin([lines[1]], { sentences: [{ n: 1, chars: chars([['炒', '炒', 'chao3'], ['飯', '饭', 'fan4']]) }] });
+    expect(pageLanguage(lines)).toBe('zh');
+    expect(lines).toEqual([
       { text: 'Fried rice', lang: 'en' },
-      { text: '炒飯', traditional: '炒飯', simplified: '炒饭', pinyin: 'chao3 fan4', lang: 'zh' },
+      { text: '炒飯', lang: 'zh', traditional: '炒飯', simplified: '炒饭', pinyin: 'chao3 fan4' },
       { text: 'Bon appétit !', lang: 'other' },
       { text: 'Tea', lang: 'en' },
     ]);
     // Nothing in English or Chinese: the page is turned away as a whole.
-    expect(cleanReading({ lines: [{ text: 'Merci beaucoup.', lang: 'other' }] }).language).toBe('other');
+    expect(pageLanguage(cleanLines({ lines: [{ text: 'Merci beaucoup.', lang: 'other' }] }))).toBe('other');
   });
 
-  it('never gives pinyin to a line in another language, or with kana among the characters', () => {
-    const jp = { text: '私は学生です。', chars: chars([['私', '私', 'si1'], ['學', '学', 'xue2'], ['生', '生', 'sheng1']]) };
-    expect(cleanReading({ lines: [{ ...jp, lang: 'other' }] }).lines[0]).toEqual({ text: jp.text, lang: 'other' });
-    expect(cleanReading({ lines: [{ ...jp, lang: 'zh' }] }).lines[0].pinyin).toBeUndefined();
+  it('never gives pinyin to a line with kana among the characters', () => {
+    const [jp] = cleanLines({ lines: [{ text: '私は学生です。', lang: 'zh' }] });
+    applyPinyin([jp], { sentences: [{ n: 1, chars: chars([['私', '私', 'si1'], ['學', '学', 'xue2'], ['生', '生', 'sheng1']]) }] });
+    expect(jp.pinyin).toBeUndefined();
+  });
+
+  it('asks for the pinyin of a long page in at most 6 requests, in order', () => {
+    const lines = Array.from({ length: 30 }, (_, i) => ({ text: `${'我'.repeat(20)}${i}`, lang: 'zh' }));
+    const batches = pinyinBatches(lines);
+    expect(batches.length).toBeLessThanOrEqual(6);
+    expect(batches.flat()).toEqual(lines);
+    expect(pinyinBatches([{ text: '你好', lang: 'zh' }])).toEqual([[{ text: '你好', lang: 'zh' }]]);
+  });
+});
+
+const answer = (json, finishReason = 'STOP') => new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: json }] }, finishReason }] }));
+
+describe('reading in two steps', () => {
+  it('finds the sentences, then asks for the pinyin; a failed pinyin request gets one more try', async () => {
+    const asked = [];
+    let pinyinTries = 0;
+    const fetchImpl = async (_url, init) => {
+      const schema = JSON.parse(init.body).generationConfig.responseSchema;
+      asked.push(Object.keys(schema.properties)[0]);
+      if (schema.properties.lines) return answer(JSON.stringify({ lines: [{ text: 'Hello!', lang: 'en' }, { text: '你好。', lang: 'zh' }] }));
+      if (++pinyinTries === 1) return new Response('{"error":"busy"}', { status: 503 });
+      return answer(JSON.stringify({ sentences: [{ n: 1, chars: chars([['你', '你', 'ni3'], ['好', '好', 'hao3']]) }] }));
+    };
+    const r = await readText({ apiKey: 'k', text: 'Hello!\n你好。', fetchImpl });
+    expect(asked).toEqual(['lines', 'sentences', 'sentences']);
+    expect(r).toEqual({ language: 'zh', lines: [{ text: 'Hello!', lang: 'en' }, { text: '你好。', lang: 'zh', traditional: '你好。', simplified: '你好。', pinyin: 'ni3 hao3' }] });
+  });
+
+  it('says why an answer could not be used (a cut-off answer)', async () => {
+    await expect(readText({ apiKey: 'k', text: 'x', fetchImpl: async () => answer('{"lines": [', 'MAX_TOKENS') }))
+      .rejects.toMatchObject({ status: 502, body: { error: 'read_unparseable', finish: 'MAX_TOKENS' } });
   });
 });
