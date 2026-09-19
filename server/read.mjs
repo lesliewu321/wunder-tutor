@@ -17,6 +17,11 @@ const MAX_TEXT_CHARS = 2000;
 const BUDGET_MS = 40_000;
 const MAX_OUTPUT_TOKENS = 8192;
 /**
+ * Status for a read that failed at Google. Not 502/504: Cloudflare swaps a Function's 502 body for its own
+ * "error code: 502" page, which hid the reason from the app (seen live on 2026-09-19).
+ */
+const UPSTREAM = 424;
+/**
  * Pinyin requests: at most 6 at once (a Cloudflare Worker opens 6 connections at a time), each of about 45 Chinese
  * characters; a very long page gets bigger requests rather than more of them.
  */
@@ -230,14 +235,31 @@ async function askGemini({ apiKey, model, thinking, fetchImpl, instruction, sche
     });
     raw = await res.text();
   } catch {
-    throw new HttpError(controller.signal.aborted ? 504 : 502, controller.signal.aborted ? 'read_timeout' : 'read_upstream');
+    throw new HttpError(UPSTREAM, controller.signal.aborted ? 'read_timeout' : 'read_upstream');
   } finally {
     clearTimeout(timer);
   }
-  if (!res.ok) throw new HttpError(502, 'read_upstream', { status: res.status });
+  if (!res.ok) throw upstreamError(res.status, raw);
   let body = null;
   try { body = JSON.parse(raw); } catch { /* reported below */ }
   const candidate = body?.candidates?.[0];
   const out = candidate?.content?.parts?.filter((p) => !p.thought).map((p) => p.text ?? '').join('') ?? '';
-  try { return JSON.parse(out); } catch { throw new HttpError(502, 'read_unparseable', { finish: candidate?.finishReason ?? body?.promptFeedback?.blockReason ?? null }); }
+  try { return JSON.parse(out); } catch { throw new HttpError(UPSTREAM, 'read_unparseable', { finish: candidate?.finishReason ?? body?.promptFeedback?.blockReason ?? null }); }
+}
+
+/**
+ * Google refused the request: name the usual reasons, and keep Google's own words for the server log (never sent to
+ * the app — they are Google's, not the learner's, but the app only needs the code).
+ */
+export function upstreamError(status, raw) {
+  let message = '';
+  try { message = String(JSON.parse(raw)?.error?.message ?? ''); } catch { message = String(raw ?? ''); }
+  const code = /location is not supported/i.test(message) ? 'read_region'
+    : /api key/i.test(message) ? 'read_key'
+    : status === 404 ? 'read_model'
+    : status === 429 ? 'read_quota'
+    : 'read_upstream';
+  const err = new HttpError(UPSTREAM, code, { status });
+  err.upstreamMessage = message.replace(/\s+/g, ' ').slice(0, 200);
+  return err;
 }

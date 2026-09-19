@@ -296,7 +296,7 @@ export function createApi(rawEnv, deps = {}) {
     } catch (err) {
       // What failed and how long it took — never the photo or the text.
       const what = input.image ? `photo ${Math.round(input.image.bytes.length / 1024)} KB` : `text ${input.text.length} chars`;
-      log.warn?.(`[read] ${err?.body?.error ?? err?.name ?? 'error'}${err?.body?.status ? ` (gemini ${err.body.status})` : ''}${err?.body?.finish ? ` (${err.body.finish})` : ''} after ${((Date.now() - started) / 1000).toFixed(1)} s, ${what}`);
+      log.warn?.(`[read] ${err?.body?.error ?? err?.name ?? 'error'}${err?.body?.status ? ` (gemini ${err.body.status}${err.upstreamMessage ? `: ${err.upstreamMessage}` : ''})` : ''}${err?.body?.finish ? ` (${err.body.finish})` : ''} after ${((Date.now() - started) / 1000).toFixed(1)} s, ${what}`);
       throw err;
     }
   }

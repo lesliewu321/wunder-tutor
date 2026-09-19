@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyPinyin, checkChineseLine, cleanLines, pageLanguage, pinyinBatches, readText } from './read.mjs';
+import { applyPinyin, checkChineseLine, cleanLines, pageLanguage, pinyinBatches, readText, upstreamError } from './read.mjs';
 
 const chars = (spec) => spec.map(([t, s, py]) => ({ t, s, py }));
 
@@ -87,6 +87,16 @@ describe('reading in two steps', () => {
 
   it('says why an answer could not be used (a cut-off answer)', async () => {
     await expect(readText({ apiKey: 'k', text: 'x', fetchImpl: async () => answer('{"lines": [', 'MAX_TOKENS') }))
-      .rejects.toMatchObject({ status: 502, body: { error: 'read_unparseable', finish: 'MAX_TOKENS' } });
+      .rejects.toMatchObject({ status: 424, body: { error: 'read_unparseable', finish: 'MAX_TOKENS' } });
+  });
+
+  it('names why Google refused, and keeps its words for the log only', () => {
+    const where = upstreamError(400, JSON.stringify({ error: { code: 400, message: 'User location is not supported for the API use.', status: 'FAILED_PRECONDITION' } }));
+    expect(where).toMatchObject({ status: 424, body: { error: 'read_region', status: 400 } });
+    expect(where.upstreamMessage).toBe('User location is not supported for the API use.');
+    expect(JSON.stringify(where.body)).not.toContain('location');
+    expect(upstreamError(400, JSON.stringify({ error: { message: 'API key not valid. Please pass a valid API key.' } })).body.error).toBe('read_key');
+    expect(upstreamError(404, '{}').body.error).toBe('read_model');
+    expect(upstreamError(500, 'oops').body.error).toBe('read_upstream');
   });
 });
