@@ -123,10 +123,10 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
    parent-oriented Parent Zone/consent flow.
 6. PWA icons are SVG only (iOS wants PNGs). The beta code is a shared passphrase, not real auth.
 7. Speak/Practice conversations are English only (the screen tells Mandarin learners so). Putonghua scenarios are to do.
-8. **Teacher takes can't be tone-checked yet.** The server gate (transcript + Azure ≥ 85 / syllable ≥ 70) is lenient on
-   tones, so a Gemini take of 麻 said as 马 could be cached. Fix idea: run the app's pitch tracker + tone model on the
-   teacher audio in the browser (the teacher voice is one known Gemini voice, so its pitch profile is fixed) and fall
-   back to the device voice on a confident mismatch.
+8. **Teacher takes:** single characters are tone-checked in the browser (`src/speech/zh/teacherCheck.ts`, Kore voice
+   profile); phrases are not — the server gate (transcript + Azure ≥ 85 / syllable ≥ 70) is lenient on tones.
+9. **Cloudflare Web Analytics** injects its beacon (`static.cloudflareinsights.com`) into the hosted app — cookieless,
+   but the privacy notice says nothing about it. Mention it or switch it off in the Pages project settings.
 
 ## Waiting on Leslie
 
@@ -157,6 +157,10 @@ Two independent reviews (scoring code; screens/grown-up/tablet) — all findings
   cropped while the pane is hidden — retry, or verify with `javascript_tool` measurements.
 - **Leslie's network intercepts/caches DNS** — verify with DNS-over-HTTPS and `curl --resolve`, not nslookup.
 - **Wrangler**: Pages/KV write, no DNS write. Local workerd needs `compatibility_date` ≤ 2026-08-08 (we use 2026-06-01).
+- **Checking a deploy:** first wait until `https://app.wundertutor.com/` serves the new `index.html` (new
+  `assets/index-*.js` name), only then fetch the new asset. Fetching it earlier gets the old deployment's SPA fallback
+  (HTML) cached at the edge under the asset URL for a year (`/assets/*` is immutable) → blank app on that edge. Happened
+  once (2026-09-19); fixed by redeploying with a new hash. Settings → Demo & diagnostics shows the app version.
 - Azure word scores are lenient ("tree" for "three" → word 80, phoneme 25) → `WRONG_SOUND_BELOW` in
   `src/engine/learning.ts`. Single-word overall uses AccuracyScore, not PronScore.
 - Mandarin display text follows the learner's script through `src/content/zh/script.ts` (the store keeps the display
