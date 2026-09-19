@@ -72,3 +72,5 @@ export const ZH_PHRASES: [string, string, string, string, number, 'tone' | 'init
 ];
 
 export const VOICES = ['Kore', 'Puck', 'Leda'];
+/** Mandarin uses more voices: the tone model is trained on some speakers and must work for new ones. */
+export const ZH_VOICES = [...VOICES, 'Aoede', 'Zephyr', 'Charon'];

@@ -90,16 +90,35 @@ export interface SurfaceTone {
  *  - 不 bù: bú before a 4th tone.
  *  - 3rd + 3rd: in a run of 3rd tones the one before the last becomes 2nd; earlier ones may be 2nd or a low 3rd.
  */
+/** The tone a light (neutral) syllable has underneath, where it changes the tone before it. */
+const UNDERLYING: Record<string, Tone> = { 个: 4, 下: 4, 些: 1, 点: 3 };
+/** Characters after which 一 is a number being counted or a date, and keeps its 1st tone. */
+const NUMERALS = '〇一二三四五六七八九十月号日';
+/**
+ * Two-character words with a 3rd tone before a light syllable that is a 3rd tone underneath. Family words said twice
+ * (姐姐, 奶奶) are not on the list: they keep the 3rd tone.
+ */
+const SANDHI_BEFORE_LIGHT = ['小姐', '哪里', '想想', '走走'];
+
 export const surfaceTones = (citation: Tone[], chars: string[] = [], breaks: Set<number> = new Set()): SurfaceTone[] => {
   const n = citation.length;
   const tones = [...citation];
   const endsPhrase = (i: number) => i === n - 1 || breaks.has(i);
   for (let i = 0; i < n; i++) {
-    const next = endsPhrase(i) ? undefined : citation[i + 1];
-    if (chars[i] === '一' && citation[i] === 1 && next) tones[i] = next === 4 ? 2 : next === 5 ? 1 : 4;
+    // A light syllable changes 一 by the tone it has underneath (一个 yí ge).
+    const next = endsPhrase(i) ? undefined : citation[i + 1] === 5 ? UNDERLYING[chars[i + 1]] ?? 5 : citation[i + 1];
+    // Counting, ordinals and dates keep yī: 一二三, 第一, 十一, 一月, 一号.
+    const counting = chars[i - 1] === '第' || chars[i - 1] === '十' || NUMERALS.includes(chars[i + 1] ?? '');
+    if (chars[i] === '一' && citation[i] === 1 && next && !counting) tones[i] = next === 4 ? 2 : next === 5 ? 1 : 4;
     if (chars[i] === '不' && citation[i] === 4 && next === 4) tones[i] = 2;
   }
   const out: SurfaceTone[] = tones.map((t, i) => ({ citation: citation[i], accept: [t], lowThird: t === 3 && !endsPhrase(i) }));
+  // Words whose light second syllable is a 3rd tone underneath still turn the first into a 2nd: 小姐 xiáojie, 哪里.
+  for (let i = 0; i + 1 < n; i++) {
+    if (tones[i] === 3 && citation[i + 1] === 5 && !endsPhrase(i) && SANDHI_BEFORE_LIGHT.includes(chars[i] + chars[i + 1])) {
+      out[i] = { citation: citation[i], accept: [2, 3], lowThird: false };
+    }
+  }
   // 3rd-tone runs (neutral tones and phrase ends break a run).
   let i = 0;
   while (i < n) {

@@ -1,5 +1,6 @@
-import type { ContentBand, Course, CourseId, Exercise, Lesson, PhonemeId, SpeakItem, Unit } from '../domain/types';
+import { isGrownUp, type AgeBand, type ContentBand, type Course, type CourseId, type Exercise, type Lesson, type PhonemeId, type SpeakItem, type Unit } from '../domain/types';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
+import { inScript } from './zh/script';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -126,24 +127,30 @@ const foodLessons: Lesson[] = [
   }),
 ];
 
-const lockedUnit = (id: string, title: string, subtitle: string, icon: string, color: string): Unit => ({
-  id, title, subtitle, icon, color, lessons: [], locked: true,
+const lockedUnit = (id: string, title: string, subtitle: string, icon: string, color: string, grownUp?: Unit['grownUp']): Unit => ({
+  id, title, subtitle, icon, color, lessons: [], locked: true, grownUp,
 });
 
 export const COURSE: Course = {
   id: 'english-adventure',
   title: 'English Adventure',
+  grownUpTitle: 'English',
   language: 'en',
   units: [
-    { id: 'food', title: 'Yummy Food', subtitle: 'Order food and drinks', icon: '🍎', color: 'var(--coral)', lessons: foodLessons },
-    lockedUnit('family', 'My Family', 'Talk about the people you love', '👨‍👩‍👧', 'var(--sky)'),
-    lockedUnit('animals', 'Animal Friends', 'Pets, farms and the zoo', '🦁', 'var(--leaf)'),
-    lockedUnit('school', 'At School', 'Classroom words and questions', '🎒', 'var(--sun)'),
+    { id: 'food', title: 'Yummy Food', subtitle: 'Order food and drinks', icon: '🍎', color: 'var(--coral)', lessons: foodLessons, grownUp: { title: 'Food & Drink', subtitle: 'Order at cafés and restaurants' } },
+    lockedUnit('family', 'My Family', 'Talk about the people you love', '👨‍👩‍👧', 'var(--sky)', { title: 'Family', subtitle: 'Talk about the people in your life' }),
+    lockedUnit('animals', 'Animal Friends', 'Pets, farms and the zoo', '🦁', 'var(--leaf)', { title: 'Animals', subtitle: 'Pets, farms and wildlife' }),
+    lockedUnit('school', 'At School', 'Classroom words and questions', '🎒', 'var(--sun)', { title: 'School & Study', subtitle: 'Classroom words and questions' }),
   ],
 };
 
 export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE };
 export const courseFor = (id: CourseId): Course => COURSES[id] ?? COURSE;
+
+/** Course and unit names as this learner sees them: plainer for teens and adults, Chinese in their script. */
+export const courseTitle = (c: Course, band: AgeBand): string => (isGrownUp(band) && c.grownUpTitle) || c.title;
+export const unitTitle = (u: Unit, band: AgeBand): string => inScript((isGrownUp(band) && u.grownUp?.title) || u.title);
+export const unitSubtitle = (u: Unit, band: AgeBand): string => inScript((isGrownUp(band) && u.grownUp?.subtitle) || u.subtitle);
 
 export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units].flatMap((u) => u.lessons);
 export const findLesson = (id: string): Lesson | undefined => ALL_LESSONS.find((l) => l.id === id);

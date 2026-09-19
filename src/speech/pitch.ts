@@ -217,3 +217,22 @@ export function voiceStats(track: PitchTrack | null | undefined): { median: numb
   const q = (p: number) => v[Math.min(v.length - 1, Math.round(p * (v.length - 1)))];
   return { median: median(v), spread: q(0.9) - q(0.1) };
 }
+
+export interface VoiceProfile { median: number; spread?: number; takes: number }
+
+/**
+ * The learner's usual pitch, updated from every take: a plain mean while it settles, then a slow average.
+ * A take far from the running value after a few takes is more likely a tracking slip than a new voice.
+ * Only takes that actually travel (spread ≥ 3 semitones) say anything about the voice's range — a one-syllable take
+ * barely moves, so the range stays unknown (and a default is used) until a real one is heard.
+ */
+export const nextVoice = (prev: VoiceProfile | undefined, take: { median: number; spread: number } | null | undefined): VoiceProfile | undefined => {
+  if (!take || !Number.isFinite(take.median)) return prev;
+  const ranged = take.spread >= 3;
+  if (!prev) return { median: take.median, spread: ranged ? take.spread : undefined, takes: 1 };
+  if (prev.takes >= 5 && Math.abs(take.median - prev.median) > 7) return prev;
+  const w = prev.takes < 20 ? 1 / (prev.takes + 1) : 0.05;
+  // The range has its own running average: not every take updates it.
+  const spread = !ranged ? prev.spread : prev.spread == null ? take.spread : prev.spread + (take.spread - prev.spread) * Math.max(w, 0.2);
+  return { median: prev.median + (take.median - prev.median) * w, spread, takes: prev.takes + 1 };
+};

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { contentBand, type Assessment, type PhonemeId, type SpeakItem } from '../../domain/types';
+import { contentBand, isGrownUp, type Assessment, type PhonemeId, type SpeakItem } from '../../domain/types';
 import { LADDERS } from '../../content/lab';
 import { phonemeInfo, tipFor } from '../../content/phonemes';
 import { findScenario, SCENARIOS } from '../../content/scenarios';
@@ -21,8 +21,9 @@ export function PracticeHome() {
   const p = useActiveProfile();
   return (
     <div className="screen practice">
-      <TopBar title="Speak with Pip" />
-      <div className="practice__intro"><Mascot mood="talking" size={92} /><p className="lead">Pick a place and have a real conversation out loud. Pip keeps chatting — tips come at the end.</p></div>
+      <TopBar title={p.band === 'adult' ? 'Conversation practice' : 'Speak with Pip'} />
+      <div className="practice__intro"><Mascot mood="talking" size={92} /><p className="lead">Pick a place and have a real conversation out loud. {p.band === 'adult' ? 'Tips come at the end.' : 'Pip keeps chatting — tips come at the end.'}</p></div>
+      {p.course === 'zh' && <p className="hint hint--left">These conversations are in English for now. Putonghua conversations are coming — keep practising tones in your lessons and the Lab.</p>}
       <ul className="scenario-list">
         {SCENARIOS.map((s) => {
           const last = [...p.conversations].reverse().find((c) => c.scenarioId === s.id);
@@ -218,7 +219,7 @@ function Summary({ lines, scenarioId, title, onSave }: { lines: Line[]; scenario
           <h2><span aria-hidden>💪</span> Strong</h2>
           <ul>{strong.slice(0, 3).map((s) => <li key={s}>{s}</li>)}</ul>
           <h2><span aria-hidden>🎯</span> Practise</h2>
-          {practice.length ? <ul>{practice.map((ph) => <li key={ph}>the “{phonemeInfo(ph).label}” sound, as in “{phonemeInfo(ph).example}”{p.band === 'teen' ? ` — /${ph}/` : ''}</li>)}</ul> : <p>Nothing stood out — every sound was clear!</p>}
+          {practice.length ? <ul>{practice.map((ph) => <li key={ph}>the “{phonemeInfo(ph).label}” sound, as in “{phonemeInfo(ph).example}”{isGrownUp(p.band) ? ` — /${ph}/` : ''}</li>)}</ul> : <p>Nothing stood out — every sound was clear!</p>}
         </div>
       </div>
       <div className="complete__dock">

@@ -146,7 +146,7 @@ export function Onboarding() {
           ))}</div>
         </>,
         <Button size="lg" block disabled={!home || !learning.length} onClick={next}>Next</Button>,
-        { grownUp: true, title: 'Which languages?', sub: 'The home language tells Pip which sounds and tones will be trickiest.' },
+        { grownUp: true, title: 'Which languages?', sub: 'The home language shows which sounds and tones will be trickiest.' },
       );
 
     case 'child':
@@ -158,7 +158,7 @@ export function Onboarding() {
           </div>
           <h2 className="field-label">Pick a buddy</h2>
           <div className="avatars">{AVATARS.map((a) => <button key={a} type="button" className={`avatar-pick ${avatar === a ? 'is-on' : ''}`} onClick={() => setAvatar(a)} aria-pressed={avatar === a} aria-label={`Avatar ${a}`}>{a}</button>)}</div>
-          <label className="field-label" htmlFor="nick">{adult ? 'Name' : 'Nickname'} <small>{adult ? '(what Pip should call you)' : '(no real names needed)'}</small></label>
+          <label className="field-label" htmlFor="nick">{adult ? 'Name' : 'Nickname'} <small>{adult ? '(what we should call you)' : '(no real names needed)'}</small></label>
           <input id="nick" className="input" value={name} maxLength={14} onChange={(e) => setName(e.target.value)} placeholder={adult ? 'e.g. Mum' : 'e.g. Tiger'} autoComplete="off" />
           {!adult && (
             <>
@@ -198,7 +198,7 @@ export function Onboarding() {
               <span className="code-badge">{flag}</span><span><b>{title}</b><small>{detail}</small></span><span className="tile__aside" aria-hidden>🔈</span>
             </button>
           ))}
-          <p className="hint">Both are correct English. Pip uses your choice for the teacher’s voice and won’t mark the other accent’s sounds as mistakes.</p>
+          <p className="hint">Both are correct English. Your choice sets the teacher’s voice, and the other accent’s sounds are never marked as mistakes.</p>
         </div>,
         <Button size="lg" block onClick={next}>Next</Button>,
         { grownUp: true, title: 'Which English accent?', sub: 'Tap one to hear it.' },
@@ -224,7 +224,7 @@ export function Onboarding() {
           <ul className="privacy">
             <li><span>🎙️</span><div><b>The microphone is only on while the mic button is red.</b><p>{adult ? 'You tap' : `${kid} taps`} to start and it stops by itself.</p></div></li>
             <li><span>📱</span><div><b>Recordings stay on this device.</b><p>They let {kid} hear “before” and “now”. Scores are stored separately from voice.</p></div></li>
-            <li><span>🗑️</span><div><b>You’re in control.</b><p>Delete recordings, history or the whole profile any time in the {adult ? 'settings' : 'Parent Zone'}.</p></div></li>
+            <li><span>🗑️</span><div><b>You’re in control.</b><p>Delete recordings, history or the whole profile any time in {adult ? 'Settings & privacy (on the Me tab)' : 'the Parent Zone'}.</p></div></li>
           </ul>
           <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>Keep recordings on this device</span></label>
           <label className="switch-row"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span>{adult ? 'I agree to microphone use' : 'I’m the parent or guardian and I agree to microphone use'}</span></label>
@@ -277,10 +277,10 @@ export function Onboarding() {
             <div className="plan__sounds">{focus.map((ph) => <span key={ph} className="sound-badge sound-badge--weak"><b>{phonemeInfo(ph).label}</b><small>{zh ? phonemeInfo(ph).name : phonemeInfo(ph).example}</small></span>)}</div>
             {strong.length > 0 && (<><h2>Already strong</h2><div className="plan__sounds">{strong.map((s) => <span key={s.phoneme} className="sound-badge sound-badge--good"><b>{phonemeInfo(s.phoneme).label}</b><small>{zh ? phonemeInfo(s.phoneme).name : phonemeInfo(s.phoneme).example}</small></span>)}</div></>)}
           </div>
-          <p className="hint">Pip will bring these into lessons and remember how they go — they’ll keep coming back until they’re easy.</p>
+          <p className="hint">{adult ? 'These will come up in your lessons until they’re easy.' : 'Pip will bring these into lessons and remember how they go — they’ll keep coming back until they’re easy.'}</p>
         </>,
         <Button size="lg" block onClick={() => nav('/', { replace: true })}>Start learning</Button>,
-        { mascot: 'happy', title: adult ? 'Your plan' : `Pip’s plan for ${profile.name}`, sub: 'Based on what Pip just heard.' },
+        { mascot: 'happy', title: adult ? 'Your plan' : `Pip’s plan for ${profile.name}`, sub: adult ? 'Based on your speaking check.' : 'Based on what Pip just heard.' },
       );
     }
   }

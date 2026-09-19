@@ -1,4 +1,5 @@
 import type { SpeechErrorCode } from '../../speech';
+import { useProfile } from '../../state/store';
 import { Button } from '../../ui/kit';
 
 const COPY: Record<SpeechErrorCode, { icon: string; title: string; body: string; retry: string }> = {
@@ -12,8 +13,17 @@ const COPY: Record<SpeechErrorCode, { icon: string; title: string; body: string;
   timeout: { icon: '⏳', title: 'That took too long', body: 'Checking your voice took longer than it should. Please try again.', retry: 'Try again' },
 };
 
+/** Grown-ups get plainer wording — and they are the ones who can change the browser's settings. */
+const ADULT: Partial<Record<SpeechErrorCode, { title: string; body: string }>> = {
+  'mic-denied': { title: 'The microphone is off', body: 'Microphone access is blocked for Wunder Tutor. Allow it in your browser’s site settings, then try again.' },
+  'no-speech': { title: 'No speech heard', body: 'Tap the mic, wait until it shows it’s listening, then speak clearly.' },
+  'too-short': { title: 'That was very quick', body: 'Say the whole thing clearly, at a natural pace.' },
+  service: { title: 'Scoring is unavailable for a moment', body: 'Something went wrong on our side, not yours. Please try again.' },
+};
+
 export function ErrorPanel({ code, onRetry, onUseDemo }: { code: SpeechErrorCode; onRetry: () => void; onUseDemo: () => void }) {
-  const c = COPY[code];
+  const adult = useProfile()?.band === 'adult';
+  const c = { ...COPY[code], ...(adult ? ADULT[code] : undefined) };
   const micProblem = code === 'mic-denied' || code === 'mic-unavailable';
   return (
     <div className="error-panel" role="alert">

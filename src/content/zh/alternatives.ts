@@ -43,6 +43,25 @@ const FINAL_SWAPS: Record<string, string[]> = {
 /** The server re-scores a take at most this many times (each re-scoring is billed). */
 export const MAX_ALTERNATIVES = 5;
 
+/** What kind of swap turns `target` into `heard`: "n→l", "-ü→-i". */
+export const swapKind = (target: string, heard: string): string => {
+  const a = parseSyllable(target), b = parseSyllable(heard);
+  return a.initial !== b.initial ? `${a.initial || '∅'}→${b.initial || '∅'}` : `-${a.final}→-${b.final}`;
+};
+
+/**
+ * How far each kind of swap can be trusted, measured on six voices (eval/alt-types-zh.ts, 2026-09-19). Azure can't
+ * tell ü from i for many voices — a correct 学 "sounded like" 鞋 about as often as a real 鞋 — so those are never
+ * named (a clearly unclear syllable is still flagged). A flat→curled swap is only believable when the target itself
+ * clearly failed (every real one scored under 40, every false one over 40). n→l needs a wider lead.
+ * Swaps not listed are trusted at the normal margin.
+ */
+export const SWAP_TRUST: Record<string, { off?: true; extraMargin?: number; maxTarget?: number }> = {
+  '-ü→-i': { off: true }, '-üe→-ie': { off: true }, '-ü→-u': { off: true },
+  'c→ch': { maxTarget: 35 }, 'z→zh': { maxTarget: 50 },
+  'n→l': { extraMargin: 4 },
+};
+
 const UNIT_OF_PART = (py: string, part: Alternative['part']): string => {
   const s = parseSyllable(py);
   if (part === 'initial') return /^(zh|ch|sh|r)$/.test(s.initial) ? 'zh:sh' : /^[zcs]$/.test(s.initial) ? 'zh:s' : /^[nl]$/.test(s.initial) ? 'zh:n' : 'zh:other';
@@ -74,6 +93,8 @@ export const alternativesFor = (numbered: string): Alternative[] => {
     if (!py) return;
     const key = py.replace(/ü/g, 'v');
     const char = CHAR_FOR[key];
+    // A swap the scorer can't hear isn't worth a (billed) re-scoring.
+    if (SWAP_TRUST[swapKind(numbered, key)]?.off) return;
     if (char && key !== numbered.replace(/ü/g, 'v') && !out.some((a) => a.py === key)) out.push({ py: key, char, part });
   };
   for (const i of INITIAL_SWAPS[s.initial] ?? []) {

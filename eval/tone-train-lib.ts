@@ -1,5 +1,5 @@
 // Tone-model training library (no side effects): labelled syllable samples and a softmax-regression trainer.
-import { breaksOf, hanChars, pitchFor, speakers, surfaceOf, zhCases } from './zh-common';
+import { breaksOf, hanChars, pitchFor, profileSpeakers, surfaceOf, zhCases } from './zh-common';
 import { readCharacters, toneContext, type AzureZhResponse } from '../src/speech/zh/assess';
 import { toneFeatures, type ToneModel } from '../src/speech/zh/tone';
 
@@ -15,7 +15,8 @@ for (const c of zhCases) {
   const sf = surfaceOf(c.spoken, c.spokenPy!);
   const { perChar } = readCharacters(c.azure as AzureZhResponse, chars);
   const pitch = pitchFor(c);
-  const spk = speakers.get(`${c.voice}|${c.speed}`)!;
+  // Normalised exactly as the app will: against the voice profile it builds from the learner's takes.
+  const spk = profileSpeakers.get(`${c.voice}|${c.speed}`)!;
   const breaks = breaksOf(c.spoken);
   const spans = perChar.map((r) => (r.offsetMs != null && r.durationMs ? { from: r.offsetMs / 1000, to: (r.offsetMs + r.durationMs) / 1000 } : { from: 0, to: 0 }));
   perChar.forEach((r, i) => {

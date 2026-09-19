@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isGrownUp, type ChildProfile, type PhonemeId } from '../../domain/types';
 import { LADDERS, LAB_STAGES, STAGE_LABEL, type LabStage } from '../../content/lab';
-import { phonemeInfo, tipFor } from '../../content/phonemes';
+import { exampleSpeech, isLongLabel, phonemeInfo, tipFor } from '../../content/phonemes';
+import { shownText } from '../../content/zh/script';
 import { XP } from '../../engine/rewards';
 import { labOrder, MASTERED_AT, WEAK_BELOW } from '../../intelligence/profile';
 import { voice } from '../../speech/voice';
@@ -43,7 +44,7 @@ export function LabHome() {
           return (
             <li key={id}>
               <button type="button" className={`sound-card sound-card--${st.key}`} onClick={() => nav(`/lab/${encodeURIComponent(id)}`)}>
-                <span className="sound-card__glyph">{info.label}</span>
+                <span className="sound-card__glyph" data-long={isLongLabel(info.label) || undefined}>{info.label}</span>
                 <span className="sound-card__text">
                   <b>{info.name}</b>
                   <small>as in “{info.example}”{isGrownUp(p.band) && !id.startsWith('zh:') ? ` · /${id}/` : ''}</small>
@@ -73,14 +74,14 @@ export function LabSound() {
   const st = status(p, sound);
   const nextStage = LAB_STAGES.find((s) => stageDone(p, sound, s) < ladder[s].length) ?? 'sentence';
   const zh = sound.startsWith('zh:');
-  const say = (slow: boolean) => void voice.speak(zh ? info.example.replace(/s+S+$/u, '') : info.example, { accent: zh ? 'zh-CN' : p.accent, slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'));
+  const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: zh ? 'zh-CN' : p.accent, slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'));
 
   return (
     <div className="screen lab-sound">
       <TopBar title={info.name} onBack={() => nav('/lab')} />
       <section className="card guide">
         <div className="guide__top">
-          <div className="guide__glyph"><b>{info.label}</b>{p.band !== 'little' && !zh && <small>/{sound}/</small>}</div>
+          <div className="guide__glyph" data-long={isLongLabel(info.label) || undefined}><b>{info.label}</b>{p.band !== 'little' && !zh && <small>/{sound}/</small>}</div>
           {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={190} /> : <Mouth pose={info.pose} size={190} />}
         </div>
         <p className="guide__tip">{tipFor(sound, p.band)}</p>
@@ -105,7 +106,7 @@ export function LabSound() {
             <li key={s}>
               <button type="button" className={`rung ${complete ? 'rung--done' : s === nextStage ? 'rung--next' : ''}`} onClick={() => nav(`/lab/${encodeURIComponent(sound)}/${s}`)}>
                 <span className="rung__n">{complete ? <Icon name="check" size={20} /> : i + 1}</span>
-                <span className="rung__text"><b>{STAGE_LABEL[s]}</b><small>{ladder[s].map((it) => it.text).join(' · ')}</small></span>
+                <span className="rung__text"><b>{STAGE_LABEL[s]}</b><small>{ladder[s].map((it) => shownText(it)).join(' · ')}</small></span>
                 <span className="rung__count">{done}/{total}</span>
               </button>
             </li>

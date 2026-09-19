@@ -191,17 +191,18 @@ const foodLessons: Lesson[] = [
   }),
 ];
 
-const lockedUnit = (id: string, title: string, subtitle: string, icon: string, color: string): Unit => ({ id, title, subtitle, icon, color, lessons: [], locked: true });
+const lockedUnit = (id: string, title: string, subtitle: string, icon: string, color: string, grownUp?: Unit['grownUp']): Unit => ({ id, title, subtitle, icon, color, lessons: [], locked: true, grownUp });
 
 export const ZH_COURSE: Course = {
   id: 'putonghua-adventure',
   title: 'Putonghua Adventure',
+  grownUpTitle: 'Putonghua',
   language: 'zh',
   units: [
-    { id: 'zh-food', title: 'Yummy Food 好吃的', subtitle: 'Order food and drinks in Putonghua', icon: '🥢', color: 'var(--coral)', lessons: foodLessons },
-    lockedUnit('zh-family', 'My Family 我的家', 'Mum, dad, grandma and me', '👨‍👩‍👧', 'var(--sky)'),
-    lockedUnit('zh-animals', 'Animals 动物', 'Pandas, tigers and pets', '🐼', 'var(--leaf)'),
-    lockedUnit('zh-school', 'At School 学校', 'Classroom words and questions', '🎒', 'var(--sun)'),
+    { id: 'zh-food', title: 'Yummy Food 好吃的', subtitle: 'Order food and drinks in Putonghua', icon: '🥢', color: 'var(--coral)', lessons: foodLessons, grownUp: { title: 'Food & Drink 饮食', subtitle: 'Order food and drinks in Putonghua' } },
+    lockedUnit('zh-family', 'My Family 我的家', 'Mum, dad, grandma and me', '👨‍👩‍👧', 'var(--sky)', { title: 'Family 家人', subtitle: 'Talk about the people in your life' }),
+    lockedUnit('zh-animals', 'Animals 动物', 'Pandas, tigers and pets', '🐼', 'var(--leaf)', { title: 'Animals 动物', subtitle: 'Pets, farms and wildlife' }),
+    lockedUnit('zh-school', 'At School 学校', 'Classroom words and questions', '🎒', 'var(--sun)', { title: 'School & Study 学校', subtitle: 'Classroom words and questions' }),
   ],
 };
 

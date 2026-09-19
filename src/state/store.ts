@@ -8,6 +8,8 @@ import { applyAssessment, dayKey, emptyProfile } from '../intelligence/profile';
 import { nextItemProgress, starsFor } from '../engine/learning';
 import { achievement, bumpStreak, XP } from '../engine/rewards';
 import { ALL_LESSONS } from '../content/course';
+import { setDisplayScript } from '../content/zh/script';
+import { nextVoice } from '../speech/pitch';
 
 export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : age <= 15 ? 'teen' : 'adult');
 
@@ -15,20 +17,6 @@ export interface NewProfileInput {
   name: string; avatar: string; age: number; homeLanguage: HomeLanguage; level: Level; goal: Goal; accent: Accent;
   learning?: CourseId[]; zhScript?: 'hant' | 'hans';
 }
-
-/**
- * The learner's usual pitch, updated from every take: a plain mean while it settles, then a slow average.
- * A take far from the running value after a few takes is more likely a tracking slip than a new voice.
- */
-export const nextVoice = (prev: ChildProfile['voice'], take: { median: number; spread: number } | null | undefined): ChildProfile['voice'] => {
-  if (!take || !Number.isFinite(take.median)) return prev;
-  if (!prev) return { median: take.median, spread: take.spread, takes: 1 };
-  if (prev.takes >= 5 && Math.abs(take.median - prev.median) > 7) return prev;
-  const w = prev.takes < 20 ? 1 / (prev.takes + 1) : 0.05;
-  // A one-syllable take barely moves; only takes that actually travel say anything about the voice's range.
-  const spread = take.spread >= 3 ? (prev.spread ?? take.spread) + (take.spread - (prev.spread ?? take.spread)) * w : prev.spread;
-  return { median: prev.median + (take.median - prev.median) * w, spread, takes: prev.takes + 1 };
-};
 
 export interface AttemptOutcome {
   attempt: Attempt;
@@ -257,6 +245,12 @@ export const useStore = create<AppState>()(
     },
   ),
 );
+
+// Mandarin guide copy follows the active learner's script. This listener is registered before any component's, so
+// the script is current by the time React re-renders.
+const syncScript = (s: AppState) => setDisplayScript(s.profiles[s.activeId ?? '']?.zhScript ?? 'hant');
+syncScript(useStore.getState());
+useStore.subscribe(syncScript);
 
 export const useProfile = (): ChildProfile | null => useStore((s) => (s.activeId ? s.profiles[s.activeId] ?? null : null));
 

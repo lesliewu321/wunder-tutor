@@ -7,6 +7,7 @@ import type { SpeechErrorCode } from '../../speech';
 import { voiceStats } from '../../speech/pitch';
 import { localeOf, playBlob, stopPlayback, voice } from '../../speech/voice';
 import { markSyllable } from '../../content/zh/pinyin';
+import { hanChars } from '../../content/zh/script';
 import { useActiveProfile, useStore } from '../../state/store';
 import { correctionFor, focusWordIndex, GOOD, headline, tier } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
@@ -275,7 +276,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         )}
         {phase === 'result' && current && (
           <div className="speak__actions">
-            {!mastered && outOfTries && <p className="speak__kind">{mode === 'check' ? 'Good to know — Pip will help you with this.' : 'Good effort! We’ll practise this one again later.'}</p>}
+            {!mastered && outOfTries && <p className="speak__kind">{mode === 'check' ? (band === 'adult' ? 'Good to know — this will come up in your lessons.' : 'Good to know — Pip will help you with this.') : 'Good effort! We’ll practise this one again later.'}</p>}
             {outOfTries || (mastered && !fixable) ? (
               <>
                 <Button variant="leaf" size="lg" block onClick={finish}>{continueLabel}</Button>
@@ -295,8 +296,8 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
       {current && sheetWord != null && phase === 'result' && (
         <WordSheet
           word={current.assessment.words[sheetWord]} band={band} home={profile.homeLanguage} onClose={() => setSheetWord(null)}
-          onListen={(slow) => void voice.speak(current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
-          script={profile.zhScript}
+          // Mandarin: say the scorer's (Simplified) character — the word shown may be Traditional.
+          onListen={(slow) => void voice.speak((item.zh && hanChars(item.text)[sheetWord]) || current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
           onHearMe={() => void play('now')}
           onHearTip={sayTip}
           onRetry={outOfTries ? undefined : startListening}

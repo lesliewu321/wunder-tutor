@@ -1,4 +1,4 @@
-import type { AgeBand, Assessment, HomeLanguage, PhonemeId, Tone, WordScore, ZhSyllable } from '../domain/types';
+import { isGrownUp, type AgeBand, type Assessment, type HomeLanguage, type PhonemeId, type Tone, type WordScore, type ZhSyllable } from '../domain/types';
 import { phonemeInfo, soundLabel, tipFor } from '../content/phonemes';
 import { markSyllable, parseSyllable } from '../content/zh/pinyin';
 import { unitsFor as zhUnits } from '../speech/zh/assess';
@@ -54,7 +54,7 @@ const correctionForZh = (w: WordScore, z: ZhSyllable, band: AgeBand, home?: Home
   const mark = markSyllable(z.py);
   const expected = (z.accept.find((t) => t !== 5) ?? z.accept[0]) as Tone;
   if (w.errorType === 'omission') {
-    return { word: char, score: 0, kind: 'omission', problem: band === 'little' ? `I didn’t hear “${char}”.` : `“${char}” (${mark}) was missing.`, tip: 'Say every word, nice and steady — don’t rush to the end.', zh: { py: z.py, expected } };
+    return { word: char, score: 0, kind: 'omission', problem: band === 'little' ? `I didn’t hear “${char}”.` : `I couldn’t make out “${char}” (${mark}) — was it skipped or said differently?`, tip: 'Say every character, nice and steady — don’t rush to the end.', zh: { py: z.py, expected } };
   }
   if (z.toneHeard && expected !== 5) {
     const t = expected as 1 | 2 | 3 | 4;
@@ -97,7 +97,7 @@ export const correctionFor = (w: WordScore, band: AgeBand, home?: HomeLanguage):
   if (w.errorType === 'omission') {
     return {
       word: w.word, score: w.score, kind: 'omission',
-      problem: band === 'little' ? `I didn’t hear “${w.word}”.` : `The word “${w.word}” was missing.`,
+      problem: band === 'little' ? `I didn’t hear “${w.word}”.` : `I couldn’t make out the word “${w.word}” — was it skipped or said differently?`,
       tip: 'Say every word, nice and steady — don’t rush to the end.',
     };
   }
@@ -118,19 +118,19 @@ export const correctionFor = (w: WordScore, band: AgeBand, home?: HomeLanguage):
     };
   }
   const info = phonemeInfo(worst.phoneme);
-  const me = band === 'teen' ? `/${worst.phoneme}/` : `“${info.label}”`;
+  const me = isGrownUp(band) ? `/${worst.phoneme}/` : `“${info.label}”`;
   let problem = info.problem;
   if (worst.heardAs === '∅') problem = `The ${me} sound was missing.`;
   else if (worst.heardAs) {
     const foreign = FOREIGN_SOUNDS[worst.heardAs];
-    const other = foreign ?? (band === 'teen' ? `/${worst.heardAs}/` : `“${soundLabel(worst.heardAs)}”`);
+    const other = foreign ?? (isGrownUp(band) ? `/${worst.heardAs}/` : `“${soundLabel(worst.heardAs)}”`);
     problem = band === 'little' || foreign ? `Your ${me} sounded like ${other}.` : `Your ${me} sounded closer to ${other}.`;
   } else {
     // The scorer knows the sound was off but not what came out instead (Azure only reports that for en-US).
     // The learner's home language tells us the usual culprit — offered as a likelihood, never as a fact.
     const usual = home ? info.l1?.[home]?.heardAs : undefined;
     if (usual && usual !== '∅' && !FOREIGN_SOUNDS[usual]) {
-      const other = band === 'teen' ? `/${usual}/` : `“${soundLabel(usual)}”`;
+      const other = isGrownUp(band) ? `/${usual}/` : `“${soundLabel(usual)}”`;
       problem = band === 'little' ? `Your ${me} wasn’t clear. Careful — it likes to turn into ${other}!` : `Your ${me} wasn’t clear. Careful — it easily turns into ${other}.`;
     } else if (usual === '∅') {
       problem = `Your ${me} wasn’t clear — make sure it doesn’t disappear.`;

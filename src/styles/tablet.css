@@ -1,0 +1,89 @@
+/* ============================================================================
+   Tablet: a home learning platform, not a stretched phone.
+   ≥ 740 × 600  side navigation rail, wide screens, two-column Home, grids, centred dialogs
+   ≥ 1000px landscape: speaking screen side by side (prompt + feedback | microphone)
+   The height condition keeps phones held sideways (844 × 390) on the phone layout — a rail doesn't fit them.
+   ============================================================================ */
+
+@media (min-width: 740px) and (min-height: 600px) {
+  body { background: var(--bg); }
+  .frame { max-width: none; box-shadow: none; }
+
+  /* Navigation becomes a rail on the left (clear of a landscape notch). */
+  .nav {
+    top: 0; bottom: 0; left: 0; transform: none; width: calc(104px + var(--safe-l)); max-width: none; height: 100%;
+    grid-template-columns: 1fr; grid-auto-rows: min-content; align-content: center; gap: 14px;
+    padding: calc(16px + var(--safe-t)) 10px calc(16px + var(--safe-b)) calc(10px + var(--safe-l));
+    border-top: 0; border-right: 1px solid var(--line);
+  }
+  .nav__item { font-size: 0.78rem; padding: 10px 0; }
+  .nav__item--center .nav__icon { margin-top: 0; }
+  .tab-main { padding-bottom: 0; padding-left: calc(104px + var(--safe-l)); }
+
+  /* Wider, calmer screens… */
+  .screen { width: 100%; max-width: 1040px; margin: 0 auto; padding: calc(24px + var(--safe-t)) 36px 44px; gap: 22px; }
+  /* …keeping the screens that end in a sticky bar or run edge to edge as they were. */
+  .lesson, .onboard, .complete, .lab-sound { padding-bottom: 0; }
+  .onboard { gap: 8px; }
+  .convo { padding: calc(10px + var(--safe-t)) 0 0; gap: 0; }
+  .lesson, .onboard, .complete, .gate { max-width: 760px; }
+  .onboard__title { font-size: 2.3rem; }
+  .section-title { font-size: 1.3rem; }
+
+  /* Home: a single wide column on a portrait tablet… */
+  .home { max-width: 760px; }
+  .home__cols, .home__main { display: flex; flex-direction: column; gap: 16px; }
+  .home > .segmented--course { max-width: 480px; }
+  .hero h1 { font-size: 2.2rem; }
+
+  /* Lists become grids. */
+  .sound-list, .scenario-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sound-rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .trophies { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .goal-picker { max-width: 560px; }
+  .ladder { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .compare { max-width: 560px; }
+  .speak__status { max-width: 320px; }
+
+  /* Sheets open as centred dialogs. */
+  .sheet-layer { align-items: center; padding: 24px; }
+  .sheet { max-width: 580px; max-height: 88%; border-radius: var(--r-xl); padding: 16px 26px 26px; animation: dialog-in 0.28s var(--ease-out); }
+  .sheet__grip { display: none; }
+  @keyframes dialog-in { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
+
+  /* Toasts centre on the content, not the rail — only where there is a rail. */
+  body:has(.nav) .toaster { left: calc(50% + 52px + var(--safe-l) / 2); }
+}
+
+/* Speaking: bigger text and a roomier stage — unless the screen is short (speak.css tightens those). */
+@media (min-width: 740px) and (min-height: 701px) {
+  .prompt { padding: 30px 26px 24px; }
+  .prompt__pic { font-size: 6.4rem; }
+  .prompt__text { font-size: 3.2rem; }
+  .prompt--phrase .prompt__text { font-size: 2.6rem; }
+  .prompt--sentence .prompt__text { font-size: 2.1rem; }
+}
+
+@media (min-width: 1000px) and (min-height: 600px) {
+  /* …and on a landscape tablet, course and today on the left, the lesson path on the right. */
+  .home { max-width: 1120px; }
+  .home__cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .home__cols > .path .section-title { margin-top: 0; }
+}
+
+@media (min-width: 1100px) and (min-height: 600px) {
+  .sound-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Landscape tablet: speaking side by side — what to say and how it went on the left, the microphone on the right. */
+@media (min-width: 1000px) and (min-height: 600px) and (orientation: landscape) {
+  .lesson { max-width: 1120px; }
+  .speak { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr); column-gap: 32px; align-items: center; }
+  .speak__stage { padding: 12px 0; }
+  .speak__dock { position: static; background: none; padding: 0 0 12px; align-self: center; }
+  .speak__actions { max-width: 380px; margin: 0 auto; }
+  .dialogue--speaking .speak { grid-column: 1 / -1; }
+  .choice { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.8fr); column-gap: 32px; align-items: center; }
+  .choice__dock { min-height: 0; }
+}

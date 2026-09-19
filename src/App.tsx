@@ -9,6 +9,7 @@ import { Conversation, PracticeHome } from './features/practice/Practice';
 import { Me, ParentZone } from './features/profile/Profile';
 import { Progress } from './features/progress/Progress';
 import { useProfile, useStore } from './state/store';
+import { isGrownUp } from './domain/types';
 import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
 
@@ -58,7 +59,7 @@ export function App() {
     const apply = () => {
       const dark = theme === 'dark' || (theme === 'auto' && mq.matches);
       root.dataset.theme = dark ? 'dark' : 'light';
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#161124' : band === 'teen' ? '#f7f6fb' : '#fff8ee');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#161124' : isGrownUp(band) ? '#f7f6fb' : '#fff8ee');
     };
     apply();
     mq.addEventListener('change', apply);

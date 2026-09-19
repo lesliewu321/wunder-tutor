@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createApi } from './core.mjs';
+import { createApi, missingScores, oneChangeAway } from './core.mjs';
 
 const get = (api, path, headers) => api.handle(new Request(`http://x${path}`, { headers }));
 const post = (api, path, body, headers) => api.handle(new Request(`http://x${path}`, { method: 'POST', body, headers }));
@@ -38,5 +38,33 @@ describe('API access control', () => {
     expect((await get(api, '/api/nope')).status).toBe(404);
     expect((await get(api, '/api/tts')).status).toBe(405);
     expect((await post(api, '/api/assess', new Uint8Array(100))).status).toBe(400);
+  });
+});
+
+describe('assess helpers', () => {
+  it('spots Azure answering "Success" without any pronunciation scores', () => {
+    const ok = { RecognitionStatus: 'Success', NBest: [{ AccuracyScore: 90, Words: [] }] };
+    const glitch = { RecognitionStatus: 'Success', NBest: [{ Display: 'milk', Words: [] }] };
+    expect(missingScores(JSON.stringify(glitch))).toBe(true);
+    expect(missingScores(JSON.stringify(ok))).toBe(false);
+    expect(missingScores(JSON.stringify({ RecognitionStatus: 'NoMatch' }))).toBe(false);
+    expect(missingScores('not json')).toBe(false);
+  });
+
+  it('only scores likely mistakes that change one word or one character', () => {
+    expect(oneChangeAway('Thank you!', 'Fank you!')).toBe(true);
+    expect(oneChangeAway('I am very hungry.', 'I am wery hungry.')).toBe(true);
+    expect(oneChangeAway('Thank you!', 'Buy crypto now')).toBe(false);
+    expect(oneChangeAway('Thank you!', 'Thank you!')).toBe(false);
+    expect(oneChangeAway('我想买', '我想卖')).toBe(true);
+    expect(oneChangeAway('我想买', '你想卖')).toBe(false);
+    expect(oneChangeAway('我想买', '我想买东西')).toBe(false);
+  });
+
+  it('rejects unrelated alternative texts', async () => {
+    const api = createApi(KEYS);
+    const res = await post(api, `/api/assess?text=milk&alts=${encodeURIComponent(JSON.stringify(['anything at all']))}`, new Uint8Array(100));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe('invalid_alts');
   });
 });

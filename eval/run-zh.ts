@@ -1,30 +1,40 @@
 // Mandarin accuracy report: runs the PRODUCTION pipeline (src/speech/zh) over the labelled test set.
 //   npx vite-node eval/run-zh.ts [--cv] [--misses]
 //   --cv   use tone models trained WITHOUT the voice being tested (the honest number for a new child's voice)
-import { hanChars, pct100 as pct, pitchFor, speakers, surfaceOf, zhCases as cases } from './zh-common';
+import { coldSpeaker, hanChars, pct100 as pct, pitchFor, profileSpeakers, speakers, surfaceOf, zhCases as cases } from './zh-common';
 import { samples, train } from './tone-train-lib';
 import { assessZh, readCharacters, type AzureZhResponse } from '../src/speech/zh/assess';
 import { DEFAULT_TONE_PARAMS, type ToneModel, type ToneParams } from '../src/speech/zh/tone';
 import type { Tone } from '../src/content/zh/pinyin';
 
-export interface ZhSummary { falseAlarmItems: number; detectItems: number; toneDetect: number; toneFalse: number; segDetect: number; localised: number }
+export interface ZhSummary {
+  falseAlarmItems: number; detectItems: number; toneDetect: number; toneFalse: number; segDetect: number; localised: number;
+  /** Single characters vs. syllables inside phrases: false alarms per correct item, tone errors caught. */
+  alone: { falseAlarms: number; toneDetect: number }; inPhrase: { falseAlarms: number; toneDetect: number };
+}
 
-export function report(opts: { params?: ToneParams; altMargin?: number; cv?: boolean; quiet?: boolean; misses?: boolean } = {}): ZhSummary {
+/**
+ * `speaker`: how the learner's voice is known — 'pooled' statistics over all their takes, the app's own 'profile' after
+ * hearing them all, or 'cold' (a new learner's first takes: only this take's own middle pitch).
+ */
+export function report(opts: { params?: ToneParams; altMargin?: number; cv?: boolean; quiet?: boolean; misses?: boolean; speaker?: 'pooled' | 'profile' | 'cold' } = {}): ZhSummary {
   const params = opts.params ?? DEFAULT_TONE_PARAMS;
   const models = new Map<string, ToneModel>();
-  if (opts.cv) for (const v of ['Kore', 'Puck', 'Leda']) models.set(v, train(samples.filter((s) => s.voice !== v)));
+  if (opts.cv) for (const v of new Set(cases.map((c) => c.voice))) models.set(v, train(samples.filter((s) => s.voice !== v)));
 
   let falseTone = 0, sylCorrect = 0, falseSeg = 0;
   let toneErrDetected = 0, toneErrTotal = 0, toneErrHeardRight = 0;
   let segDetected = 0, segTotal = 0, segHeardRight = 0, segHeardAny = 0;
   let itemFalse = 0, itemCorrect = 0, itemDetected = 0, itemErrors = 0, itemLocalised = 0;
   const falseByKind: Record<string, [number, number]> = {};
+  const bySize = { alone: { f: 0, n: 0, td: 0, tn: 0 }, inPhrase: { f: 0, n: 0, td: 0, tn: 0 } };
   const labelMismatch = new Set<string>();
   const misses: string[] = [];
 
   for (const c of cases) {
     const pitch = pitchFor(c);
-    const speaker = speakers.get(`${c.voice}|${c.speed}`)!;
+    const mode = opts.speaker ?? 'profile';
+    const speaker = mode === 'cold' ? coldSpeaker(c) : (mode === 'pooled' ? speakers : profileSpeakers).get(`${c.voice}|${c.speed}`)!;
     const alts = (c.alts ?? []).map((a) => ({ index: a.index, py: a.py, char: a.char, part: a.part as 'initial' | 'final', json: a.azure as AzureZhResponse }));
     let a;
     try {
@@ -36,7 +46,7 @@ export function report(opts: { params?: ToneParams; altMargin?: number; cv?: boo
     if (c.kind === 'lesson') {
       const { perChar } = readCharacters(c.azure as AzureZhResponse, refChars);
       c.refPy!.split(' ').forEach((p, i) => {
-        const label = perChar[i]?.label?.replace(/\s+/g, '');
+        const label = perChar[i]?.label?.replace(/\s+/g, '').replace(/v/g, 'ü');
         if (label && label !== p.replace(/v/g, 'ü') && !p.endsWith('5')) labelMismatch.add(`${refChars[i]} ours=${p} azure=${label} in ${c.reference}`);
       });
     }
@@ -49,6 +59,9 @@ export function report(opts: { params?: ToneParams; altMargin?: number; cv?: boo
       const fk = (falseByKind[c.kind] ??= [0, 0]);
       fk[1]++;
       const bad = a.words.filter(flagged);
+      const size = a.words.length > 1 ? bySize.inPhrase : bySize.alone;
+      size.n++;
+      if (bad.length) size.f++;
       if (bad.length) { itemFalse++; fk[0]++; misses.push(`FALSE ALARM ${c.voice}@${c.speed} "${c.reference}": ${bad.map(describe).join(' ')}`); }
       for (const w of a.words) { const z = w.syllables[0]?.zh; if (!z) continue; sylCorrect++; if (z.toneHeard) falseTone++; if (z.heardAs) falseSeg++; }
     } else {
@@ -62,6 +75,9 @@ export function report(opts: { params?: ToneParams; altMargin?: number; cv?: boo
       if (hit && worst === i) itemLocalised++;
       if (c.truth.part === 'tone') {
         toneErrTotal++;
+        const size = a.words.length > 1 ? bySize.inPhrase : bySize.alone;
+        size.tn++;
+        if (z?.toneHeard) size.td++;
         if (z?.toneHeard) { toneErrDetected++; if (spokenSurface[i]?.accept.includes(z.toneHeard as Tone)) toneErrHeardRight++; }
         else misses.push(`TONE MISS ${c.voice}@${c.speed} said "${c.spoken}" for "${c.reference}" #${i}: sound ${z?.soundScore} tone ${z?.toneScore ?? '-'}`);
       } else {
@@ -79,6 +95,8 @@ export function report(opts: { params?: ToneParams; altMargin?: number; cv?: boo
   const summary: ZhSummary = {
     falseAlarmItems: itemFalse / itemCorrect, detectItems: itemDetected / itemErrors, toneDetect: toneErrDetected / toneErrTotal,
     toneFalse: falseTone / sylCorrect, segDetect: segDetected / segTotal, localised: itemLocalised / itemErrors,
+    alone: { falseAlarms: bySize.alone.f / bySize.alone.n, toneDetect: bySize.alone.td / bySize.alone.tn },
+    inPhrase: { falseAlarms: bySize.inPhrase.f / bySize.inPhrase.n, toneDetect: bySize.inPhrase.td / bySize.inPhrase.tn },
   };
   if (!opts.quiet) {
     console.log(`\n=== Mandarin accuracy${opts.cv ? ' (tone models never saw the voice under test)' : ''} ===`);

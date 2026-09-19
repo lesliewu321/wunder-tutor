@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiHealth, type ApiHealth } from '../../speech';
-import { courseFor } from '../../content/course';
-import { phonemeInfo } from '../../content/phonemes';
+import { courseFor, courseTitle, unitSubtitle, unitTitle } from '../../content/course';
+import { inScript } from '../../content/zh/script';
+import { isLongLabel, phonemeInfo } from '../../content/phonemes';
 import { dueItems, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
 import { focusSound, weakSoundsIn } from '../../intelligence/profile';
@@ -51,7 +52,7 @@ export function Home() {
       <div className="segmented segmented--course" role="group" aria-label="Course">
         {(Object.entries(COURSE_LABEL) as [CourseId, string][]).map(([id, label]) => (
           <button key={id} type="button" className={p.course === id ? 'is-on' : ''} aria-pressed={p.course === id} onClick={() => setCourse(id)}>
-            <span lang={id === 'zh' ? 'zh-Hant' : undefined}>{label}</span>
+            <span lang={id === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : undefined}>{inScript(label, p.zhScript)}</span>
           </button>
         ))}
       </div>
@@ -59,21 +60,23 @@ export function Home() {
       {p.course === 'zh' && !p.zhChecked && (
         <button type="button" className="practice-note practice-note--check" onClick={() => nav('/check/zh')}>
           <span aria-hidden>🎤</span>
-          <span><b>New: Putonghua with tone checks</b> A one-minute speaking check so Pip knows which tones and sounds to practise first.</span>
+          <span><b>New: Putonghua with tone checks</b> A one-minute speaking check {p.band === 'adult' ? 'to find' : 'so Pip knows'} which tones and sounds to practise first.</span>
         </button>
       )}
 
       {practiceMode && (
         <button type="button" className="practice-note" onClick={() => nav('/parents')}>
           <span aria-hidden>🧪</span>
-          <span><b>Practice mode — scores are simulated.</b> {api?.needsCode ? 'A grown-up can enter a beta access code in the Parent Zone to switch on real pronunciation scoring.' : 'Real pronunciation scoring isn’t connected on this device.'}</span>
+          <span><b>Practice mode — scores are simulated.</b> {api?.needsCode ? (p.band === 'adult' ? 'Enter a beta access code in Settings & privacy to switch on real pronunciation scoring.' : 'A grown-up can enter a beta access code in the Parent Zone to switch on real pronunciation scoring.') : 'Real pronunciation scoring isn’t connected on this device.'}</span>
         </button>
       )}
 
+      <div className="home__cols">
+      <div className="home__main">
       <section className="hero" style={{ ['--hero' as string]: unit.color }}>
         <div className="hero__text">
-          <span className="hero__unit">{COURSE.title} · Unit 1</span>
-          <h1>{unit.title}</h1>
+          <span className="hero__unit">{courseTitle(COURSE, p.band)} · Unit 1</span>
+          <h1>{unitTitle(unit, p.band)}</h1>
           <p>{next ? <>Next: <b>{next.icon} {next.title}</b></> : due ? <>{due} things are ready to review</> : <>Unit finished — keep your sounds sharp!</>}</p>
           <div className="hero__progress"><ProgressBar value={doneCount / ids.length} tone="sun" /><span>{doneCount}/{ids.length}</span></div>
         </div>
@@ -82,19 +85,20 @@ export function Home() {
       </section>
 
       <button type="button" className="focus-card" onClick={() => nav(`/lab/${encodeURIComponent(focus)}`)}>
-        <span className="focus-card__sound">{focusInfo.label}</span>
+        <span className="focus-card__sound" data-long={isLongLabel(focusInfo.label) || undefined}>{focusInfo.label}</span>
         <span className="focus-card__text">
           <small>Today’s pronunciation focus</small>
           <b>{focusInfo.name}</b>
-          <em>{measured ? `Pip noticed this one in “${focusInfo.example}”` : `Often tricky — like in “${focusInfo.example}”`}</em>
+          <em>{measured ? `${p.band === 'adult' ? 'Heard' : 'Pip noticed this one'} in “${focusInfo.example}”` : `Often tricky — like in “${focusInfo.example}”`}</em>
         </span>
         <span className="focus-card__go">2 min<Icon name="chevron" size={18} /></span>
       </button>
 
       <div className="daily"><div className="daily__row"><b>Today’s goal</b><span>{goalPct >= 1 ? 'Done! 🎉' : `${p.dailyGoalXp - xp} XP to go`}</span></div><ProgressBar value={goalPct} tone="leaf" /></div>
+      </div>
 
       <section className="path" aria-label="Lessons">
-        <h2 className="section-title">{unit.icon} {unit.title}</h2>
+        <h2 className="section-title">{unit.icon} {unitTitle(unit, p.band)}</h2>
         <ol className="path__list">
           {unit.lessons.map((l, i) => {
             const done = p.lessonsCompleted[l.id];
@@ -105,21 +109,23 @@ export function Home() {
                 <button type="button" className={`node ${done ? 'node--done' : current ? 'node--current' : unlocked ? '' : 'node--locked'}`} disabled={!unlocked} onClick={() => nav(`/lesson/${l.id}`)}>
                   <span className="node__icon">{unlocked ? l.icon : <Icon name="lock" size={22} />}</span>
                   <span className="node__text"><b>{l.title}</b><small>{done ? 'Tap to practise again' : current ? 'Up next' : unlocked ? 'Ready' : `Finish “${unit.lessons[i - 1].title}” first`}</small></span>
-                  {done ? <span className="node__stars" aria-label={`${done.stars} stars`}>{'★'.repeat(done.stars)}<i>{'★'.repeat(3 - done.stars)}</i></span> : current ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
+                  {done ? p.band === 'adult' ? <span className="node__go node__go--done" aria-label="Done"><Icon name="check" size={16} /></span> : <span className="node__stars" aria-label={`${done.stars} stars`}>{'★'.repeat(done.stars)}<i>{'★'.repeat(3 - done.stars)}</i></span> : current ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
                 </button>
               </li>
             );
           })}
         </ol>
         {COURSE.units.slice(1).map((u) => (
-          <div key={u.id} className="unit-locked"><span className="unit-locked__icon">{u.icon}</span><span><b>{u.title}</b><small>{u.subtitle}</small></span><Icon name="lock" size={20} /></div>
+          <div key={u.id} className="unit-locked"><span className="unit-locked__icon">{u.icon}</span><span><b>{unitTitle(u, p.band)}</b><small>{unitSubtitle(u, p.band)}</small></span><Icon name="lock" size={20} /></div>
         ))}
       </section>
+      </div>
     </div>
   );
 }
 
-const COURSE_LABEL: Record<CourseId, string> = { en: 'English', zh: '普通話 Putonghua' };
+/** Written in Simplified; shown in the learner's script. */
+const COURSE_LABEL: Record<CourseId, string> = { en: 'English', zh: '普通话 Putonghua' };
 
 const greeting = (): string => {
   const h = new Date().getHours();

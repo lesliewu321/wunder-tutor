@@ -1,54 +1,68 @@
-# Wunder Tutor API proxy
+# Wunder Tutor API
 
-Zero-dependency Node 20+ server (`server/index.mjs`) that keeps the Azure Speech and
-Anthropic keys off the browser. It stores nothing and never logs keys, audio or transcripts.
+A runtime-neutral core (`server/core.mjs`) that keeps the Azure Speech, Gemini and Anthropic keys off the browser.
+It runs as a zero-dependency Node 22+ server for local dev (`server/index.mjs`) and as a Cloudflare Pages Function
+in production (`functions/api/[[path]].js`). It stores nothing and never logs keys, access codes, audio, transcripts
+or request bodies.
 
 ## Configure and run
-1. Copy `.env.example` to `.env` (git-ignored, project root). Fill in `AZURE_SPEECH_KEY`,
-   `AZURE_SPEECH_REGION` (e.g. `westeurope`), `ANTHROPIC_API_KEY`. Optional: `CLAUDE_MODEL`
-   (default `claude-sonnet-5`), `PORT` (8787), `HOST` (127.0.0.1), `AZURE_SPEECH_ENDPOINT`.
-   Never prefix these with `VITE_`. Real environment variables override `.env`.
+1. Copy `.env.example` to `.env` (git-ignored, project root). Fill in `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`
+   (we use `eastasia`), `GEMINI_API_KEY`, optionally `ANTHROPIC_API_KEY`. Optional: `CLAUDE_MODEL`,
+   `GEMINI_LIVE_MODEL`, `GEMINI_TTS_VOICE`, `PORT` (8787), `HOST` (127.0.0.1). Never prefix these with `VITE_`.
+   Real environment variables override `.env`. Leave `AZURE_SPEECH_ENDPOINT` unset — the portal's
+   `*.api.cognitive.microsoft.com` URL is the wrong host for speech-to-text; the region alone works.
 2. `npm run server`, then `npm run dev` in another terminal; Vite proxies `/api/*` to port 8787.
-3. Check with `curl http://localhost:8787/api/health`. A missing key only disables its endpoint
-   (503), so the app can fall back to its offline/mock provider.
+3. Check with `curl http://localhost:8787/api/health`. A missing key only disables its endpoint (503), so the app
+   falls back to its built-in practice mode.
+
+Hosted: secrets are Cloudflare Pages secrets (`npx wrangler pages secret put NAME`), applied on the next deploy.
+When `BETA_ACCESS_CODE` is set, every endpoint except `/api/health` requires it in the `x-wunder-access` header; a
+public deployment with no code set fails closed.
 
 ## Endpoints (JSON responses; request bodies over 5 MB get 413 `payload_too_large`)
-- `GET /api/health` -> `{ ok: true, azure: boolean, claude: boolean }` (keys configured?).
-- `POST /api/assess?text=<reference>&locale=en-US|en-GB[&nbest=1..10]`, raw body = WAV
-  (16 kHz mono 16-bit PCM, max 30 s). Forwards to Azure short-audio pronunciation assessment
-  (HundredMark, phoneme granularity, miscue + prosody, IPA) and returns Azure's JSON unchanged:
-  scores sit on `NBest[0]` (`PronScore`, `AccuracyScore`, `FluencyScore`, `CompletenessScore`,
-  `ProsodyScore`, `Words[]`). `RecognitionStatus` may be `NoMatch` / `InitialSilenceTimeout`
-  with HTTP 200. `nbest` adds `NBestPhonemeCount` (for "heard as"). Errors: 400
-  `missing_text|text_too_long|unsupported_locale|missing_audio`, 503 `azure_not_configured`,
-  502 `{error:"azure_upstream",status}`, 504 `azure_timeout` (15 s).
+
+- `GET /api/health` → `{ ok, azure, claude, gemini, ttsVersion, needsCode, authorized }`.
+- `POST /api/assess?text=<reference>&locale=en-US|en-GB|zh-CN[&nbest=1..10][&alts=<JSON>][&dual=1]`, raw body = WAV
+  (16 kHz mono 16-bit PCM, max 30 s). Azure short-audio pronunciation assessment (HundredMark, phoneme granularity,
+  miscue, prosody). `text` ≤ 500 chars; Mandarin text must be **Simplified** (Traditional scores badly).
+  - `nbest` (en-US only): adds Azure's "what was heard" candidates per phoneme; IPA phoneme names are en-US only.
+  - `alts=["Fank you!", …]`: the same audio is also scored against up to 5 likely-mistake texts, each the reference
+    with exactly one word (or one Chinese character) changed — anything else is 400 `invalid_alts`.
+  - `dual=1` (en-GB only): the same audio is also scored as en-US.
+  - Without `alts`/`dual` the response is Azure's JSON unchanged; with either it is `{ main, us?, alts? }` (a failed
+    extra scoring is `null`; the main score still stands). Azure sometimes answers `Success` with no scores — the
+    server retries that once when the retry can still finish inside the app's 20-second wait.
+  - Each extra scoring is billed as the full audio again (see *Cost* below).
+  - Errors: 400 `missing_text|text_too_long|unsupported_locale|missing_audio|invalid_alts`, 503
+    `azure_not_configured`, 502 `{error:"azure_upstream",status}`, 504 `azure_timeout` (15 s).
+- `POST /api/tts` with `{ text, locale?: "en-US"|"en-GB"|"zh-CN", accent?, slow?, kind? }` → `audio/wav` (24 kHz mono,
+  silence-trimmed), header `X-Tts-Cache: hit|miss`. One Gemini Live session per uncached phrase with a strict "say
+  exactly this" instruction; the model's own transcript must match the text (Chinese: character overlap, no Latin
+  words), one firmer retry, else `502 tts_mismatch` and the app uses the device voice. New **Mandarin** takes must also
+  score as the text on Azure (≥ 85 overall, every syllable ≥ 70) before they are cached — a scorer outage skips that
+  check rather than silencing the teacher. Errors: 400 `missing_text|text_too_long|invalid_text`, 429
+  `tts_budget_exceeded` (120 generations / 10 min), 502 `gemini_rejected|gemini_closed|gemini_no_audio`, 503
+  `gemini_not_configured`, 504 `gemini_timeout`. Only lesson text goes to Google; no learner audio.
 - `POST /api/tutor` with `{ scenario:{title,setting,tutorRole,goals[]}, band, history:[{role:"tutor"|"child",text}], pronunciationNotes? }`
-  -> `{ reply, suggestions (0-2 strings), done }`. Child-safety rules live in the system prompt;
-  emojis are stripped; `done` is forced after 8 child turns; empty `history` yields the opening
-  line. Errors: 400 `invalid_json|invalid_scenario|invalid_band|invalid_history`,
+  → `{ reply, suggestions (0-2 strings), done }`. Child-safety rules live in the system prompt; emojis are stripped;
+  `done` is forced after 8 child turns. Errors: 400 `invalid_json|invalid_scenario|invalid_band|invalid_history`,
   503 `claude_not_configured`, 502 `{error:"claude_upstream",status}`, 504 `claude_timeout` (20 s).
 
-## Not yet verified against live Azure / Anthropic
-Tested locally: startup, health, validation, 413/503/502/404/405. No real keys were available, so
-no successful upstream round trip has been seen.
-- Azure: header/query format was checked against Microsoft's current REST docs, but they now show
-  `https://<resource>.cognitiveservices.azure.com/stt/...` rather than the default regional host
-  `{region}.stt.speech.microsoft.com` (set `AZURE_SPEECH_ENDPOINT` to `https://<resource>.cognitiveservices.azure.com/stt` if it fails).
-  `PhonemeAlphabet` / `NBestPhonemeCount` are documented for the SDK only, so IPA output and the
-  `Phonemes` / `Syllables` shape inside `Words[]` are unconfirmed over REST.
-- Anthropic: structured-output JSON (`output_config.format`) and `thinking: disabled` on the chosen
-  model are unconfirmed; a 400 triggers one retry without them.
+Per-client rate limits: assess 400 billed scorings / 5 min (a take with likely-mistake checks counts each scoring),
+tts 120 / 5 min, tutor 40 / 5 min, access-code guesses 12 / 10 min.
 
-## Teacher voice — `POST /api/tts` (Gemini Live, native audio)
+## Verified live (eastasia, 2026-09)
 
-Set `GEMINI_API_KEY` (optional: `GEMINI_LIVE_MODEL`, `GEMINI_TTS_VOICE`, `TTS_CACHE_DIR`). Needs Node 22+ (built-in WebSocket client).
+- Regional host `{region}.stt.speech.microsoft.com`; scores sit flat on `NBest[0]`.
+- **en-US**: IPA phoneme names, syllables, prosody, `NBestPhonemes`. **en-GB**: phoneme scores but no names, no
+  `NBestPhonemes`, harsh single-word scores. **zh-CN**: one unit per character, labelled with pinyin + tone number
+  (`shui 3`), with Offset/Duration; no prosody.
+- Gemini Live teacher voice from Node and from the Workers runtime (fetch-upgrade WebSocket).
+- Not yet run live: the Claude tutor (no Anthropic key set).
 
-- Body: `{ "text": "three red apples", "accent": "en-US" | "en-GB", "slow": false, "kind": "syllable"? }` — text ≤ 200 chars.
-- 200 → `audio/wav` (24 kHz mono, silence-trimmed), header `X-Tts-Cache: hit|miss`. Takes are cached in `server/.cache/tts`.
-- One Live session per uncached phrase: strict "say exactly this" system instruction, `outputAudioTranscription` checked against
-  the request, one firmer retry, then `502 tts_mismatch` (the app falls back to the device voice).
-- Errors: 400 `missing_text` / `text_too_long` / `invalid_text`, 429 `tts_budget_exceeded` (120 generations / 10 min),
-  502 `gemini_rejected` (bad key/model) / `gemini_closed` / `gemini_no_audio`, 503 `gemini_not_configured`, 504 `gemini_timeout`.
-- Only lesson text goes to Google. No child audio is ever sent to this endpoint.
-- This endpoint fronts a paid API and the server has no auth: keep it bound to localhost, or put auth + rate limiting in
-  front of it before deploying.
+## Cost
+
+Azure bills audio time: about US$1.00/h speech-to-text + $0.30/h pronunciation assessment (eastasia, pay-as-you-go).
+Because of the accuracy checks, one learner take is scored 1–6 times (US: main + up to 3 likely mistakes; British:
+main + US + up to 3; Mandarin: main + up to 5), so a 2.5 s take bills roughly 10 s of audio. Scoring only the one
+word being checked for the extra scorings (a second, shorter request) would roughly halve that.

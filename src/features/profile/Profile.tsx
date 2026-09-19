@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Accent, CourseId, ParentSettings } from '../../domain/types';
+import { settingsName, type Accent, type AgeBand, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
 import { HOME_LANGUAGES } from '../../content/translations';
+import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, liveStreak } from '../../engine/rewards';
 import { apiHealth, getAccessCode, setAccessCode, type ApiHealth } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
 
-const COURSE_NAME: Record<CourseId, string> = { en: 'English', zh: '普通話' };
+/** Written in Simplified; shown in the learner's script. */
+const COURSE_NAME: Record<CourseId, string> = { en: 'English', zh: '普通话' };
 const BAND_LABEL = { little: 'Little explorer · 5–7', junior: 'Junior · 8–11', teen: 'Teen · 12–15', adult: 'Grown-up learner' } as const;
 
 export function Me() {
@@ -55,14 +57,14 @@ export function Me() {
 
       <button type="button" className="row-link" onClick={() => nav('/parents')}>
         <span className="row-link__icon"><Icon name="shield" /></span>
-        <span><b>Parent Zone</b><small>Privacy, recordings, learners and settings</small></span>
+        <span><b>{settingsName(p.band)}</b><small>Privacy, recordings, learners and settings</small></span>
         <Icon name="lock" size={20} />
       </button>
     </div>
   );
 }
 
-function Gate({ onPass, onCancel }: { onPass: () => void; onCancel: () => void }) {
+function Gate({ onPass, onCancel, band }: { onPass: () => void; onCancel: () => void; band: AgeBand }) {
   const [a, b] = useMemo(() => [6 + Math.floor(Math.random() * 4), 6 + Math.floor(Math.random() * 4)], []);
   const [value, setValue] = useState('');
   const [wrong, setWrong] = useState(false);
@@ -70,8 +72,8 @@ function Gate({ onPass, onCancel }: { onPass: () => void; onCancel: () => void }
   return (
     <div className="screen screen--center gate">
       <span className="gate__icon"><Icon name="shield" size={36} /></span>
-      <h1>Grown-ups only</h1>
-      <p>To open the Parent Zone, answer this multiplication:</p>
+      <h1>{band === 'adult' ? 'Quick check' : 'Grown-ups only'}</h1>
+      <p>To open {band === 'adult' ? 'Settings & privacy' : 'the Parent Zone'}, answer this multiplication:</p>
       <form onSubmit={(e) => { e.preventDefault(); submit(); }}>
         {/* Spelled out: the × glyph in the display font is easy to misread as +. */}
         <label className="gate__q" htmlFor="gate">{a} <span className="gate__op">times</span> {b} = ?</label>
@@ -103,7 +105,7 @@ export function ParentZone() {
   const refresh = () => void audioRepo.count(`${p.id}/`).then(setRecordings);
   useEffect(() => { if (open) { refresh(); void apiHealth().then(setServices); } }, [open, p.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!open) return <Gate onPass={() => setOpen(true)} onCancel={() => nav('/me')} />;
+  if (!open) return <Gate band={p.band} onPass={() => setOpen(true)} onCancel={() => nav('/me')} />;
 
   const DANGER: Record<Exclude<Danger, null>, { title: string; body: string; cta: string; run: () => Promise<void> }> = {
     recordings: { title: `Delete ${p.name}’s recordings?`, body: 'All saved voice recordings are erased from this device. Scores and progress are kept.', cta: 'Delete recordings', run: async () => { const n = await store.deleteRecordings(p.id); toast(`${n} recording${n === 1 ? '' : 's'} deleted`, '🗑️'); refresh(); } },
@@ -121,7 +123,7 @@ export function ParentZone() {
 
   return (
     <div className="screen parents">
-      <TopBar title="Parent Zone" onBack={() => nav('/me')} />
+      <TopBar title={settingsName(p.band)} onBack={() => nav('/me')} />
 
       <section>
         <h2 className="section-title">Learners</h2>
@@ -146,7 +148,7 @@ export function ParentZone() {
                 return (
                   <button key={id} type="button" className={`chip chip--sm ${on ? 'is-on' : ''}`} aria-pressed={on}
                     onClick={() => { const learning = on ? p.learning.filter((c) => c !== id) : [...p.learning, id]; if (learning.length) patch(p.id, { learning, course: learning.includes(p.course) ? p.course : learning[0] }); }}>
-                    {label}
+                    {inScript(label, p.zhScript)}
                   </button>
                 );
               })}
@@ -166,8 +168,8 @@ export function ParentZone() {
 
       <section>
         <h2 className="section-title">Voice &amp; privacy</h2>
-        {toggle('storeRecordings', 'Keep recordings on this device', 'Lets your child replay “before” and “now”. Only the newest 3 per phrase are kept. Off = audio is discarded right after scoring.')}
-        <p className="fineprint fineprint--left">{recordings == null ? 'Counting recordings…' : `${recordings} recording${recordings === 1 ? '' : 's'} stored for ${p.name}. Recordings never leave this device${services?.azure ? ' except to be scored by the speech service, which does not keep them' : ''}.${services?.gemini ? ' The teacher’s voice is made from lesson text only — your child’s voice is never sent for that.' : ''}`}</p>
+        {toggle('storeRecordings', 'Keep recordings on this device', 'Lets learners replay “before” and “now”. Only the newest 3 per phrase are kept. Off = audio is discarded right after scoring.')}
+        <p className="fineprint fineprint--left">{recordings == null ? 'Counting recordings…' : `${recordings} recording${recordings === 1 ? '' : 's'} stored for ${p.name}. Recordings never leave this device${services?.azure ? ' except to be scored by the speech service, which does not keep them' : ''}.${services?.gemini ? ' The teacher’s voice is made from lesson text only — learners’ voices are never sent for that.' : ''}`}</p>
         <div className="danger-list">
           <button type="button" onClick={() => setDanger('recordings')}><Icon name="trash" size={20} />Delete recordings</button>
           <button type="button" onClick={() => setDanger('history')}><Icon name="trash" size={20} />Delete pronunciation history</button>

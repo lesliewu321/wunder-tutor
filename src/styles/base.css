@@ -132,7 +132,10 @@ small { font-size: 0.8em; font-weight: 600; color: var(--ink-soft); display: blo
   background: var(--surface); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 10px 20px calc(22px + var(--safe-b));
   animation: sheet-up 0.34s var(--ease-out);
 }
-.sheet__grip { width: 44px; height: 5px; border-radius: 99px; background: var(--line); margin: 0 auto 14px; }
+.sheet__top { position: relative; display: flex; align-items: center; justify-content: center; height: 30px; margin: -4px 0 8px; }
+.sheet__grip { width: 44px; height: 5px; border-radius: 99px; background: var(--line); }
+.sheet__close { position: absolute; top: 0; right: -8px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-soft); }
+.sheet__close:hover { background: var(--surface-2); color: var(--ink); }
 @keyframes sheet-up { from { transform: translateY(100%); } }
 @keyframes fade { from { opacity: 0; } }
 

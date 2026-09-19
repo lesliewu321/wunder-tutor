@@ -28,8 +28,21 @@ export function missingScores(text) {
   try {
     const j = JSON.parse(text);
     const b = j?.NBest?.[0];
-    return j?.RecognitionStatus === Success && !!b && b.AccuracyScore == null && b.PronunciationAssessment == null;
+    return j?.RecognitionStatus === 'Success' && !!b && b.AccuracyScore == null && b.PronunciationAssessment == null;
   } catch { return false; }
+}
+
+/**
+ * A likely-mistake text must be the reference with ONE word (English) or ONE character (Chinese) changed — the
+ * endpoint scores audio against lesson text, not arbitrary text.
+ */
+export function oneChangeAway(text, alt) {
+  const han = (s) => [...s].filter((c) => /\p{Script=Han}/u.test(c));
+  const a = han(text), b = han(alt);
+  if (a.length) return a.length === b.length && a.filter((c, i) => c !== b[i]).length === 1;
+  const words = (s) => s.toLowerCase().split(/\s+/).map((w) => w.replace(/[^a-z']/g, '')).filter(Boolean);
+  const x = words(text), y = words(alt);
+  return x.length === y.length && x.filter((w, i) => w !== y[i]).length === 1;
 }
 
 const json = (status, body, extraHeaders) =>
@@ -83,12 +96,13 @@ function sameSecret(a, b) {
 /** Tiny fixed-window limiter. Per process / per Worker isolate — a speed bump, not a guarantee. */
 function createLimiter(max, windowMs) {
   const hits = new Map();
-  return (id) => {
+  /** `cost`: how many billed upstream calls this request makes. */
+  return (id, cost = 1) => {
     const now = Date.now();
     if (hits.size > 5000) hits.clear();
     const entry = hits.get(id);
-    if (!entry || now - entry.start > windowMs) { hits.set(id, { start: now, count: 1 }); return true; }
-    entry.count += 1;
+    if (!entry || now - entry.start > windowMs) { hits.set(id, { start: now, count: cost }); return cost <= max; }
+    entry.count += cost;
     return entry.count <= max;
   };
 }
@@ -143,7 +157,8 @@ export function createApi(rawEnv, deps = {}) {
     })
     : null;
 
-  const allowAssess = createLimiter(90, 5 * 60_000); // ~18 attempts a minute per client is already frantic
+  // Counted in billed scorings (a take with likely-mistake checks is several): ~100 typical takes per 5 minutes.
+  const allowAssess = createLimiter(400, 5 * 60_000);
   const allowTts = createLimiter(120, 5 * 60_000);
   const allowTutor = createLimiter(40, 5 * 60_000);
   const allowCodeGuess = createLimiter(12, 10 * 60_000);
@@ -164,7 +179,7 @@ export function createApi(rawEnv, deps = {}) {
     return btoa(binary);
   }
 
-  async function scoreOnce(audio, text, locale, nbest, attempt = 0) {
+  async function scoreOnce(audio, text, locale, nbest, attempt = 0, started = Date.now()) {
     const base = AZURE_SPEECH_ENDPOINT || `https://${AZURE_SPEECH_REGION}.stt.speech.microsoft.com`;
     const upstream = await fetchText(
       `${base}/speech/recognition/conversation/cognitiveservices/v1?language=${encodeURIComponent(locale)}&format=detailed`,
@@ -188,7 +203,8 @@ export function createApi(rawEnv, deps = {}) {
     }
     // Now and then Azure answers "Success" without running the pronunciation part (no scores at all). That is not a
     // verdict on the child — ask once more rather than let it read as a zero.
-    if (!attempt && missingScores(upstream.text)) return scoreOnce(audio, text, locale, nbest, 1);
+    // Only when a retry can still finish inside the app's 20-second wait.
+    if (!attempt && Date.now() - started < 4000 && missingScores(upstream.text)) return scoreOnce(audio, text, locale, nbest, 1, started);
     return upstream.text;
   }
 
@@ -198,7 +214,7 @@ export function createApi(rawEnv, deps = {}) {
    *   dual=1             British: the same audio as US English too, for "what was said instead" on consonants
    * With either, the response is { main, alts?, us? } holding Azure's JSON objects; without, Azure's JSON unchanged.
    */
-  async function handleAssess(request, url) {
+  async function handleAssess(request, url, client) {
     if (!status.azure) throw new HttpError(503, 'azure_not_configured');
     const text = (url.searchParams.get('text') ?? '').trim();
     if (!text) throw new HttpError(400, 'missing_text');
@@ -210,9 +226,10 @@ export function createApi(rawEnv, deps = {}) {
     let alts = [];
     if (url.searchParams.has('alts')) {
       try { alts = JSON.parse(url.searchParams.get('alts') ?? '[]'); } catch { throw new HttpError(400, 'invalid_alts'); }
-      if (!Array.isArray(alts) || alts.length > MAX_ALTS || alts.some((a) => typeof a !== 'string' || !a.trim() || a.length > 500)) throw new HttpError(400, 'invalid_alts', { max: MAX_ALTS });
+      if (!Array.isArray(alts) || alts.length > MAX_ALTS || alts.some((a) => typeof a !== 'string' || !a.trim() || a.length > 500 || !oneChangeAway(text, a))) throw new HttpError(400, 'invalid_alts', { max: MAX_ALTS });
     }
     const dual = url.searchParams.get('dual') === '1' && locale === 'en-GB';
+    if (!allowAssess(client, 1 + alts.length + (dual ? 1 : 0))) throw new HttpError(429, 'rate_limited');
 
     const audio = await readBody(request);
     if (audio.length < 44) throw new HttpError(400, 'missing_audio'); // smaller than a WAV header
@@ -223,8 +240,8 @@ export function createApi(rawEnv, deps = {}) {
     }
     const [main, us, ...altTexts] = await Promise.all([
       scoreOnce(audio, text, locale, nbest),
-      dual ? scoreOnce(audio, text, 'en-US', 5) : Promise.resolve(null),
-      // A failed alternative only loses that hint; the main score still stands.
+      // A failed extra scoring only loses that evidence; the main score still stands.
+      dual ? scoreOnce(audio, text, 'en-US', 5).catch(() => null) : Promise.resolve(null),
       ...alts.map((a) => scoreOnce(audio, a, locale, 0).catch(() => null)),
     ]);
     const parse = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
@@ -328,8 +345,7 @@ export function createApi(rawEnv, deps = {}) {
       if (!authorized) throw new HttpError(401, 'access_code_required');
 
       if (path === '/api/assess') {
-        if (!allowAssess(client)) throw new HttpError(429, 'rate_limited');
-        return await handleAssess(request, url);
+        return await handleAssess(request, url, client);
       }
       if (path === '/api/tts') {
         if (!allowTts(client)) throw new HttpError(429, 'rate_limited');

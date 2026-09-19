@@ -12,8 +12,6 @@ interface Props {
   word: WordScore;
   band: AgeBand;
   home?: HomeLanguage;
-  /** Mandarin: which characters to show. */
-  script?: 'hant' | 'hans';
   onClose: () => void;
   onListen: (slow: boolean) => void;
   onHearMe: () => void;
@@ -64,7 +62,7 @@ export function WordSheet({ word, band, home, onClose, onListen, onHearMe, onHea
               : info && c.kind === 'sound' && info.category !== 'tone' && <div className="teach__mouth"><Mouth pose={info.pose} size={132} /></div>}
             <p className="teach__tip"><b>Try:</b> {c.tip}</p>
           </div>
-          <button type="button" className="teach__say" onClick={() => onHearTip(c.tip)}><Icon name="speaker" size={18} />Hear Pip say the tip</button>
+          <button type="button" className="teach__say" onClick={() => onHearTip(c.tip)}><Icon name="speaker" size={18} />{band === 'adult' ? 'Hear the tip' : 'Hear Pip say the tip'}</button>
         </div>
 
         {info && (c.kind === 'sound' || c.kind === 'tone') && (

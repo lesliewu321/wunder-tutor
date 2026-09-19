@@ -1,5 +1,6 @@
 import type { Assessment, PhonemeScore, Tone, WordErrorType, WordScore, ZhSyllable } from '../../domain/types';
 import { parseSyllable, splitPinyin, surfaceTones } from '../../content/zh/pinyin';
+import { SWAP_TRUST, swapKind } from '../../content/zh/alternatives';
 import { type PitchTrack } from '../pitch';
 import { SpeechError } from '../types';
 import { DEFAULT_TONE_PARAMS, judgeTone, readTone, type SpeakerRef, type Span, type ToneContext, type ToneModel, type ToneParams } from './tone';
@@ -105,7 +106,9 @@ export function assessZh(json: AzureZhResponse, ref: { text: string; py: string;
   if (best.AccuracyScore == null && best.PronunciationAssessment == null) throw new SpeechError('service', 'no scores');
   // Nothing recognised at all (every character "omitted"): ask again rather than mark everything missing.
   const azWords = best.Words ?? [];
-  if (azWords.length && azWords.every((w) => errorType((w.PronunciationAssessment ?? w).ErrorType ?? w.ErrorType) === 'omission')) throw new SpeechError('no-speech');
+  // Scores but no words: another glitch — there is nothing to grade the characters by.
+  if (!azWords.length) throw new SpeechError('service', 'no words');
+  if (azWords.every((w) => errorType((w.PronunciationAssessment ?? w).ErrorType ?? w.ErrorType) === 'omission')) throw new SpeechError('no-speech');
   const scores: AzScores = { ...best.PronunciationAssessment, ...best };
 
   const all = [...ref.text];
@@ -137,7 +140,12 @@ export function assessZh(json: AzureZhResponse, ref: { text: string; py: string;
     }
     // Sounds: did a likely mistake fit the audio clearly better than the target?
     const better = altReadings
-      .filter((a) => a.index === i && a.reading && a.reading.error !== 'omission' && a.reading.score >= r.score + margin && a.reading.score >= 70)
+      .filter((a) => {
+        if (a.index !== i || !a.reading || a.reading.error === 'omission') return false;
+        const trust = SWAP_TRUST[swapKind(py[i], a.py)] ?? {};
+        if (trust.off || (trust.maxTarget != null && r.score >= trust.maxTarget)) return false;
+        return a.reading.score >= r.score + margin + (trust.extraMargin ?? 0) && a.reading.score >= 70;
+      })
       .sort((a, b) => b.reading!.score - a.reading!.score)[0];
     if (better) zh.heardAs = better.py;
     const segScore = better ? Math.min(r.score, 55) : r.score;
@@ -151,17 +159,24 @@ export function assessZh(json: AzureZhResponse, ref: { text: string; py: string;
     // Tone: from the child's own pitch, never from the scorer alone.
     let toneWrong = false;
     if (opts.pitch && speaker && r.offsetMs != null && r.durationMs) {
-      const reading = readTone(opts.pitch, spans, i, speaker, toneContext(i, chars.length, breaks), toneParams, opts.toneModel);
+      const context = toneContext(i, chars.length, breaks);
+      const reading = readTone(opts.pitch, spans, i, speaker, context, toneParams, opts.toneModel);
+      // A speaker with no takes behind them is this take's own pitch: a new learner, judged more carefully.
+      const p = { ...toneParams, ...(context === 'alone' ? undefined : toneParams.connected), ...(speaker.takes === 0 ? toneParams.cold : undefined) };
       // Without the scorer as a second opinion, only a near-certain pitch reading counts.
-      const verdict = judgeTone(reading, sf.accept as Tone[], scorerDisagrees ? 0 : r.score, scorerDisagrees ? { ...toneParams, maxExpected: toneParams.maxExpected / 4 } : toneParams);
+      const verdict = judgeTone(reading, sf.accept as Tone[], scorerDisagrees ? 0 : r.score, scorerDisagrees ? { ...p, maxExpected: p.maxExpected / 4 } : p);
       if (reading) zh.contour = reading.contour;
       if (verdict.score != null) zh.toneScore = verdict.score;
       if (verdict.wrong) { zh.toneHeard = verdict.heard; toneWrong = true; }
     }
     const neutral = sf.accept.every((t) => t === 5);
-    // A light (neutral) tone is unstressed and the scorer expects it wrongly often: its low score is no evidence.
-    const soundScore = neutral && !better ? Math.max(segScore, 85) : segScore;
-    const lowSound = !neutral && !better && !scorerDisagrees && r.score < ZH_LOW_SOUND;
+    // A light (neutral) tone is unstressed and the scorer expects it wrongly often; when the scorer read the character
+    // differently (好 in 好吃 as hào) it graded something else. Either way its score says nothing about the sounds:
+    // it neither marks the syllable down nor counts for or against the learner's sounds.
+    const unreliable = (neutral || scorerDisagrees) && !better;
+    const soundScore = unreliable ? Math.max(segScore, 85) : segScore;
+    zh.soundScore = unreliable ? soundScore : r.score;
+    const lowSound = !unreliable && !better && r.score < ZH_LOW_SOUND;
     const score = toneWrong ? Math.min(soundScore, zh.toneScore ?? 60) : soundScore;
 
     const units = unitsFor(py[i]);
@@ -169,8 +184,10 @@ export function assessZh(json: AzureZhResponse, ref: { text: string; py: string;
     const tone = sf.accept[0];
     if (tone !== 5 && zh.toneScore != null) phonemes.push({ phoneme: `zh:t${tone}`, score: zh.toneScore });
     const heardPart = better?.part;
-    if (units.initial) phonemes.push({ phoneme: units.initial, score: heardPart === 'final' ? r.score : segScore });
-    if (units.final) phonemes.push({ phoneme: units.final, score: heardPart === 'initial' ? r.score : segScore });
+    if (!unreliable) {
+      if (units.initial) phonemes.push({ phoneme: units.initial, score: heardPart === 'final' ? r.score : segScore });
+      if (units.final) phonemes.push({ phoneme: units.final, score: heardPart === 'initial' ? r.score : segScore });
+    }
 
     const err: WordErrorType = toneWrong || !!better || lowSound ? 'mispronunciation' : 'none';
     return { word: char, score, errorType: err, syllables: [{ text: char, score, zh }], phonemes, offsetMs: r.offsetMs, durationMs: r.durationMs };

@@ -1,6 +1,7 @@
 import { createStore, get, set } from 'idb-keyval';
 import type { Accent, Locale, SpeakItem } from '../domain/types';
 import { apiFetch, apiHealth } from './health';
+import { teacherToneOk } from './zh/teacherCheck';
 
 /** Mandarin items always speak Mandarin; everything else is English in the child's accent. */
 export const localeOf = (item: Pick<SpeakItem, 'lang'> | undefined | null, accent: Accent): Locale => item?.lang ?? accent;
@@ -108,10 +109,14 @@ class GeminiTakes {
   /** Model/voice the server generates with — a different voice is a different take. */
   version = '';
 
+  /** Takes that failed the tone check this session — not fetched again. */
+  private rejected = new Set<string>();
+
   fetch(text: string, opts: SpeakOptions): Promise<Blob> {
     const key = ttsKey(this.version, text, opts);
     const hit = this.memory.get(key);
     if (hit) return Promise.resolve(hit);
+    if (this.rejected.has(key)) return Promise.reject(new Error('tts tone mismatch'));
     let job = this.inflight.get(key);
     if (!job) {
       job = this.load(key, text, opts).finally(() => this.inflight.delete(key));
@@ -120,10 +125,16 @@ class GeminiTakes {
     return job;
   }
 
+  /** Mandarin: a take whose tone is confidently wrong is never played (the device voice speaks instead). */
+  private async toneOk(blob: Blob, text: string, opts: SpeakOptions): Promise<boolean> {
+    if (opts.accent !== 'zh-CN') return true;
+    try { return teacherToneOk(await blob.arrayBuffer(), text, this.version.split('/')[1] ?? ''); } catch { return true; }
+  }
+
   private async load(key: string, text: string, opts: SpeakOptions): Promise<Blob> {
     try {
       const stored = this.store && (await get<Blob>(key, this.store));
-      if (stored) { this.memory.set(key, stored); return stored; }
+      if (stored && (await this.toneOk(stored, text, opts))) { this.memory.set(key, stored); return stored; }
     } catch { /* storage unavailable — fetch instead */ }
 
     const ctl = new AbortController();
@@ -135,6 +146,7 @@ class GeminiTakes {
       });
       if (!res.ok || !res.headers.get('content-type')?.startsWith('audio/')) throw new Error(`tts ${res.status}`);
       const blob = await res.blob();
+      if (!(await this.toneOk(blob, text, opts))) { this.rejected.add(key); throw new Error('tts tone mismatch'); }
       this.memory.set(key, blob);
       try { if (this.store) await set(key, blob, this.store); } catch { /* memory cache only */ }
       return blob;

@@ -9,7 +9,7 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { assess, CACHE, pool, take, wav16k } from './lib.mjs';
-import { EN_PAIRS, EN_SENTENCES, VOICES, ZH_PAIRS, ZH_PHRASES } from './cases';
+import { EN_PAIRS, EN_SENTENCES, VOICES, ZH_PAIRS, ZH_PHRASES, ZH_VOICES } from './cases';
 import { ITEM_INDEX } from '../src/content/course';
 import { ZH_ITEMS } from '../src/content/zh/course';
 import { alternativesFor } from '../src/content/zh/alternatives';
@@ -100,7 +100,7 @@ async function buildMandarin(): Promise<EvalCase[]> {
   const pairTexts = ZH_PAIRS.flatMap(([a, pa, b, pb]) => [{ text: a, py: pa }, { text: b, py: pb }]);
   const phraseTexts = ZH_PHRASES.flatMap(([a, pa, b, pb]) => [{ text: a, py: pa }, { text: b, py: pb }]);
   const all = [...new Map([...items, ...pairTexts, ...phraseTexts].map((t) => [t.text, t])).values()];
-  const jobs = VOICES.flatMap((voice) => all.map((t) => ({ ...t, voice })));
+  const jobs = ZH_VOICES.flatMap((voice) => all.map((t) => ({ ...t, voice })));
   log(`zh-CN: ${jobs.length} takes`);
   const takes = new Map<string, { key: string; rate: number; transcript: string; pcm: Buffer }>();
   await pool(jobs, 3, async (j: { text: string; voice: string }) => {
@@ -113,7 +113,7 @@ async function buildMandarin(): Promise<EvalCase[]> {
     if (!t) return;
     planned.push({ id: `${locale}|${voice}|${speed}|${kind}|${ref.text}|${spoken.text}`, lang: 'zh', locale, voice, speed, reference: ref.text, refPy: ref.py, spoken: spoken.text, spokenPy: spoken.py, kind, truth, audio: { key: t.key, rate: t.rate, transcript: t.transcript } });
   };
-  for (const voice of VOICES) {
+  for (const voice of ZH_VOICES) {
     for (const speed of [1, 1.25] as Speed[]) {
       for (const [a, pa, b, pb, part] of ZH_PAIRS) {
         const A = { text: a, py: pa }, B = { text: b, py: pb };

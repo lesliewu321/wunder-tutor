@@ -37,23 +37,41 @@ export function ProgressBar({ value, tone = 'primary' }: { value: number; tone?:
   );
 }
 
-/** Bottom sheet. Focus moves into it, Escape and the scrim close it. */
+const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/** Bottom sheet (a centred dialog on tablets). Focus moves into it and stays there; Escape, the scrim and × close it. */
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: ReactNode; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
+  // Callers pass a new onClose on every render; focus must only move when the sheet opens or closes.
+  const close = useRef(onClose);
+  close.current = onClose;
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement as HTMLElement | null;
     ref.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { close.current(); return; }
+      const box = ref.current;
+      if (e.key !== 'Tab' || !box) return;
+      const items = [...box.querySelectorAll<HTMLElement>(FOCUSABLE)];
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1], at = document.activeElement;
+      if (!box.contains(at)) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && (at === first || at === box)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+    };
     window.addEventListener('keydown', onKey);
     return () => { window.removeEventListener('keydown', onKey); prev?.focus?.(); };
-  }, [open, onClose]);
+  }, [open]);
   if (!open) return null;
   return createPortal(
     <div className="sheet-layer">
       <div className="sheet-scrim" onClick={onClose} />
       <div className="sheet" role="dialog" aria-modal="true" aria-label={label} tabIndex={-1} ref={ref}>
-        <div className="sheet__grip" />
+        <div className="sheet__top">
+          <div className="sheet__grip" />
+          <button type="button" className="sheet__close" aria-label="Close" onClick={onClose}><Icon name="close" size={20} /></button>
+        </div>
         {children}
       </div>
     </div>,

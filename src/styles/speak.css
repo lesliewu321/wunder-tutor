@@ -252,3 +252,5 @@
 .wordsheet__py { display: block; font-family: var(--font-body); font-size: 1rem; font-weight: 800; color: var(--primary); }
 /* Pinyin tone marks (ā á ǎ à, ǖ ǘ ǚ ǜ) need a font that has them; the display font doesn't. */
 .py, .wordsheet__py, .zh__py, .sound-badge b, .guide__glyph b, .sound-card__glyph, .focus-card__sound, .sound-row__glyph, .gains__glyph { font-family: var(--font-body); }
+:root[data-band='adult'] .mascot, :root[data-band='adult'] .confetti { display: none; }
+:root[data-band='adult'] .hero__text { padding-right: 0; }

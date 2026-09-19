@@ -42,6 +42,19 @@ describe('tone sandhi', () => {
     expect(accept('一杯', 'yi1 bei1')).toEqual(['4', '1']);
     expect(accept('不客气', 'bu4 ke4 qi5')).toEqual(['2', '4', '5']);
     expect(accept('我不饿', 'wo3 bu4 e4')).toEqual(['3', '2', '4']);
+    // before a light syllable, by its tone underneath: 一个 yí ge, 一点 yì diǎn
+    expect(accept('一个', 'yi1 ge5')).toEqual(['2', '5']);
+    expect(accept('一些', 'yi1 xie5')).toEqual(['4', '5']);
+  });
+  it('一 keeps its 1st tone when counting and in dates', () => {
+    expect(accept('一二三', 'yi1 er4 san1')[0]).toBe('1');
+    expect(accept('一月', 'yi1 yue4')[0]).toBe('1');
+    expect(accept('第一天', 'di4 yi1 tian1')[1]).toBe('1');
+  });
+  it('a light syllable that is a 3rd tone underneath still changes the 3rd tone before it', () => {
+    expect(accept('小姐', 'xiao3 jie5')).toEqual(['2|3', '5']);
+    expect(accept('奶奶', 'nai3 nai5')).toEqual(['3', '5']);
+    expect(accept('饺子', 'jiao3 zi5')).toEqual(['3', '5']);
   });
   it('a 3rd tone followed by more speech is low; at the end it keeps its rise', () => {
     const s = surfaceTones(tones('wo3 e4 le5'), chars('我饿了'));
@@ -60,7 +73,9 @@ describe('likely-mistake alternatives', () => {
     expect(alternativesFor('shi4').map((a) => a.char)).toEqual(['四']);
     expect(alternativesFor('shi1').map((a) => a.char)).toEqual(['思']);
     expect(alternativesFor('tang1').map((a) => `${a.part}:${a.char}`)).toEqual(['final:贪']);
-    expect(alternativesFor('nv3').map((a) => a.char)).toEqual(['旅', '你', '努']);
+    // ü → i / u: the scorer can't hear the difference (eval/alt-types-zh.ts), so only n → l is checked for 女.
+    expect(alternativesFor('nv3').map((a) => a.char)).toEqual(['旅']);
+    expect(alternativesFor('xue2')).toEqual([]);
     expect(alternativesFor('le5')).toEqual([]);
   });
   it('every alternative character is a single Han character', () => {

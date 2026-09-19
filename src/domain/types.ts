@@ -9,6 +9,8 @@ export type ContentBand = 'little' | 'junior' | 'teen';
 export const contentBand = (band: AgeBand): ContentBand => (band === 'adult' ? 'teen' : band);
 /** Teens and adults get the grown-up presentation: phonetic symbols, less mascot, no stars. */
 export const isGrownUp = (band: AgeBand): boolean => band === 'teen' || band === 'adult';
+/** What the protected settings area is called: a parent's Parent Zone, or an adult learner's own settings. */
+export const settingsName = (band: AgeBand): string => (band === 'adult' ? 'Settings & privacy' : 'Parent Zone');
 /** The English accent a child is taught. */
 export type Accent = 'en-US' | 'en-GB';
 /** What a piece of speech is scored and spoken as: English in the child's accent, or Mandarin (Putonghua). */
@@ -74,11 +76,15 @@ export interface Unit {
   color: string;
   lessons: Lesson[];
   locked?: boolean;
+  /** Plainer names for teens and adults ("Food & Drink", not "Yummy Food"). */
+  grownUp?: { title: string; subtitle: string };
 }
 
 export interface Course {
   id: string;
   title: string;
+  /** For teens and adults: just the language. */
+  grownUpTitle?: string;
   language: CourseId;
   units: Unit[];
 }

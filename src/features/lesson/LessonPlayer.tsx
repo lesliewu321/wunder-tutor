@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { Achievement, Exercise, PhonemeId, SpeakItem } from '../../domain/types';
 import { findLesson } from '../../content/course';
 import { LADDERS } from '../../content/lab';
-import { phonemeInfo, tipFor } from '../../content/phonemes';
+import { exampleSpeech, phonemeInfo, tipFor } from '../../content/phonemes';
+import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { liveStreak } from '../../engine/rewards';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
@@ -63,7 +64,7 @@ export function LessonPlayer() {
   };
 
   const onSpeakDone = (ex: Extract<Exercise, { type: 'speak' }> | { item: SpeakItem; id: string }, r: SpeakResult) => {
-    const all = [...results, { ...r, text: ex.item.text }];
+    const all = [...results, { ...r, text: shownText(ex.item) }];
     setResults(all);
     let next = queue;
 
@@ -133,7 +134,7 @@ function DrillIntro({ sound, onDone }: { sound: PhonemeId; onDone: () => void })
         <h2>{info.category === 'tone' ? <>Let’s practise {info.name.split(' · ')[0].toLowerCase()}</> : <>Let’s fix the “{info.label}” sound</>}</h2>
         {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={210} /> : <Mouth pose={info.pose} size={210} />}
         <p className="drill-intro__tip">{tipFor(sound, profile.band)}</p>
-        <button type="button" className="pill" onClick={() => void voice.speak(speakable(info.example), { accent: sound.startsWith('zh:') ? 'zh-CN' : profile.accent, slow: true }).catch(() => undefined)}>🔈 Hear it in “{info.example}”</button>
+        <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: sound.startsWith('zh:') ? 'zh-CN' : profile.accent, slow: true }).catch(() => undefined)}>🔈 Hear it in “{info.example}”</button>
       </div>
       <div className="drill-intro__dock"><Button variant="primary" size="lg" block onClick={onDone}>I’m ready</Button></div>
     </div>
@@ -221,7 +222,8 @@ function LessonComplete({ title, results, outcome, xpGained, streak, listen }: {
             <span className="callout__icon" aria-hidden>{again.length ? '🔁' : '✅'}</span>
             <div>
               <b>{masteredCount} of {spoken.length} mastered</b>
-              <p>{again.length ? `Pip will bring back “${again[0].text}” soon for more practice.` : 'Everything in this lesson sounded clear.'}</p>
+              <p>{!again.length ? 'Everything in this lesson sounded clear.'
+                : profile.band === 'adult' ? `“${again[0].text}” will come back soon for more practice.` : `Pip will bring back “${again[0].text}” soon for more practice.`}</p>
             </div>
           </div>
         )}
@@ -236,6 +238,3 @@ function LessonComplete({ title, results, outcome, xpGained, streak, listen }: {
     </div>
   );
 }
-
-/** A sound's example as spoken: Mandarin examples are written "妈 mā" — say just the characters. */
-const speakable = (example: string): string => example.replace(/s*[a-zA-Zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]+$/u, '') || example;

@@ -126,7 +126,8 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     difficulty: 0.5, l1: yue(0.2, 'zh:l'),
   },
   {
-    id: 'zh:-ng', label: '-n / -ng', name: 'Endings -n and -ng', example: '汤 tāng', category: 'consonant',
+    // The label's hyphens are non-breaking, so a small tile wraps it as "‑n /" over "‑ng".
+    id: 'zh:-ng', label: '‑n / ‑ng', name: 'Endings -n and -ng', example: '汤 tāng', category: 'consonant',
     pose: pose({ open: 0.3, tongue: 'high-back', air: 'nose' }),
     tip: {
       little: 'For -ng, finish with a hum at the back, like “sing”!',

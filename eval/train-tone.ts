@@ -1,4 +1,4 @@
-// Train the tone model on the labelled set and check it honestly: train on two voices, test on the third.
+// Train the tone model on the labelled set and check it honestly: every voice is tested by a model trained without it.
 //   npx vite-node eval/train-tone.ts [--write] [--l2=0.02]
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -21,7 +21,7 @@ const evaluate = (m: ToneModel, test: Sample[]) => {
 
 const l2 = Number(process.argv.find((a) => a.startsWith('--l2='))?.slice(5) ?? 0.02);
 let cvOk = 0, cvN = 0;
-for (const held of ['Kore', 'Puck', 'Leda']) {
+for (const held of new Set(samples.map((s) => s.voice))) {
   const m = train(samples.filter((s) => s.voice !== held), l2);
   const test = samples.filter((s) => s.voice === held);
   const r = evaluate(m, test);
@@ -32,6 +32,6 @@ console.log(`CROSS-VOICE tone accuracy: ${pct100(cvOk, cvN)}`);
 if (process.argv.includes('--write')) {
   const m = train(samples, l2);
   const r4 = (a: number[]) => a.map((v) => Math.round(v * 1e4) / 1e4);
-  writeFileSync(join(ROOT, 'src/speech/zh/toneModel.ts'), `import type { ToneModel } from './tone';\n\n// Trained by eval/train-tone.ts on ${samples.length} labelled syllables (3 voices × normal and child-like speed).\n// Cross-voice accuracy when trained on two voices and tested on the third: ${pct100(cvOk, cvN)}. Regenerate; don't edit.\nexport const TONE_MODEL: ToneModel = {\n  mean: ${JSON.stringify(r4(m.mean))},\n  std: ${JSON.stringify(r4(m.std))},\n  weights: [\n${m.weights.map((w) => `    ${JSON.stringify(r4(w))},`).join('\n')}\n  ],\n  bias: ${JSON.stringify(r4(m.bias))},\n};\n`);
+  writeFileSync(join(ROOT, 'src/speech/zh/toneModel.ts'), `import type { ToneModel } from './tone';\n\n// Trained by eval/train-tone.ts on ${samples.length} labelled syllables (${new Set(samples.map((s) => s.voice)).size} voices × normal and child-like speed).\n// Cross-voice accuracy (each voice tested by a model trained without it): ${pct100(cvOk, cvN)}. Regenerate; don't edit.\nexport const TONE_MODEL: ToneModel = {\n  mean: ${JSON.stringify(r4(m.mean))},\n  std: ${JSON.stringify(r4(m.std))},\n  weights: [\n${m.weights.map((w) => `    ${JSON.stringify(r4(w))},`).join('\n')}\n  ],\n  bias: ${JSON.stringify(r4(m.bias))},\n};\n`);
   console.log('wrote src/speech/zh/toneModel.ts');
 }

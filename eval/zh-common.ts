@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { CACHE, wav16k } from './lib.mjs';
 import type { EvalCase } from './build';
-import { semitones, speakerMedian, trackPitch, type PitchTrack } from '../src/speech/pitch';
+import { nextVoice, semitones, speakerMedian, trackPitch, voiceStats, type PitchTrack, type VoiceProfile } from '../src/speech/pitch';
 import { parseSyllable, surfaceTones } from '../src/content/zh/pinyin';
 import type { SpeakerRef } from '../src/speech/zh/tone';
 
@@ -63,6 +63,28 @@ export const speakers = new Map<string, SpeakerRef>();
   }
   for (const [k, ms] of meds) speakers.set(k, { median: pct(ms, 0.5), spread: pct(all.get(k)!, 0.9) - pct(all.get(k)!, 0.1), takes: ms.length });
 }
+
+/**
+ * The same speakers as the app would know them after hearing all their takes: the production voice profile
+ * (nextVoice), not pooled statistics.
+ */
+export const profileSpeakers = new Map<string, SpeakerRef>();
+{
+  const seen = new Set<string>();
+  for (const c of zhCases) {
+    const k = `${c.voice}|${c.speed}`;
+    if (seen.has(`${k}|${c.audio.key}`)) continue;
+    seen.add(`${k}|${c.audio.key}`);
+    const next = nextVoice(profileSpeakers.get(k) as VoiceProfile | undefined, voiceStats(pitchFor(c)));
+    if (next) profileSpeakers.set(k, next);
+  }
+}
+
+/** A new learner's first takes: the app knows nothing but this take's own middle pitch. */
+export const coldSpeaker = (c: (typeof zhCases)[number]): SpeakerRef | null => {
+  const m = speakerMedian(pitchFor(c));
+  return m == null ? null : { median: m, takes: 0 };
+};
 
 export const hanChars = (s: string) => [...s].filter((c) => /\p{Script=Han}/u.test(c));
 export const breaksOf = (text: string) => { const b = new Set<number>(); let i = -1; for (const c of text) { if (/\p{Script=Han}/u.test(c)) i++; else if (i >= 0 && /[，。！？]/.test(c)) b.add(i); } return b; };

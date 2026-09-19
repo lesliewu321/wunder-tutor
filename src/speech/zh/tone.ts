@@ -40,13 +40,25 @@ export interface ToneParams {
   scorerDoubt: number;
   trimStart: number;
   trimEnd: number;
+  /** Overrides inside phrases, where neighbouring tones bend each other and the pitch model is less sure. */
+  connected?: Partial<Pick<ToneParams, 'maxExpected' | 'scorerDoubt'>>;
+  /** Overrides for a new learner, before the app knows their voice (the take is its own pitch reference). */
+  cold?: Partial<Pick<ToneParams, 'maxExpected' | 'scorerDoubt'>>;
 }
 
 /**
  * Calibrated on the labelled set with tone models that never saw the voice under test: pitch model and scorer
  * agreeing caught 91% of tone swaps with 3.1% of correct syllables flagged; the pitch model alone caught 68% at 3.8%.
+ * Inside phrases the scorer's word is trusted a little more (eval/sweep-zh.ts, 2026-09-19): correct phrases flagged
+ * 10.7% → 7.0%, with the same share of phrase tone errors caught.
  */
-export const DEFAULT_TONE_PARAMS: ToneParams = { maxExpected: 0.4, scorerDoubt: 95, trimStart: 0.08, trimEnd: 0.04 };
+export const DEFAULT_TONE_PARAMS: ToneParams = {
+  maxExpected: 0.4, scorerDoubt: 95, trimStart: 0.08, trimEnd: 0.04, connected: { scorerDoubt: 90 },
+  // A new learner's first takes, before the app knows their voice (eval/cold-zh.ts, six voices): correct items flagged
+  // 5.9% — no more than for a known voice (6.7%) — with 72.5% of tone errors caught (vs 83.6%) until the app has
+  // heard three takes. Any looser and new learners see more false alarms than known ones (maxExpected 0.3: 7.4%).
+  cold: { maxExpected: 0.2, scorerDoubt: 90 },
+};
 
 /**
  * Typical shapes (semitones relative to the speaker's usual pitch at 10/30/50/70/90 % of the syllable), measured on
@@ -67,6 +79,8 @@ export interface Span { from: number; to: number }
 /** Five slices of a span: median pitch (semitones, null if unvoiced) and the fraction of frames that were voiced. */
 const slice = (track: PitchTrack, s: Span, p: Pick<ToneParams, 'trimStart' | 'trimEnd'>) => {
   const dur = s.to - s.from;
+  // A syllable the scorer gave no timing (omitted) has an empty span: nothing to read.
+  if (!(dur > 0)) return { pts: [], raw: [null, null, null, null, null] as (number | null)[], voiced: [0, 0, 0, 0, 0] };
   const a = s.from + dur * p.trimStart;
   const b = s.to - dur * p.trimEnd;
   const pts = segment(track, a, b);

@@ -82,8 +82,11 @@ export class MicRecorder {
     const media = this.media;
     if (!media) throw new SpeechError('mic-unavailable');
     const durationMs = performance.now() - this.startedAt;
-    const done = new Promise<void>((resolve) => { media.onstop = () => resolve(); });
-    if (media.state !== 'inactive') media.stop();
+    // If the track already ended (an iOS interruption, a headset unplugged), "stop" has fired before we listened for
+    // it — don't wait for it. A timeout guards against a recorder that never reports back.
+    const done = media.state === 'inactive'
+      ? Promise.resolve()
+      : new Promise<void>((resolve) => { media.onstop = () => resolve(); window.setTimeout(resolve, 3000); media.stop(); });
     await done;
     const blob = new Blob(this.chunks, { type: media.mimeType || 'audio/webm' });
     this.release();

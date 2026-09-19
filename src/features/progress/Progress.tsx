@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ALL_LESSONS } from '../../content/course';
 import { LADDERS } from '../../content/lab';
-import { phonemeInfo } from '../../content/phonemes';
+import { isLongLabel, phonemeInfo } from '../../content/phonemes';
 import { ACHIEVEMENT_CATALOGUE, liveStreak } from '../../engine/rewards';
 import { improvementSummary, improvingSounds, masteredSounds, totals, trend, weakSounds, type TrendPoint } from '../../intelligence/profile';
 import { useActiveProfile } from '../../state/store';
@@ -28,7 +28,7 @@ export function Progress() {
     return (
       <div className="screen progress">
         <TopBar title="My progress" />
-        <div className="empty"><Mascot mood="idle" size={120} /><h2>Nothing to show yet</h2><p>Say your first words and Pip will start tracking every sound.</p><Button variant="coral" size="lg" onClick={() => nav('/')}>Start a lesson</Button></div>
+        <div className="empty"><Mascot mood="idle" size={120} /><h2>Nothing to show yet</h2><p>{p.band === 'adult' ? 'Say your first words and every sound will be tracked here.' : 'Say your first words and Pip will start tracking every sound.'}</p><Button variant="coral" size="lg" onClick={() => nav('/')}>Start a lesson</Button></div>
       </div>
     );
   }
@@ -64,7 +64,7 @@ export function Progress() {
               return (
                 <li key={s.phoneme}>
                   <button type="button" className="sound-row" onClick={() => nav(LADDERS[s.phoneme] ? `/lab/${encodeURIComponent(s.phoneme)}` : '/lab')}>
-                    <span className="sound-row__glyph sound-row__glyph--weak">{info.label}</span>
+                    <span className="sound-row__glyph sound-row__glyph--weak" data-long={isLongLabel(info.label) || undefined}>{info.label}</span>
                     <span className="sound-row__text"><b>{info.name}</b><small>{sub && sub !== '∅' ? `Often sounds like “${phonemeInfo(sub).label}”` : `as in “${info.example}”`} · heard {s.count}×</small></span>
                     <span className="meter"><i style={{ width: `${s.ema}%` }} className={`meter--${tier(s.ema)}`} /></span>
                     <b className={`score-text score-text--${tier(s.ema)}`}>{Math.round(s.ema)}</b>
@@ -73,13 +73,13 @@ export function Progress() {
               );
             })}
           </ul>
-        ) : <p className="muted-card">No weak sounds right now. Pip will keep listening. 👂</p>}
+        ) : <p className="muted-card">{p.band === 'adult' ? 'No weak sounds right now.' : 'No weak sounds right now. Pip will keep listening. 👂'}</p>}
       </section>
 
       {improving.length > 0 && (
         <section>
           <h2 className="section-title">Strongest improvements</h2>
-          <ul className="gains">{improving.map((s) => <li key={s.phoneme}><span className="gains__glyph">{phonemeInfo(s.phoneme).label}</span><span>{Math.round(s.first)} → <b>{Math.round(s.ema)}</b></span><em>+{s.gain}</em></li>)}</ul>
+          <ul className="gains">{improving.map((s) => <li key={s.phoneme}><span className="gains__glyph" data-long={isLongLabel(phonemeInfo(s.phoneme).label) || undefined}>{phonemeInfo(s.phoneme).label}</span><span>{Math.round(s.first)} → <b>{Math.round(s.ema)}</b></span><em>+{s.gain}</em></li>)}</ul>
         </section>
       )}
 

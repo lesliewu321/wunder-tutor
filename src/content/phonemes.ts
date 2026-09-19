@@ -1,5 +1,6 @@
 import type { AgeBand, HomeLanguage, PhonemeId } from '../domain/types';
 import { ZH_SOUNDS } from './zh/sounds';
+import { displayScript, inScript } from './zh/script';
 
 /** Parameters for the mouth illustration. Numeric so poses can be tweened into animation later. */
 export interface MouthPose {
@@ -329,8 +330,15 @@ export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries([
 /** Mandarin units are namespaced "zh:…", so the two catalogues never collide. */
 export const isZhSound = (id: PhonemeId): boolean => id.startsWith('zh:');
 
+/** The Mandarin guides in Traditional characters, for learners who read them (most of Hong Kong). */
+const ZH_HANT: Record<PhonemeId, PhonemeInfo> = Object.fromEntries(ZH_SOUNDS.map((p) => [p.id, {
+  ...p, example: inScript(p.example, 'hant'), problem: inScript(p.problem, 'hant'), detail: inScript(p.detail, 'hant'),
+  steps: p.steps.map((x) => inScript(x, 'hant')),
+  tip: Object.fromEntries(Object.entries(p.tip).map(([band, x]) => [band, inScript(x, 'hant')])) as PhonemeInfo['tip'],
+}]));
+
 export const phonemeInfo = (id: PhonemeId): PhonemeInfo =>
-  PHONEMES[id] ?? {
+  (displayScript() === 'hant' ? ZH_HANT[id] : undefined) ?? PHONEMES[id] ?? {
     id, label: id, name: id, example: '', category: 'consonant', pose: pose({}),
     tip: { junior: 'Listen closely and copy the sound.' }, steps: ['Listen', 'Watch the mouth', 'Copy'],
     problem: 'This sound wasn’t quite clear.', detail: `/${id}/`, difficulty: 0.2,
@@ -338,8 +346,18 @@ export const phonemeInfo = (id: PhonemeId): PhonemeInfo =>
 
 export const tipFor = (id: PhonemeId, band: AgeBand): string => {
   const info = phonemeInfo(id);
-  return info.tip[band] ?? info.tip.junior;
+  // Grown-ups get the teen wording (the most precise), never the little-ones version.
+  return info.tip[band] ?? (band === 'adult' ? info.tip.teen : undefined) ?? info.tip.junior;
 };
+
+/** The example to say aloud. Mandarin examples read "妈 mā": say just the character, as the scorer writes it. */
+export const exampleSpeech = (id: PhonemeId): string => {
+  const ex = (PHONEMES[id] ?? phonemeInfo(id)).example;
+  return /\p{Script=Han}/u.test(ex) ? ex.replace(/\s+\S+$/u, '') : ex;
+};
+
+/** Labels too long for a square glyph tile at full size ("zh ch sh", "-n / -ng"). */
+export const isLongLabel = (label: string): boolean => label.replace(/\s/g, '').length > 3;
 
 /** How to write a (possibly foreign) sound for a child: English spelling if we know it, else the symbol. */
 export const soundLabel = (id: PhonemeId): string => {

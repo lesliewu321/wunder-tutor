@@ -29,7 +29,7 @@ export function CourseCheck() {
         <div className="onboard__body">
           <Mascot mood="happy" size={96} />
           <h1 className="onboard__title">{zh ? 'Your Putonghua plan' : 'Your plan'}</h1>
-          <p className="onboard__sub">Based on what Pip just heard.</p>
+          <p className="onboard__sub">{p.band === 'adult' ? 'Based on your speaking check.' : 'Based on what Pip just heard.'}</p>
           <div className="card plan">
             <h2>Start with</h2>
             <div className="plan__sounds">{focus.map((ph) => <span key={ph} className="sound-badge sound-badge--weak"><b>{phonemeInfo(ph).label}</b><small>{phonemeInfo(ph).name}</small></span>)}</div>

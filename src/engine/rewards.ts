@@ -27,15 +27,16 @@ export const liveStreak = (streak: ChildProfile['streak'], now = Date.now()): nu
 export const todayXp = (p: ChildProfile, now = Date.now()): number => p.pronunciation.days[dayKey(now)]?.xp ?? 0;
 
 const DEFS: Record<string, Omit<Achievement, 'earnedAt' | 'id'>> = {
-  'first-word': { title: 'First words', detail: 'You spoke English out loud!', icon: '🎤' },
+  'first-word': { title: 'First words', detail: 'You said your first words out loud!', icon: '🎤' },
   'first-lesson': { title: 'Lesson one, done', detail: 'You finished your first lesson.', icon: '🎓' },
-  comeback: { title: 'Comeback kid', detail: 'You jumped 15 points on a retry.', icon: '🚀' },
+  comeback: { title: 'Big comeback', detail: 'You jumped 15 points on a retry.', icon: '🚀' },
   perfect: { title: 'Bullseye', detail: 'A pronunciation score of 98 or more.', icon: '🎯' },
   'streak-3': { title: '3-day streak', detail: 'Three days of speaking in a row.', icon: '🔥' },
   'streak-7': { title: '7-day speaking streak', detail: 'A whole week of speaking!', icon: '🌟' },
   chatterbox: { title: 'Chatterbox', detail: 'You finished a whole conversation.', icon: '💬' },
   'lab-ladder': { title: 'Ladder climber', detail: 'You climbed a whole sound ladder in the Lab.', icon: '🪜' },
-  'unit-food': { title: 'Yummy Food champion', detail: 'You finished every lesson in the unit.', icon: '🏆' },
+  'unit-food': { title: 'Food champion', detail: 'You finished every lesson in the English food unit.', icon: '🏆' },
+  'unit-zh-food': { title: 'Putonghua food champion', detail: 'You finished every lesson in the Putonghua food unit.', icon: '🥢' },
 };
 
 export const achievement = (id: string, now: number): Achievement => {

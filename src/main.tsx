@@ -6,6 +6,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/speak.css';
 import './styles/screens.css';
+import './styles/tablet.css';
 
 // Dev-only handle for poking at state from the console.
 if (import.meta.env.DEV) (window as unknown as { __store: typeof useStore }).__store = useStore;

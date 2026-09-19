@@ -105,9 +105,13 @@ const alignSame = (a: string[], b: string[]): [number, number][] => {
  * ~100). So on shared sounds, a clearly lower US score and its "heard as" carry over; R and British-only vowels
  * always stay British.
  */
-export const mergeUsConsonants = (gb: WordScore[], us: WordScore[]): WordScore[] =>
-  gb.map((w, wi) => {
-    const u = us[wi];
+export const mergeUsConsonants = (gb: WordScore[], usAll: WordScore[]): WordScore[] => {
+  // Words line up by position among the reference words; an extra word heard by only one scorer must not shift them.
+  const us = usAll.filter((w) => w.errorType !== 'insertion');
+  let ref = -1;
+  return gb.map((w) => {
+    if (w.errorType === 'insertion') return w;
+    const u = us[++ref];
     if (!u || u.word.toLowerCase() !== w.word.toLowerCase() || !w.phonemes.length || !u.phonemes.length) return w;
     const pairs = alignSame(w.phonemes.map((p) => p.phoneme), u.phonemes.map((p) => p.phoneme));
     const phonemes = w.phonemes.map((p) => ({ ...p }));
@@ -119,6 +123,7 @@ export const mergeUsConsonants = (gb: WordScore[], us: WordScore[]): WordScore[]
     }
     return { ...w, phonemes };
   });
+};
 
 /** How much better a likely mistake must fit a word than the real text before we say that's what was said. */
 export const EN_ALT_MARGIN = 7;
@@ -168,8 +173,10 @@ export const mapAzure = (json: AzureResponse, referenceText: string, fallbackDur
   if (!best) throw new SpeechError('no-speech');
   // Azure occasionally answers "Success" without the pronunciation part — a glitch, never a zero for the child.
   if (best.AccuracyScore == null && best.PronunciationAssessment == null) throw new SpeechError('service', 'no scores');
+  // Scores but no words: another glitch — the overall number alone must not count as a pass.
+  if (!(best.Words ?? []).length) throw new SpeechError('service', 'no words');
   // Nothing recognised at all (every word "omitted"): ask again rather than mark every word missing.
-  if ((best.Words ?? []).length && (best.Words ?? []).every((w) => errorType(w.ErrorType ?? w.PronunciationAssessment?.ErrorType) === 'omission')) throw new SpeechError('no-speech');
+  if ((best.Words ?? []).every((w) => errorType(w.ErrorType ?? w.PronunciationAssessment?.ErrorType) === 'omission')) throw new SpeechError('no-speech');
   const s: AzureScores = { ...best.PronunciationAssessment, ...pick(best) };
   let words: WordScore[] = mapWords(best, accent);
   const usBest = accent === 'en-GB' && usJson?.RecognitionStatus === 'Success' ? usJson.NBest?.[0] : undefined;
