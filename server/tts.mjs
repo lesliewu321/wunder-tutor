@@ -33,6 +33,16 @@ export class TtsError extends Error {
 // ------------------------------------------------------------------ prompt
 
 export function buildInstruction({ accent, slow, kind }) {
+  if (accent === 'zh-CN') {
+    return [
+      'You are the recorded model voice inside a pronunciation app for children learning Mandarin Chinese (Putonghua).',
+      'Each user message is one line starting with "SAY:". Speak exactly the Chinese text after "SAY:", once, in clear, warm, standard Putonghua (Beijing standard, as on mainland school recordings), with careful and correct tones on every syllable and natural tone changes (for example 你好 is said ní hǎo).',
+      'Never add, remove or change a character. No greeting, no comment, no question, no English, no sound effects.',
+      slow
+        ? 'Speak slowly and deliberately, about half normal speed, giving every syllable its full tone, without distorting it.'
+        : 'Speak at a calm, natural pace.',
+    ].join(' ');
+  }
   const accentName = accent === 'en-GB' ? 'standard southern British English' : 'General American English';
   return [
     'You are the recorded model voice inside a pronunciation app for children learning English.',
@@ -59,7 +69,20 @@ export const tokens = (s) =>
  * Did the model say what we asked, and nothing else? Transcription of short or unusual words is
  * imperfect, so this tolerates mis-hearings but not extra speech.
  */
+const han = (s) => [...String(s)].filter((c) => /\p{Script=Han}/u.test(c));
+
 export function transcriptMatches(expected, heard) {
+  if (han(expected).length) {
+    // Mandarin: the transcript may use Traditional forms or a homophone for a lone syllable, so compare loosely —
+    // but never accept extra speech (a greeting, a comment in English).
+    const want = han(expected);
+    const got = han(heard);
+    if (!String(heard).trim()) return true;
+    if (/[a-z]{3,}/i.test(heard)) return false;
+    if (got.length > want.length + 1) return false;
+    if (want.length <= 2) return true;
+    return want.filter((c) => got.includes(c)).length / want.length >= 0.5;
+  }
   const want = tokens(expected);
   const got = tokens(heard);
   if (!got.length) return true; // no transcription delivered — nothing to contradict the audio
@@ -196,7 +219,25 @@ export async function synthesizeOnce({ apiKey, model, voiceName, text, accent, s
  * @param {{ get(key: string): Promise<Uint8Array|Buffer|null|undefined>, put(key: string, wav: Buffer): Promise<void> }} [opts.cache]
  *   Durable store for accepted takes (disk under Node, KV on Cloudflare). Optional.
  */
-export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
+/** 24 kHz 16-bit mono PCM → 16 kHz WAV, the format the speech scorer takes. */
+export function toWav16k(pcm, rate) {
+  const n = Math.floor(((pcm.length >> 1) * 16000) / rate);
+  const out = Buffer.alloc(n * 2);
+  const step = rate / 16000;
+  const src = (i) => pcm.readInt16LE(Math.min((pcm.length >> 1) - 1, i) * 2);
+  for (let i = 0; i < n; i++) {
+    const x = i * step, i0 = Math.floor(x), f = x - i0;
+    out.writeInt16LE(Math.max(-32768, Math.min(32767, Math.round(src(i0) * (1 - f) + src(i0 + 1) * f))), i * 2);
+  }
+  return pcmToWav(out, 16000);
+}
+
+/**
+ * @param {(wav16k: Buffer, text: string, locale: string) => Promise<boolean>} [opts.verify]
+ *   Optional quality gate for a new take (the server wires Azure scoring in for Mandarin): a take whose tones or
+ *   sounds don't score as the text is rejected, exactly like one that ad-libbed.
+ */
+export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, verify, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
   const inflight = new Map();
   let windowStart = Date.now();
   let generated = 0;
@@ -210,7 +251,14 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     for (const firm of [false, true]) {
       generated += 1;
       const out = await synthesizeOnce({ apiKey, model, voiceName, endpoint, connect, firm, ...req });
-      if (transcriptMatches(req.text, out.transcript)) return pcmToWav(trimSilence(out.pcm, out.sampleRate), out.sampleRate);
+      if (!transcriptMatches(req.text, out.transcript)) continue;
+      const pcm = trimSilence(out.pcm, out.sampleRate);
+      if (verify && req.accent === 'zh-CN') {
+        let ok = true;
+        try { ok = await verify(toWav16k(pcm, out.sampleRate), req.text, req.accent); } catch { ok = true; } // a scorer outage must not silence the teacher
+        if (!ok) continue;
+      }
+      return pcmToWav(pcm, out.sampleRate);
     }
     throw new TtsError('tts_mismatch');
   }
@@ -220,8 +268,10 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     const text = String(input?.text ?? '').replace(/\s+/g, ' ').trim();
     if (!text) throw new TtsError('missing_text', 400);
     if (text.length > MAX_TTS_CHARS) throw new TtsError('text_too_long', 400);
-    if (!/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
-    const req = { text, accent: input.accent === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: input.kind === 'syllable' ? 'syllable' : undefined };
+    const locale = input.locale ?? input.accent;
+    const zh = locale === 'zh-CN';
+    if (zh ? !han(text).length : !/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
+    const req = { text, accent: zh ? 'zh-CN' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !zh && input.kind === 'syllable' ? 'syllable' : undefined };
     const key = keyFor(req);
     if (cache) {
       try {

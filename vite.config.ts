@@ -4,7 +4,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
+    // A preview runner may assign a free port through PORT; 5173 otherwise.
+    port: Number(process.env.PORT) || 5173,
     // The optional API proxy (server/index.mjs) keeps Azure / Claude keys server-side.
     proxy: {
       '/api': {

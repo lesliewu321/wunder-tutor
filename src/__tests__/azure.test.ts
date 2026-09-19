@@ -91,6 +91,8 @@ describe('Azure — live response fixtures', () => {
 import gbSentence from './fixtures/azure-gb-sentence.json';
 import gbThirsty from './fixtures/azure-gb-thirsty.json';
 import gbThreeSaidFree from './fixtures/azure-gb-three-said-free.json';
+import gbFreeForThree from './fixtures/azure-gb-free-for-three.json';
+import gbThreeCorrect from './fixtures/azure-gb-three-correct.json';
 import { alignmentCandidates } from '../content/lexicon';
 import { applyAssessment, emptyProfile } from '../intelligence/profile';
 
@@ -121,11 +123,12 @@ describe('Azure — British English alignment', () => {
     expect(alignmentCandidates('turn', 'en-US')).toHaveLength(1);
   });
 
-  it('catches the classic Hong Kong "free" for "three" and says so honestly', () => {
+  it('on its own, the British scorer only hints at "free" for "three" — offered as a likelihood', () => {
+    // This is why every British take is ALSO scored as US English and against likely mistakes (next test):
+    // en-GB alone left /θ/ at 82 for a clear "free".
     const a = mapAzure(gbThreeSaidFree, 'three', 0, 'en-GB');
     expect(a.words[0].phonemes[0].phoneme).toBe('θ');
     expect(a.words[0].phonemes[0].score).toBeLessThan(a.words[0].phonemes[1].score); // the first sound is the weak one
-    expect(isMastered(a, 'junior')).toBe(false);
 
     const c = correctionFor(a.words[0], 'junior', 'yue');
     expect(c).toMatchObject({ kind: 'sound', phoneme: 'θ' });
@@ -133,6 +136,19 @@ describe('Azure — British English alignment', () => {
     expect(c.tip).toMatch(/between your teeth/);
     // A Mandarin-speaking child gets the Mandarin pattern instead.
     expect(correctionFor(a.words[0], 'junior', 'zh').problem).toContain('“s”');
+  });
+
+  it('with the US scoring and the "free" alternative of the same take, the swap is caught and named exactly', () => {
+    const alt = (json: unknown) => [{ alt: { wordIndex: 0, target: 'θ', heard: 'f', text: 'free' }, json: json as never }];
+    const wrong = mapAzure(gbFreeForThree.gb as never, 'three', 0, 'en-GB', gbFreeForThree.us as never, alt(gbFreeForThree.altFree));
+    expect(wrong.words[0].phonemes[0]).toMatchObject({ phoneme: 'θ', heardAs: 'f' });
+    expect(isMastered(wrong, 'junior')).toBe(false);
+    expect(correctionFor(wrong.words[0], 'junior', 'yue').problem).toBe('Your “th” sounded closer to “f”.');
+
+    // The same pipeline on a correct British "three": nothing to fix, and the silent-R-free British sounds pass.
+    const right = mapAzure(gbThreeCorrect.gb as never, 'three', 0, 'en-GB', gbThreeCorrect.us as never, alt(gbThreeCorrect.altFree));
+    expect(right.words[0].phonemes.some((p) => p.heardAs)).toBe(false);
+    expect(isMastered(right, 'junior')).toBe(true);
   });
 
   it('gives honest word-level advice when a sound cannot be named, and remembers nothing false', () => {

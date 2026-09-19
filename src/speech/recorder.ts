@@ -1,3 +1,4 @@
+import { trackPitch, type PitchTrack } from './pitch';
 import { SpeechError, type AudioAnalysis, type Recording } from './types';
 
 export interface RecorderOptions {
@@ -89,16 +90,20 @@ export class MicRecorder {
 
     let analysis: AudioAnalysis = { durationMs, speechMs: 0, peak: 0, speechRms: 0, noiseRms: 0 };
     let wav: Blob | undefined;
+    let pitch: PitchTrack | null = null;
     try {
       const decoded = await decode(blob);
       analysis = analyse(decoded.getChannelData(0), decoded.sampleRate);
-      wav = await toWav16k(decoded);
+      const out = await toWav16k(decoded);
+      wav = out.wav;
+      // Measured on exactly the audio the scorer receives, so its syllable timings line up with this track.
+      try { pitch = trackPitch(out.pcm, 16000); } catch { pitch = null; }
     } catch {
       // Some browsers cannot decode their own MediaRecorder output; fall back to duration only
       // and let the provider judge the audio.
       analysis = { durationMs, speechMs: durationMs * 0.6, peak: 0.5, speechRms: 0.1, noiseRms: 0.005 };
     }
-    return { blob, wav, analysis, simulated: false };
+    return { blob, wav, pitch, analysis, simulated: false };
   }
 
   /** Abort without producing a recording (child left the screen, pressed back, …). */
@@ -146,7 +151,7 @@ export const analyse = (samples: Float32Array, sampleRate: number): AudioAnalysi
   };
 };
 
-const toWav16k = async (buffer: AudioBuffer): Promise<Blob> => {
+const toWav16k = async (buffer: AudioBuffer): Promise<{ wav: Blob; pcm: Float32Array }> => {
   const rate = 16000;
   const offline = new OfflineAudioContext(1, Math.max(1, Math.ceil(buffer.duration * rate)), rate);
   const src = offline.createBufferSource();
@@ -164,7 +169,7 @@ const toWav16k = async (buffer: AudioBuffer): Promise<Blob> => {
     const s = Math.max(-1, Math.min(1, pcm[i]));
     view.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
   }
-  return new Blob([view], { type: 'audio/wav' });
+  return { wav: new Blob([view], { type: 'audio/wav' }), pcm };
 };
 
 /** How long a fluent speaker needs for a text — used for max recording time and simulated takes. */

@@ -1,16 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { AgeBand, Assessment, Attempt, HomeLanguage, PhonemeId, SpeakItem } from '../../domain/types';
+import { isGrownUp, type AgeBand, type Assessment, type Attempt, type HomeLanguage, type PhonemeId, type SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
 import { translationFor } from '../../content/translations';
 import { isMastered, MAX_TRIES } from '../../engine/learning';
 import type { SpeechErrorCode } from '../../speech';
-import { playBlob, stopPlayback, voice } from '../../speech/voice';
+import { voiceStats } from '../../speech/pitch';
+import { localeOf, playBlob, stopPlayback, voice } from '../../speech/voice';
+import { markSyllable } from '../../content/zh/pinyin';
 import { useActiveProfile, useStore } from '../../state/store';
 import { correctionFor, focusWordIndex, GOOD, headline, tier } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
 import { Button, ScoreRing, toast } from '../../ui/kit';
 import { Mascot, type Mood } from '../../ui/Mascot';
 import { MicButton } from '../../ui/MicButton';
+import { ToneContour } from '../../ui/ToneContour';
+import { ZhText } from '../../ui/ZhText';
 import { ErrorPanel } from './ErrorPanel';
 import { useSpeechTake } from './useSpeechTake';
 import { WordSheet } from './WordSheet';
@@ -67,7 +71,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     micRef,
     onError: (code) => { setError(code); setView('error'); },
     onAssessed: async (assessment, rec) => {
-      const outcome = await recordAttempt({ item, assessment, audio: rec.blob, context, isRetry: takes.length > 0, previousScore: current?.assessment.overall });
+      const outcome = await recordAttempt({ item, assessment, audio: rec.blob, context, isRetry: takes.length > 0, previousScore: current?.assessment.overall, voice: voiceStats(rec.pitch) });
       if (!alive.current) return;
       setTakes((t) => [...t, { assessment, audio: rec.blob }]);
       setRevealed(true);
@@ -84,7 +88,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     try {
       if (kind === 'normal' || kind === 'slow') {
         if (!voice.available()) throw new Error('playback-unavailable');
-        await voice.speak(item.say ?? item.text, { accent: profile.accent, slow: kind === 'slow', kind: item.kind });
+        await voice.speak(item.say ?? item.text, { accent: localeOf(item, profile.accent), slow: kind === 'slow', kind: item.kind });
       } else {
         const blob = (kind === 'now' ? current : previous)?.audio;
         if (!blob) { toast(demoMic ? 'The demo microphone doesn’t record sound' : 'No recording for this try', '🎧'); return; }
@@ -157,7 +161,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     phase === 'listening' ? 'I’m listening… tap when you’re done'
       : phase === 'processing' ? (take.slowHint ? 'Still checking… almost there' : 'Checking your pronunciation…')
         : takes.length ? 'Tap the mic and try again'
-          : effectivePrompt === 'text' ? 'Listen, then tap the mic and say it' : 'Tap the mic and say it in English';
+          : effectivePrompt === 'text' ? 'Listen, then tap the mic and say it' : `Tap the mic and say it in ${item.lang ? 'Putonghua' : 'English'}`;
 
   return (
     <div className={`speak speak--${phase}`}>
@@ -170,7 +174,11 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
             <p className="prompt__hint prompt__hint--big">What is it? Say it!</p>
           ) : (
             <p className="prompt__text">
-              {current && phase === 'result'
+              {item.zh ? (
+                <ZhText item={item} script={profile.zhScript}
+                  marks={current && phase === 'result' ? current.assessment.words.map((w, i) => ({ tier: w.errorType === 'omission' ? 'missing' : tier(w.score), focus: i === focusIdx, label: `score ${w.score}` })) : undefined}
+                  onTap={current && phase === 'result' ? setSheetWord : undefined} />
+              ) : current && phase === 'result'
                 ? current.assessment.words.map((w, i) => (
                   <button key={i} type="button" className={`word word--${w.errorType === 'omission' ? 'missing' : tier(w.score)} ${i === focusIdx ? 'word--focus' : ''}`}
                     onClick={() => setSheetWord(i)} aria-label={`${w.word}, score ${w.score}. Tap for help`}>
@@ -208,7 +216,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                     <em>{delta! > 0 ? `+${delta}` : delta}</em>
                   </div>
                 ) : (
-                  <p className="result__sub">{focus && focus.kind !== 'fine' ? (band === 'little' ? 'Listen to Pip’s tip!' : 'Tap the coloured word to see how to fix it.') : 'Every word was clear.'}</p>
+                  <p className="result__sub">{focus && focus.kind !== 'fine' ? (band === 'little' ? 'Listen to Pip’s tip!' : `Tap the coloured ${item.zh ? 'character' : 'word'} to see how to fix it.`) : item.zh ? 'Every character was clear.' : 'Every word was clear.'}</p>
                 )}
               </div>
             </div>
@@ -217,11 +225,16 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
               <button type="button" className={`fix fix--${tier(focus.score)}`} onClick={() => setSheetWord(focusIdx)}>
                 <div className="fix__head">
                   {/* One word on screen → name the sound instead of repeating the word with a second, different number. */}
-                  <span className="fix__word">{single && focus.phoneme ? <>The “{phonemeInfo(focus.phoneme).label}” sound</> : focus.word}</span>
-                  <span className="fix__score">{focus.kind === 'omission' ? 'missed' : single && focus.phoneme ? focusPhonemeScore : focus.score}</span>
+                  <span className="fix__word">{focus.zh ? <>{focus.word} <span className="py">{markSyllable(focus.zh.py)}</span></> : single && focus.phoneme ? <>The “{phonemeInfo(focus.phoneme).label}” sound</> : focus.word}</span>
+                  <span className="fix__score">{focus.kind === 'omission' ? 'missed' : single && focus.phoneme && !focus.zh ? focusPhonemeScore : focus.score}</span>
                 </div>
-                <p className="fix__problem">{focus.problem}</p>
-                <p className="fix__tip"><b>Try:</b> {focus.tip}</p>
+                <div className="fix__row">
+                  {focus.kind === 'tone' && focus.zh && focus.zh.expected !== 5 && <ToneContour tone={focus.zh.expected as 1 | 2 | 3 | 4} yours={focus.zh.contour} size={96} />}
+                  <div>
+                    <p className="fix__problem">{focus.problem}</p>
+                    <p className="fix__tip"><b>Try:</b> {focus.tip}</p>
+                  </div>
+                </div>
                 <span className="fix__more">Show me how <Icon name="chevron" size={16} /></span>
               </button>
             ) : (
@@ -254,7 +267,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         {phase !== 'result' && phase !== 'error' && (
           <>
             <div className="speak__coach">
-              <Mascot mood={mood} size={band === 'teen' ? 64 : 84} />
+              <Mascot mood={mood} size={isGrownUp(band) ? 64 : 84} />
               <p className="speak__status" aria-live="polite">{status}</p>
             </div>
             <MicButton ref={micRef} state={phase === 'ready' ? 'ready' : phase} onPress={onMic} size={band === 'little' ? 116 : 104} />
@@ -282,7 +295,8 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
       {current && sheetWord != null && phase === 'result' && (
         <WordSheet
           word={current.assessment.words[sheetWord]} band={band} home={profile.homeLanguage} onClose={() => setSheetWord(null)}
-          onListen={(slow) => void voice.speak(current.assessment.words[sheetWord].word, { accent: profile.accent, slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
+          onListen={(slow) => void voice.speak(current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
+          script={profile.zhScript}
           onHearMe={() => void play('now')}
           onHearTip={sayTip}
           onRetry={outOfTries ? undefined : startListening}

@@ -1,4 +1,4 @@
-import type { AgeBand } from '../domain/types';
+import { contentBand, type AgeBand } from '../domain/types';
 import type { Scenario } from '../content/scenarios';
 import { apiFetch, apiHealth } from '../speech';
 
@@ -26,8 +26,9 @@ export class ScriptedTutor implements ConversationTutor {
     await wait(500);
     const turn = history.filter((h) => h.role === 'child').length;
     const t = scenario.turns[turn];
-    if (!t) return { reply: scenario.closing[band], suggestions: [], done: true };
-    return { reply: t.tutor[band], suggestions: t.replies[band], done: false };
+    const b = contentBand(band);
+    if (!t) return { reply: scenario.closing[b], suggestions: [], done: true };
+    return { reply: t.tutor[b], suggestions: t.replies[b], done: false };
   }
 }
 

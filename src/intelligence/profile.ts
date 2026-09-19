@@ -1,5 +1,9 @@
-import type { Assessment, HomeLanguage, PhonemeId, PhonemeStat, PronunciationProfile } from '../domain/types';
+import type { Assessment, CourseId, HomeLanguage, PhonemeId, PhonemeStat, PronunciationProfile } from '../domain/types';
 import { LAB_SOUNDS, phonemeInfo } from '../content/phonemes';
+import { ZH_LAB_SOUNDS } from '../content/zh/course';
+
+const labSounds = (course: CourseId): PhonemeId[] => (course === 'zh' ? ZH_LAB_SOUNDS : LAB_SOUNDS);
+const inCourse = (id: PhonemeId, course: CourseId) => id.startsWith('zh:') === (course === 'zh');
 import { wordKey } from '../content/lexicon';
 
 // Pronunciation Intelligence: the persistent memory of how this child pronounces English.
@@ -98,22 +102,26 @@ export const improvingSounds = (p: PronunciationProfile): (PhonemeStat & { gain:
     .filter((s) => s.gain >= 5).sort((a, b) => b.gain - a.gain);
 
 /** Before we have data, predict trouble from the home language so day one is already personalised. */
-export const predictedTrouble = (home: HomeLanguage): PhonemeId[] =>
-  [...LAB_SOUNDS].sort((a, b) => {
+export const predictedTrouble = (home: HomeLanguage, course: CourseId = 'en'): PhonemeId[] =>
+  [...labSounds(course)].sort((a, b) => {
     const d = (id: PhonemeId) => phonemeInfo(id).difficulty + (phonemeInfo(id).l1?.[home]?.boost ?? 0);
     return d(b) - d(a);
   });
 
-/** Lab ordering: measured weak sounds first, then predicted trouble, mastered last. */
-export const labOrder = (p: PronunciationProfile, home: HomeLanguage): PhonemeId[] => {
-  const weak = weakSounds(p).map((s) => s.phoneme).filter((id) => LAB_SOUNDS.includes(id));
+/** Lab ordering for one course: measured weak sounds first, then predicted trouble, mastered last. */
+export const labOrder = (p: PronunciationProfile, home: HomeLanguage, course: CourseId = 'en'): PhonemeId[] => {
+  const sounds = labSounds(course);
+  const weak = weakSounds(p).map((s) => s.phoneme).filter((id) => sounds.includes(id));
   const mastered = new Set(masteredSounds(p).map((s) => s.phoneme));
-  const rest = predictedTrouble(home).filter((id) => !weak.includes(id));
+  const rest = predictedTrouble(home, course).filter((id) => !weak.includes(id));
   return [...weak, ...rest.filter((id) => !mastered.has(id)), ...rest.filter((id) => mastered.has(id))];
 };
 
-/** Today's recommended focus sound. */
-export const focusSound = (p: PronunciationProfile, home: HomeLanguage): PhonemeId => labOrder(p, home)[0];
+/** Today's recommended focus sound in a course. */
+export const focusSound = (p: PronunciationProfile, home: HomeLanguage, course: CourseId = 'en'): PhonemeId => labOrder(p, home, course)[0];
+
+/** Weak sounds of one course only. */
+export const weakSoundsIn = (p: PronunciationProfile, course: CourseId): PhonemeStat[] => weakSounds(p).filter((s) => inCourse(s.phoneme, course));
 
 export interface TrendPoint { date: string; avg: number; attempts: number }
 
@@ -135,6 +143,6 @@ export const totals = (p: PronunciationProfile) => {
   return {
     speakingMs: days.reduce((n, d) => n + d.speakingMs, 0),
     attempts: days.reduce((n, d) => n + d.attempts, 0),
-    wordsLearned: Object.values(p.words).filter((w) => w.best >= 80 && w.word.length > 2).length,
+    wordsLearned: Object.values(p.words).filter((w) => w.best >= 80 && (w.word.length > 2 || /\p{Script=Han}/u.test(w.word))).length,
   };
 };

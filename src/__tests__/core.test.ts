@@ -12,7 +12,7 @@ import { correctionFor, focusWordIndex } from '../tutor/feedback';
 
 const provider = new MockPronunciationProvider({ latency: false });
 const ctx = (over: Partial<AssessContext> = {}): AssessContext => ({
-  itemId: 'it-three', accent: 'en-US', band: 'junior', homeLanguage: 'ja', profileId: 'p1', attemptIndex: 0, ...over,
+  itemId: 'it-three', locale: 'en-US', accent: 'en-US', band: 'junior', homeLanguage: 'ja', profileId: 'p1', attemptIndex: 0, ...over,
 });
 const DAY = 86400000;
 

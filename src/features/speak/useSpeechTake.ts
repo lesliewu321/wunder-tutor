@@ -3,7 +3,7 @@ import type { Assessment, SpeakItem } from '../../domain/types';
 import { syllableCount } from '../../content/lexicon';
 import { getProvider, mockProvider, SpeechError, type Recording, type SpeechErrorCode } from '../../speech';
 import { expectedSpeechMs, MicRecorder, simulatedRecording } from '../../speech/recorder';
-import { stopPlayback } from '../../speech/voice';
+import { localeOf, stopPlayback } from '../../speech/voice';
 import { useActiveProfile, useStore } from '../../state/store';
 
 export type TakePhase = 'idle' | 'listening' | 'processing';
@@ -63,7 +63,10 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
       const st = useStore.getState();
       const fresh = st.profiles[profile.id] ?? profile;
       const assessment = await provider.assess(rec, j.item.text, {
-        itemId: j.item.id, accent: fresh.accent, band: fresh.band, homeLanguage: fresh.homeLanguage, profileId: fresh.id,
+        itemId: j.item.id, locale: localeOf(j.item, fresh.accent), accent: fresh.accent, zh: j.item.zh, script: fresh.zhScript, focus: j.item.focus,
+        // Tones are judged against the child's own voice once we've heard enough of it.
+        speaker: fresh.voice && fresh.voice.takes >= 3 ? fresh.voice : null,
+        band: fresh.band, homeLanguage: fresh.homeLanguage, profileId: fresh.id,
         attemptIndex: j.attemptIndex, profile: fresh.pronunciation, simulate: st.settings.simulate,
       });
       if (!alive.current) return;

@@ -1,4 +1,6 @@
-import type { Accent, AgeBand, Assessment, HomeLanguage, PronunciationProfile } from '../domain/types';
+import type { Accent, AgeBand, Assessment, HomeLanguage, Locale, PhonemeId, PronunciationProfile, ZhText } from '../domain/types';
+import type { PitchTrack } from './pitch';
+import type { SpeakerRef } from './zh/tone';
 
 export type SpeechErrorCode =
   | 'mic-denied'
@@ -31,13 +33,26 @@ export interface Recording {
   blob?: Blob;
   /** 16 kHz mono PCM WAV for the assessment provider. */
   wav?: Blob;
+  /** Pitch of the take, measured on the device (the same 16 kHz audio the scorer hears) — for Mandarin tones. */
+  pitch?: PitchTrack | null;
   analysis: AudioAnalysis;
   simulated: boolean;
 }
 
 export interface AssessContext {
   itemId: string;
+  /** What the take is scored as: English in the child's accent, or Mandarin. */
+  locale: Locale;
+  /** The child's English accent (for English items; Mandarin items ignore it). */
   accent: Accent;
+  /** Mandarin items: Traditional form and numbered pinyin. */
+  zh?: ZhText;
+  /** Mandarin: the characters the learner reads — feedback uses them (scoring always uses Simplified). */
+  script?: 'hant' | 'hans';
+  /** Sounds the item deliberately practises — checked first when extra scorings are rationed. */
+  focus?: PhonemeId[];
+  /** The child's usual pitch, learned across takes, so tones are judged against their own voice. */
+  speaker?: SpeakerRef | null;
   band: AgeBand;
   homeLanguage: HomeLanguage;
   profileId: string;

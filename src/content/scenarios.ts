@@ -1,6 +1,6 @@
-import type { AgeBand } from '../domain/types';
+import type { ContentBand } from '../domain/types';
 
-type ByBand<T> = Record<AgeBand, T>;
+type ByBand<T> = Record<ContentBand, T>;
 
 export interface ScenarioTurn {
   tutor: ByBand<string>;

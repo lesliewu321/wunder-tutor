@@ -15,8 +15,22 @@ import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, T
 const MAX_BODY_BYTES = 5 * 1024 * 1024;
 const AZURE_TIMEOUT_MS = 15_000;
 const CLAUDE_TIMEOUT_MS = 20_000;
-const LOCALES = new Set(['en-US', 'en-GB']);
+const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN']);
+/** At most this many "likely mistake" re-scorings of one take (each is billed as a scoring). */
+const MAX_ALTS = 5;
+/** A Mandarin teacher take is only kept if it scores at least this well as its own text (calibrated in eval/). */
+const TEACHER_MIN_ACCURACY = 85;
+const TEACHER_MIN_SYLLABLE = 70;
 export const ACCESS_HEADER = 'x-wunder-access';
+
+/** A "Success" response whose best result carries no pronunciation scores at all. */
+export function missingScores(text) {
+  try {
+    const j = JSON.parse(text);
+    const b = j?.NBest?.[0];
+    return j?.RecognitionStatus === Success && !!b && b.AccuracyScore == null && b.PronunciationAssessment == null;
+  } catch { return false; }
+}
 
 const json = (status, body, extraHeaders) =>
   new Response(typeof body === 'string' ? body : JSON.stringify(body), {
@@ -110,8 +124,23 @@ export function createApi(rawEnv, deps = {}) {
     ttsVersion: `${GEMINI_LIVE_MODEL}/${GEMINI_TTS_VOICE}`,
   };
 
+  /** Quality gate for new Mandarin teacher takes: the take must score as the text, syllable by syllable. */
+  async function verifyTake(wav, text, locale) {
+    const j = JSON.parse(await scoreOnce(wav, text, locale, 0));
+    if (j.RecognitionStatus !== 'Success') return false;
+    const best = j.NBest?.[0];
+    const pa = best?.PronunciationAssessment ?? best ?? {};
+    const words = best?.Words ?? [];
+    if (words.some((w) => ((w.PronunciationAssessment ?? w).ErrorType ?? 'None') !== 'None')) return false;
+    const syllables = words.flatMap((w) => (w.Phonemes?.length ? w.Phonemes : [w]).map((p) => (p.PronunciationAssessment ?? p).AccuracyScore ?? 0));
+    return (pa.AccuracyScore ?? 0) >= TEACHER_MIN_ACCURACY && syllables.every((s) => s >= TEACHER_MIN_SYLLABLE);
+  }
+
   const tts = status.gemini
-    ? createTts({ apiKey: GEMINI_API_KEY, model: GEMINI_LIVE_MODEL, voiceName: GEMINI_TTS_VOICE, endpoint: env('GEMINI_LIVE_ENDPOINT') || undefined, cache: deps.ttsCache, connect: deps.connectWebSocket })
+    ? createTts({
+      apiKey: GEMINI_API_KEY, model: GEMINI_LIVE_MODEL, voiceName: GEMINI_TTS_VOICE, endpoint: env('GEMINI_LIVE_ENDPOINT') || undefined,
+      cache: deps.ttsCache, connect: deps.connectWebSocket, verify: status.azure ? verifyTake : undefined,
+    })
     : null;
 
   const allowAssess = createLimiter(90, 5 * 60_000); // ~18 attempts a minute per client is already frantic
@@ -120,32 +149,22 @@ export function createApi(rawEnv, deps = {}) {
   const allowCodeGuess = createLimiter(12, 10 * 60_000);
 
   // ---------------------------------------------------------------- /api/assess
-  // Verified live (eastasia, 2026-09): regional stt host, PhonemeAlphabet IPA honoured over REST, scores flat on NBest[0].
-  function pronunciationHeader(referenceText, nbestPhonemeCount) {
+  // Verified live (eastasia, 2026-09): regional stt host, PhonemeAlphabet IPA honoured over REST, scores flat on NBest[0],
+  // NBestPhonemeCount ("what was said instead") returned for en-US over REST, not for en-GB or zh-CN.
+  function pronunciationHeader(referenceText, locale, nbestPhonemeCount) {
     const params = {
       ReferenceText: referenceText, GradingSystem: 'HundredMark', Granularity: 'Phoneme', Dimension: 'Comprehensive',
-      EnableMiscue: 'True', EnableProsodyAssessment: 'True', PhonemeAlphabet: 'IPA',
+      EnableMiscue: 'True', EnableProsodyAssessment: 'True',
     };
-    if (nbestPhonemeCount > 0) params.NBestPhonemeCount = nbestPhonemeCount;
+    if (locale === 'en-US') params.PhonemeAlphabet = 'IPA';
+    if (locale === 'en-US' && nbestPhonemeCount > 0) params.NBestPhonemeCount = nbestPhonemeCount;
     const bytes = new TextEncoder().encode(JSON.stringify(params));
     let binary = '';
     for (const b of bytes) binary += String.fromCharCode(b);
     return btoa(binary);
   }
 
-  async function handleAssess(request, url) {
-    if (!status.azure) throw new HttpError(503, 'azure_not_configured');
-    const text = (url.searchParams.get('text') ?? '').trim();
-    if (!text) throw new HttpError(400, 'missing_text');
-    if (text.length > 500) throw new HttpError(400, 'text_too_long', { maxChars: 500 });
-    const locale = url.searchParams.get('locale') ?? 'en-US';
-    if (!LOCALES.has(locale)) throw new HttpError(400, 'unsupported_locale', { supported: [...LOCALES] });
-    const nbestRaw = Number.parseInt(url.searchParams.get('nbest') ?? '0', 10);
-    const nbest = Number.isFinite(nbestRaw) ? Math.min(Math.max(nbestRaw, 0), 10) : 0;
-
-    const audio = await readBody(request);
-    if (audio.length < 44) throw new HttpError(400, 'missing_audio'); // smaller than a WAV header
-
+  async function scoreOnce(audio, text, locale, nbest, attempt = 0) {
     const base = AZURE_SPEECH_ENDPOINT || `https://${AZURE_SPEECH_REGION}.stt.speech.microsoft.com`;
     const upstream = await fetchText(
       `${base}/speech/recognition/conversation/cognitiveservices/v1?language=${encodeURIComponent(locale)}&format=detailed`,
@@ -155,7 +174,7 @@ export function createApi(rawEnv, deps = {}) {
           'Ocp-Apim-Subscription-Key': AZURE_SPEECH_KEY,
           'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
           Accept: 'application/json',
-          'Pronunciation-Assessment': pronunciationHeader(text, nbest),
+          'Pronunciation-Assessment': pronunciationHeader(text, locale, nbest),
         },
         body: audio,
       },
@@ -167,8 +186,49 @@ export function createApi(rawEnv, deps = {}) {
       log.warn?.(`[assess] azure upstream failure status=${upstream.status}${upstream.networkError ? ` (${upstream.networkError})` : ''}`);
       throw new HttpError(502, 'azure_upstream', { status: upstream.status });
     }
-    // Azure's JSON unchanged. RecognitionStatus may still be NoMatch / InitialSilenceTimeout with HTTP 200.
-    return json(200, upstream.text);
+    // Now and then Azure answers "Success" without running the pronunciation part (no scores at all). That is not a
+    // verdict on the child — ask once more rather than let it read as a zero.
+    if (!attempt && missingScores(upstream.text)) return scoreOnce(audio, text, locale, nbest, 1);
+    return upstream.text;
+  }
+
+  /**
+   * One take, scored once — or, for accuracy, several times in parallel so it costs no extra waiting:
+   *   alts=["我想卖", …]  the same audio against likely mistakes ("what did it sound like instead"), any locale
+   *   dual=1             British: the same audio as US English too, for "what was said instead" on consonants
+   * With either, the response is { main, alts?, us? } holding Azure's JSON objects; without, Azure's JSON unchanged.
+   */
+  async function handleAssess(request, url) {
+    if (!status.azure) throw new HttpError(503, 'azure_not_configured');
+    const text = (url.searchParams.get('text') ?? '').trim();
+    if (!text) throw new HttpError(400, 'missing_text');
+    if (text.length > 500) throw new HttpError(400, 'text_too_long', { maxChars: 500 });
+    const locale = url.searchParams.get('locale') ?? 'en-US';
+    if (!LOCALES.has(locale)) throw new HttpError(400, 'unsupported_locale', { supported: [...LOCALES] });
+    const nbestRaw = Number.parseInt(url.searchParams.get('nbest') ?? '0', 10);
+    const nbest = Number.isFinite(nbestRaw) ? Math.min(Math.max(nbestRaw, 0), 10) : 0;
+    let alts = [];
+    if (url.searchParams.has('alts')) {
+      try { alts = JSON.parse(url.searchParams.get('alts') ?? '[]'); } catch { throw new HttpError(400, 'invalid_alts'); }
+      if (!Array.isArray(alts) || alts.length > MAX_ALTS || alts.some((a) => typeof a !== 'string' || !a.trim() || a.length > 500)) throw new HttpError(400, 'invalid_alts', { max: MAX_ALTS });
+    }
+    const dual = url.searchParams.get('dual') === '1' && locale === 'en-GB';
+
+    const audio = await readBody(request);
+    if (audio.length < 44) throw new HttpError(400, 'missing_audio'); // smaller than a WAV header
+
+    if (!alts.length && !dual) {
+      // Azure's JSON unchanged. RecognitionStatus may still be NoMatch / InitialSilenceTimeout with HTTP 200.
+      return json(200, await scoreOnce(audio, text, locale, nbest));
+    }
+    const [main, us, ...altTexts] = await Promise.all([
+      scoreOnce(audio, text, locale, nbest),
+      dual ? scoreOnce(audio, text, 'en-US', 5) : Promise.resolve(null),
+      // A failed alternative only loses that hint; the main score still stands.
+      ...alts.map((a) => scoreOnce(audio, a, locale, 0).catch(() => null)),
+    ]);
+    const parse = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
+    return json(200, { main: parse(main), us: dual ? parse(us) : undefined, alts: alts.length ? altTexts.map(parse) : undefined });
   }
 
   // ---------------------------------------------------------------- /api/tts

@@ -37,11 +37,28 @@ const RAW: Record<string, string> = {
   tha: 'tha|θ ɑ', thee: 'thee|θ i', thoo: 'thoo|θ u', ra: 'ra|r ɑ', ree: 'ree|r i', roo: 'roo|r u',
   va: 'va|v ɑ', vee: 'vee|v i', voo: 'voo|v u', wa: 'wa|w ɑ', wee: 'wee|w i', woo: 'woo|w u',
   la: 'la|l ɑ', lee: 'lee|l i', loo: 'loo|l u',
+  // Minimal-pair words (listening drills, the accuracy test set, future content)
+  free: 'free|f r i', thin: 'thin|θ ɪ n', fin: 'fin|f ɪ n', thirst: 'thirst|θ ɝ s t', first: 'first|f ɝ s t', sank: 'sank|s æ ŋ k',
+  mouse: 'mouse|m aʊ s', tin: 'tin|t ɪ n', day: 'day|d eɪ', then: 'then|ð ɛ n', den: 'den|d ɛ n', those: 'those|ð oʊ z', doze: 'doze|d oʊ z',
+  vest: 'vest|v ɛ s t', west: 'west|w ɛ s t', vine: 'vine|v aɪ n', wine: 'wine|w aɪ n', vet: 'vet|v ɛ t', wet: 'wet|w ɛ t',
+  rice: 'rice|r aɪ s', lice: 'lice|l aɪ s', light: 'light|l aɪ t', grass: 'grass|g r æ s', wed: 'wed|w ɛ d', ring: 'ring|r ɪ ŋ', wing: 'wing|w ɪ ŋ',
+  night: 'night|n aɪ t', low: 'low|l oʊ', snow: 'snow|s n oʊ', slow: 'slow|s l oʊ', sit: 'sit|s ɪ t', seat: 'seat|s i t', live: 'live|l ɪ v', leave: 'leave|l i v',
+  bad: 'bad|b æ d', bed: 'bed|b ɛ d', man: 'man|m æ n', men: 'men|m ɛ n', set: 'set|s ɛ t', she: 'she|ʃ i', sheet: 'sheet|ʃ i t',
+  peas: 'peas|p i z', peace: 'peace|p i s', eyes: 'eyes|aɪ z', ice: 'ice|aɪ s', prize: 'prize|p r aɪ z', price: 'price|p r aɪ s',
+  late: 'late|l eɪ t', lay: 'lay|l eɪ', made: 'made|m eɪ d', may: 'may|m eɪ', bike: 'bike|b aɪ k', buy: 'buy|b aɪ',
+  full: 'full|f ʊ l', fool: 'fool|f u l', pull: 'pull|p ʊ l', pool: 'pool|p u l', sing: 'sing|s ɪ ŋ', sin: 'sin|s ɪ n', jeep: 'jeep|dʒ i p', cheap: 'cheap|tʃ i p',
+  boat: 'boat|b oʊ t', are: 'are|ɑ r~', go: 'go|g oʊ',
 };
 
-/** Words whose British pronunciation differs by more than R-dropping. */
+/**
+ * Standard Southern British forms where the vowel itself differs, not just the R:
+ * BATH words take the long "ah" (glass, banana), LOT words the short rounded ɒ (hot, what, orange).
+ * GOAT (oʊ → əʊ) is handled for every word in forAccent.
+ */
 const RAW_GB: Record<string, string> = {
-  restaurant: 'res.taurant|r ɛ s . t r ɑ n t',
+  restaurant: 'res.taurant|r ɛ s . t r ɒ n t',
+  glass: 'glass|g l ɑ s', grass: 'grass|g r ɑ s', banana: 'ba.na.na|b ə . n ɑ . n ə',
+  hot: 'hot|h ɒ t', on: 'on|ɒ n', want: 'want|w ɒ n t', what: 'what|w ɒ t', chocolate: 'choc.late|tʃ ɒ k . l ə t', orange: 'or.ange|ɒ . r ɪ n dʒ',
 };
 
 export interface SyllablePhones { text: string; phonemes: PhonemeId[] }
@@ -52,7 +69,7 @@ const forAccent = (ph: string, accent: Accent): string | null => {
     if (ph === 'r~') return null;
     if (ph === 'ɚ') return 'ə';
     if (ph === 'ɝ') return 'ɜ';
-    if (ph === 'oʊ') return 'oʊ';
+    if (ph === 'oʊ') return 'əʊ';
   }
   return ph === 'r~' ? 'r' : ph;
 };
@@ -83,7 +100,8 @@ const guess = (word: string): string[] => {
   return out.length ? out : ['ə'];
 };
 
-export const wordKey = (word: string): string => word.toLowerCase().replace(/[’]/g, "'").replace(/[^a-z']/g, '');
+/** A word's key for the memory of personal bests: letters for English, characters for Chinese. */
+export const wordKey = (word: string): string => word.toLowerCase().replace(/[’]/g, "'").replace(/[^a-z'\p{Script=Han}]/gu, '');
 
 export const tokenize = (text: string): string[] =>
   text.split(/\s+/).map((t) => t.replace(/^[^A-Za-z']+|[^A-Za-z']+$/g, '')).filter(Boolean);
@@ -133,5 +151,6 @@ export const textPhones = (text: string, accent: Accent): WordPhones[] => tokeni
 export const phonemesIn = (text: string, accent: Accent): PhonemeId[] =>
   textPhones(text, accent).flatMap((w) => w.syllables.flatMap((s) => s.phonemes));
 
+/** Syllables in a text: English words by the lexicon, Chinese one per character. */
 export const syllableCount = (text: string): number =>
-  textPhones(text, 'en-US').reduce((n, w) => n + w.syllables.length, 0);
+  [...text].filter((c) => /\p{Script=Han}/u.test(c)).length + textPhones(text, 'en-US').reduce((n, w) => n + w.syllables.length, 0);

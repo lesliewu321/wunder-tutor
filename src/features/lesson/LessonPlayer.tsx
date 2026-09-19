@@ -6,11 +6,13 @@ import { LADDERS } from '../../content/lab';
 import { phonemeInfo, tipFor } from '../../content/phonemes';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { liveStreak } from '../../engine/rewards';
-import { stopPlayback, voice } from '../../speech/voice';
+import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile, useStore, type LessonOutcome } from '../../state/store';
 import { Button, Confetti, IconButton, ProgressBar, Sheet, toast } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
 import { Mouth } from '../../ui/Mouth';
+import { ToneContour } from '../../ui/ToneContour';
+import { ZhText } from '../../ui/ZhText';
 import { SpeakExercise, type SpeakResult } from '../speak/SpeakExercise';
 import { ChoiceExercise } from './ChoiceExercise';
 
@@ -41,7 +43,7 @@ export function LessonPlayer() {
   // Fetch the next teacher take while the child is busy with this one, so Listen is instant.
   useEffect(() => {
     const next = queue[index + 1];
-    if (next?.type === 'speak') voice.prefetch(next.item.say ?? next.item.text, { accent: profile.accent, kind: next.item.kind });
+    if (next?.type === 'speak') voice.prefetch(next.item.say ?? next.item.text, { accent: localeOf(next.item, profile.accent), kind: next.item.kind });
   }, [queue, index, profile.accent]);
 
   if (!lesson) {
@@ -128,10 +130,10 @@ function DrillIntro({ sound, onDone }: { sound: PhonemeId; onDone: () => void })
     <div className="drill-intro">
       <div className="drill-intro__stage">
         <span className="tag tag--sun">Quick sound workout</span>
-        <h2>Let’s fix the “{info.label}” sound</h2>
-        <Mouth pose={info.pose} size={210} />
+        <h2>{info.category === 'tone' ? <>Let’s practise {info.name.split(' · ')[0].toLowerCase()}</> : <>Let’s fix the “{info.label}” sound</>}</h2>
+        {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={210} /> : <Mouth pose={info.pose} size={210} />}
         <p className="drill-intro__tip">{tipFor(sound, profile.band)}</p>
-        <button type="button" className="pill" onClick={() => void voice.speak(info.example, { accent: profile.accent, slow: true }).catch(() => undefined)}>🔈 Hear it in “{info.example}”</button>
+        <button type="button" className="pill" onClick={() => void voice.speak(speakable(info.example), { accent: sound.startsWith('zh:') ? 'zh-CN' : profile.accent, slow: true }).catch(() => undefined)}>🔈 Hear it in “{info.example}”</button>
       </div>
       <div className="drill-intro__dock"><Button variant="primary" size="lg" block onClick={onDone}>I’m ready</Button></div>
     </div>
@@ -142,15 +144,19 @@ function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialo
   const profile = useActiveProfile();
   const [choice, setChoice] = useState<SpeakItem | null>(ex.replies.length === 1 ? ex.replies[0] : null);
 
+  const tutorLocale = localeOf(ex.tutor, profile.accent);
   useEffect(() => {
-    const t = setTimeout(() => void voice.speak(ex.tutorLine, { accent: profile.accent }).catch(() => undefined), 400);
+    const t = setTimeout(() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined), 400);
     return () => { clearTimeout(t); stopPlayback(); };
   }, [ex.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const bubble = (
     <div className="bubble-row">
       <span className="bubble-row__who" aria-hidden>{ex.picture ?? '🧑‍🍳'}</span>
-      <button type="button" className="bubble" onClick={() => void voice.speak(ex.tutorLine, { accent: profile.accent }).catch(() => undefined)}>{ex.tutorLine} <span aria-hidden>🔈</span></button>
+      <button type="button" className="bubble" onClick={() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined)}>
+        {ex.tutor?.zh ? <ZhText item={ex.tutor} script={profile.zhScript} /> : ex.tutorLine} <span aria-hidden>🔈</span>
+        {ex.tutor?.zh && ex.tutor.meaning && profile.band !== 'little' && <small className="bubble__meaning">{ex.tutor.meaning}</small>}
+      </button>
     </div>
   );
 
@@ -161,7 +167,7 @@ function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialo
         <h2 className="dialogue__title">What will you say?</h2>
         <div className="dialogue__replies">
           {ex.replies.map((r) => (
-            <button key={r.id} type="button" className="reply" onClick={() => setChoice(r)}>{r.picture && <span aria-hidden>{r.picture}</span>}{r.text}</button>
+            <button key={r.id} type="button" className="reply" onClick={() => setChoice(r)}>{r.picture && <span aria-hidden>{r.picture}</span>}{r.zh ? <ZhText item={r} script={profile.zhScript} /> : r.text}</button>
           ))}
         </div>
       </div>
@@ -230,3 +236,6 @@ function LessonComplete({ title, results, outcome, xpGained, streak, listen }: {
     </div>
   );
 }
+
+/** A sound's example as spoken: Mandarin examples are written "妈 mā" — say just the characters. */
+const speakable = (example: string): string => example.replace(/s*[a-zA-Zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]+$/u, '') || example;

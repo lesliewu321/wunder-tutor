@@ -8,7 +8,7 @@ A pronunciation-first language tutor for **children 5–15**, set up by a parent
 **listen → speak → score → see the exact sound that slipped → how to fix it → retry → before/after.**
 
 **Launch audience (Leslie, 2026-09-19): Hong Kong children learning English — preferably British — and Mandarin.**
-Home language is mostly Cantonese. Original brief: `C:\Users\Leslie\Desktop\Wunder_Tutor_Fable_Master_Prompt.md`
+Home language is mostly Cantonese. Original brief: `C:\_Cloud\Dropbox\AI\WunderTutor\Wunder_Tutor_Fable_Master_Prompt.md`
 (its adult "not childish" tone was overridden by the children audience).
 
 ## Where everything lives

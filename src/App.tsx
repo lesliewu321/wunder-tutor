@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes, useLocation } 
 import { Home } from './features/home/Home';
 import { LabHome, LabSound, LabStagePlayer } from './features/lab/Lab';
 import { LessonPlayer } from './features/lesson/LessonPlayer';
+import { CourseCheck } from './features/onboarding/CourseCheck';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { Conversation, PracticeHome } from './features/practice/Practice';
 import { Me, ParentZone } from './features/profile/Profile';
@@ -83,6 +84,7 @@ export function App() {
             <Route path="lesson/:lessonId" element={<LessonPlayer />} />
             <Route path="speak/:scenarioId" element={<Conversation />} />
             <Route path="parents" element={<ParentZone />} />
+            <Route path="check/:course" element={<CourseCheck />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

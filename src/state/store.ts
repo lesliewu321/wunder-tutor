@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type {
-  Accent, Achievement, AgeBand, Assessment, Attempt, ChildProfile, ConversationRecord, Goal, HomeLanguage, Level, ParentSettings, PhonemeId, SpeakItem,
+  Accent, Achievement, AgeBand, Assessment, Attempt, ChildProfile, ConversationRecord, CourseId, Goal, HomeLanguage, Level, ParentSettings, PhonemeId, SpeakItem,
 } from '../domain/types';
 import { audioRepo, stateStorage } from '../data/repository';
 import { applyAssessment, dayKey, emptyProfile } from '../intelligence/profile';
@@ -9,11 +9,26 @@ import { nextItemProgress, starsFor } from '../engine/learning';
 import { achievement, bumpStreak, XP } from '../engine/rewards';
 import { ALL_LESSONS } from '../content/course';
 
-export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : 'teen');
+export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : age <= 15 ? 'teen' : 'adult');
 
 export interface NewProfileInput {
   name: string; avatar: string; age: number; homeLanguage: HomeLanguage; level: Level; goal: Goal; accent: Accent;
+  learning?: CourseId[]; zhScript?: 'hant' | 'hans';
 }
+
+/**
+ * The learner's usual pitch, updated from every take: a plain mean while it settles, then a slow average.
+ * A take far from the running value after a few takes is more likely a tracking slip than a new voice.
+ */
+export const nextVoice = (prev: ChildProfile['voice'], take: { median: number; spread: number } | null | undefined): ChildProfile['voice'] => {
+  if (!take || !Number.isFinite(take.median)) return prev;
+  if (!prev) return { median: take.median, spread: take.spread, takes: 1 };
+  if (prev.takes >= 5 && Math.abs(take.median - prev.median) > 7) return prev;
+  const w = prev.takes < 20 ? 1 / (prev.takes + 1) : 0.05;
+  // A one-syllable take barely moves; only takes that actually travel say anything about the voice's range.
+  const spread = take.spread >= 3 ? (prev.spread ?? take.spread) + (take.spread - (prev.spread ?? take.spread)) * w : prev.spread;
+  return { median: prev.median + (take.median - prev.median) * w, spread, takes: prev.takes + 1 };
+};
 
 export interface AttemptOutcome {
   attempt: Attempt;
@@ -34,7 +49,8 @@ interface AppState {
   setActive(id: string): void;
   patchProfile(id: string, patch: Partial<ChildProfile>): void;
   setSettings(patch: Partial<ParentSettings>): void;
-  recordAttempt(input: { item: SpeakItem; assessment: Assessment; audio?: Blob; context: Attempt['context']; isRetry: boolean; previousScore?: number }): Promise<AttemptOutcome>;
+  recordAttempt(input: { item: SpeakItem; assessment: Assessment; audio?: Blob; context: Attempt['context']; isRetry: boolean; previousScore?: number; voice?: { median: number; spread: number } | null }): Promise<AttemptOutcome>;
+  setCourse(course: CourseId): void;
   finishItem(item: SpeakItem, best: number, mastered: boolean, tries: number): void;
   completeLesson(lessonId: string, avgScore: number): LessonOutcome;
   recordConversation(rec: Omit<ConversationRecord, 'id' | 'at'>): Achievement[];
@@ -72,8 +88,10 @@ export const useStore = create<AppState>()(
 
       createProfile(input) {
         const id = uid();
+        const learning: CourseId[] = input.learning?.length ? input.learning : ['en'];
         const profile: ChildProfile = {
-          id, ...input, band: bandForAge(input.age), createdAt: Date.now(), xp: 0, dailyGoalXp: 60,
+          id, ...input, learning, course: learning[0], zhScript: input.zhScript ?? 'hant',
+          band: bandForAge(input.age), createdAt: Date.now(), xp: 0, dailyGoalXp: 60,
           streak: { count: 0, lastDay: null, best: 0 }, lessonsCompleted: {}, items: {}, pronunciation: emptyProfile(), achievements: [], conversations: [],
         };
         set((s) => ({ profiles: { ...s.profiles, [id]: profile }, activeId: id }));
@@ -82,9 +100,15 @@ export const useStore = create<AppState>()(
 
       setActive: (id) => set({ activeId: id }),
       patchProfile: (id, patch) => set((s) => (s.profiles[id] ? { profiles: { ...s.profiles, [id]: { ...s.profiles[id], ...patch } } } : s)),
+      setCourse: (course) => set((s) => {
+        const p = s.profiles[s.activeId ?? ''];
+        if (!p) return s;
+        const learning = p.learning.includes(course) ? p.learning : [...p.learning, course];
+        return { profiles: { ...s.profiles, [p.id]: { ...p, course, learning } } };
+      }),
       setSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch } })),
 
-      async recordAttempt({ item, assessment, audio, context, isRetry, previousScore }) {
+      async recordAttempt({ item, assessment, audio, context, isRetry, previousScore, voice }) {
         const s = get();
         const p = s.profiles[s.activeId ?? ''];
         if (!p) throw new Error('no active profile');
@@ -99,7 +123,7 @@ export const useStore = create<AppState>()(
         const attempt: Attempt = { id, profileId: p.id, itemId: item.id, text: item.text, createdAt: now, assessment, audioKey, context };
 
         const { profile: pron, events } = applyAssessment(p.pronunciation, assessment, now, isRetry);
-        let next: ChildProfile = withXp({ ...p, pronunciation: pron, streak: bumpStreak(p.streak, now) }, XP.attempt, now);
+        let next: ChildProfile = withXp({ ...p, pronunciation: pron, streak: bumpStreak(p.streak, now), voice: nextVoice(p.voice, voice) }, XP.attempt, now);
 
         const ids = ['first-word', ...events.soundsMastered.map((ph) => `sound-${ph}`)];
         if (assessment.overall >= 98) ids.push('perfect');
@@ -215,9 +239,21 @@ export const useStore = create<AppState>()(
     }),
     {
       name: 'wunder-tutor/v1',
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => stateStorage),
       partialize: ({ profiles, activeId, settings, attempts }) => ({ profiles, activeId, settings, attempts }),
+      // v1 → v2: learners gain courses (English / Mandarin) and a character-set choice.
+      migrate: (state, version) => {
+        const s = state as { profiles?: Record<string, ChildProfile> };
+        if (version < 2 && s.profiles) {
+          for (const p of Object.values(s.profiles)) {
+            p.learning ??= ['en'];
+            p.course ??= 'en';
+            p.zhScript ??= 'hant';
+          }
+        }
+        return state as AppState;
+      },
     },
   ),
 );

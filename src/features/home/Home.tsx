@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiHealth, type ApiHealth } from '../../speech';
-import { COURSE } from '../../content/course';
+import { courseFor } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
 import { dueItems, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
-import { focusSound, weakSounds } from '../../intelligence/profile';
-import { useActiveProfile } from '../../state/store';
+import { focusSound, weakSoundsIn } from '../../intelligence/profile';
+import { useActiveProfile, useStore } from '../../state/store';
+import type { CourseId } from '../../domain/types';
 import { Icon } from '../../ui/Icon';
 import { Button, ProgressBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
@@ -14,6 +15,8 @@ import { Mascot } from '../../ui/Mascot';
 export function Home() {
   const nav = useNavigate();
   const p = useActiveProfile();
+  const setCourse = useStore((s) => s.setCourse);
+  const COURSE = courseFor(p.course);
   const unit = COURSE.units[0];
   const ids = unit.lessons.map((l) => l.id);
   const nextId = nextLessonId(p, ids);
@@ -22,10 +25,10 @@ export function Home() {
   const streak = liveStreak(p.streak);
   const xp = todayXp(p);
   const goalPct = Math.min(1, xp / p.dailyGoalXp);
-  const focus = focusSound(p.pronunciation, p.homeLanguage);
+  const focus = focusSound(p.pronunciation, p.homeLanguage, p.course);
   const focusInfo = phonemeInfo(focus);
-  const measured = weakSounds(p.pronunciation).some((s) => s.phoneme === focus);
-  const due = dueItems(p, Date.now()).length;
+  const measured = weakSoundsIn(p.pronunciation, p.course).some((s) => s.phoneme === focus);
+  const due = dueItems(p, Date.now()).filter((d) => d.itemId.startsWith('zh-') === (p.course === 'zh')).length;
   const review = unit.lessons[unit.lessons.length - 1];
   const [api, setApi] = useState<ApiHealth | null>(null);
   useEffect(() => { void apiHealth().then(setApi); }, []);
@@ -44,6 +47,21 @@ export function Home() {
           <span className="stat-pill stat-pill--xp" aria-label={`${xp} of ${p.dailyGoalXp} XP today`}><Icon name="bolt" size={18} fill />{xp}<small>/{p.dailyGoalXp}</small></span>
         </div>
       </header>
+
+      <div className="segmented segmented--course" role="group" aria-label="Course">
+        {(Object.entries(COURSE_LABEL) as [CourseId, string][]).map(([id, label]) => (
+          <button key={id} type="button" className={p.course === id ? 'is-on' : ''} aria-pressed={p.course === id} onClick={() => setCourse(id)}>
+            <span lang={id === 'zh' ? 'zh-Hant' : undefined}>{label}</span>
+          </button>
+        ))}
+      </div>
+
+      {p.course === 'zh' && !p.zhChecked && (
+        <button type="button" className="practice-note practice-note--check" onClick={() => nav('/check/zh')}>
+          <span aria-hidden>🎤</span>
+          <span><b>New: Putonghua with tone checks</b> A one-minute speaking check so Pip knows which tones and sounds to practise first.</span>
+        </button>
+      )}
 
       {practiceMode && (
         <button type="button" className="practice-note" onClick={() => nav('/parents')}>
@@ -100,6 +118,8 @@ export function Home() {
     </div>
   );
 }
+
+const COURSE_LABEL: Record<CourseId, string> = { en: 'English', zh: '普通話 Putonghua' };
 
 const greeting = (): string => {
   const h = new Date().getHours();

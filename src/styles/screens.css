@@ -244,3 +244,14 @@
 .practice-note { display: flex; align-items: flex-start; gap: 10px; width: 100%; text-align: left; background: var(--sun-soft); color: var(--ink); border-radius: var(--r-md); padding: 12px 14px; font-size: 0.88rem; line-height: 1.35; }
 .practice-note b { display: block; color: var(--sun-deep); }
 .practice-note > span:first-child { font-size: 1.3rem; }
+
+/* ---------- Courses ---------- */
+.segmented--course { grid-template-columns: 1fr 1fr; }
+.segmented--course button { font-size: 0.98rem; }
+.practice-note--check { background: var(--primary-soft); }
+.practice-note--check b { color: var(--primary); }
+.bubble__meaning { display: block; margin-top: 4px; font-weight: 700; }
+.segmented--2 { grid-template-columns: 1fr 1fr; margin-bottom: 4px; }
+.hint--left { text-align: left; margin: 6px 2px 0; }
+.course-toggles { display: flex; gap: 6px; }
+.chip--sm { min-height: 36px; padding: 0 12px; font-size: 0.9rem; }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { Assessment, PhonemeId, SpeakItem } from '../../domain/types';
+import { contentBand, type Assessment, type PhonemeId, type SpeakItem } from '../../domain/types';
 import { LADDERS } from '../../content/lab';
 import { phonemeInfo, tipFor } from '../../content/phonemes';
 import { findScenario, SCENARIOS } from '../../content/scenarios';
@@ -30,7 +30,7 @@ export function PracticeHome() {
             <li key={s.id}>
               <button type="button" className="scenario" style={{ ['--tone' as string]: s.color }} onClick={() => nav(`/speak/${s.id}`)}>
                 <span className="scenario__icon">{s.icon}</span>
-                <span className="scenario__text"><b>{s.title}</b><small>{s.blurb[p.band]}</small></span>
+                <span className="scenario__text"><b>{s.title}</b><small>{s.blurb[contentBand(p.band)]}</small></span>
                 {last ? <span className={`chip-score chip-score--${tier(last.score)}`}>{last.score}</span> : <Icon name="chevron" size={20} />}
               </button>
             </li>

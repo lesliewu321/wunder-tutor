@@ -2,7 +2,7 @@
 // code runs under Node and Cloudflare Workers.
 import { HttpError } from './http-error.mjs';
 
-const BANDS = new Set(['little', 'junior', 'teen']);
+const BANDS = new Set(['little', 'junior', 'teen', 'adult']);
 
 const BAND_STYLE = {
   little:
@@ -11,6 +11,8 @@ const BAND_STYLE = {
     'The child is about 8 to 11 years old. Use simple, clear sentences with common everyday words. Avoid idioms and long clauses.',
   teen:
     'The learner is about 12 to 15 years old. Use natural, friendly everyday English as a kind older student would, without slang that needs explaining.',
+  adult:
+    'The learner is an adult (often a parent learning alongside their child). Use natural, friendly everyday English at a normal adult register; no baby talk, and no slang that needs explaining.',
 };
 
 export const TUTOR_SCHEMA = {

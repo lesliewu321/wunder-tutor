@@ -1,9 +1,13 @@
 import { createStore, get, set } from 'idb-keyval';
-import type { Accent, SpeakItem } from '../domain/types';
+import type { Accent, Locale, SpeakItem } from '../domain/types';
 import { apiFetch, apiHealth } from './health';
 
+/** Mandarin items always speak Mandarin; everything else is English in the child's accent. */
+export const localeOf = (item: Pick<SpeakItem, 'lang'> | undefined | null, accent: Accent): Locale => item?.lang ?? accent;
+
 export interface SpeakOptions {
-  accent: Accent;
+  /** The language to speak in: the child's English accent, or 'zh-CN' for Mandarin. */
+  accent: Locale;
   slow?: boolean;
   /** Isolated syllables ("rah", "thee") need different handling from words and sentences. */
   kind?: SpeakItem['kind'];
@@ -35,10 +39,11 @@ class WebSpeechVoice implements ReferenceVoice {
     return typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
   }
 
-  private pick(accent: Accent): SpeechSynthesisVoice | undefined {
+  private pick(accent: Locale): SpeechSynthesisVoice | undefined {
     const norm = (l: string) => l.replace('_', '-').toLowerCase();
     const exact = this.voices.filter((v) => norm(v.lang) === accent.toLowerCase());
-    const pool = exact.length ? exact : this.voices.filter((v) => norm(v.lang).startsWith('en'));
+    // Mandarin must never fall back to a Cantonese (zh-HK) or Taiwanese voice, nor to English.
+    const pool = exact.length ? exact : accent === 'zh-CN' ? this.voices.filter((v) => /^(zh-cn|cmn)/.test(norm(v.lang))) : this.voices.filter((v) => norm(v.lang).startsWith('en'));
     for (const re of PREFERRED) { const v = pool.find((x) => re.test(x.name)); if (v) return v; }
     return pool[0];
   }

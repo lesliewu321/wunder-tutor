@@ -1,4 +1,4 @@
-import type { AgeBand, Assessment, ChildProfile, Exercise, ItemProgress, Lesson, PhonemeId, SpeakItem } from '../domain/types';
+import { contentBand, type AgeBand, type Assessment, type ChildProfile, type Exercise, type ItemProgress, type Lesson, type PhonemeId, type PhonemeScore, type SpeakItem, type WordScore } from '../domain/types';
 import { ITEM_INDEX } from '../content/course';
 import { LADDERS } from '../content/lab';
 import { weakSounds } from '../intelligence/profile';
@@ -6,21 +6,28 @@ import { weakSounds } from '../intelligence/profile';
 // Learning Engine: mastery rules, spaced repetition and in-lesson adaptation.
 
 /** Score needed to master an item. Younger children get a gentler bar. */
-export const MASTERY: Record<AgeBand, number> = { little: 70, junior: 76, teen: 80 };
+export const MASTERY: Record<AgeBand, number> = { little: 70, junior: 76, teen: 80, adult: 80 };
 /** After this many tries we move on kindly and bring the item back later — difficulty is never punished. */
 export const MAX_TRIES = 3;
 export const FAST_TRACK_SCORE = 90;
 
 /** A sound this far off is the wrong sound, whatever the word-level average says. */
 export const WRONG_SOUND_BELOW = 35;
+/** A weak sound that the scorer heard as a different sound is wrong too. */
+export const HEARD_WRONG_BELOW = 60;
+
+/** One sound in a word that was clearly not the target — lenient word scores must not hide it. */
+export const wrongSound = (ph: PhonemeScore): boolean => !!ph.phoneme && (ph.score < WRONG_SOUND_BELOW || (!!ph.heardAs && ph.score < HEARD_WRONG_BELOW));
+
+/** A Mandarin syllable with a measured wrong tone, or a sound that fit a likely mistake better than the target. */
+const wrongSyllable = (w: WordScore): boolean => w.syllables.some((s) => !!s.zh && (!!s.zh.toneHeard || !!s.zh.heardAs));
 
 export const isMastered = (a: Assessment, band: AgeBand): boolean =>
   a.overall >= MASTERY[band] &&
   a.words.every((w) =>
     w.errorType !== 'omission' && w.score >= MASTERY[band] - 22 &&
-    // Real scorers are lenient at word level: "tree" for "three" scores 80 with /θ/ at 25. That is not mastery.
-    // Only applied to words the scorer itself did not rate as good, so a noisy phoneme in a clean word is ignored.
-    (w.score >= 85 || w.phonemes.every((ph) => ph.score >= WRONG_SOUND_BELOW)));
+    // Real scorers are lenient at word level: "free" for "three" scored 90 with /θ/ at 35 heard as /f/. Not mastery.
+    !w.phonemes.some(wrongSound) && !wrongSyllable(w));
 
 const HOUR = 3600000;
 const BOX_INTERVAL = [0.15 * HOUR, 24 * HOUR, 3 * 24 * HOUR, 7 * 24 * HOUR, 21 * 24 * HOUR];
@@ -51,11 +58,14 @@ export const drillFor = (sound: PhonemeId, skipText?: string): Exercise[] => {
 
 export const isDrill = (ex: Exercise): boolean => ex.id.startsWith('drill-');
 
-/** Review lessons are personal: what's due for repetition plus a word for each weak sound. */
+/** Review lessons are personal: what's due for repetition plus a word for each weak sound — from this lesson's course only. */
 export const buildReview = (lesson: Lesson, profile: ChildProfile, now: number): Exercise[] => {
-  const fallback = lesson.exercises[profile.band];
-  const due = dueItems(profile, now).map((p) => ITEM_INDEX[p.itemId]).filter((i): i is SpeakItem => !!i).slice(0, 4);
-  const weak = weakSounds(profile.pronunciation).map((s) => LADDERS[s.phoneme]?.words[0]).filter((i): i is SpeakItem => !!i).slice(0, 2);
+  const fallback = lesson.exercises[contentBand(profile.band)];
+  const zh = lesson.unitId.startsWith('zh-');
+  const sameCourse = (i: SpeakItem) => (i.lang === 'zh-CN') === zh;
+  const due = dueItems(profile, now).map((p) => ITEM_INDEX[p.itemId]).filter((i): i is SpeakItem => !!i && sameCourse(i)).slice(0, 4);
+  const weak = weakSounds(profile.pronunciation).filter((s) => s.phoneme.startsWith('zh:') === zh)
+    .map((s) => LADDERS[s.phoneme]?.words[0]).filter((i): i is SpeakItem => !!i).slice(0, 2);
   const picked = [...due, ...weak];
   if (picked.length < 3) {
     for (const ex of fallback) {
@@ -67,7 +77,7 @@ export const buildReview = (lesson: Lesson, profile: ChildProfile, now: number):
 };
 
 export const exercisesFor = (lesson: Lesson, profile: ChildProfile, now = Date.now()): Exercise[] =>
-  lesson.kind === 'review' ? buildReview(lesson, profile, now) : lesson.exercises[profile.band];
+  lesson.kind === 'review' ? buildReview(lesson, profile, now) : lesson.exercises[contentBand(profile.band)];
 
 /** Already solid from earlier sessions — safe to skip when the child is flying through. */
 export const canSkip = (ex: Exercise, profile: ChildProfile): boolean =>

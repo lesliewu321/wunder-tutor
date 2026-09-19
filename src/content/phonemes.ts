@@ -1,4 +1,5 @@
 import type { AgeBand, HomeLanguage, PhonemeId } from '../domain/types';
+import { ZH_SOUNDS } from './zh/sounds';
 
 /** Parameters for the mouth illustration. Numeric so poses can be tweened into animation later. */
 export interface MouthPose {
@@ -21,8 +22,10 @@ export interface PhonemeInfo {
   /** Friendly name for cards and the Lab. */
   name: string;
   example: string;
-  category: 'consonant' | 'vowel';
+  category: 'consonant' | 'vowel' | 'tone';
   pose: MouthPose;
+  /** Tones: the pitch shape on Chao's 1 (low) – 5 (high) scale at five points, for the tone picture. */
+  contour?: number[];
   /** Short, do-this-with-your-mouth instructions. `junior` is the base; others fall back to it. */
   tip: Partial<Record<AgeBand, string>> & { junior: string };
   /** Three bullet steps shown in the mouth guide. */
@@ -277,7 +280,12 @@ const easyConsonants: Easy[] = [
 const vowels: Easy[] = [
   ['i', 'ee', 'cheese', 'Smile wide and hold it: “eee”.', 'This “ee” should be long with a wide smile.', 0.2, { open: 0.15, spread: 0.9, tongue: 'high-front' }, 'ɪ'],
   ['ɛ', 'e', 'bread', 'Open your mouth a little and relax: “eh”.', 'The “e” needs a slightly more open mouth.', 0.22, { open: 0.45, spread: 0.4, tongue: 'high-front' }, 'eɪ'],
-  ['ɑ', 'o', 'hot', 'Open wide like at the doctor’s: “ah”.', 'Open your mouth wider for this “ah” sound.', 0.24, { open: 0.9, tongue: 'low' }, 'ɔ'],
+  ['ɑ', 'ah', 'car', 'Open wide like at the doctor’s: “ah”.', 'Open your mouth wider for this “ah” sound.', 0.24, { open: 0.9, tongue: 'low' }, 'ʌ'],
+  // British vowels (Standard Southern British): short rounded "o", and the "oh" that starts from "uh".
+  ['ɒ', 'o', 'hot', 'Drop your jaw and round your lips a little — a short, quick “o”.', 'This short “o” needs slightly rounded lips — it sounded too flat.', 0.3, { open: 0.75, round: 0.45, tongue: 'low' }, 'ɑ'],
+  ['əʊ', 'oh', 'no', 'Start with a relaxed “uh” and glide to a small round “oo”: “uh-oo”.', 'This “oh” should glide from “uh” to round lips.', 0.28, { open: 0.4, round: 0.7, tongue: 'rest' }, 'ɔ'],
+  ['ɪə', 'ear', 'here', 'Start at a short “ih” and relax into “uh”: “ih-uh”. No R at the end.', 'This sound glides “ih-uh” — don’t add an R.', 0.3, { open: 0.3, spread: 0.3, tongue: 'high-front' }, 'i'],
+  ['eə', 'air', 'there', 'Start at “eh” and relax into “uh”: “eh-uh”. No R at the end.', 'This sound glides “eh-uh” — don’t add an R.', 0.3, { open: 0.45, spread: 0.3, tongue: 'high-front' }, 'ɛ'],
   ['ɔ', 'aw', 'water', 'Round your lips and drop your jaw: “aw”.', 'Round your lips more for this “aw” sound.', 0.28, { open: 0.65, round: 0.6, tongue: 'high-back' }, 'oʊ'],
   ['ʊ', 'oo', 'good', 'Short and relaxed with soft round lips: “uh-oo”. Don’t hold it.', 'This vowel was too long — keep “oo” short and relaxed.', 0.42, { open: 0.3, round: 0.6, tongue: 'high-back' }, 'u'],
   ['u', 'oo', 'juice', 'Make tight round lips and hold: “ooo”.', 'Round your lips tightly and hold this “oo”.', 0.2, { open: 0.15, round: 1, tongue: 'high-back' }, 'ʊ'],
@@ -312,10 +320,14 @@ const CANTONESE: Record<PhonemeId, { boost: number; heardAs?: PhonemeId }> = {
   's': { boost: 0.06, heardAs: '∅' }, 'dʒ': { boost: 0.08, heardAs: 'tʃ' }, 'eɪ': { boost: 0.06, heardAs: 'ɛ' },
 };
 
-export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries(
-  [...list, ...easyConsonants.map(fromEasy('consonant')), ...vowels.map(fromEasy('vowel'))]
-    .map((p) => [p.id, CANTONESE[p.id] ? { ...p, l1: { ...p.l1, yue: CANTONESE[p.id] } } : p]),
-);
+export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries([
+  ...[...list, ...easyConsonants.map(fromEasy('consonant')), ...vowels.map(fromEasy('vowel'))]
+    .map((p) => [p.id, CANTONESE[p.id] ? { ...p, l1: { ...p.l1, yue: CANTONESE[p.id] } } : p] as const),
+  ...ZH_SOUNDS.map((p) => [p.id, p] as const),
+]);
+
+/** Mandarin units are namespaced "zh:…", so the two catalogues never collide. */
+export const isZhSound = (id: PhonemeId): boolean => id.startsWith('zh:');
 
 export const phonemeInfo = (id: PhonemeId): PhonemeInfo =>
   PHONEMES[id] ?? {

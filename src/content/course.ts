@@ -1,4 +1,5 @@
-import type { Course, Exercise, Lesson, PhonemeId, SpeakItem, Unit } from '../domain/types';
+import type { ContentBand, Course, CourseId, Exercise, Lesson, PhonemeId, SpeakItem, Unit } from '../domain/types';
+import { ZH_COURSE, ZH_ITEMS } from './zh/course';
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -141,8 +142,12 @@ export const COURSE: Course = {
   ],
 };
 
-export const ALL_LESSONS: Lesson[] = COURSE.units.flatMap((u) => u.lessons);
+export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE };
+export const courseFor = (id: CourseId): Course => COURSES[id] ?? COURSE;
+
+export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units].flatMap((u) => u.lessons);
 export const findLesson = (id: string): Lesson | undefined => ALL_LESSONS.find((l) => l.id === id);
+export const lessonsOf = (id: CourseId): Lesson[] => courseFor(id).units.flatMap((u) => u.lessons);
 
 export const ITEM_INDEX: Record<string, SpeakItem> = {};
 for (const l of ALL_LESSONS) {
@@ -153,9 +158,10 @@ for (const l of ALL_LESSONS) {
     }
   }
 }
+for (const it of ZH_ITEMS) ITEM_INDEX[it.id] ??= it;
 
 /** Onboarding speaking check: short, covers the classic trouble sounds (w, r, θ, æ, v, ɪ). */
-export const ASSESSMENT_ITEMS: Record<'little' | 'junior' | 'teen', SpeakItem[]> = {
+export const ASSESSMENT_ITEMS: Record<ContentBand, SpeakItem[]> = {
   little: [W.water, W.three, W.apple],
   junior: [W.water, W.three, item('very red', '🔴'), P.thankYou],
   teen: [W.thirsty, item('very red apples', '🍎'), item('I think this is the right ship.', '🚢')],

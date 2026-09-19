@@ -1,6 +1,9 @@
-import type { Assessment, PhonemeScore, WordScore } from '../domain/types';
+import type { Assessment, PhonemeScore, Tone, WordScore, ZhSyllable } from '../domain/types';
 import { phonemeInfo } from '../content/phonemes';
 import { textPhones } from '../content/lexicon';
+import { alternativesFor } from '../content/zh/alternatives';
+import { parseSyllable, splitPinyin, surfaceTones } from '../content/zh/pinyin';
+import { unitsFor } from './zh/assess';
 import { SpeechError, type AssessContext, type PronunciationProvider, type Recording } from './types';
 
 // A learner model, not a random-number generator. It produces Azure-shaped results that behave the
@@ -42,6 +45,7 @@ export class MockPronunciationProvider implements PronunciationProvider {
       if (a.speechMs < 120 || a.peak < 0.02) throw new SpeechError('no-speech');
       if (a.noiseRms > 0.045 && a.speechRms / a.noiseRms < 2.2) throw new SpeechError('too-noisy');
     }
+    if (ctx.locale === 'zh-CN' && ctx.zh) return mockZh(referenceText, ctx.zh.py, ctx, rand, a.durationMs, ctx.script === 'hant' ? ctx.zh.hant : undefined);
 
     const words = textPhones(referenceText, ctx.accent);
     const syllables = words.reduce((n, w) => n + w.syllables.length, 0);
@@ -107,3 +111,67 @@ export class MockPronunciationProvider implements PronunciationProvider {
 }
 
 const avg = (xs: number[]): number => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+
+// ---------------------------------------------------------------- Mandarin learner model
+
+/** What a Hong Kong child's tone tends to turn into (Cantonese has six tones, but not these shapes). */
+const TONE_SLIP: Record<1 | 2 | 3 | 4, Tone> = { 1: 4, 2: 3, 3: 2, 4: 1 };
+const TONE_DIFFICULTY: Record<1 | 2 | 3 | 4, number> = { 1: 0.3, 2: 0.45, 3: 0.55, 4: 0.3 };
+const UNIT_DIFFICULTY: Record<string, number> = { 'zh:sh': 0.55, 'zh:s': 0.2, 'zh:n': 0.45, 'zh:j': 0.35, 'zh:ü': 0.35, 'zh:-ng': 0.3 };
+
+function mockZh(text: string, py: string, ctx: AssessContext, rand: () => number, durationMs: number, hant?: string): Assessment {
+  const chars = [...text].filter((c) => /\p{Script=Han}/u.test(c));
+  const shown = hant ? [...hant].filter((c) => /\p{Script=Han}/u.test(c)) : chars;
+  const syl = splitPinyin(py);
+  const surface = surfaceTones(syl.map((s) => parseSyllable(s).tone), chars);
+  const retry = RETRY_FACTOR[Math.min(ctx.attemptIndex, RETRY_FACTOR.length - 1)];
+  const learned = (id: string) => { const s = ctx.profile?.phonemes[id]; return s ? Math.min(0.6, s.count / (s.count + 14)) : 0; };
+  const home = ctx.homeLanguage === 'yue' ? 0.1 : 0;
+
+  // Risk per syllable; the one or two riskiest are where this take goes wrong.
+  const risk = syl.map((s, i) => {
+    const t = surface[i].accept[0];
+    const u = unitsFor(s);
+    const toneRisk = t === 5 ? 0 : (TONE_DIFFICULTY[t as 1 | 2 | 3 | 4] + home) * (1 - learned(`zh:t${t}`));
+    const unit = u.initial ?? u.final;
+    const segRisk = unit ? ((UNIT_DIFFICULTY[unit] ?? 0.2) + home) * (1 - learned(unit)) : 0;
+    return { i, toneRisk, segRisk, unit, r: Math.max(toneRisk, segRisk) * (0.7 + rand() * 0.6) };
+  });
+  const trouble = new Set([...risk].sort((x, y) => y.r - x.r).filter((x) => x.r * retry > 0.18).slice(0, chars.length > 4 ? 2 : 1).map((x) => x.i));
+
+  const words: WordScore[] = chars.map((_, i) => {
+    const char = shown[i] ?? chars[i];
+    const sf = surface[i];
+    const t = sf.accept[0];
+    const z: ZhSyllable = { char, py: syl[i], accept: sf.accept, lowThird: sf.lowThird, soundScore: Math.round(clamp(96 - rand() * 8, 0, 100)) };
+    const rk = risk[i];
+    if (t !== 5) {
+      z.toneScore = Math.round(clamp(92 - rand() * 12, 0, 100));
+      z.contour = TONE_CONTOUR[t as 1 | 2 | 3 | 4];
+    }
+    if (trouble.has(i)) {
+      if (t !== 5 && rk.toneRisk >= rk.segRisk) {
+        const heard = TONE_SLIP[t as 1 | 2 | 3 | 4];
+        z.toneHeard = heard;
+        z.toneScore = Math.round(clamp(30 + rand() * 25 + (1 - retry) * 30, 0, 100));
+        z.contour = TONE_CONTOUR[heard as 1 | 2 | 3 | 4];
+        if (z.toneScore >= 65) { delete z.toneHeard; z.contour = TONE_CONTOUR[t as 1 | 2 | 3 | 4]; }
+      } else {
+        const alt = alternativesFor(syl[i])[0];
+        z.soundScore = Math.round(clamp(45 + rand() * 20 + (1 - retry) * 35, 0, 100));
+        if (alt && z.soundScore < 75) z.heardAs = alt.py;
+      }
+    }
+    const score = z.toneHeard ? Math.min(z.soundScore, z.toneScore ?? 60) : z.heardAs ? Math.min(z.soundScore, 55) : z.soundScore;
+    const phonemes: PhonemeScore[] = [];
+    if (t !== 5 && z.toneScore != null) phonemes.push({ phoneme: `zh:t${t}`, score: z.toneScore });
+    const u = unitsFor(syl[i]);
+    if (u.initial) phonemes.push({ phoneme: u.initial, score: z.soundScore });
+    if (u.final) phonemes.push({ phoneme: u.final, score: z.soundScore });
+    return { word: char, score, errorType: score < 60 ? 'mispronunciation' : 'none', syllables: [{ text: char, score, zh: z }], phonemes };
+  });
+  const overall = Math.round(avg(words.map((w) => w.score)));
+  return { provider: 'mock', referenceText: text, words, overall, accuracy: overall, fluency: Math.round(clamp(88 - rand() * 12, 0, 100)), completeness: 100, durationMs };
+}
+
+const TONE_CONTOUR: Record<1 | 2 | 3 | 4, number[]> = { 1: [4.7, 4.75, 4.75, 4.7, 4.6], 2: [3, 2.9, 3.4, 4.1, 4.7], 3: [2.4, 1.6, 1.2, 1.5, 2.8], 4: [4.8, 4.4, 3.5, 2.4, 1.4] };

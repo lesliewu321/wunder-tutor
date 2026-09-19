@@ -11,3 +11,4 @@ server/.cache
 .wrangler
 .dev.vars
 .astro
+eval/.cache

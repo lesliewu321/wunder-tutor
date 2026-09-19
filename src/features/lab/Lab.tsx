@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { ChildProfile, PhonemeId } from '../../domain/types';
+import { isGrownUp, type ChildProfile, type PhonemeId } from '../../domain/types';
 import { LADDERS, LAB_STAGES, STAGE_LABEL, type LabStage } from '../../content/lab';
 import { phonemeInfo, tipFor } from '../../content/phonemes';
 import { XP } from '../../engine/rewards';
 import { labOrder, MASTERED_AT, WEAK_BELOW } from '../../intelligence/profile';
 import { voice } from '../../speech/voice';
+import { ToneContour } from '../../ui/ToneContour';
 import { useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, ProgressBar, toast, TopBar } from '../../ui/kit';
@@ -28,11 +29,11 @@ const stageDone = (p: ChildProfile, sound: PhonemeId, stage: LabStage) => LADDER
 export function LabHome() {
   const nav = useNavigate();
   const p = useActiveProfile();
-  const order = labOrder(p.pronunciation, p.homeLanguage);
+  const order = labOrder(p.pronunciation, p.homeLanguage, p.course);
   return (
     <div className="screen lab">
       <TopBar title="Pronunciation Lab" />
-      <p className="lead">Your trickiest sounds come first. Climb each ladder: sound → syllables → words → phrases → sentence.</p>
+      <p className="lead">{p.course === 'zh' ? 'Your trickiest tones and sounds come first. Climb each ladder: syllables → words → phrases → sentence.' : 'Your trickiest sounds come first. Climb each ladder: sound → syllables → words → phrases → sentence.'}</p>
       <ul className="sound-list">
         {order.map((id, i) => {
           const info = phonemeInfo(id);
@@ -45,7 +46,7 @@ export function LabHome() {
                 <span className="sound-card__glyph">{info.label}</span>
                 <span className="sound-card__text">
                   <b>{info.name}</b>
-                  <small>as in “{info.example}”{p.band === 'teen' ? ` · /${id}/` : ''}</small>
+                  <small>as in “{info.example}”{isGrownUp(p.band) && !id.startsWith('zh:') ? ` · /${id}/` : ''}</small>
                   <ProgressBar value={done / total} tone="leaf" />
                 </span>
                 <span className="sound-card__side">
@@ -71,20 +72,21 @@ export function LabSound() {
 
   const st = status(p, sound);
   const nextStage = LAB_STAGES.find((s) => stageDone(p, sound, s) < ladder[s].length) ?? 'sentence';
-  const say = (slow: boolean) => void voice.speak(info.example, { accent: p.accent, slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'));
+  const zh = sound.startsWith('zh:');
+  const say = (slow: boolean) => void voice.speak(zh ? info.example.replace(/s+S+$/u, '') : info.example, { accent: zh ? 'zh-CN' : p.accent, slow }).catch(() => toast('Sound isn’t working on this device right now', '🔇'));
 
   return (
     <div className="screen lab-sound">
       <TopBar title={info.name} onBack={() => nav('/lab')} />
       <section className="card guide">
         <div className="guide__top">
-          <div className="guide__glyph"><b>{info.label}</b>{p.band !== 'little' && <small>/{sound}/</small>}</div>
-          <Mouth pose={info.pose} size={190} />
+          <div className="guide__glyph"><b>{info.label}</b>{p.band !== 'little' && !zh && <small>/{sound}/</small>}</div>
+          {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={190} /> : <Mouth pose={info.pose} size={190} />}
         </div>
         <p className="guide__tip">{tipFor(sound, p.band)}</p>
         <ul className="steps">
           {info.steps.map((s, i) => <li key={i}><span>{i + 1}</span>{s}</li>)}
-          <li className={info.pose.voiced ? 'steps__voice on' : 'steps__voice'}><span>{info.pose.voiced ? '〰' : '·'}</span>{info.pose.voiced ? 'Voice ON — feel your throat buzz' : 'Voice OFF — just air'}</li>
+          {info.category !== 'tone' && <li className={info.pose.voiced ? 'steps__voice on' : 'steps__voice'}><span>{info.pose.voiced ? '〰' : '·'}</span>{info.pose.voiced ? 'Voice ON — feel your throat buzz' : 'Voice OFF — just air'}</li>}
         </ul>
         <div className="listen-row">
           <button type="button" className="pill" onClick={() => say(false)}><Icon name="speaker" size={20} />“{info.example}”</button>

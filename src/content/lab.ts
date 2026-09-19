@@ -1,4 +1,5 @@
 import type { PhonemeId, SpeakItem } from '../domain/types';
+import { ZH_LADDERS } from './zh/course';
 
 export type LabStage = 'syllables' | 'words' | 'phrases' | 'sentence';
 export const LAB_STAGES: LabStage[] = ['syllables', 'words', 'phrases', 'sentence'];
@@ -17,8 +18,9 @@ const ladder = (s: PhonemeId, syl: [string, string][], words: [string, string][]
   sentence: [mk(s, 'sentence', sentence)],
 });
 
-/** Sound → syllable → word → phrase → sentence ladders for deliberate practice. */
+/** Sound → syllable → word → phrase → sentence ladders for deliberate practice (English, then Mandarin "zh:…"). */
 export const LADDERS: Record<PhonemeId, Ladder> = {
+  ...ZH_LADDERS,
   'θ': ladder('θ', [['tha', 'thah'], ['thee', 'thee'], ['thoo', 'thoo']], [['three', '3️⃣'], ['thank', '💛'], ['mouth', '👄']], ['thank you', 'three things'], 'I think I am thirsty.'),
   'r': ladder('r', [['ra', 'rah'], ['ree', 'ree'], ['roo', 'roo']], [['red', '🔴'], ['right', '➡️'], ['around', '🔄']], ['right now', 'around the corner'], 'Turn right at the next street.'),
   'ð': ladder('ð', [['the', 'the'], ['they', 'they'], ['though', 'though']], [['this', '👇'], ['that', '👉'], ['mother', '👩']], ['this one', 'my brother'], 'This is my mother and that is my brother.'),

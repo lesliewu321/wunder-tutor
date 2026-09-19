@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Exercise, SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
-import { stopPlayback, voice } from '../../speech/voice';
+import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, toast } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
+import { ZhText } from '../../ui/ZhText';
 
 type ChoiceEx = Extract<Exercise, { type: 'choose-heard' | 'minimal-pair' }>;
 
@@ -28,9 +29,10 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
   const solved = picked === answer.id;
   const canHear = voice.available();
 
+  const locale = localeOf(answer, profile.accent);
   const say = async (text: string, slow = false) => {
     setPlaying(true);
-    try { await voice.speak(text, { accent: profile.accent, slow }); } catch { toast('Sound isn’t working on this device right now', '🔇'); }
+    try { await voice.speak(text, { accent: locale, slow }); } catch { toast('Sound isn’t working on this device right now', '🔇'); }
     if (alive.current) setPlaying(false);
   };
 
@@ -46,21 +48,22 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
     if (solved) return;
     if (it.id === answer.id) {
       setPicked(it.id);
-      if (ex.type === 'minimal-pair') void say(`${ex.pair[0].text}. ${ex.pair[1].text}.`, true);
+      if (ex.type === 'minimal-pair') void say(answer.lang ? `${ex.pair[0].text}，${ex.pair[1].text}。` : `${ex.pair[0].text}. ${ex.pair[1].text}.`, true);
     } else {
       setWrong((w) => [...w, it.id]);
       void say(answer.text, true);
     }
   };
 
-  const showText = profile.band !== 'little' || options.some((o) => !o.picture);
+  // Mandarin: characters with pinyin are the whole point (a tone pair differs only in its mark), so always show them.
+  const showText = profile.band !== 'little' || options.some((o) => !o.picture) || !!answer.zh;
   const sound = ex.type === 'minimal-pair' ? phonemeInfo(ex.focus) : null;
 
   return (
     <div className="choice">
       <div className="choice__stage">
         <h2 className="choice__title">{ex.type === 'minimal-pair' ? 'Which one did you hear?' : 'What did you hear?'}</h2>
-        {sound && profile.band !== 'little' && <p className="choice__sub">Listen for the “{sound.label}” sound.</p>}
+        {sound && profile.band !== 'little' && <p className="choice__sub">{sound.category === 'tone' ? `Listen for ${sound.name.toLowerCase()}.` : `Listen for the “${sound.label}” sound.`}</p>}
         <button type="button" className={`bigplay ${playing ? 'is-playing' : ''}`} onClick={() => void say(answer.text)} aria-label="Play the sound again">
           <Icon name="speaker" size={40} />
         </button>
@@ -73,7 +76,7 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
             return (
               <button key={o.id} type="button" className={`option option--${state} ${o.picture && o.text.length <= 14 ? '' : 'option--text'}`} onClick={() => choose(o)} disabled={wrong.includes(o.id)}>
                 {o.picture && <span className="option__pic" aria-hidden>{o.picture}</span>}
-                {showText && <span className="option__text">{o.text}</span>}
+                {showText && <span className="option__text">{o.zh ? <ZhText item={o} script={profile.zhScript} /> : o.text}</span>}
                 {!showText && <span className="sr-only">{o.text}</span>}
               </button>
             );

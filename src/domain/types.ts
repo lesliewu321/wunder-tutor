@@ -2,8 +2,20 @@
 // These mirror the tables in supabase/schema.sql so the local repository can
 // later be swapped for a Supabase-backed one without touching the UI.
 
-export type AgeBand = 'little' | 'junior' | 'teen';
+/** Who is learning: children by age, or a grown-up (a parent, or any adult learner). */
+export type AgeBand = 'little' | 'junior' | 'teen' | 'adult';
+/** Lessons are written for three bands; grown-ups get the teen material, which is natural, full sentences. */
+export type ContentBand = 'little' | 'junior' | 'teen';
+export const contentBand = (band: AgeBand): ContentBand => (band === 'adult' ? 'teen' : band);
+/** Teens and adults get the grown-up presentation: phonetic symbols, less mascot, no stars. */
+export const isGrownUp = (band: AgeBand): boolean => band === 'teen' || band === 'adult';
+/** The English accent a child is taught. */
 export type Accent = 'en-US' | 'en-GB';
+/** What a piece of speech is scored and spoken as: English in the child's accent, or Mandarin (Putonghua). */
+export type Locale = Accent | 'zh-CN';
+export type CourseId = 'en' | 'zh';
+/** Mandarin tone: 1–4, and 5 for the neutral (light) tone. */
+export type Tone = 1 | 2 | 3 | 4 | 5;
 /** 'yue' = Cantonese, 'zh' = Mandarin — their speakers make different mistakes in English, so they are kept apart. */
 export type HomeLanguage = 'yue' | 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'hi' | 'ar' | 'other';
 export type Level = 'new' | 'some' | 'confident';
@@ -25,13 +37,24 @@ export interface SpeakItem {
   focus?: PhonemeId[];
   /** Spoken form for the reference voice when it differs from the text (e.g. isolated sounds). */
   say?: string;
+  /** Mandarin items are always Mandarin; everything else is English in the child's accent. */
+  lang?: 'zh-CN';
+  /** Mandarin items: `text` is Simplified (what the scorer is sent); this adds what the child reads. */
+  zh?: ZhText;
+}
+
+export interface ZhText {
+  /** Traditional characters, as read in Hong Kong. */
+  hant: string;
+  /** Numbered pinyin with citation tones, one syllable per character: "wo3 xiang3 he1 shui3". */
+  py: string;
 }
 
 export type Exercise =
   | { id: string; type: 'speak'; item: SpeakItem; prompt?: 'text' | 'image' | 'translation' }
   | { id: string; type: 'choose-heard'; answer: SpeakItem; options: SpeakItem[] }
   | { id: string; type: 'minimal-pair'; pair: [SpeakItem, SpeakItem]; answerIndex: 0 | 1; focus: PhonemeId }
-  | { id: string; type: 'dialogue'; tutorLine: string; replies: SpeakItem[]; picture?: string };
+  | { id: string; type: 'dialogue'; tutorLine: string; replies: SpeakItem[]; picture?: string; tutor?: SpeakItem };
 
 export interface Lesson {
   id: string;
@@ -40,7 +63,7 @@ export interface Lesson {
   icon: string;
   kind: 'words' | 'phrases' | 'pronunciation' | 'listening' | 'speaking' | 'conversation' | 'review';
   /** Exercises per age band — the same lesson teaches different material to a 6- and a 14-year-old. */
-  exercises: Record<AgeBand, Exercise[]>;
+  exercises: Record<ContentBand, Exercise[]>;
 }
 
 export interface Unit {
@@ -56,7 +79,7 @@ export interface Unit {
 export interface Course {
   id: string;
   title: string;
-  language: 'en';
+  language: CourseId;
   units: Unit[];
 }
 
@@ -74,6 +97,31 @@ export interface PhonemeScore {
 export interface SyllableScore {
   text: string;
   score: number;
+  /** Mandarin: one syllable per character, with its tone check. */
+  zh?: ZhSyllable;
+}
+
+/** One Mandarin syllable as assessed: the scorer's view of the sounds plus our own pitch check of the tone. */
+export interface ZhSyllable {
+  char: string;
+  /** Expected numbered pinyin with the citation tone, e.g. "shui3". */
+  py: string;
+  /** Tones a native speaker would use here after tone changes (你好 → ní hǎo). 5 = light tone, not checked. */
+  accept: Tone[];
+  /** A 3rd tone followed by more speech is said low, without the final rise. */
+  lowThird: boolean;
+  /** Said alone, at the end of a phrase, or mid-phrase — tones move further alone (for the tone picture). */
+  context?: 'alone' | 'final' | 'mid';
+  /** The speech scorer's 0–100 for this syllable. */
+  soundScore: number;
+  /** Tone measured from the child's pitch, when the pitch was clear enough to tell. */
+  toneHeard?: Tone;
+  /** 0–100 match between the measured and the expected tone; absent when the tone couldn't be measured. */
+  toneScore?: number;
+  /** The child's pitch across the syllable on the 1 (low) – 5 (high) scale, for the tone picture. */
+  contour?: number[];
+  /** What the syllable most likely sounded like instead, as numbered pinyin — measured, not guessed. */
+  heardAs?: string;
 }
 
 export interface WordScore {
@@ -82,6 +130,9 @@ export interface WordScore {
   errorType: WordErrorType;
   syllables: SyllableScore[];
   phonemes: PhonemeScore[];
+  /** Where the word sits in the recording (ms), when the scorer reports it. */
+  offsetMs?: number;
+  durationMs?: number;
 }
 
 export interface Assessment {
@@ -182,6 +233,15 @@ export interface ChildProfile {
   level: Level;
   goal: Goal;
   accent: Accent;
+  /** Courses this learner takes, and the one on screen now. */
+  learning: CourseId[];
+  course: CourseId;
+  /** Mandarin: which characters to show (the scorer always gets Simplified). */
+  zhScript: 'hant' | 'hans';
+  /** The learner's usual pitch in semitones re 100 Hz, learned from their takes; Mandarin tones are judged against it. */
+  voice?: { median: number; spread?: number; takes: number };
+  /** Set once the first Mandarin speaking check is done. */
+  zhChecked?: boolean;
   createdAt: number;
   xp: number;
   dailyGoalXp: number;

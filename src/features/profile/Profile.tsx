@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Accent, ParentSettings } from '../../domain/types';
+import type { Accent, CourseId, ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
 import { HOME_LANGUAGES } from '../../content/translations';
 import { DAILY_GOALS, liveStreak } from '../../engine/rewards';
@@ -9,7 +9,8 @@ import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
 
-const BAND_LABEL = { little: 'Little explorer · 5–7', junior: 'Junior · 8–11', teen: 'Teen · 12–15' } as const;
+const COURSE_NAME: Record<CourseId, string> = { en: 'English', zh: '普通話' };
+const BAND_LABEL = { little: 'Little explorer · 5–7', junior: 'Junior · 8–11', teen: 'Teen · 12–15', adult: 'Grown-up learner' } as const;
 
 export function Me() {
   const nav = useNavigate();
@@ -26,7 +27,7 @@ export function Me() {
       <section className="me__card">
         <div className="me__avatar">{p.avatar}</div>
         <h2>{p.name}</h2>
-        <p>{BAND_LABEL[p.band]} · {p.accent === 'en-US' ? 'American' : 'British'} English</p>
+        <p>{BAND_LABEL[p.band]} · {p.learning.map((c) => (c === 'en' ? `${p.accent === 'en-US' ? 'American' : 'British'} English` : 'Putonghua')).join(' + ')}</p>
         <div className="stat-row">
           <div className="stat"><b>{level}</b><span>Level</span></div>
           <div className="stat stat--sun"><b>{p.xp}</b><span>Total XP</span></div>
@@ -126,7 +127,7 @@ export function ParentZone() {
         <h2 className="section-title">Learners</h2>
         <div className="learners">
           {Object.values(profiles).map((c) => (
-            <button key={c.id} type="button" className={`learner ${c.id === p.id ? 'is-on' : ''}`} onClick={() => store.setActive(c.id)} aria-pressed={c.id === p.id}><span>{c.avatar}</span><b>{c.name}</b><small>{c.age} yrs</small></button>
+            <button key={c.id} type="button" className={`learner ${c.id === p.id ? 'is-on' : ''}`} onClick={() => store.setActive(c.id)} aria-pressed={c.id === p.id}><span>{c.avatar}</span><b>{c.name}</b><small>{c.band === 'adult' ? 'Grown-up' : `${c.age} yrs`}</small></button>
           ))}
           <button type="button" className="learner learner--add" onClick={() => nav('/welcome?add=1')}><span><Icon name="plus" /></span><b>Add</b><small>learner</small></button>
         </div>
@@ -136,10 +137,26 @@ export function ParentZone() {
         <h2 className="section-title">{p.name}’s learning</h2>
         <div className="form-card">
           <label className="select-row"><span>Age</span>
-            <select value={p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 11 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}</select>
+            <select value={p.band === 'adult' ? 18 : p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 11 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}<option value={18}>Grown-up</option></select>
           </label>
-          <label className="select-row"><span>Accent to teach</span>
-            <select value={p.accent} onChange={(e) => patch(p.id, { accent: e.target.value as Accent })}><option value="en-US">American English</option><option value="en-GB">British English</option></select>
+          <div className="select-row"><span>Courses</span>
+            <span className="course-toggles">
+              {(Object.entries(COURSE_NAME) as [CourseId, string][]).map(([id, label]) => {
+                const on = p.learning.includes(id);
+                return (
+                  <button key={id} type="button" className={`chip chip--sm ${on ? 'is-on' : ''}`} aria-pressed={on}
+                    onClick={() => { const learning = on ? p.learning.filter((c) => c !== id) : [...p.learning, id]; if (learning.length) patch(p.id, { learning, course: learning.includes(p.course) ? p.course : learning[0] }); }}>
+                    {label}
+                  </button>
+                );
+              })}
+            </span>
+          </div>
+          <label className="select-row"><span>English accent</span>
+            <select value={p.accent} onChange={(e) => patch(p.id, { accent: e.target.value as Accent })}><option value="en-US">American (most detailed feedback)</option><option value="en-GB">British</option></select>
+          </label>
+          <label className="select-row"><span>Chinese characters</span>
+            <select value={p.zhScript} onChange={(e) => patch(p.id, { zhScript: e.target.value as 'hant' | 'hans' })}><option value="hant">繁體 Traditional</option><option value="hans">简体 Simplified</option></select>
           </label>
           <label className="select-row"><span>Home language</span>
             <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}</select>

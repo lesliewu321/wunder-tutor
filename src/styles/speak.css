@@ -221,3 +221,34 @@
   .option__pic { font-size: 2.4rem; }
   .choice__dock { min-height: 120px; }
 }
+
+/* ---------- Mandarin: characters with pinyin, and the tone picture ---------- */
+.zh { display: inline; }
+.zh:lang(zh-Hant) { font-family: 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', 'Heiti TC', var(--font-display), sans-serif; }
+.zh:lang(zh-Hans) { font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', 'Heiti SC', var(--font-display), sans-serif; }
+.zh__char { display: inline-block; font: inherit; vertical-align: bottom; }
+.zh__ruby { ruby-position: over; ruby-align: center; }
+.zh__py { font-family: var(--font-body); font-size: max(0.36em, 13px); font-weight: 800; letter-spacing: 0; color: var(--primary); line-height: 1.3; }
+.word--good .zh__py, .word--okay .zh__py, .word--weak .zh__py, .word--missing .zh__py { color: inherit; opacity: 0.85; }
+.zh__punct { opacity: 0.6; }
+.prompt__text .zh { line-height: 1.5; }
+.prompt--word .prompt__text .zh { font-size: 1.25em; }
+.option__text .zh__py { font-size: 0.7em; }
+.bubble .zh { font-size: 1.15rem; line-height: 1.8; }
+.bubble .zh__py { font-size: 0.62em; }
+.reply .zh { font-size: 1.1rem; line-height: 1.8; }
+.reply .zh__py { font-size: 0.6em; }
+
+.tone { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: none; }
+.tone svg { display: block; overflow: visible; }
+.tone__grid { stroke: var(--line); stroke-width: 1; }
+.tone__target { fill: none; stroke: var(--primary); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.9; }
+.tone__yours { fill: none; stroke: var(--coral); stroke-width: 3.5; stroke-dasharray: 6 6; stroke-linecap: round; }
+.tone__key { display: flex; gap: 12px; font-size: 0.72rem; font-weight: 800; }
+.tone__key-target { color: var(--primary); }
+.tone__key-yours { color: var(--coral-deep); }
+.fix__row { display: flex; align-items: center; gap: 12px; }
+.fix__row > div { flex: 1; min-width: 0; }
+.wordsheet__py { display: block; font-family: var(--font-body); font-size: 1rem; font-weight: 800; color: var(--primary); }
+/* Pinyin tone marks (ā á ǎ à, ǖ ǘ ǚ ǜ) need a font that has them; the display font doesn't. */
+.py, .wordsheet__py, .zh__py, .sound-badge b, .guide__glyph b, .sound-card__glyph, .focus-card__sound, .sound-row__glyph, .gains__glyph { font-family: var(--font-body); }
