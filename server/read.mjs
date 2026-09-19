@@ -175,7 +175,12 @@ export function applyPinyin(batch, answer) {
   }
 }
 
+/**
+ * The photo as base64 for Gemini. Buffer (Node, and Workers with nodejs_compat) does it natively in about a
+ * millisecond; the character-by-character fallback costs tens of milliseconds of a Worker's CPU time on a phone photo.
+ */
 const toBase64 = (bytes) => {
+  if (typeof Buffer !== 'undefined') return Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength).toString('base64');
   let s = '';
   for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   return btoa(s);

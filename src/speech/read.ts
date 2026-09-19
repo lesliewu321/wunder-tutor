@@ -77,7 +77,14 @@ async function post(body: Blob | string, type: string, cancel?: AbortSignal): Pr
     clearTimeout(timer);
     cancel?.removeEventListener('abort', stop);
   }
-  const reason = async () => ((await res.json().catch(() => null)) as { error?: string } | null)?.error ?? `http_${res.status}`;
+  // Our server names its errors ("read_timeout"); anything else came from the platform in front of it — keep its own
+  // code ("error code: 1102") so a screenshot says which.
+  const reason = async () => {
+    const body = await res.text().catch(() => '');
+    try { const e = (JSON.parse(body) as { error?: string } | null)?.error; if (e) return e; } catch { /* not ours */ }
+    const platform = /error code:?\s*(\d{3,4})/i.exec(body)?.[1];
+    return `http_${res.status}${platform ? ` cf${platform}` : ''}`;
+  };
   if (res.status === 429) throw new ReadError('busy');
   if (res.status === 401 || res.status === 503) throw new ReadError('unavailable', await reason());
   if (!res.ok) throw new ReadError('failed', await reason());

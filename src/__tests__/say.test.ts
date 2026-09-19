@@ -4,7 +4,7 @@ import { emptyProfile } from '../intelligence/profile';
 import { splitSentences } from '../speech/read';
 import { sayItem } from '../features/say/sayItem';
 import { writtenWords } from '../tutor/feedback';
-import { visibleRegion } from '../features/say/camera';
+import { backLenses, pickLens } from '../features/say/camera';
 
 const learner = (weak: Record<string, number> = {}): ChildProfile => {
   const pron = emptyProfile();
@@ -59,14 +59,25 @@ describe('Say it right — showing the scores on the words as written', () => {
 });
 
 describe('Say it right — the camera', () => {
-  it('keeps exactly what was on screen: the view fills the screen and crops the camera picture', () => {
-    // A 1920×1080 picture on a tall phone screen (390×844): only the middle strip is shown.
-    const r = visibleRegion(1920, 1080, 390, 844);
-    expect(r.sh).toBe(1080);
-    expect(Math.round(r.sw)).toBe(499);
-    expect(Math.round(r.sx)).toBe(710);
-    // A portrait picture on the same screen, and a picture shown whole.
-    expect(visibleRegion(1080, 1920, 390, 844)).toMatchObject({ sy: 0, sh: 1920 });
-    expect(visibleRegion(1280, 720, 640, 360)).toEqual({ sx: 0, sy: 0, sw: 1280, sh: 720 });
+  const android = [
+    { deviceId: 'a', label: 'camera2 1, facing front', kind: 'videoinput' },
+    { deviceId: 'b', label: 'camera2 3, facing back', kind: 'videoinput' },
+    { deviceId: 'c', label: 'camera2 0, facing back', kind: 'videoinput' },
+    { deviceId: 'd', label: 'camera2 2, facing back', kind: 'videoinput' },
+    { deviceId: 'm', label: 'Microphone', kind: 'audioinput' },
+  ];
+  it('opens the main back camera, not whichever lens the browser picked first (a zoom lens magnified the page)', () => {
+    const backs = backLenses(android);
+    expect(backs.map((l) => l.deviceId)).toEqual(['b', 'c', 'd']);
+    expect(pickLens(backs)?.deviceId).toBe('c');
+    // The lens the learner chose with the Lens button wins while it exists.
+    expect(pickLens(backs, 'd')?.deviceId).toBe('d');
+    expect(pickLens(backs, 'gone')?.deviceId).toBe('c');
+  });
+  it('keeps the browser’s choice where lenses have other names (iPhone, computers)', () => {
+    const iphone = [{ deviceId: 'x', label: 'Back Camera' }, { deviceId: 'y', label: 'Back Ultra Wide Camera' }, { deviceId: 'z', label: '前置相機' }];
+    expect(backLenses(iphone).map((l) => l.deviceId)).toEqual(['x', 'y']);
+    expect(pickLens(backLenses(iphone))).toBeNull();
+    expect(backLenses([{ deviceId: 'w', label: 'HD WebCam (04f2:b6dd)' }])).toEqual([]);
   });
 });

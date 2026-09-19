@@ -310,16 +310,11 @@
 
 /* The camera: full screen on every device */
 .camera { position: fixed; inset: 0; z-index: 70; background: #000; color: #fff; overflow: hidden; }
-.camera__video, .camera__shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* The whole camera picture, never cropped to fill the screen: the photo is everything the lens sees. */
+.camera__video, .camera__shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .camera__video--mirror { transform: scaleX(-1); }
 .camera__video--off { opacity: 0; }
-.camera__shot { object-fit: contain; background: #000; }
-.camera__frame { position: absolute; left: 50%; transform: translateX(-50%); width: min(86vw, 64vh, 620px); top: calc(var(--safe-t) + 84px); bottom: calc(var(--safe-b) + 186px); pointer-events: none; }
-.camera__frame i { position: absolute; width: 36px; height: 36px; border: 4px solid #fff; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)); }
-.camera__frame i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 16px; }
-.camera__frame i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 16px; }
-.camera__frame i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 16px; }
-.camera__frame i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 16px; }
+.camera__shot { background: #000; }
 .camera__top { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(var(--safe-t) + 12px) 16px 18px; background: linear-gradient(rgba(0, 0, 0, 0.55), transparent); }
 .camera__title { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
 .camera__round { flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: rgba(30, 30, 30, 0.55); border: 1.5px solid rgba(255, 255, 255, 0.4); color: #fff; }
