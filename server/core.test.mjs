@@ -5,6 +5,37 @@ const get = (api, path, headers) => api.handle(new Request(`http://x${path}`, { 
 const post = (api, path, body, headers) => api.handle(new Request(`http://x${path}`, { method: 'POST', body, headers }));
 const KEYS = { AZURE_SPEECH_KEY: 'k', AZURE_SPEECH_REGION: 'eastasia', GEMINI_API_KEY: 'g' };
 
+describe('the phone apps calling in from the device', () => {
+  const options = (api, origin) => api.handle(new Request('http://x/api/read', { method: 'OPTIONS', headers: { origin, 'access-control-request-method': 'POST' } }));
+
+  it('answers the Android and iOS apps, whose pages live on the device', async () => {
+    const api = createApi(KEYS);
+    for (const origin of ['https://localhost', 'capacitor://localhost', 'http://localhost']) {
+      expect((await options(api, origin)).status).toBe(204);
+      const res = await get(api, '/api/health', { origin });
+      expect(res.headers.get('access-control-allow-origin')).toBe(origin);
+      // The sign-in token and the invite code travel in headers, so the browser must be told they are allowed.
+      expect(res.headers.get('access-control-allow-headers')).toMatch(/x-wunder-access/i);
+      expect(res.headers.get('access-control-allow-headers')).toMatch(/authorization/i);
+      expect(res.headers.get('vary')).toBe('Origin');
+    }
+  });
+
+  it('never lets another website make a visitor’s browser call this API', async () => {
+    const api = createApi(KEYS);
+    for (const origin of ['https://evil.example', 'https://localhost.evil.example', 'http://localhost:5173.evil.example', 'null']) {
+      expect((await options(api, origin)).status).toBe(403);
+      expect((await get(api, '/api/health', { origin })).headers.get('access-control-allow-origin')).toBeNull();
+    }
+  });
+
+  it('leaves the website itself alone: same-origin calls carry no such headers', async () => {
+    const res = await get(createApi(KEYS), '/api/health');
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
+    expect(res.status).toBe(200);
+  });
+});
+
 describe('API access control', () => {
   it('is open on localhost when no access code is configured', async () => {
     const h = await (await get(createApi(KEYS), '/api/health')).json();

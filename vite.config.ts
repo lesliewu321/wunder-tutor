@@ -9,7 +9,8 @@ const version = (() => {
 
 export default defineConfig({
   plugins: [react()],
-  define: { __APP_VERSION__: JSON.stringify(version) },
+  // WT_API_BASE is set by npm run build:app (the phone app): the web build leaves it empty and stays same-origin.
+  define: { __APP_VERSION__: JSON.stringify(version), __API_BASE__: JSON.stringify(process.env.WT_API_BASE ?? '') },
   server: {
     // A preview runner may assign a free port through PORT; 5173 otherwise.
     port: Number(process.env.PORT) || 5173,

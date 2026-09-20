@@ -1,6 +1,7 @@
 // Talking to the API proxy: which services exist, and the beta access code that unlocks them.
 import { t, type Key } from '../i18n';
 import { accessToken } from '../account/pending';
+import { apiUrl } from '../platform';
 
 export interface ApiHealth {
   azure: boolean;
@@ -49,7 +50,8 @@ export const apiFetch = (path: string, init: RequestInit = {}): Promise<Response
   // A signed-in family: the API knows them by their token (their plan unlocks it; their use is counted per day).
   const token = accessToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
-  return fetch(path, { ...init, headers });
+  // In the phone app the page lives on the device, so the API's real address is added here (src/platform.ts).
+  return fetch(apiUrl(path), { ...init, headers });
 };
 
 let health: Promise<ApiHealth> | null = null;

@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { loadShelf, onBookChange, replacePages } from '../features/say/page';
 import { useStore } from '../state/store';
+import { emailReturnUrl } from '../platform';
 import { forgetSync, hasAccountHere, loadMeta, saveMeta } from './pending';
 import { syncOnce, type Local } from './sync';
 
@@ -109,7 +110,7 @@ const problem = (e: unknown): AccountError => {
 export async function sendCode(email: string): Promise<AccountError | null> {
   try {
     const b = await load();
-    const { error } = await b.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true, emailRedirectTo: `${window.location.origin}/parents` } });
+    const { error } = await b.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true, emailRedirectTo: emailReturnUrl() } });
     return error ? problem(error) : null;
   } catch (e) { return problem(e); }
 }

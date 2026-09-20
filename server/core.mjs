@@ -462,8 +462,35 @@ export function createApi(rawEnv, deps = {}) {
   // ---------------------------------------------------------------- router
   const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read']);
 
+  /**
+   * The phone apps (Capacitor) run the same web app from inside a WebView, where the page's origin is localhost —
+   * so their calls to this API are cross-origin and the browser asks permission first. Only those few origins are
+   * answered, never "*": every call carries the family's sign-in token, and no other site may make the browser send
+   * it. Nothing is granted to a page on the open web; the site itself is same-origin and needs none of this.
+   */
+  const APP_ORIGINS = new Set(['capacitor://localhost', 'https://localhost', 'http://localhost']);
+  const corsFor = (origin) => (APP_ORIGINS.has(origin) ? {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Headers': `Content-Type, ${ACCESS_HEADER}, Authorization`,
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Max-Age': '86400',
+    Vary: 'Origin',
+  } : null);
+
   /** @param {Request} request  @param {{ clientId?: string }} [ctx] */
   async function handle(request, ctx = {}) {
+    const cors = corsFor(request.headers.get('origin') ?? '');
+    // The browser's "may I?" before the real call. An origin we don't know gets no permission, not an error page.
+    if (request.method === 'OPTIONS') return new Response(null, { status: cors ? 204 : 403, headers: cors ?? {} });
+    const answer = await serve(request, ctx);
+    if (!cors) return answer;
+    const headers = new Headers(answer.headers);
+    for (const [name, value] of Object.entries(cors)) headers.set(name, value);
+    return new Response(answer.body, { status: answer.status, statusText: answer.statusText, headers });
+  }
+
+  /** The API itself, once the cross-origin question above is settled. @param {Request} request  @param {{ clientId?: string }} [ctx] */
+  async function serve(request, ctx = {}) {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, '') || '/';
     const route = `${request.method} ${path}`;

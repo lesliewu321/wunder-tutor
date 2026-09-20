@@ -4,6 +4,7 @@ import { App } from './App';
 import { ErrorBoundary } from './ui/ErrorBoundary';
 import { useStore } from './state/store';
 import { startAccount } from './account/account';
+import { isApp } from './platform';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/speak.css';
@@ -18,7 +19,8 @@ createRoot(document.getElementById('root')!).render(<StrictMode><ErrorBoundary><
 // A family with an account: keep its devices the same. (Nothing is loaded for a family without one.)
 startAccount();
 
-// Offline app shell — production only, so it never gets in the way of development.
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+// Offline app shell — production website only. The phone app already carries every file on the device, and a service
+// worker there would only serve a second, stale copy of them.
+if (import.meta.env.PROD && !isApp && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => void navigator.serviceWorker.register('/sw.js').catch(() => undefined));
 }
