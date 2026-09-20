@@ -219,7 +219,15 @@ export async function readText({ apiKey, model = DEFAULT_READ_MODEL, image, text
   return { language: pageLanguage(lines), lines };
 }
 
+/** What a key can look like in a request header: printable, no spaces. */
+const USABLE_KEY = /^[!-~]+$/;
+
 async function askGemini({ apiKey, model, thinking, fetchImpl, instruction, schema, parts, budget }) {
+  if (!USABLE_KEY.test(String(apiKey ?? ''))) {
+    const bad = new HttpError(UPSTREAM, 'read_key');
+    bad.upstreamMessage = 'the configured Gemini key has characters that cannot go in a request header';
+    throw bad;
+  }
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), Math.max(1, budget));
   let res, raw;
@@ -234,8 +242,11 @@ async function askGemini({ apiKey, model, thinking, fetchImpl, instruction, sche
       }),
     });
     raw = await res.text();
-  } catch {
-    throw new HttpError(UPSTREAM, controller.signal.aborted ? 'read_timeout' : 'read_upstream');
+  } catch (e) {
+    const err = new HttpError(UPSTREAM, controller.signal.aborted ? 'read_timeout' : 'read_upstream');
+    // Why the request never got an answer (a bad header, DNS, a dropped connection) — for the server log only.
+    err.upstreamMessage = `${e?.name ?? 'error'}: ${String(e?.message ?? '').slice(0, 160)}`;
+    throw err;
   } finally {
     clearTimeout(timer);
   }

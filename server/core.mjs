@@ -47,6 +47,13 @@ export function oneChangeAway(text, alt) {
   return x.length === y.length && x.filter((w, i) => w !== y[i]).length === 1;
 }
 
+/**
+ * A key or id as it goes into a request header or URL: any whitespace a paste left in it is removed (a line break
+ * inside a pasted key made the request itself invalid, so it failed before ever reaching Google). Passphrases are
+ * left alone — spaces may be part of them.
+ */
+export const cleanApiKey = (value) => String(value ?? '').replace(/\s+/g, '');
+
 const json = (status, body, extraHeaders) =>
   new Response(typeof body === 'string' ? body : JSON.stringify(body), {
     status,
@@ -134,12 +141,12 @@ export function createApi(rawEnv, deps = {}) {
   const env = (name) => String(rawEnv?.[name] ?? '').trim();
   const log = deps.log ?? console;
 
-  const AZURE_SPEECH_KEY = env('AZURE_SPEECH_KEY');
-  const AZURE_SPEECH_REGION = env('AZURE_SPEECH_REGION').toLowerCase();
+  const AZURE_SPEECH_KEY = cleanApiKey(env('AZURE_SPEECH_KEY'));
+  const AZURE_SPEECH_REGION = cleanApiKey(env('AZURE_SPEECH_REGION')).toLowerCase();
   const AZURE_SPEECH_ENDPOINT = env('AZURE_SPEECH_ENDPOINT').replace(/\/+$/, '');
-  const ANTHROPIC_API_KEY = env('ANTHROPIC_API_KEY');
+  const ANTHROPIC_API_KEY = cleanApiKey(env('ANTHROPIC_API_KEY'));
   const CLAUDE_MODEL = env('CLAUDE_MODEL') || 'claude-sonnet-5';
-  const GEMINI_API_KEY = env('GEMINI_API_KEY');
+  const GEMINI_API_KEY = cleanApiKey(env('GEMINI_API_KEY'));
   const GEMINI_LIVE_MODEL = env('GEMINI_LIVE_MODEL') || DEFAULT_LIVE_MODEL;
   const GEMINI_TTS_VOICE = env('GEMINI_TTS_VOICE') || DEFAULT_VOICE;
   const GEMINI_READ_MODEL = env('GEMINI_READ_MODEL') || DEFAULT_READ_MODEL;
@@ -296,7 +303,7 @@ export function createApi(rawEnv, deps = {}) {
     } catch (err) {
       // What failed and how long it took — never the photo or the text.
       const what = input.image ? `photo ${Math.round(input.image.bytes.length / 1024)} KB` : `text ${input.text.length} chars`;
-      log.warn?.(`[read] ${err?.body?.error ?? err?.name ?? 'error'}${err?.body?.status ? ` (gemini ${err.body.status}${err.upstreamMessage ? `: ${err.upstreamMessage}` : ''})` : ''}${err?.body?.finish ? ` (${err.body.finish})` : ''} after ${((Date.now() - started) / 1000).toFixed(1)} s, ${what}`);
+      log.warn?.(`[read] ${err?.body?.error ?? err?.name ?? 'error'}${err.upstreamMessage ? ` (${err?.body?.status ? `gemini ${err.body.status}: ` : ''}${err.upstreamMessage})` : ''}${err?.body?.finish ? ` (${err.body.finish})` : ''} after ${((Date.now() - started) / 1000).toFixed(1)} s, ${what}`);
       throw err;
     }
   }

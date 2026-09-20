@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createApi, missingScores, oneChangeAway } from './core.mjs';
+import { cleanApiKey, createApi, missingScores, oneChangeAway } from './core.mjs';
 
 const get = (api, path, headers) => api.handle(new Request(`http://x${path}`, { headers }));
 const post = (api, path, body, headers) => api.handle(new Request(`http://x${path}`, { method: 'POST', body, headers }));
@@ -46,6 +46,15 @@ describe('API access control', () => {
     expect((await get(api, '/api/nope')).status).toBe(404);
     expect((await get(api, '/api/tts')).status).toBe(405);
     expect((await post(api, '/api/assess', new Uint8Array(100))).status).toBe(400);
+  });
+});
+
+describe('keys as pasted', () => {
+  it('drops whitespace a paste left in a key, and keeps the key itself', () => {
+    // A line break inside a pasted key made the request invalid: it failed before ever reaching Google (2026-09-20).
+    expect(cleanApiKey('AIzaSyB-sample\nkey_s123')).toBe('AIzaSyB-samplekey_s123');
+    expect(cleanApiKey('  spaced key  ')).toBe('spacedkey');
+    expect(cleanApiKey(undefined)).toBe('');
   });
 });
 
