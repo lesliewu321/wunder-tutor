@@ -7,7 +7,8 @@ import type { Reading } from '../../speech/read';
 // own id and `changed` time, so that pages can travel with the learner once families have accounts.)
 
 export interface BookPage { id: string; reading: Reading; best: Record<number, number>; at: number; changed: number }
-export interface Shelf { pages: BookPage[]; open: string | null }
+/** `gone`: pages deleted here (id → when), remembered for a while so that the family's other devices delete them too. */
+export interface Shelf { pages: BookPage[]; open: string | null; gone?: Record<string, number> }
 export type HomeMode = 'course' | 'book';
 
 /** My book holds this many pages; the oldest makes room for a new one (the learner is told). */
@@ -43,7 +44,7 @@ export function loadShelf(profileId: string): Shelf {
   let shelf: Shelf = { pages: [], open: null };
   if (kept && Array.isArray(kept.pages)) {
     const pages = kept.pages.map(asPage).filter((p): p is BookPage => !!p);
-    shelf = { pages, open: pages.some((p) => p.id === kept.open) ? kept.open! : pages[0]?.id ?? null };
+    shelf = { pages, open: pages.some((p) => p.id === kept.open) ? kept.open! : pages[0]?.id ?? null, gone: kept.gone && typeof kept.gone === 'object' ? kept.gone : undefined };
   } else {
     const one = asPage(readJson(onePageKey(profileId)));
     if (one) {
@@ -58,9 +59,9 @@ export function loadShelf(profileId: string): Shelf {
 /** A new page goes on top and is opened. `dropped` is the oldest page, when the book was full and it made room. */
 export function addPage(profileId: string, reading: Reading, now = Date.now()): { page: BookPage; dropped: BookPage | null } {
   const page: BookPage = { id: newId(), reading, best: {}, at: now, changed: now };
-  const pages = [page, ...loadShelf(profileId).pages];
+  const shelf = loadShelf(profileId), pages = [page, ...shelf.pages];
   const dropped = pages.length > MAX_PAGES ? pages.pop()! : null;
-  write(profileId, { pages, open: page.id });
+  write(profileId, { pages, open: page.id, gone: dropped ? remember(shelf.gone, dropped.id, now) : shelf.gone });
   return { page, dropped };
 }
 
@@ -77,10 +78,27 @@ export function scorePage(profileId: string, id: string, sentence: number, score
 }
 
 /** Deleting the open page opens the newest one left. */
-export function deletePage(profileId: string, id: string): void {
+export function deletePage(profileId: string, id: string, now = Date.now()): void {
   const shelf = loadShelf(profileId), pages = shelf.pages.filter((p) => p.id !== id);
-  if (pages.length !== shelf.pages.length) write(profileId, { pages, open: shelf.open === id ? pages[0]?.id ?? null : shelf.open });
+  if (pages.length !== shelf.pages.length) write(profileId, { pages, open: shelf.open === id ? pages[0]?.id ?? null : shelf.open, gone: remember(shelf.gone, id, now) });
 }
+
+const FORGET_AFTER = 90 * 86_400_000;
+/** The deleted pages worth remembering: the last three months', a hundred at most. */
+function remember(gone: Record<string, number> | undefined, id: string, now: number): Record<string, number> {
+  const kept = Object.entries({ ...gone, [id]: now }).filter(([, at]) => now - at < FORGET_AFTER).sort((x, y) => y[1] - x[1]).slice(0, 100);
+  return Object.fromEntries(kept);
+}
+
+/** What sync worked out with the family's other devices: the pages to have now, and the deletions still to pass on. */
+export function replacePages(profileId: string, pages: BookPage[], gone: Record<string, number>): void {
+  const shelf = loadShelf(profileId);
+  const sorted = [...pages].sort((x, y) => y.at - x.at).slice(0, MAX_PAGES);
+  write(profileId, { pages: sorted, open: sorted.some((p) => p.id === shelf.open) ? shelf.open : sorted[0]?.id ?? null, gone });
+}
+
+/** Called whenever any learner's book or Home mode changes (sync listens). */
+export const onBookChange = (f: () => void): (() => void) => { listeners.add(f); return () => { listeners.delete(f); }; };
 
 export const loadMode = (profileId: string): HomeMode => {
   try { return localStorage.getItem(modeKey(profileId)) === 'book' ? 'book' : 'course'; } catch { return 'course'; }

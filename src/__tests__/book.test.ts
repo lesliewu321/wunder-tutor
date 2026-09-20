@@ -73,8 +73,11 @@ describe('My book: saved pages', () => {
     expect(loadShelf(id)).toMatchObject({ open: second.id, pages: [{ id: second.id }, { id: first.id }] });
     deletePage(id, first.id); // not the open one: the open page stays
     expect(loadShelf(id).open).toBe(second.id);
-    deletePage(id, second.id);
-    expect(loadShelf(id)).toEqual({ pages: [], open: null });
+    deletePage(id, second.id, 77);
+    expect(loadShelf(id)).toMatchObject({ pages: [], open: null });
+    // Deleted pages are remembered for a while, so that the family's other devices delete them too.
+    expect(Object.keys(loadShelf(id).gone ?? {}).sort()).toEqual([first.id, second.id, third.id].sort());
+    expect(loadShelf(id).gone?.[second.id]).toBe(77);
   });
 
   it(`holds ${MAX_PAGES} pages: the oldest makes room, and the caller is told which`, () => {

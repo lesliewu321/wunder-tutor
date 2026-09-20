@@ -19,6 +19,8 @@
     "i18n:import": "node scripts/i18n-import.mjs"
   },
   "dependencies": {
+    "@supabase/auth-js": "^2.116.0",
+    "@supabase/postgrest-js": "^2.116.0",
     "idb-keyval": "^6.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

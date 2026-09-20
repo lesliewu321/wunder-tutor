@@ -250,6 +250,8 @@ export interface ChildProfile {
   /** Set once the first Mandarin speaking check is done. */
   zhChecked?: boolean;
   createdAt: number;
+  /** When a grown-up last changed who this learner is or how they learn (name, age, accent, courses…): with two devices, the later edit wins. */
+  editedAt?: number;
   xp: number;
   dailyGoalXp: number;
   streak: { count: number; lastDay: string | null; best: number };

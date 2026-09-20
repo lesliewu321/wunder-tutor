@@ -90,12 +90,12 @@ export const useStore = create<AppState>()(
       },
 
       setActive: (id) => set({ activeId: id }),
-      patchProfile: (id, patch) => set((s) => (s.profiles[id] ? { profiles: { ...s.profiles, [id]: { ...s.profiles[id], ...patch } } } : s)),
+      patchProfile: (id, patch) => set((s) => (s.profiles[id] ? { profiles: { ...s.profiles, [id]: { ...s.profiles[id], ...patch, editedAt: Date.now() } } } : s)),
       setCourse: (course) => set((s) => {
         const p = s.profiles[s.activeId ?? ''];
         if (!p) return s;
         const learning = p.learning.includes(course) ? p.learning : [...p.learning, course];
-        return { profiles: { ...s.profiles, [p.id]: { ...p, course, learning } } };
+        return { profiles: { ...s.profiles, [p.id]: { ...p, course, learning, editedAt: Date.now() } } };
       }),
       setSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch } })),
 
