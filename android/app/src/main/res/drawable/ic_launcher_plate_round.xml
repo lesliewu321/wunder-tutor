@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The round version of the same cream plate, for launchers on Android 7 that ask for a round icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M 0,54 a 54,54 0 1,0 108,0 a 54,54 0 1,0 -108,0 Z"
+        android:fillColor="#FFF8EE" />
+</vector>

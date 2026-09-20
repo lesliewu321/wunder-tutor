@@ -16,9 +16,15 @@ const config: CapacitorConfig = {
     allowMixedContent: false,
   },
   plugins: {
-    // The first screen is the app's own, so the launch image only needs to cover the moment the WebView starts.
-    SplashScreen: { launchShowDuration: 600, backgroundColor: '#fff8ee', androidScaleType: 'CENTER_CROP', showSpinner: false },
+    // Android 15 and later draw apps behind the status bar and the navigation bar, edge to edge, and there is no
+    // opting out. The app already expects that: index.html asks for `viewport-fit=cover` and the layout keeps clear
+    // of the bars with env(safe-area-inset-*) (src/styles/tokens.css). Saying `cover` here as well tells Capacitor
+    // what it will find before it reads the page, so the first screen does not jump once it has read it.
+    SystemBars: { initialViewportFitValueHint: 'cover' },
   },
+  // There is no launch-screen plugin and none is needed: Android shows the activity's launch theme
+  // (android/app/src/main/res/drawable/splash.xml — the app's cream and Pip) until the WebView has drawn, which is
+  // quick because the files are already on the device.
 };
 
 export default config;

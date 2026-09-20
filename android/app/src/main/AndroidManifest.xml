@@ -44,6 +44,14 @@
         time the mic button is pressed, never at install.
     -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--
+        Asked for together with the microphone, and it must be here. When the page calls for the microphone, Capacitor
+        asks Android for RECORD_AUDIO and MODIFY_AUDIO_SETTINGS at once, and treats the answer as yes only if every
+        one of them came back yes (BridgeWebChromeClient.onPermissionRequest). A permission a manifest never declared
+        always comes back no — so leaving this line out would silently refuse the microphone to every learner.
+        It is granted on install and shows no dialog: it lets the app set the audio route while recording.
+    -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <!-- "Say it right": a photo of a page from a book, taken inside the app. -->
     <uses-permission android:name="android.permission.CAMERA" />
 

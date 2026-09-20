@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The cream square Pip sits on, for Android 7, which has no adaptive icons and so draws the icon as we hand it over.
+  Android 8 and later ignore this and use @color/ic_launcher_background behind the same Pip instead.
+  108 units wide like drawable/pip.xml, so the two line up whatever size the launcher draws them at.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M 25,0 L 83,0 A 25,25 0 0 1 108,25 L 108,83 A 25,25 0 0 1 83,108 L 25,108 A 25,25 0 0 1 0,83 L 0,25 A 25,25 0 0 1 25,0 Z"
+        android:fillColor="#FFF8EE" />
+</vector>

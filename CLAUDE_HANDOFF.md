@@ -1,4 +1,4 @@
-# Wunder Tutor — handoff (2026-09-19, evening)
+# Wunder Tutor — handoff (2026-09-20, evening)
 
 Read this first in a new session. Then `README.md` for architecture, `server/README.md` for the API, `eval/README.md`
 for how accuracy is measured.
@@ -26,7 +26,7 @@ A pronunciation-first language tutor. Core loop:
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
-| Learner data | **Per device only**: localStorage (state) + IndexedDB (recordings). No accounts, no sync. `supabase/schema.sql` is a file — no Supabase project exists |
+| Learner data | On the device: localStorage (state) + IndexedDB (recordings, which never leave it). Learners and My book pages also sync through a family account — Supabase project `xzghsihffoliduqkjvck`, built but not yet used by a real sign-in (see Family accounts below, and `supabase/README.md`) |
 | Accuracy test set | `eval/.cache` (gitignored, ~160 MB of cached Gemini takes + Azure responses) — reruns are free |
 | Domain | `wundertutor.com`, registrar Namecheap, DNS on Cloudflare (`annabel`/`porter.ns.cloudflare.com`) |
 | Azure | Speech resource `wunder-tutor-speech`, resource group `wunder-tutor`, region **eastasia**, tier S0 |
@@ -43,6 +43,7 @@ npm run deploy       # build + deploy the app to Cloudflare Pages
 npx vite-node eval/run-en.ts            # English accuracy report (cached, free)
 npx vite-node eval/report-zh.ts --cv    # Mandarin accuracy report (cached, free)
 cd site && npm run dev | npm run deploy # marketing site
+npm run app:apk      # the Android app as a file to install on a phone (no Android Studio needed)
 ```
 
 Preview configs for the Browser pane: `.claude/launch.json` (`wunder-tutor` has `autoPort`, `wundertutor-website`).
@@ -115,6 +116,30 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   `{{ .Token }}`, the secret key into `.env` → `npm run keys:push` → deploy. Until the secret key is there the API
   still verifies tokens but knows no plans: only the access code unlocks it, as before. First real test = Leslie
   signs in on the phone and a second device; watch `[account] sync` warnings in the console.
+- **The phone app (Android), 2026-09-20 — it builds, and nothing has run it yet.** Capacitor carries the very same
+  web files on the device (`capacitor.config.ts`, `android/`). Build it with **`npm run app:apk`**
+  (`scripts/build-apk.mjs`): that builds the web files with the API's real address baked in (`src/platform.ts` —
+  inside the app the page's own address is localhost, so `/api/read` would ask the phone), syncs them into `android/`,
+  and runs Gradle. The file lands at `android/app/build/outputs/apk/debug/app-debug.apk` (4.4 MB). It is a **debug**
+  build, signed with Android's throwaway debug key: installable on a phone you own, not a Play Store upload.
+  - **The toolchain on this machine:** Java 21 at `C:\Program Files\Microsoft\jdk-21.0.12.101-hotspot`, Android SDK at
+    `C:\Android\sdk` (command-line tools 23.0, `platform-tools`, `platforms/android-36`, `build-tools/36.0.0`,
+    installed 2026-09-20 — Google's licences accepted on this machine in the process). No Android Studio, and none
+    needed. `android/local.properties` points Gradle at the SDK and is gitignored; `npm run app:apk` rewrites it, and
+    finds the SDK on a fresh machine from `ANDROID_HOME` or the usual places. The new `sdkmanager` is a wrapper around
+    "Android CLI" and wants **slashes**, not semicolons: `platforms/android-36`, not `platforms;android-36`.
+  - **Icon and launch screen are the app's own** (they were Capacitor's blue logo): Pip, hand-converted from
+    `public/icon.svg` into Android vector art — `res/drawable/pip.xml`, framed for Android's 108-unit icon canvas so
+    ears and chin land at 24 and 87, inside the 18–90 every launcher is guaranteed to show. One drawing serves the
+    adaptive icon (`mipmap-anydpi-v26/`), the Android 7 icon (`mipmap/`, on a cream plate) and the launch screen
+    (`drawable/splash.xml`, cream, and `values-night/` dark so a dark phone gets no bright flash). All vector: sharp at
+    any size, no PNG per density. Checked by re-rendering the very same paths and transforms as SVG in the browser and
+    measuring the bounds, not by eye. **Google Play will still want a 512×512 PNG for the listing.**
+  - **Edge to edge:** Android 15+ draws apps behind the status and navigation bars and there is no opting out. The app
+    already copes (`viewport-fit=cover` in `index.html`, `env(safe-area-inset-*)` in `src/styles/tokens.css`), and
+    `SystemBars: { initialViewportFitValueHint: 'cover' }` in `capacitor.config.ts` tells Capacitor so before it reads
+    the page, so the first screen does not jump. There is no splash-screen plugin and none is needed — the old
+    `plugins.SplashScreen` block was dead config (the plugin was never installed) and is gone.
 - **Checking the Chinese** (2026-09-20): Leslie checks it on a private Artifact page, **Wunder Tutor Chinese Check**
   (https://claude.ai/artifact/QThnysyrfPbFeSeyUq4Ejp) — all 1,240 lines by section, English | 繁體中文, Change → type →
   Save per line, "mark section as checked", and 8 open wording questions to answer first. Everything is saved in the
@@ -207,7 +232,13 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 
 ### Not verified
 - A real **child** (or any real human) on the Mandarin course or the new accuracy features. Most important next test.
-- iPhone/iPad Safari. The Claude tutor (no key). Supabase. Teacher-take quality thresholds for Mandarin
+- **The Android app has never been run.** It builds and the file is correct inside (label, icon, microphone and camera
+  permissions, the web files, the API's address baked in) — but no device or emulator has opened it. First run should
+  check, in this order: it opens at all; the app's own icon and launch screen; the microphone prompt appears on the
+  first speaking take and scoring comes back; the camera opens for "Say it right" and reads a page; Android's Back
+  button closes the camera rather than the app; the layout clears the status and navigation bars top and bottom.
+- iPhone/iPad Safari — and there is **no iOS project yet** (`npx cap add ios`, needs Leslie's Mac).
+- The Claude tutor (no key). Supabase. Teacher-take quality thresholds for Mandarin
   (`TEACHER_MIN_ACCURACY` 85 / `TEACHER_MIN_SYLLABLE` 70 in `server/core.mjs`) are uncalibrated.
 
 ## Open items
@@ -234,7 +265,9 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 ## Waiting on Leslie
 
 - Create the Wunder Tutor **Supabase** project ($10/month on org `lesliewu321`) — accounts + sync. Not approved yet.
-- **Native apps** via Capacitor (Leslie has a Mac + iPhone, Apple Developer and Google Play accounts).
+- **Install the Android app on the phone and open it** (`npm run app:apk`, copy the file across, tap it) — the first
+  time any of this has run on a device. Then: the iOS project needs Leslie's Mac (`npx cap add ios`), and a real
+  Play Store upload needs a signing key of their own plus a 512×512 icon for the listing.
 - SpeechSuper trial for Mandarin sounds. Mandarin: pinyin always shown or fading? First cohort beginners or school
   learners?
 - Suggested stack for 1M users (discussed, nothing bought): Capacitor, RevenueCat + Stripe, FCM push, Cloudflare R2,
@@ -255,6 +288,12 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   lengths only. `AZURE_SPEECH_REGION` is not a secret. Don't set `AZURE_SPEECH_ENDPOINT`.
 - **The Bash tool eats backslashes** in inline scripts (`node -e`, heredocs): `/\s+/` became `/s+/` twice and shipped.
   Write code containing regexes with the Edit/Write tools. A scan for such regexes found none left.
+- **The phone app's microphone hangs on a permission nobody asks about.** When the page calls for the microphone,
+  Capacitor asks Android for `RECORD_AUDIO` **and `MODIFY_AUDIO_SETTINGS` together**, and counts the answer as yes
+  only if every one came back yes (`BridgeWebChromeClient.onPermissionRequest`). Android always answers no to a
+  permission the manifest never declared — so without that second line in `AndroidManifest.xml` the app refuses the
+  microphone to every learner, silently, with no dialog to explain it. It is declared now. The same all-or-nothing
+  rule will apply to anything else added to a `getUserMedia` call later.
 - **Browser pane:** blocks the microphone (use Parent Zone → Demo microphone). Screenshots time out or come back
   cropped while the pane is hidden — retry, or verify with `javascript_tool` measurements.
 - **Leslie's network intercepts/caches DNS** — verify with DNS-over-HTTPS and `curl --resolve`, not nslookup.

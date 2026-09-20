@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The home-screen icon on Android 7, which cannot mask an icon itself: Pip on the cream plate, already the right
+  shape. Android 8 and later use mipmap-anydpi-v26/ic_launcher.xml instead.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_launcher_plate" />
+    <item android:drawable="@drawable/pip" />
+</layer-list>
