@@ -48,11 +48,12 @@ export function oneChangeAway(text, alt) {
 }
 
 /**
- * A key or id as it goes into a request header or URL: any whitespace a paste left in it is removed (a line break
- * inside a pasted key made the request itself invalid, so it failed before ever reaching Google). Passphrases are
- * left alone — spaces may be part of them.
+ * A key or id as it goes into a request header or URL: everything a paste may have carried along — line breaks,
+ * spaces, and invisible characters from a web page or document — is removed, because a single one of them makes the
+ * request itself invalid (it then fails before ever reaching Google). Keys are printable ASCII; passphrases are left
+ * alone, since spaces may be part of them.
  */
-export const cleanApiKey = (value) => String(value ?? '').replace(/\s+/g, '');
+export const cleanApiKey = (value) => String(value ?? '').replace(/[^!-~]+/g, '');
 
 const json = (status, body, extraHeaders) =>
   new Response(typeof body === 'string' ? body : JSON.stringify(body), {
@@ -301,8 +302,10 @@ export function createApi(rawEnv, deps = {}) {
     try {
       return json(200, await readText({ apiKey: GEMINI_API_KEY, model: GEMINI_READ_MODEL, ...input }));
     } catch (err) {
-      // What failed and how long it took — never the photo or the text.
+      // What failed and how long it took — never the photo, the text, or a key. For a key that can't be sent, how
+      // much of the stored value is usable at all says whether it is empty, padded or the wrong value entirely.
       const what = input.image ? `photo ${Math.round(input.image.bytes.length / 1024)} KB` : `text ${input.text.length} chars`;
+      if (err?.body?.error === 'read_key') log.warn?.(`[read] stored Gemini key: ${GEMINI_API_KEY.length} usable characters of ${env('GEMINI_API_KEY').length}`);
       log.warn?.(`[read] ${err?.body?.error ?? err?.name ?? 'error'}${err.upstreamMessage ? ` (${err?.body?.status ? `gemini ${err.body.status}: ` : ''}${err.upstreamMessage})` : ''}${err?.body?.finish ? ` (${err.body.finish})` : ''} after ${((Date.now() - started) / 1000).toFixed(1)} s, ${what}`);
       throw err;
     }

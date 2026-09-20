@@ -54,6 +54,8 @@ describe('keys as pasted', () => {
     // A line break inside a pasted key made the request invalid: it failed before ever reaching Google (2026-09-20).
     expect(cleanApiKey('AIzaSyB-sample\nkey_s123')).toBe('AIzaSyB-samplekey_s123');
     expect(cleanApiKey('  spaced key  ')).toBe('spacedkey');
+    // Copied from a web page or a document: a zero-width space, a non-breaking space, a byte-order mark.
+    expect(cleanApiKey('﻿AIza​SyB key')).toBe('AIzaSyBkey');
     expect(cleanApiKey(undefined)).toBe('');
   });
 });
