@@ -14,7 +14,9 @@
     "cf:dev": "npm run build && wrangler pages dev dist --port 8788",
     "keys:check": "node scripts/push-keys.mjs --check",
     "keys:push": "node scripts/push-keys.mjs",
-    "deploy:egress": "wrangler deploy -c egress/wrangler.toml"
+    "deploy:egress": "wrangler deploy -c egress/wrangler.toml",
+    "i18n:export": "node scripts/i18n-export.mjs",
+    "i18n:import": "node scripts/i18n-import.mjs"
   },
   "dependencies": {
     "idb-keyval": "^6.2.1",

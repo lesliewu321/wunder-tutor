@@ -35,6 +35,23 @@ camera, reading messages), `lesson` (lesson player, choice exercises), `lab`, `p
 8. Emoji that are decoration stay in the code, not in the texts. `aria-label`s are wording too.
 9. Don't touch logic, styling or tests' meaning. After moving a file: `npx tsc --noEmit -p .` and `npx vitest run`.
 
+## Checking a translation
+
+1. `npm run i18n:export` writes every line, English next to 繁體中文, in the order a family meets the screens:
+   `i18n-review.json`, `i18n-review.csv` (opens in Excel / Sheets, with empty `correction` and `comment` columns) and
+   `i18n-review.html` — the same list as a page. All three are generated and git-ignored.
+2. The page (`scripts/i18n-review-page.html` is its template) is published **privately** as a Claude Artifact. The
+   checker presses Change on a line, types what it should say, and saves; corrections, notes, the sections marked
+   as checked and the answers to the open wording questions are kept in the artifact's own database (collections
+   `corrections`, `sections`, `answers`), which Claude reads back. With no database (the page opened some other
+   way) it keeps them in the browser and offers them as text to paste into the chat.
+3. `npm run i18n:import -- <corrections>` puts them into `zh-Hant/*.json` — the pasted text, a folder of saved
+   documents, or the filled-in CSV. It rewrites only the corrected lines, in place, and holds back any correction
+   that loses a `{placeholder}` or a `**` pair, contains a long dash, is empty, or was made against a line that has
+   changed since (`--force`); `--dry` shows what would change. Then `npx vitest run`, export again and republish the
+   page: corrected lines now say “In the app now”.
+4. When a language has been checked, add it to `STARTS_IN` in `index.ts` so phones set to it start in it.
+
 ## 繁體中文 — style
 
 Written Chinese as used in Hong Kong (書面語, not colloquial Cantonese), Traditional characters, Hong Kong vocabulary.

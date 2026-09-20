@@ -95,6 +95,14 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   for Leslie: a Chinese name for "Say it right" (kept in English), 字 vs 字詞 for an English word, 家長 vs 成人,
   badge/goal names, tone descriptions (低低轉彎…), "Buzzy/Quiet" sounds (震動的/無聲的). Bundle grew 428 → 536 kB
   (both languages ship to everyone): load the Chinese catalogs on demand when it matters.
+- **Checking the Chinese** (2026-09-20): Leslie checks it on a private Artifact page, **Wunder Tutor Chinese Check**
+  (https://claude.ai/artifact/QThnysyrfPbFeSeyUq4Ejp) — all 1,240 lines by section, English | 繁體中文, Change → type →
+  Save per line, "mark section as checked", and 8 open wording questions to answer first. Everything is saved in the
+  artifact's database: read it with the ArtifactData tool (`list` on `corrections`, `answers`, `sections`; add
+  `out_dir` to save the documents), then `npm run i18n:import -- <folder or file>` (guards placeholders, ** pairs,
+  the long dash, stale lines; `--dry` first), `npx vitest run`, `npm run i18n:export`, and republish
+  `i18n-review.html` to the same URL so corrected lines show "In the app now". Workflow: `src/i18n/README.md`.
+  Once Leslie says it is checked: add `'zh-Hant'` to `STARTS_IN`.
 - **Setup problems show before the photo** (2026-09-20, after six failed phone attempts that were all key/code
   problems): opening the camera asks `/api/health` fresh and `/api/status` (live key check); a missing/refused code or
   a refused Google key is shown in place of the shutter with a button to Settings (`/parents`, scrolls to **Beta

@@ -1,0 +1,694 @@
+<title>Wunder Tutor Chinese Check</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@500;600;700;800&display=swap">
+<style>
+  /* The app's own grown-up look (src/styles/tokens.css): same violet, same inks, same two typefaces. */
+  :root {
+    --bg: #f7f6fb;
+    --surface: #ffffff;
+    --surface-2: #f3f1fa;
+    --ink: #2b2140;
+    --ink-soft: #625a78;
+    --line: #e6e3f0;
+    --accent: #5236d1;
+    --accent-soft: #ece7ff;
+    --button: #6c4df5;
+    --button-hover: #5236d1;
+    --on-button: #ffffff;
+    --good: #15803f;
+    --good-soft: #dcf7e8;
+    --okay: #a85504;
+    --okay-soft: #fff0d4;
+    --weak: #c4223a;
+    --weak-soft: #ffe3e6;
+    --focus: #6c4df5;
+    --shadow: 0 1px 0 rgba(43, 33, 64, 0.04), 0 8px 24px -14px rgba(43, 33, 64, 0.22);
+    --font-display: 'Baloo 2', 'Nunito', 'Noto Sans HK', 'Microsoft JhengHei', 'PingFang HK', system-ui, sans-serif;
+    --font-ui: 'Nunito', system-ui, -apple-system, 'Segoe UI', 'Noto Sans HK', 'Microsoft JhengHei', 'PingFang HK', sans-serif;
+    --font-code: ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #161124;
+      --surface: #221a36;
+      --surface-2: #2a2142;
+      --ink: #f4f0ff;
+      --ink-soft: #b9b1cf;
+      --line: #3a2f57;
+      --accent: #b3a4ff;
+      --accent-soft: #2f2556;
+      --button: #6c4df5;
+      --button-hover: #7d61f7;
+      --good: #3fd089;
+      --good-soft: #173a2a;
+      --okay: #ffb534;
+      --okay-soft: #43361a;
+      --weak: #ff7f8b;
+      --weak-soft: #4a2230;
+      --focus: #b3a4ff;
+      --shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 8px 24px -14px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161124;
+    --surface: #221a36;
+    --surface-2: #2a2142;
+    --ink: #f4f0ff;
+    --ink-soft: #b9b1cf;
+    --line: #3a2f57;
+    --accent: #b3a4ff;
+    --accent-soft: #2f2556;
+    --button: #6c4df5;
+    --button-hover: #7d61f7;
+    --good: #3fd089;
+    --good-soft: #173a2a;
+    --okay: #ffb534;
+    --okay-soft: #43361a;
+    --weak: #ff7f8b;
+    --weak-soft: #4a2230;
+    --focus: #b3a4ff;
+    --shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 8px 24px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 500 15px/1.55 var(--font-ui); -webkit-text-size-adjust: 100%; }
+  .wrap { max-width: 1040px; margin-inline: auto; padding-inline: 16px; padding-block: 28px 72px; display: flex; flex-direction: column; gap: 22px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+  p, ul, h1, h2, h3 { margin: 0; }
+
+  /* Top */
+  .top { display: flex; flex-direction: column; gap: 12px; }
+  .eyebrow { font-weight: 800; font-size: 12px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); }
+  h1 { font: 800 clamp(30px, 6vw, 42px)/1.08 var(--font-display); text-wrap: balance; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+  .h1-zh { font-size: 0.56em; font-weight: 700; color: var(--ink-soft); }
+  .lede { max-width: 66ch; font-size: 16px; }
+  .rules { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 28px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .rules li { display: flex; flex-direction: column; gap: 2px; font-size: 14px; color: var(--ink-soft); }
+  .rules b { color: var(--ink); font-weight: 800; font-size: 15px; }
+
+  .linkish { background: none; border: 0; padding: 0; font: inherit; font-weight: 800; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .code-bit { font: 600 0.86em/1 var(--font-code); background: var(--accent-soft); color: var(--accent); border-radius: 5px; padding: 1px 4px; white-space: nowrap; }
+
+  /* Where things stand */
+  .standing { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; font-size: 14px; color: var(--ink-soft); }
+  .standing b { color: var(--ink); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .standing__mode { display: inline-flex; align-items: center; gap: 8px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-soft); flex: none; }
+  .dot[data-mode="db"] { background: var(--good); }
+  .dot[data-mode="local"] { background: var(--okay); }
+  .banner { background: var(--okay-soft); color: var(--ink); border-radius: 12px; padding: 12px 14px; font-size: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .banner p { flex: 1 1 260px; }
+
+  /* Toolbar */
+  .bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.3fr) minmax(0, 0.7fr); gap: 10px; }
+  .field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .field > label { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  select, input[type="search"], input[type="text"], textarea { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+  select, input[type="search"] { height: 40px; }
+  textarea { resize: vertical; font-size: 17px; line-height: 1.7; field-sizing: content; min-height: 3.4em; }
+  select:hover, input:hover, textarea:hover { border-color: var(--ink-soft); }
+  @media (max-width: 640px) { .bar { grid-template-columns: 1fr 1fr; } .field--search { grid-column: 1 / -1; grid-row: 1; } }
+
+  .count { font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; scroll-margin-top: 120px; }
+
+  /* The lines: one sheet, hairlines between — not a card each */
+  .sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding-inline: 18px; }
+  @media (max-width: 640px) { .sheet { padding-inline: 14px; } }
+  .group { font: 800 13px/1.3 var(--font-ui); color: var(--accent); padding-block: 18px 2px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+  .group:first-child { border-top: 0; }
+  .group span { font-weight: 600; color: var(--ink-soft); }
+  .group + .line { border-top: 0; }
+  .line { display: grid; gap: 8px; padding-block: 14px; border-top: 1px solid var(--line); }
+  .line:first-child { border-top: 0; }
+  .line__head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-height: 30px; }
+  .line__key { font: 500 12px/1.4 var(--font-code); color: var(--ink-soft); overflow-wrap: anywhere; }
+  .line__pills { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .line__head .btn { margin-left: auto; }
+  .tag, .pill { font-size: 11.5px; font-weight: 800; border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+  .tag { background: var(--surface-2); color: var(--ink-soft); }
+  .pill--changed { background: var(--okay-soft); color: var(--okay); }
+  .pill--note { background: var(--accent-soft); color: var(--accent); }
+  .pill--applied { background: var(--good-soft); color: var(--good); }
+  .line__pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 30px; align-items: start; }
+  @media (max-width: 640px) { .line__pair { grid-template-columns: minmax(0, 1fr); } }
+  .line__en { overflow-wrap: anywhere; white-space: pre-wrap; }
+  .line__zh { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .zh { font-size: 17px; line-height: 1.7; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .zh--new { color: var(--ink); background: var(--okay-soft); border-radius: 8px; padding: 2px 8px; margin-inline: -8px; }
+  .zh--was { font-size: 14.5px; color: var(--ink-soft); }
+  .line__note { font-size: 13.5px; color: var(--ink-soft); overflow-wrap: anywhere; }
+  .line__note b { color: var(--ink); }
+
+  /* Buttons */
+  .btn { font: 700 14px/1 var(--font-ui); color: var(--ink); background: var(--surface-2); border: 1.5px solid var(--line); border-radius: 10px; min-height: 36px; padding: 0 14px; cursor: pointer; }
+  .btn:hover { border-color: var(--ink-soft); }
+  .btn--primary { background: var(--button); border-color: var(--button); color: var(--on-button); }
+  .btn--primary:hover { background: var(--button-hover); border-color: var(--button-hover); }
+  .btn--danger { color: var(--weak); background: transparent; }
+  .btn--small { min-height: 30px; padding: 0 12px; font-size: 13px; }
+  .btn[disabled] { opacity: 0.55; cursor: default; }
+  @media (pointer: coarse) { .btn { min-height: 42px; } .btn--small { min-height: 38px; } }
+  @media (prefers-reduced-motion: no-preference) { .btn, select, input, textarea { transition: border-color 0.15s, background-color 0.15s; } }
+
+  /* Editor */
+  .editor { display: flex; flex-direction: column; gap: 6px; background: var(--surface-2); border-radius: 12px; padding: 12px; }
+  .editor label { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-top: 4px; }
+  .editor__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .editor__actions .btn--danger { margin-left: auto; }
+  .editor__status { font-size: 13.5px; color: var(--weak); min-height: 1em; }
+  .warns { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; color: var(--okay); }
+  .warns li::before { content: '! '; font-weight: 800; }
+  .warns:empty { display: none; }
+
+  /* Questions */
+  .q { display: grid; gap: 8px; padding-block: 18px; border-top: 1px solid var(--line); }
+  .q:first-child { border-top: 0; }
+  .q h3 { font: 800 17px/1.3 var(--font-ui); text-wrap: balance; }
+  .q__body { max-width: 70ch; color: var(--ink-soft); }
+  .q__body [lang] { color: var(--ink); font-size: 1.06em; }
+  .q__row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .q__saved { font-size: 13px; color: var(--good); }
+  .q textarea { font-size: 16px; line-height: 1.6; }
+
+  .foot { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .foot .btn--next { margin-left: auto; }
+  .checked-note { font-size: 14px; color: var(--good); font-weight: 700; }
+  details.handover { border-top: 1px solid var(--line); padding-top: 16px; font-size: 14px; color: var(--ink-soft); }
+  details.handover summary { cursor: pointer; font-weight: 800; color: var(--ink); }
+  details.handover > div { display: grid; gap: 10px; margin-top: 10px; }
+  details.handover textarea { font: 500 12px/1.5 var(--font-code); min-height: 140px; field-sizing: fixed; }
+  .small { font-size: 13px; color: var(--ink-soft); }
+  .empty { padding-block: 28px; color: var(--ink-soft); text-align: center; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Wunder Tutor · App language</p>
+    <h1>Chinese check <span class="h1-zh" lang="zh-Hant-HK">繁體中文校對</span></h1>
+    <p class="lede">Every line of the app’s own wording, English beside the Chinese draft. Read down a section. Where the Chinese is wrong, stiff, or not how Hong Kong families would say it, press <b>Change</b>, type what it should say, and save. Lines you leave alone count as fine. Claude reads your changes from this page and puts them into the app.</p>
+    <ul class="rules">
+      <li><b>Only touch what’s wrong</b>There is nothing to tick per line. Mark a whole section as checked when you reach its end.</li>
+      <li><b>Keep the code bits</b><span><span class="code-bit">{name}</span> is filled in by the app and <span class="code-bit">**</span> wraps bold words. Move them where the sentence needs them, but keep them.</span></li>
+      <li><b>No long dash</b><span lang="zh-Hant-HK">The headline font draws —— as 一一. Use ， or ： instead; a long sound is 「嗶～～」.</span></li>
+    </ul>
+    <p class="small">Short on time? <button class="linkish" id="go-questions" type="button">Answer the wording questions first</button>: each one settles many lines at once.</p>
+  </header>
+
+  <div class="standing" id="standing" aria-live="polite">
+    <span><b id="n-sections">0</b> of <b id="n-sections-all">0</b> sections checked</span>
+    <span id="s-changed"><b>0</b> lines changed</span>
+    <span id="s-notes"><b>0</b> notes</span>
+    <span><b id="n-answers">0</b> of <b id="n-questions">0</b> questions answered</span>
+    <span class="standing__mode"><span class="dot" id="mode-dot"></span><span id="mode-text">Connecting to the shared list…</span></span>
+  </div>
+  <div class="banner" id="banner" hidden><p id="banner-text"></p><button class="btn btn--small" id="banner-action" type="button" hidden></button></div>
+
+  <div class="bar" role="search">
+    <div class="field"><label for="section">Section</label><select id="section"></select></div>
+    <div class="field field--search"><label for="search">Find</label><input id="search" type="search" placeholder="English, Chinese or key" autocomplete="off"></div>
+    <div class="field"><label for="show">Show</label><select id="show"><option value="all">All lines</option><option value="changed">My changes</option><option value="notes">My notes</option></select></div>
+  </div>
+
+  <p class="count" id="count"></p>
+  <div class="sheet" id="list"></div>
+  <div class="foot" id="foot"></div>
+
+  <details class="handover" id="handover">
+    <summary>Hand my changes over another way</summary>
+    <div>
+      <p>If the shared list is not available, everything you have changed is also here as text. Copy it and paste it to Claude in the chat.</p>
+      <label class="sr" for="handover-text">All my changes as text</label>
+      <textarea id="handover-text" readonly spellcheck="false"></textarea>
+      <div class="foot"><button class="btn" id="handover-copy" type="button">Copy</button><span class="small" id="handover-status" role="status"></span></div>
+    </div>
+  </details>
+  <p class="small" id="built"></p>
+</div>
+
+<script type="application/json" id="rows" data-built="/*BUILT*/">/*ROWS*/</script>
+<script>
+(() => {
+  'use strict';
+
+  const source = document.getElementById('rows');
+  const ROWS = JSON.parse(source.textContent);
+  const $ = (id) => document.getElementById(id);
+  const PAGE = 150;
+
+  // ---------- The open wording questions ----------
+  const QUESTIONS = [
+    { id: 'say-it-right', title: 'A Chinese name for “Say it right”', find: 'Say it right',
+      body: ['The photo feature is still called “Say it right” in Chinese (the camera title and the centre button’s label). Should it have a Chinese name, for example ', ['讀得準'], ' or ', ['說得準'], ', or stay in English like Wunder Tutor and Pip?'] },
+    { id: 'word', title: '字 or 字詞 for an English word', find: '字詞',
+      body: ['Feedback says ', ['這個字說得很清楚'], ' for an English word, while the Lab says ', ['練習字詞'], '. Which should the app use for one English word, or is the mix natural?'] },
+    { id: 'grown-up', title: '“Grown-up”: 家長 or 成人', find: 'grown-up',
+      body: ['“Grown-ups only” is ', ['只限家長'], ', “Ask a grown-up” is ', ['請家長'], ', but a grown-up learner is ', ['成人學習者'], '. Is that split right?'] },
+    { id: 'badges-goals', title: 'Badge and goal names', find: 'badge.',
+      body: ['Badges such as ', ['聊天高手'], ', ', ['大進步'], ', ', ['爬梯高手'], ' and the daily goals ', ['輕鬆／穩定／超級'], '. Do they sound like something a child would be proud of, or translated?'] },
+    { id: 'tones', title: 'How tones are described to 5–7 year olds', find: 'feedback.zh.tone.little',
+      body: ['Tone 1 ', ['高高的、平平的'], ', tone 2 ', ['向上升'], ', tone 3 ', ['壓得低低的'], ', tone 4 ', ['從高處降下來'], '. Is this how a Hong Kong teacher would describe Putonghua tones to a small child?'] },
+    { id: 'buzzy-quiet', title: '“Buzzy” and “Quiet” sounds', find: 'Buzzy',
+      body: ['“Buzzy TH / Quiet TH” became ', ['震動的 TH／無聲的 TH'], '. Alternatives: ', ['有聲／無聲'], ', or the technical ', ['濁音／清音'], ' (already used in the detailed notes for grown-ups).'] },
+    { id: 'next', title: '“Next” on the setup screens', find: 'next',
+      body: ['Setup uses ', ['下一步'], '; elsewhere it is ', ['下一個'], ', ', ['下一句'], ' or ', ['下一課'], ' depending on what comes next. Fine as it is?'] },
+    { id: 'script', title: 'The Traditional / Simplified setting', find: 'settings.learning.script',
+      body: ['The setting “Chinese characters” is ', ['中文字體'], ', but in Hong Kong ', ['字體'], ' usually means a font. Better: ', ['繁體／簡體'], ', ', ['中文字形'], ', or something else?'] },
+  ];
+
+  // ---------- Rows, sections, groups ----------
+  const GROUPED = new Set(['sound', 'badge', 'goal', 'scenario', 'unit', 'course']);
+  const RANK = { name: 0, title: 0, label: 0, subtitle: 1, detail: 2, blurb: 2, problem: 3, step: 4, tip: 5 };
+  const BAND = { little: 0, junior: 1, teen: 2, adult: 3 };
+  const WHO = { little: 'ages 5–7', junior: 'ages 8–11', teen: 'ages 12–17', adult: 'grown-ups', kid: 'children', child: 'children', parent: 'parents', aria: 'screen-reader label' };
+  const groupOf = (key) => { const p = key.split('.'); return GROUPED.has(p[0]) && p.length > 2 ? p[0] + '.' + p[1] : ''; };
+  const orderIn = (key) => { const p = key.split('.').slice(2); return (RANK[p[0]] ?? 6) * 100 + (p[1] in BAND ? BAND[p[1]] : Number(p[1]) || 0) * 4 + (p[2] in BAND ? BAND[p[2]] : 0); };
+
+  const SECTIONS = new Map();
+  for (const row of ROWS) {
+    const n = String(parseInt(row.area, 10));
+    if (!SECTIONS.has(n)) SECTIONS.set(n, { n, full: row.area, short: row.area.replace(/^\d+\s*·\s*/, ''), rows: [] });
+    SECTIONS.get(n).rows.push(row);
+    row.group = groupOf(row.key);
+    row.section = n;
+  }
+  for (const s of SECTIONS.values()) {           // a group sits where it first appears; inside it: name, details, steps, then tips youngest first
+    const firstAt = new Map();
+    s.rows.forEach((row, i) => { row.at = i; if (row.group && !firstAt.has(row.group)) firstAt.set(row.group, i); });
+    const place = (row) => (row.group ? firstAt.get(row.group) : row.at);
+    s.rows.sort((a, b) => place(a) - place(b) || (a.group && a.group === b.group ? orderIn(a.key) - orderIn(b.key) : 0) || a.at - b.at);
+  }
+  const ALL = [...SECTIONS.values()].flatMap((s) => s.rows);
+  const ROW = new Map(ALL.map((r) => [r.key, r]));
+  const groupTitle = (group) => {
+    const [kind, id] = group.split('.');
+    const named = ['name', 'title', 'label'].map((f) => ROW.get(group + '.' + f)).find(Boolean);
+    return { kind, id, name: named ? named.en : '' };
+  };
+
+  /** A key as a safe document name: anything beyond plain letters, digits, _ . - becomes ~hex~ (θ → ~3b8~). */
+  const idOf = (key) => Array.from(key).map((ch) => (/[A-Za-z0-9_.-]/.test(ch) ? ch : '~' + ch.codePointAt(0).toString(16) + '~')).join('');
+
+  // ---------- State ----------
+  const state = {
+    mode: 'starting',               // 'db' (the shared list) | 'local' (this browser only)
+    db: null,
+    corrections: new Map(),         // key → { key, zh, note, was, en, at }
+    sections: new Map(),            // n → { n, checked, at }
+    answers: new Map(),             // question id → { id, answer, at }
+    view: { section: '1', search: '', show: 'all', limit: PAGE, before: null },
+  };
+  const LOCAL = 'wunder-zh-check/v1', DRAFTS = 'wunder-zh-check/drafts', VIEW = 'wunder-zh-check/view';
+  const readStore = (name) => { try { return JSON.parse(localStorage.getItem(name) || 'null'); } catch { return null; } };
+  const writeStore = (name, value) => { try { localStorage.setItem(name, JSON.stringify(value)); return true; } catch { return false; } };
+  const drafts = new Map(Object.entries(readStore(DRAFTS) || {}));
+  let draftTimer = 0;
+  const keepDrafts = () => { clearTimeout(draftTimer); draftTimer = setTimeout(() => writeStore(DRAFTS, Object.fromEntries(drafts)), 400); };
+
+  const text = (v) => (typeof v === 'string' ? v : '');
+  const isChange = (fix, row) => !!fix && typeof fix.zh === 'string' && fix.zh !== row.zh;
+  const isApplied = (fix, row) => !!fix && typeof fix.zh === 'string' && fix.zh === row.zh && text(fix.was) !== '' && fix.was !== row.zh;
+
+  // ---------- Small DOM helpers ----------
+  const h = (tag, attrs, ...kids) => {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null || v === false) continue;
+      if (k === 'text') node.textContent = v;
+      else if (k.startsWith('on')) node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) node.append(kid);
+    return node;
+  };
+  /** A line with its code bits ({name}, **) picked out, so they are easy to keep. */
+  const marked = (value) => {
+    const frag = document.createDocumentFragment();
+    for (const part of String(value).split(/(\{\w+\}|\*\*)/)) {
+      if (!part) continue;
+      frag.append(/^(\{\w+\}|\*\*)$/.test(part) ? h('span', { class: 'code-bit', text: part }) : part);
+    }
+    return frag;
+  };
+  const zhBits = (parts) => parts.map((p) => (Array.isArray(p) ? h('span', { lang: 'zh-Hant-HK', text: p[0] }) : p));
+
+  // ---------- Saving ----------
+  let settle;
+  const ready = new Promise((resolve) => { settle = resolve; });
+  const chains = new Map();
+  const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+  /** One write at a time per document; one more try after a passing hiccup. */
+  const write = (path, op) => {
+    const once = async () => {
+      try { return await op(state.db.doc(path)); }
+      catch (e) { if (e && e.code === 'unavailable') { await pause(500 + Math.random() * 900); return op(state.db.doc(path)); } throw e; }
+    };
+    const run = (chains.get(path) || Promise.resolve()).catch(() => {}).then(once);
+    chains.set(path, run);
+    return run;
+  };
+  const persistLocal = () => writeStore(LOCAL, { corrections: [...state.corrections.values()], sections: [...state.sections.values()], answers: [...state.answers.values()] });
+  const GONE = new Set(['revoked', 'not_granted', 'capability_disabled', 'capability_removed']);
+  const explain = (e) => {
+    const code = e && e.code;
+    if (code === 'quota_exceeded') return 'The shared list is full. Your text is still here. Tell Claude, and use “Hand my changes over another way” below.';
+    if (code === 'invalid_argument' || code === 'transform_error') return 'This view is not allowed to save to the shared list. Your text is kept in this browser.';
+    if (code === 'resource_exhausted') return 'Saving too fast for the shared list. Wait a moment, then press Save again.';
+    return 'That did not save. Your text is still here. Press Save again.';
+  };
+  /** Put `value` under `key` in one of the three lists, shared or local. `null` removes it. Throws with a message for the person. */
+  async function put(list, path, key, value) {
+    await ready;
+    if (state.mode === 'db') {
+      try { await write(path, (ref) => (value ? ref.set(value) : ref.delete())); }
+      catch (e) {
+        if (GONE.has(e && e.code)) goLocal('The shared list stopped answering, so changes now stay in this browser.');
+        else throw new Error(explain(e));
+      }
+    }
+    if (value) state[list].set(key, value); else state[list].delete(key);
+    if (state.mode === 'local' && !persistLocal()) showBanner('This browser is not keeping your changes. Before you close the page, open “Hand my changes over another way” and copy them.');
+    paintAll();
+  }
+
+  function goLocal(message) {
+    state.mode = 'local';
+    persistLocal();
+    paintMode();
+    if (message) showBanner(message);
+  }
+  function showBanner(message, action, run) {
+    $('banner-text').textContent = message;
+    const b = $('banner-action');
+    b.hidden = !action;
+    if (action) { b.textContent = action; b.onclick = run; }
+    $('banner').hidden = false;
+  }
+
+  async function start() {
+    let db = null;
+    try { db = window.claude && typeof window.claude.use === 'function' ? await window.claude.use('db') : null; } catch { db = null; }
+    const kept = readStore(LOCAL) || {};
+    if (!db) {
+      for (const f of kept.corrections || []) if (f && ROW.has(f.key)) state.corrections.set(f.key, f);
+      for (const s of kept.sections || []) if (s && SECTIONS.has(String(s.n))) state.sections.set(String(s.n), s);
+      for (const a of kept.answers || []) if (a && typeof a.id === 'string') state.answers.set(a.id, a);
+      state.mode = 'local';
+      settle(); paintMode(); paintAll();
+      return;
+    }
+    state.db = db;
+    state.mode = 'db';
+    let first = true;
+    const dead = (e) => { if (state.mode === 'db') goLocal(GONE.has(e && e.code) ? 'The shared list is not available in this view, so changes stay in this browser.' : 'The shared list stopped answering, so changes now stay in this browser.'); };
+    const watch = (name, into, keyOf) => db.collection(name).limit(1000).onSnapshot((snap) => {
+      if (state.mode !== 'db') return;
+      into.clear();
+      for (const d of snap.docs) { const v = d.data(); const k = v && keyOf(v); if (k) into.set(k, v); }
+      if (name === 'corrections' && first && !snap.metadata.fromCache) { first = false; offerKept(kept); }
+      paintAll();
+    }, dead);
+    watch('corrections', state.corrections, (v) => (typeof v.key === 'string' && ROW.has(v.key) ? v.key : ''));
+    watch('sections', state.sections, (v) => (SECTIONS.has(String(v.n)) ? String(v.n) : ''));
+    watch('answers', state.answers, (v) => (typeof v.id === 'string' ? v.id : ''));
+    settle(); paintMode();
+  }
+  /** Changes made while the shared list was out of reach: offer to move them across, once it is back. */
+  function offerKept(kept) {
+    const todo = (kept.corrections || []).filter((f) => f && ROW.has(f.key) && !state.corrections.has(f.key));
+    const answers = (kept.answers || []).filter((a) => a && typeof a.id === 'string' && !state.answers.has(a.id));
+    if (!todo.length && !answers.length) { try { localStorage.removeItem(LOCAL); } catch { /* nothing to clear */ } return; }
+    showBanner(`${todo.length + answers.length} of your changes are kept only in this browser.`, 'Move them to the shared list', async () => {
+      $('banner-action').disabled = true;
+      try {
+        for (const f of todo) await put('corrections', 'corrections/' + idOf(f.key), f.key, f);
+        for (const a of answers) await put('answers', 'answers/' + a.id, a.id, a);
+        try { localStorage.removeItem(LOCAL); } catch { /* nothing to clear */ }
+        $('banner').hidden = true;
+      } catch (e) { $('banner-text').textContent = e.message; }
+      $('banner-action').disabled = false;
+    });
+  }
+
+  // ---------- Checks on a correction (advice, never a block) ----------
+  const bits = (s, re) => (String(s).match(re) || []).slice().sort().join(' ');
+  function advice(row, zh) {
+    const out = [];
+    const need = bits(row.zh, /\{\w+\}/g), has = bits(zh, /\{\w+\}/g);
+    if (need !== has) out.push(need ? `Keep ${need} exactly as written: the app fills ${need.includes(' ') ? 'them' : 'it'} in.` : `This line has no {curly} parts, but yours has ${has}.`);
+    if ((String(zh).match(/\*\*/g) || []).length !== (row.zh.match(/\*\*/g) || []).length) out.push('Keep the ** pairs: they wrap the words shown in bold.');
+    if (/—/.test(zh)) out.push('A long dash shows as 一一 in the app’s headline font. Use ， or ： instead.');
+    if (!String(zh).trim()) out.push('Empty: the app would show the English line here.');
+    return out;
+  }
+
+  // ---------- One line ----------
+  const rowOf = new WeakMap();
+  function lineNode(row) {
+    const id = idOf(row.key);
+    const who = [...new Set(row.key.split('.').slice(1).map((p) => WHO[p]).filter(Boolean))];
+    const node = h('article', { class: 'line', id: 'line-' + id },
+      h('div', { class: 'line__head' },
+        h('code', { class: 'line__key', text: row.key }),
+        who.map((w) => h('span', { class: 'tag', text: w })),
+        h('span', { class: 'line__pills' }),
+        h('button', { class: 'btn btn--small', type: 'button', onclick: () => openEditor(node, true) })),
+      h('div', { class: 'line__pair' }, h('p', { class: 'line__en' }, marked(row.en)), h('div', { class: 'line__zh', lang: 'zh-Hant-HK' })),
+      h('div', { class: 'line__edit' }));
+    rowOf.set(node, row);
+    paintLine(node);
+    if (drafts.has(row.key)) openEditor(node, false);
+    return node;
+  }
+  function paintLine(node) {
+    const row = rowOf.get(node), fix = state.corrections.get(row.key);
+    const changed = isChange(fix, row), note = fix ? text(fix.note) : '';
+    node.querySelector('.line__pills').replaceChildren(...[
+      changed && h('span', { class: 'pill pill--changed', text: 'Changed' }),
+      note && h('span', { class: 'pill pill--note', text: 'Note' }),
+      isApplied(fix, row) && h('span', { class: 'pill pill--applied', text: 'In the app now' }),
+    ].filter(Boolean));
+    node.querySelector('.line__zh').replaceChildren(...[
+      h('p', { class: changed ? 'zh zh--new' : 'zh' }, marked(changed ? fix.zh : row.zh)),
+      changed && h('p', { class: 'zh zh--was' }, h('span', { class: 'sr', text: 'Before: ' }), h('s', { text: row.zh })),
+      note && h('p', { class: 'line__note', lang: 'en' }, h('b', { text: 'Your note: ' }), note),
+    ].filter(Boolean));
+    const button = node.querySelector('.line__head .btn'), label = changed || note ? 'Edit' : 'Change';
+    button.textContent = label;
+    button.setAttribute('aria-label', `${label} the Chinese for ${row.key}`);
+  }
+
+  function openEditor(node, focus) {
+    const row = rowOf.get(node), id = idOf(row.key), slot = node.querySelector('.line__edit');
+    if (slot.firstChild) { if (focus) slot.querySelector('textarea').focus(); return; }
+    const fix = state.corrections.get(row.key), draft = drafts.get(row.key);
+    const zh = h('textarea', { id: 'zh-' + id, lang: 'zh-Hant-HK', rows: '2', spellcheck: 'false' });
+    zh.value = draft ? text(draft.zh) : fix && typeof fix.zh === 'string' ? fix.zh : row.zh;
+    const note = h('input', { id: 'note-' + id, type: 'text', maxlength: '400', placeholder: 'Optional: why, or a question for Claude' });
+    note.value = draft ? text(draft.note) : fix ? text(fix.note) : '';
+    const warns = h('ul', { class: 'warns' });
+    const status = h('p', { class: 'editor__status', role: 'status' });
+    const save = h('button', { class: 'btn btn--primary', type: 'submit', text: 'Save' });
+    const close = () => { drafts.delete(row.key); keepDrafts(); slot.replaceChildren(); node.querySelector('.line__head .btn').focus(); };
+    const busy = (on) => { for (const b of slot.querySelectorAll('button')) b.disabled = on; };
+    const advise = () => warns.replaceChildren(...advice(row, zh.value).map((w) => h('li', { text: w })));
+    const typed = () => { drafts.set(row.key, { zh: zh.value, note: note.value }); keepDrafts(); advise(); status.textContent = ''; };
+    const act = async (work) => { busy(true); status.textContent = ''; try { await work(); close(); } catch (e) { status.textContent = e.message; busy(false); } };
+    const form = h('form', { class: 'editor', novalidate: true,
+      onsubmit: (e) => { e.preventDefault(); act(() => saveFix(row, zh.value, note.value)); },
+      onkeydown: (e) => { if (e.key === 'Escape') { e.preventDefault(); close(); } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); form.requestSubmit(); } } },
+      h('label', { for: 'zh-' + id, text: 'What the Chinese should say' }), zh,
+      h('label', { for: 'note-' + id, text: 'Note' }), note,
+      warns,
+      h('div', { class: 'editor__actions' }, save,
+        h('button', { class: 'btn', type: 'button', text: 'Cancel', onclick: close }),
+        fix && h('button', { class: 'btn btn--danger', type: 'button', text: 'Remove my change', onclick: () => act(() => put('corrections', 'corrections/' + id, row.key, null)) })),
+      status);
+    zh.addEventListener('input', typed);
+    note.addEventListener('input', typed);
+    slot.replaceChildren(form);
+    advise();
+    if (focus) { zh.focus(); zh.setSelectionRange(zh.value.length, zh.value.length); }
+  }
+  function saveFix(row, zhValue, noteValue) {
+    const zh = zhValue.replace(/\r\n?/g, '\n').trim(), note = noteValue.trim();
+    const path = 'corrections/' + idOf(row.key);
+    if (zh === row.zh && !note) return put('corrections', path, row.key, null);      // nothing to say about this line
+    return put('corrections', path, row.key, { key: row.key, zh, note, was: row.zh, en: row.en, at: new Date().toISOString() });
+  }
+
+  // ---------- The questions ----------
+  function questionNode(q) {
+    const answer = h('textarea', { id: 'answer-' + q.id, rows: '2', placeholder: 'Your answer, in English or Chinese' });
+    const saved = h('span', { class: 'q__saved', role: 'status' });
+    const save = h('button', { class: 'btn btn--primary btn--small', type: 'button', text: 'Save answer' });
+    const current = () => text((state.answers.get(q.id) || {}).answer);
+    answer.value = drafts.has('q:' + q.id) ? text(drafts.get('q:' + q.id).zh) : current();
+    answer.addEventListener('input', () => { drafts.set('q:' + q.id, { zh: answer.value }); keepDrafts(); saved.textContent = ''; });
+    save.addEventListener('click', async () => {
+      save.disabled = true; saved.textContent = '';
+      const value = answer.value.trim();
+      try {
+        await put('answers', 'answers/' + q.id, q.id, value ? { id: q.id, question: q.title, answer: value, at: new Date().toISOString() } : null);
+        drafts.delete('q:' + q.id); keepDrafts();
+        saved.style.color = ''; saved.textContent = value ? 'Saved' : 'Cleared';
+      } catch (e) { saved.style.color = 'var(--weak)'; saved.textContent = e.message; }
+      save.disabled = false;
+    });
+    const node = h('section', { class: 'q', id: 'q-' + q.id },
+      h('h3', { text: q.title }),
+      h('p', { class: 'q__body' }, zhBits(q.body)),
+      h('label', { class: 'sr', for: 'answer-' + q.id, text: 'Your answer: ' + q.title }), answer,
+      h('div', { class: 'q__row' }, save,
+        h('button', { class: 'btn btn--small', type: 'button', text: 'See the lines', onclick: () => { $('search').value = q.find; setView({ search: q.find }); } }),
+        saved));
+    node.dataset.q = q.id;
+    return node;
+  }
+
+  // ---------- The view ----------
+  const hay = (row) => { const fix = state.corrections.get(row.key); return (row.key + '\n' + row.en + '\n' + row.zh + '\n' + (fix ? text(fix.zh) + '\n' + text(fix.note) : '')).toLowerCase(); };
+  function matching() {
+    const { section, search, show } = state.view, q = search.trim().toLowerCase();
+    let rows = SECTIONS.has(section) ? SECTIONS.get(section).rows : ALL;
+    if (show === 'changed') rows = rows.filter((r) => isChange(state.corrections.get(r.key), r));
+    if (show === 'notes') rows = rows.filter((r) => text((state.corrections.get(r.key) || {}).note));
+    if (q) rows = rows.filter((r) => hay(r).includes(q));
+    return rows;
+  }
+  function setView(patch, keepScroll) {
+    const v = state.view, was = { ...v };
+    Object.assign(v, patch, { limit: patch.limit || PAGE });
+    const narrowed = v.search.trim() || v.show !== 'all';
+    // Finding and filtering look across the whole app; the section you were reading comes back afterwards.
+    if (narrowed && !(was.search.trim() || was.show !== 'all') && !('section' in patch)) { v.before = v.section; v.section = 'all'; }
+    if (!narrowed && (was.search.trim() || was.show !== 'all') && v.before && !('section' in patch)) { v.section = v.before; v.before = null; }
+    if ('section' in patch) v.before = null;
+    if (v.section === 'q' && narrowed) { v.before = 'q'; v.section = 'all'; }
+    $('section').value = v.section; $('show').value = v.show;
+    writeStore(VIEW, { section: v.before || v.section });
+    render();
+    if (!keepScroll && !('limit' in patch)) $('count').scrollIntoView({ block: 'start' });
+  }
+  function render() {
+    const v = state.view, list = $('list');
+    if (v.section === 'q') {
+      $('count').textContent = `${QUESTIONS.length} wording questions where your call decides many lines at once.`;
+      list.replaceChildren(...QUESTIONS.map(questionNode));
+      paintFoot(true);
+      return;
+    }
+    const rows = matching(), shown = rows.slice(0, v.limit);
+    const scope = SECTIONS.has(v.section) ? SECTIONS.get(v.section) : null;
+    const narrowed = v.search.trim() || v.show !== 'all';
+    $('count').textContent = narrowed ? `${rows.length.toLocaleString()} of ${(scope ? scope.rows : ALL).length.toLocaleString()} lines${scope ? ' in this section' : ', all sections'}` : `${rows.length.toLocaleString()} lines`;
+    const nodes = []; let group = null;
+    for (const row of shown) {
+      if (row.group !== group) {
+        group = row.group;
+        if (group) { const g = groupTitle(group); nodes.push(h('h3', { class: 'group' }, `${g.kind} · ${g.id}`, g.name && h('span', { text: g.name }))); }
+      }
+      nodes.push(lineNode(row));
+    }
+    if (!rows.length) nodes.push(h('p', { class: 'empty', text: v.show === 'changed' ? 'No changes yet. Press Change on any line.' : v.show === 'notes' ? 'No notes yet.' : 'No line matches. Try a shorter word.' }));
+    list.replaceChildren(...nodes);
+    shownOf = { total: rows.length, shown: shown.length };
+    paintFoot(true);
+  }
+  let shownOf = { total: 0, shown: 0 }, footSign = '';
+  /** Under the list: more lines, "checked" for the section, and the way on. Rebuilt only when something it shows has changed. */
+  function paintFoot(force) {
+    const v = state.view, foot = $('foot'), scope = SECTIONS.get(v.section) || null;
+    const narrowed = !!(v.search.trim() || v.show !== 'all'), more = Math.max(0, shownOf.total - shownOf.shown);
+    const done = scope ? !!(state.sections.get(scope.n) || {}).checked : false;
+    const sign = [v.section, narrowed, done, more].join('|');
+    if (!force && sign === footSign) return;
+    footSign = sign;
+    foot.replaceChildren();
+    if (v.section === 'q') return;
+    if (more) foot.append(h('button', { class: 'btn', type: 'button', text: `Show ${Math.min(PAGE, more)} more`, onclick: () => setView({ limit: v.limit + PAGE }, true) }));
+    if (!scope || narrowed || more) return;
+    const order = [...SECTIONS.keys()], next = order[order.indexOf(scope.n) + 1];
+    const mark = h('button', { class: done ? 'btn' : 'btn btn--primary', type: 'button', id: 'mark-section', text: done ? 'Undo “checked”' : 'Mark this section as checked' });
+    mark.addEventListener('click', async () => {
+      mark.disabled = true;
+      try { await put('sections', 'sections/s' + scope.n, scope.n, { n: Number(scope.n), area: scope.full, checked: !done, at: new Date().toISOString() }); }
+      catch (e) { mark.disabled = false; showBanner(e.message); }
+    });
+    foot.append(...[mark, done && h('span', { class: 'checked-note', text: 'Checked' }),
+      next && h('button', { class: 'btn btn--next', type: 'button', text: `Next: ${SECTIONS.get(next).short}`, onclick: () => setView({ section: next }) })].filter(Boolean));
+  }
+  function paintQuestions() {
+    for (const node of $('list').querySelectorAll('.q')) {
+      const box = node.querySelector('textarea'), value = text((state.answers.get(node.dataset.q) || {}).answer);
+      if (document.activeElement !== box && !drafts.has('q:' + node.dataset.q) && box.value !== value) box.value = value;
+    }
+  }
+  function paintAll() {
+    // A filtered list depends on the changes themselves: rebuild it when they arrive, unless someone is typing in it.
+    if (state.view.show !== 'all' && state.view.section !== 'q' && !$('list').querySelector('.editor')) render();
+    else for (const node of $('list').querySelectorAll('.line')) paintLine(node);
+    paintStanding(); paintSections(); paintFoot(false); paintQuestions(); paintHandover();
+  }
+  function paintStanding() {
+    const fixes = [...state.corrections.values()].filter((f) => ROW.has(f.key));
+    $('n-sections').textContent = [...state.sections.values()].filter((s) => s.checked).length;
+    $('n-sections-all').textContent = SECTIONS.size;
+    const changed = fixes.filter((f) => isChange(f, ROW.get(f.key))).length, notes = fixes.filter((f) => text(f.note)).length;
+    $('s-changed').replaceChildren(h('b', { text: String(changed) }), changed === 1 ? ' line changed' : ' lines changed');
+    $('s-notes').replaceChildren(h('b', { text: String(notes) }), notes === 1 ? ' note' : ' notes');
+    $('n-answers').textContent = QUESTIONS.filter((q) => text((state.answers.get(q.id) || {}).answer)).length;
+    $('n-questions').textContent = QUESTIONS.length;
+  }
+  function paintMode() {
+    $('mode-dot').dataset.mode = state.mode;
+    $('mode-text').textContent = state.mode === 'db' ? 'Saving to the shared list Claude reads' : state.mode === 'local' ? 'Saving in this browser only' : 'Connecting to the shared list…';
+  }
+  function paintSections() {
+    const select = $('section'), value = state.view.section;
+    const changedIn = (s) => s.rows.filter((r) => isChange(state.corrections.get(r.key), r)).length;
+    const options = [h('option', { value: 'q', text: `Questions to decide first (${QUESTIONS.length})` })];
+    for (const s of SECTIONS.values()) {
+      const n = changedIn(s);
+      options.push(h('option', { value: s.n, text: `${(state.sections.get(s.n) || {}).checked ? '✓ ' : ''}${s.full} (${s.rows.length}${n ? `, ${n} changed` : ''})` }));
+    }
+    options.push(h('option', { value: 'all', text: `All sections (${ALL.length.toLocaleString()})` }));
+    const labels = options.map((o) => o.value + o.textContent).join('|');
+    if (select.dataset.labels === labels) return;       // nothing new: leave an open picker alone
+    select.dataset.labels = labels;
+    select.replaceChildren(...options);
+    select.value = value;
+  }
+  function paintHandover() {
+    if (!$('handover').open) return;
+    $('handover-text').value = JSON.stringify({
+      corrections: [...state.corrections.values()].filter((f) => ROW.has(f.key)).map((f) => ({ key: f.key, zh: text(f.zh), note: text(f.note), was: text(f.was) })),
+      answers: [...state.answers.values()].map((a) => ({ id: a.id, answer: text(a.answer) })),
+      sectionsChecked: [...state.sections.values()].filter((s) => s.checked).map((s) => Number(s.n)),
+    }, null, 1);
+  }
+
+  // ---------- Wiring ----------
+  let searchTimer = 0;
+  $('section').addEventListener('change', (e) => {
+    if (e.target.value !== 'q') return setView({ section: e.target.value });
+    $('search').value = '';
+    setView({ section: 'q', search: '', show: 'all' });
+  });
+  $('go-questions').addEventListener('click', () => { $('search').value = ''; setView({ section: 'q', search: '', show: 'all' }); });
+  $('show').addEventListener('change', (e) => setView({ show: e.target.value }, true));
+  $('search').addEventListener('input', (e) => { clearTimeout(searchTimer); const value = e.target.value; searchTimer = setTimeout(() => setView({ search: value }, true), 180); });
+  $('handover').addEventListener('toggle', paintHandover);
+  $('handover-copy').addEventListener('click', async () => {
+    const box = $('handover-text'); let ok = false;
+    try { await navigator.clipboard.writeText(box.value); ok = true; } catch { try { box.focus(); box.select(); ok = document.execCommand('copy'); } catch { ok = false; } }
+    $('handover-status').textContent = ok ? 'Copied. Paste it to Claude in the chat.' : 'Copying is blocked here: select the text and copy it by hand.';
+  });
+  $('built').textContent = `${ALL.length.toLocaleString()} lines, as the app had them on ${source.dataset.built}. Corrected lines show “In the app now” once Claude has put them in and refreshed this page.`;
+
+  const remembered = readStore(VIEW);
+  if (remembered && (SECTIONS.has(remembered.section) || remembered.section === 'q' || remembered.section === 'all')) state.view.section = remembered.section;
+  paintSections(); paintStanding(); paintMode(); render();
+  start();
+})();
+</script>
