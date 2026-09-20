@@ -1,7 +1,9 @@
 # Cloudflare Pages: static app from dist/ + the API as Pages Functions (functions/api/[[path]].js).
 # Deploy: npm run deploy
 #
-# Secrets are NOT in this file. Set them once per project (you will be prompted for each value):
+# Secrets are NOT in this file. The service keys go up from the local .env without pasting (checked first):
+#   npm run keys:push        # AZURE_SPEECH_KEY, AZURE_SPEECH_REGION, GEMINI_API_KEY — then `npm run deploy`
+# Pasting into wrangler's hidden prompt went wrong three times (invalid, a line break inside, empty). By hand:
 #   npx wrangler pages secret put AZURE_SPEECH_KEY
 #   npx wrangler pages secret put AZURE_SPEECH_REGION
 #   npx wrangler pages secret put GEMINI_API_KEY

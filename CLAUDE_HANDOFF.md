@@ -203,6 +203,12 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   cropped while the pane is hidden — retry, or verify with `javascript_tool` measurements.
 - **Leslie's network intercepts/caches DNS** — verify with DNS-over-HTTPS and `curl --resolve`, not nslookup.
 - **Wrangler**: Pages/KV write, no DNS write. Local workerd needs `compatibility_date` ≤ 2026-08-08 (we use 2026-06-01).
+- **Service keys go up with `npm run keys:push`** (Leslie runs it — never me: it transmits key values). It reads the
+  three keys from `.env`, asks Microsoft and Google whether each works, uploads only working ones through wrangler's
+  stdin (`pages secret bulk`), and prints names/lengths/✓✗ only. `npm run keys:check` uploads nothing. On 2026-09-20
+  `/api/status` showed the live app with `scoring: key_refused, reading/voice: not_set` — i.e. real scoring, reading
+  and the Gemini voice had never worked on the live app; `.env` keys were verified good (Azure 84 chars, region 8,
+  Gemini 53).
 - **Secrets need a deploy, and a check:** after Leslie runs `wrangler pages secret put …`, run `npm run deploy`, then
   `curl https://app.wundertutor.com/api/status` — `reading`/`voice`/`scoring` must say `ok`. A pasted key can be
   present and wrong: on 2026-09-19/20 the live Gemini key was first invalid (Google 400 in 0.1 s), then held a line
