@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Achievement, Exercise, PhonemeId, SpeakItem } from '../../domain/types';
-import { findLesson } from '../../content/course';
+import { findLesson, lessonTitle } from '../../content/course';
 import { LADDERS } from '../../content/lab';
 import { exampleSpeech, phonemeInfo, tipFor } from '../../content/phonemes';
 import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
-import { liveStreak } from '../../engine/rewards';
+import { badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
+import { useT } from '../../i18n/useT';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile, useStore, type LessonOutcome } from '../../state/store';
 import { Button, Confetti, IconButton, ProgressBar, Sheet, toast } from '../../ui/kit';
@@ -21,6 +22,7 @@ type Step = Exercise | { id: string; type: 'drill-intro'; sound: PhonemeId };
 interface ItemResult extends SpeakResult { text: string }
 
 export function LessonPlayer() {
+  const { t } = useT();
   const { lessonId = '' } = useParams();
   const nav = useNavigate();
   const profile = useActiveProfile();
@@ -48,7 +50,7 @@ export function LessonPlayer() {
   }, [queue, index, profile.accent]);
 
   if (!lesson) {
-    return <div className="screen screen--center"><p>We couldn’t find that lesson.</p><Button onClick={() => nav('/')}>Back home</Button></div>;
+    return <div className="screen screen--center"><p>{t('lesson.missing.body')}</p><Button onClick={() => nav('/')}>{t('lesson.missing.home')}</Button></div>;
   }
 
   const finishLesson = (all: ItemResult[]) => {
@@ -83,7 +85,7 @@ export function LessonPlayer() {
       const kept = ahead.filter((s) => s.type === 'drill-intro' || !canSkip(s, profile));
       if (kept.length < ahead.length && kept.length > 0) {
         next = [...next.slice(0, index + 1), ...kept];
-        toast('You’re flying! Skipping ones you already know.', '🚀');
+        toast(t('lesson.fastTrack.toast'), '🚀');
       }
       strong.current = 0;
     }
@@ -91,13 +93,13 @@ export function LessonPlayer() {
     advance(next, all);
   };
 
-  if (outcome) return <LessonComplete title={lesson.title} results={results} outcome={outcome} xpGained={profile.xp - startXp.current} streak={liveStreak(profile.streak)} listen={listenScore} />;
+  if (outcome) return <LessonComplete title={lessonTitle(lesson)} results={results} outcome={outcome} xpGained={profile.xp - startXp.current} streak={liveStreak(profile.streak)} listen={listenScore} />;
 
   const step = queue[index];
   return (
     <div className="screen lesson">
       <header className="lesson__bar">
-        <IconButton icon="close" label="Leave lesson" onClick={() => setConfirmExit(true)} />
+        <IconButton icon="close" label={t('lesson.leave.button')} onClick={() => setConfirmExit(true)} />
         <ProgressBar value={index / queue.length} tone="leaf" />
         <span className="lesson__count">{index + 1}/{queue.length}</span>
       </header>
@@ -111,13 +113,13 @@ export function LessonPlayer() {
         {step.type === 'drill-intro' && <DrillIntro sound={step.sound} onDone={() => advance(queue, results)} />}
       </div>
 
-      <Sheet open={confirmExit} onClose={() => setConfirmExit(false)} label="Leave lesson?">
+      <Sheet open={confirmExit} onClose={() => setConfirmExit(false)} label={t('lesson.leave.sheet')}>
         <div className="confirm">
           <Mascot mood="encourage" size={88} />
-          <h2>Leave this lesson?</h2>
-          <p>Your speaking scores are saved, but you’ll start this lesson from the beginning next time.</p>
-          <Button variant="primary" size="lg" block onClick={() => setConfirmExit(false)}>Keep going</Button>
-          <Button variant="ghost" block onClick={() => nav('/')}>Leave</Button>
+          <h2>{t('lesson.leave.title')}</h2>
+          <p>{t('lesson.leave.body')}</p>
+          <Button variant="primary" size="lg" block onClick={() => setConfirmExit(false)}>{t('lesson.leave.stay')}</Button>
+          <Button variant="ghost" block onClick={() => nav('/')}>{t('lesson.leave.confirm')}</Button>
         </div>
       </Sheet>
     </div>
@@ -125,30 +127,34 @@ export function LessonPlayer() {
 }
 
 function DrillIntro({ sound, onDone }: { sound: PhonemeId; onDone: () => void }) {
+  const { t } = useT();
   const profile = useActiveProfile();
   const info = phonemeInfo(sound);
+  // A tone goes by the short half of its name: "Tone 1 · high and flat" → "tone 1" (a translation keeps the " · ").
+  const tone = info.name.split(' · ')[0].toLowerCase();
   return (
     <div className="drill-intro">
       <div className="drill-intro__stage">
-        <span className="tag tag--sun">Quick sound workout</span>
-        <h2>{info.category === 'tone' ? <>Let’s practise {info.name.split(' · ')[0].toLowerCase()}</> : <>Let’s fix the “{info.label}” sound</>}</h2>
+        <span className="tag tag--sun">{t('lesson.drill.tag')}</span>
+        <h2>{info.category === 'tone' ? t('lesson.drill.title.tone', { tone }) : t('lesson.drill.title.sound', { label: info.label })}</h2>
         {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={210} /> : <Mouth pose={info.pose} size={210} />}
         <p className="drill-intro__tip">{tipFor(sound, profile.band)}</p>
-        <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: sound.startsWith('zh:') ? 'zh-CN' : profile.accent, slow: true }).catch(() => undefined)}>🔈 Hear it in “{info.example}”</button>
+        <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: sound.startsWith('zh:') ? 'zh-CN' : profile.accent, slow: true }).catch(() => undefined)}>🔈 {t('lesson.drill.hear', { example: info.example })}</button>
       </div>
-      <div className="drill-intro__dock"><Button variant="primary" size="lg" block onClick={onDone}>I’m ready</Button></div>
+      <div className="drill-intro__dock"><Button variant="primary" size="lg" block onClick={onDone}>{t('lesson.drill.ready')}</Button></div>
     </div>
   );
 }
 
 function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialogue' }>; onDone: (item: SpeakItem, r: SpeakResult) => void }) {
+  const { t } = useT();
   const profile = useActiveProfile();
   const [choice, setChoice] = useState<SpeakItem | null>(ex.replies.length === 1 ? ex.replies[0] : null);
 
   const tutorLocale = localeOf(ex.tutor, profile.accent);
   useEffect(() => {
-    const t = setTimeout(() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined), 400);
-    return () => { clearTimeout(t); stopPlayback(); };
+    const timer = setTimeout(() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined), 400);
+    return () => { clearTimeout(timer); stopPlayback(); };
   }, [ex.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const bubble = (
@@ -165,7 +171,7 @@ function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialo
     return (
       <div className="dialogue">
         {bubble}
-        <h2 className="dialogue__title">What will you say?</h2>
+        <h2 className="dialogue__title">{t('lesson.dialogue.title')}</h2>
         <div className="dialogue__replies">
           {ex.replies.map((r) => (
             <button key={r.id} type="button" className="reply" onClick={() => setChoice(r)}>{r.picture && <span aria-hidden>{r.picture}</span>}{r.zh ? <ZhText item={r} script={profile.zhScript} /> : r.text}</button>
@@ -185,6 +191,7 @@ function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialo
 function LessonComplete({ title, results, outcome, xpGained, streak, listen }: {
   title: string; results: ItemResult[]; outcome: LessonOutcome; xpGained: number; streak: number; listen: { right: number; total: number };
 }) {
+  const { t } = useT();
   const nav = useNavigate();
   const profile = useActiveProfile();
   const spoken = results.filter((r) => r.tries > 0);
@@ -198,42 +205,42 @@ function LessonComplete({ title, results, outcome, xpGained, streak, listen }: {
       <Confetti />
       <div className="complete__stage">
         <Mascot mood="cheer" size={132} />
-        <h1>Lesson complete!</h1>
+        <h1>{t('lesson.complete.title')}</h1>
         <p className="complete__lesson">{title}</p>
-        <div className="complete__stars" aria-label={`${outcome.stars} out of 3 stars`}>
+        <div className="complete__stars" aria-label={t('lesson.complete.stars', { n: outcome.stars })}>
           {[0, 1, 2].map((i) => <span key={i} className={i < outcome.stars ? 'on' : ''} style={{ animationDelay: `${250 + i * 180}ms` }}>★</span>)}
         </div>
 
         <div className="stat-row">
-          {avg != null && <div className="stat"><b>{avg}</b><span>Pronunciation</span></div>}
-          {avg == null && listen.total > 0 && <div className="stat"><b>{listen.right}/{listen.total}</b><span>First-try listening</span></div>}
-          <div className="stat stat--sun"><b>+{xpGained}</b><span>XP</span></div>
-          <div className="stat stat--coral"><b>{streak}</b><span>Day streak</span></div>
+          {avg != null && <div className="stat"><b>{avg}</b><span>{t('lesson.complete.stat.pronunciation')}</span></div>}
+          {avg == null && listen.total > 0 && <div className="stat"><b>{listen.right}/{listen.total}</b><span>{t('lesson.complete.stat.listening')}</span></div>}
+          <div className="stat stat--sun"><b>+{xpGained}</b><span>{t('lesson.complete.stat.xp')}</span></div>
+          <div className="stat stat--coral"><b>{streak}</b><span>{t('lesson.complete.stat.streak')}</span></div>
         </div>
 
         {improved && (
           <div className="card callout">
             <span className="callout__icon" aria-hidden>📈</span>
-            <div><b>Biggest improvement</b><p>“{improved.text}” went from {improved.first} to {improved.best}.</p></div>
+            <div><b>{t('lesson.complete.improved.title')}</b><p>{t('lesson.complete.improved.body', { text: improved.text, from: improved.first, to: improved.best })}</p></div>
           </div>
         )}
         {spoken.length > 0 && (
           <div className="card callout">
             <span className="callout__icon" aria-hidden>{again.length ? '🔁' : '✅'}</span>
             <div>
-              <b>{masteredCount} of {spoken.length} mastered</b>
-              <p>{!again.length ? 'Everything in this lesson sounded clear.'
-                : profile.band === 'adult' ? `“${again[0].text}” will come back soon for more practice.` : `Pip will bring back “${again[0].text}” soon for more practice.`}</p>
+              <b>{t('lesson.complete.mastered.title', { n: masteredCount, total: spoken.length })}</b>
+              <p>{!again.length ? t('lesson.complete.mastered.all')
+                : t(profile.band === 'adult' ? 'lesson.complete.mastered.again.adult' : 'lesson.complete.mastered.again.kid', { text: again[0].text })}</p>
             </div>
           </div>
         )}
         {outcome.achievements.map((a: Achievement) => (
-          <div key={a.id} className="card callout callout--badge"><span className="callout__icon" aria-hidden>{a.icon}</span><div><b>{a.title}</b><p>{a.detail}</p></div></div>
+          <div key={a.id} className="card callout callout--badge"><span className="callout__icon" aria-hidden>{a.icon}</span><div><b>{badgeName(a)}</b><p>{badgeDetail(a)}</p></div></div>
         ))}
       </div>
       <div className="complete__dock">
-        <Button variant="leaf" size="lg" block onClick={() => nav('/')}>Continue</Button>
-        <Button variant="ghost" block onClick={() => nav('/progress')}>{profile.band === 'little' ? 'See my stars' : 'See my progress'}</Button>
+        <Button variant="leaf" size="lg" block onClick={() => nav('/')}>{t('common.continue')}</Button>
+        <Button variant="ghost" block onClick={() => nav('/progress')}>{t(profile.band === 'little' ? 'lesson.complete.progress.little' : 'lesson.complete.progress.older')}</Button>
       </div>
     </div>
   );

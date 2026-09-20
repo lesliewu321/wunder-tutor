@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isGrownUp, type ChildProfile } from '../../domain/types';
+import { useT } from '../../i18n/useT';
 import { apiHealth, getAccessCode, type ApiHealth } from '../../speech/health';
 import { prepareText, splitSentences, type Reading } from '../../speech/read';
 import { tier } from '../../tutor/feedback';
@@ -19,6 +20,7 @@ import { sayItem } from './sayItem';
 const HAN = /\p{Script=Han}/u;
 
 export function BookHome({ p }: { p: ChildProfile }) {
+  const { t, tn } = useT();
   const nav = useNavigate();
   const kid = !isGrownUp(p.band);
   const { page, setPage } = useBook(p.id);
@@ -32,7 +34,7 @@ export function BookHome({ p }: { p: ChildProfile }) {
   const open = items.flatMap((it, i) => (it ? [i] : []));
   const said = open.filter((i) => best[i] != null).length;
   const next = open.find((i) => best[i] == null) ?? open[0];
-  const settings = p.band === 'adult' ? 'Settings & privacy' : 'the Parent Zone';
+  const settings = t(p.band === 'adult' ? 'common.settings.adult' : 'common.settings.parent.the');
   // Says what is actually wrong: no code, a code that stopped working, or a server that can't read yet.
   const notice = api ? bookNotice(api, !!getAccessCode(), kid, settings) : null;
 
@@ -43,22 +45,22 @@ export function BookHome({ p }: { p: ChildProfile }) {
       {!page ? (
         <section className="book__start">
           <span className="book__art" aria-hidden>📖</span>
-          <h1>{kid ? 'Snap a page from your book' : 'Practise any page'}</h1>
-          <p>{kid ? 'Take a photo. Listen to each sentence, say it, and get help with every word.' : 'Photograph a page of a book, a menu or a sign. Hear each sentence, say it, and get corrected.'}</p>
-          <Button variant="coral" size="lg" block icon="camera" onClick={openCamera}>Take a photo</Button>
+          <h1>{t(kid ? 'home.book.start.title.kid' : 'home.book.start.title.adult')}</h1>
+          <p>{t(kid ? 'home.book.start.body.kid' : 'home.book.start.body.adult')}</p>
+          <Button variant="coral" size="lg" block icon="camera" onClick={openCamera}>{t('home.book.takePhoto')}</Button>
         </section>
       ) : (
         <section className="book__page">
           <div className="book__head">
             <div>
-              <h1>{kid ? 'My page' : 'Your page'}</h1>
-              <p>{open.length ? `${said} of ${open.length} sentences said` : 'Nothing here can be checked yet'}</p>
+              <h1>{t(kid ? 'home.book.page.title.kid' : 'home.book.page.title.adult')}</h1>
+              <p>{open.length ? tn('home.book.page.said', open.length, { said }) : t('home.book.page.nothing')}</p>
             </div>
-            <Button variant="soft" size="sm" icon="camera" onClick={openCamera}>New photo</Button>
+            <Button variant="soft" size="sm" icon="camera" onClick={openCamera}>{t('home.book.newPhoto')}</Button>
           </div>
           {next != null && (
             <Button variant="coral" size="lg" block onClick={() => nav(`/say?s=${next}`)}>
-              {said === 0 ? (kid ? 'Start reading' : 'Start') : said < open.length ? 'Keep going' : 'Practise again'}
+              {t(said === 0 ? (kid ? 'home.book.go.start.kid' : 'home.book.go.start.adult') : said < open.length ? 'home.book.go.keep' : 'home.book.go.again')}
             </Button>
           )}
           <ol className="say__lines">
@@ -68,7 +70,7 @@ export function BookHome({ p }: { p: ChildProfile }) {
                 <li key={i}>
                   <button type="button" className="say__line" disabled={!it} onClick={() => nav(`/say?s=${i}`)}>
                     <span className="say__line-text">{it?.zh ? <ZhText item={it} script={p.zhScript} /> : l.text}</span>
-                    {!it ? <small>{l.lang === 'other' ? 'Not English or Putonghua' : 'Can’t check this line'}</small>
+                    {!it ? <small>{t(l.lang === 'other' ? 'home.book.line.other' : 'home.book.line.cant')}</small>
                       : best[i] != null ? <span className={`chip-score chip-score--${tier(best[i])}`}>{best[i]}</span> : <Icon name="mic" size={20} />}
                   </button>
                 </li>
@@ -78,24 +80,25 @@ export function BookHome({ p }: { p: ChildProfile }) {
         </section>
       )}
 
-      <button type="button" className="book__type" onClick={() => setTyping(true)}><Icon name="keyboard" size={18} />{kid ? 'Type the words instead' : 'Type or paste text instead'}</button>
-      {api?.read && <p className="fineprint">Photos and sentences go to Google’s Gemini to be read and spoken. Wunder Tutor doesn’t keep them; Google may keep them for a short time under its API terms.</p>}
+      <button type="button" className="book__type" onClick={() => setTyping(true)}><Icon name="keyboard" size={18} />{t(kid ? 'home.book.type.kid' : 'home.book.type.adult')}</button>
+      {api?.read && <p className="fineprint">{t('home.book.fineprint')}</p>}
       <TypeSheet open={typing} kid={kid} onClose={() => setTyping(false)} onReady={(reading) => { setPage({ reading, best: {}, at: Date.now() }); setTyping(false); }} />
     </div>
   );
 }
 
 function TypeSheet({ open, kid, onClose, onReady }: { open: boolean; kid: boolean; onClose: () => void; onReady: (r: Reading) => void }) {
+  const { t } = useT();
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const go = async () => {
-    const t = text.trim();
-    if (!t) return;
+    const typed = text.trim();
+    if (!typed) return;
     // English needs no server; Chinese needs the server for its pinyin.
-    if (!HAN.test(t)) return onReady({ language: 'en', lines: splitSentences(t).map((s) => ({ text: s, lang: 'en' as const })) });
+    if (!HAN.test(typed)) return onReady({ language: 'en', lines: splitSentences(typed).map((s) => ({ text: s, lang: 'en' as const })) });
     setBusy(true);
     try {
-      const r = await prepareText(t);
+      const r = await prepareText(typed);
       const problem = readingProblem(r, kid);
       if (problem) toast(problem, '🔍'); else { onReady(r); setText(''); }
     } catch (e) {
@@ -105,12 +108,12 @@ function TypeSheet({ open, kid, onClose, onReady }: { open: boolean; kid: boolea
     }
   };
   return (
-    <Sheet open={open} onClose={onClose} label="Type the words">
+    <Sheet open={open} onClose={onClose} label={t('home.book.typeSheet.aria')}>
       <div className="type-sheet">
-        <h2>{kid ? 'Type the words' : 'Type or paste text'}</h2>
-        <label className="sr-only" htmlFor="say-text">Text to practise</label>
-        <textarea id="say-text" className="input say__text" rows={5} value={text} maxLength={2000} placeholder={kid ? 'Type some words…' : 'Type or paste a sentence…'} onChange={(e) => setText(e.target.value)} />
-        <Button variant="primary" size="lg" block disabled={!text.trim() || busy} onClick={() => void go()}>{busy ? 'Getting it ready…' : 'Practise this text'}</Button>
+        <h2>{t(kid ? 'home.book.typeSheet.title.kid' : 'home.book.typeSheet.title.adult')}</h2>
+        <label className="sr-only" htmlFor="say-text">{t('home.book.typeSheet.field')}</label>
+        <textarea id="say-text" className="input say__text" rows={5} value={text} maxLength={2000} placeholder={t(kid ? 'home.book.typeSheet.placeholder.kid' : 'home.book.typeSheet.placeholder.adult')} onChange={(e) => setText(e.target.value)} />
+        <Button variant="primary" size="lg" block disabled={!text.trim() || busy} onClick={() => void go()}>{t(busy ? 'home.book.typeSheet.busy' : 'home.book.typeSheet.go')}</Button>
       </div>
     </Sheet>
   );

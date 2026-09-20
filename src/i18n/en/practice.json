@@ -1,0 +1,40 @@
+{
+  "practice.home.title.adult": "Conversation practice",
+  "practice.home.title.kid": "Speak with Pip",
+  "practice.home.lead.adult": "Pick a place and have a real conversation out loud. Tips come at the end.",
+  "practice.home.lead.kid": "Pick a place and have a real conversation out loud. Pip keeps chatting — tips come at the end.",
+  "practice.home.zhNotice": "These conversations are in English for now. Putonghua conversations are coming — keep practising tones in your lessons and the Lab.",
+
+  "practice.missing.body": "That conversation isn’t available.",
+
+  "practice.leave.button": "Leave conversation",
+  "practice.leave.sheet": "Leave conversation?",
+  "practice.leave.title": "Leave the conversation?",
+  "practice.leave.body": "You’re doing great — only a few lines to go.",
+  "practice.leave.stay": "Keep talking",
+  "practice.leave.confirm": "Leave",
+
+  "practice.line.play": "Play: {text}",
+  "practice.line.tip": "Quick tip for “{word}”: {tip}",
+  "practice.demoMic.toast": "Demo microphone on — scores are simulated",
+
+  "practice.hint.choose": "Choose what to say",
+  "practice.hint.ready": "Tap the mic and say it",
+  "practice.hint.listening": "I’m listening…",
+  "practice.hint.processing": "Got it…",
+
+  "practice.summary.title": "Conversation summary",
+  "practice.summary.stat.pronunciation": "Pronunciation",
+  "practice.summary.stat.lines": "Things you said",
+  "practice.summary.strong.title": "Strong",
+  "practice.summary.strong.everyWord": "saying every word",
+  "practice.summary.strong.rhythm": "smooth, steady rhythm",
+  "practice.summary.strong.melody": "natural melody",
+  "practice.summary.strong.clearSound": "a clear “{label}”",
+  "practice.summary.strong.keptGoing": "keeping the conversation going",
+  "practice.summary.practise.title": "Practise",
+  "practice.summary.practise.sound": "the “{label}” sound, as in “{example}”",
+  "practice.summary.practise.sound.symbol": "the “{label}” sound, as in “{example}” — /{symbol}/",
+  "practice.summary.practise.none": "Nothing stood out — every sound was clear!",
+  "practice.summary.drill": "2-minute “{label}” drill"
+}

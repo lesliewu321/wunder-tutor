@@ -10,6 +10,8 @@ import { Me, ParentZone } from './features/profile/Profile';
 import { Progress } from './features/progress/Progress';
 import { useProfile, useStore } from './state/store';
 import { isGrownUp } from './domain/types';
+import type { Key } from './i18n';
+import { useT } from './i18n/useT';
 import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
 import { SayIt } from './features/say/SayIt';
@@ -18,12 +20,12 @@ import { openCamera } from './features/say/camera';
 
 // The big button in the middle is the camera ("Say it right": photograph a page and practise it). In a lesson or a
 // conversation the big button is the microphone instead — those screens have their own.
-const TABS: { to: string; label: string; icon: IconName; camera?: boolean }[] = [
-  { to: '/', label: 'Learn', icon: 'home' },
-  { to: '/lab', label: 'Lab', icon: 'lab' },
-  { to: '', label: 'Photo', icon: 'camera', camera: true },
-  { to: '/progress', label: 'Progress', icon: 'chart' },
-  { to: '/me', label: 'Me', icon: 'user' },
+const TABS: { to: string; label: Key; icon: IconName; camera?: boolean }[] = [
+  { to: '/', label: 'common.nav.learn', icon: 'home' },
+  { to: '/lab', label: 'common.nav.lab', icon: 'lab' },
+  { to: '', label: 'common.nav.photo', icon: 'camera', camera: true },
+  { to: '/progress', label: 'common.nav.progress', icon: 'chart' },
+  { to: '/me', label: 'common.nav.me', icon: 'user' },
 ];
 
 function RequireProfile() {
@@ -32,19 +34,20 @@ function RequireProfile() {
 }
 
 function Tabs() {
+  const { t } = useT();
   return (
     <>
       <main className="tab-main"><Outlet /></main>
-      <nav className="nav" aria-label="Main">
-        {TABS.map((t) => (t.camera ? (
-          <button key="camera" type="button" className="nav__item nav__item--center" aria-label="Say it right: take a photo of a page" onClick={openCamera}>
-            <span className="nav__icon"><Icon name={t.icon} size={28} /></span>
-            <span className="nav__label">{t.label}</span>
+      <nav className="nav" aria-label={t('common.nav.main')}>
+        {TABS.map((tab) => (tab.camera ? (
+          <button key="camera" type="button" className="nav__item nav__item--center" aria-label={t('common.nav.photo.aria')} onClick={openCamera}>
+            <span className="nav__icon"><Icon name={tab.icon} size={28} /></span>
+            <span className="nav__label">{t(tab.label)}</span>
           </button>
         ) : (
-          <NavLink key={t.to} to={t.to} end={t.to === '/'} className={({ isActive }) => `nav__item ${isActive ? 'is-active' : ''}`}>
-            <span className="nav__icon"><Icon name={t.icon} size={24} /></span>
-            <span className="nav__label">{t.label}</span>
+          <NavLink key={tab.to} to={tab.to} end={tab.to === '/'} className={({ isActive }) => `nav__item ${isActive ? 'is-active' : ''}`}>
+            <span className="nav__icon"><Icon name={tab.icon} size={24} /></span>
+            <span className="nav__label">{t(tab.label)}</span>
           </NavLink>
         )))}
       </nav>

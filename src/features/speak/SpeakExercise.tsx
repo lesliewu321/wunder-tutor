@@ -3,11 +3,14 @@ import { isGrownUp, type AgeBand, type Assessment, type Attempt, type HomeLangua
 import { phonemeInfo } from '../../content/phonemes';
 import { translationFor } from '../../content/translations';
 import { isMastered, MAX_TRIES } from '../../engine/learning';
+import { badgeName } from '../../engine/rewards';
 import type { SpeechErrorCode } from '../../speech';
 import { voiceStats } from '../../speech/pitch';
 import { localeOf, playBlob, stopPlayback, voice } from '../../speech/voice';
 import { markSyllable } from '../../content/zh/pinyin';
 import { hanChars } from '../../content/zh/script';
+import { inEnglish, t } from '../../i18n';
+import { rich, useT } from '../../i18n/useT';
 import { useActiveProfile, useStore } from '../../state/store';
 import { correctionFor, focusWordIndex, GOOD, headline, tier, writtenWords } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
@@ -45,7 +48,8 @@ type PlayKind = 'normal' | 'slow' | 'now' | 'before';
 interface Take { assessment: Assessment; audio?: Blob }
 
 /** LEARN → LISTEN → SPEAK → SCORE → CORRECT → RETRY → MASTER for a single word, phrase or sentence. */
-export function SpeakExercise({ item, prompt = 'text', context, onDone, continueLabel = 'Continue', mode = 'practice' }: Props) {
+export function SpeakExercise({ item, prompt = 'text', context, onDone, continueLabel, mode = 'practice' }: Props) {
+  const { t } = useT();
   const profile = useActiveProfile();
   const demoMic = useStore((s) => s.settings.demoMic);
   const recordAttempt = useStore((s) => s.recordAttempt);
@@ -75,12 +79,12 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     onAssessed: async (assessment, rec) => {
       const outcome = await recordAttempt({ item, assessment, audio: rec.blob, context, isRetry: takes.length > 0, previousScore: current?.assessment.overall, voice: voiceStats(rec.pitch) });
       if (!alive.current) return;
-      setTakes((t) => [...t, { assessment, audio: rec.blob }]);
+      setTakes((prev) => [...prev, { assessment, audio: rec.blob }]);
       setRevealed(true);
       setView('result');
-      if (outcome.personalBest) toast(`New personal best — ${outcome.personalBest.word}: ${outcome.personalBest.score}`, '🏅');
-      outcome.soundsMastered.forEach((ph) => toast(`Sound mastered: ${phonemeInfo(ph).name}`, '👅'));
-      outcome.achievements.filter((a) => !a.id.startsWith('sound-')).forEach((a) => toast(a.title, a.icon));
+      if (outcome.personalBest) toast(t('speak.toast.best', { word: outcome.personalBest.word, score: outcome.personalBest.score }), '🏅');
+      outcome.soundsMastered.forEach((ph) => toast(t('speak.toast.soundMastered', { name: phonemeInfo(ph).name }), '👅'));
+      outcome.achievements.filter((a) => !a.id.startsWith('sound-')).forEach((a) => toast(badgeName(a), a.icon));
     },
   });
 
@@ -93,11 +97,11 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         await voice.speak(item.say ?? item.text, { accent: localeOf(item, profile.accent), slow: kind === 'slow', kind: item.kind, ephemeral: mode === 'free' || undefined });
       } else {
         const blob = (kind === 'now' ? current : previous)?.audio;
-        if (!blob) { toast(demoMic ? 'The demo microphone doesn’t record sound' : 'No recording for this try', '🎧'); return; }
+        if (!blob) { toast(t(demoMic ? 'speak.toast.demoSilent' : 'speak.toast.noRecording'), '🎧'); return; }
         await playBlob(blob);
       }
     } catch {
-      toast('Sound isn’t working on this device right now', '🔇');
+      toast(t('speak.toast.noSound'), '🔇');
     } finally {
       if (alive.current) setPlaying((p) => (p === kind ? null : p));
     }
@@ -106,8 +110,8 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   // Learn → Listen: the model pronunciation plays as soon as a new item appears (not for "say what you see").
   useEffect(() => {
     alive.current = true;
-    const t = window.setTimeout(() => { if (prompt === 'text') void play('normal'); }, 450);
-    return () => { alive.current = false; clearTimeout(t); stopPlayback(); };
+    const timer = window.setTimeout(() => { if (prompt === 'text') void play('normal'); }, 450);
+    return () => { alive.current = false; clearTimeout(timer); stopPlayback(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item.id]);
 
@@ -116,11 +120,12 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     stopPlayback();
     void voice.speak(text, { accent: profile.accent }).catch(() => undefined);
   }, [profile.accent]);
-  const tipToSay = current && view === 'result' && band === 'little' ? spokenTip(current.assessment, band, profile.homeLanguage) : null;
+  // Said aloud, so in English whatever the App language (see inEnglish).
+  const tipToSay = current && view === 'result' && band === 'little' ? inEnglish(() => spokenTip(current.assessment, band, profile.homeLanguage)) : null;
   useEffect(() => {
     if (!tipToSay) return;
-    const t = window.setTimeout(() => sayTip(tipToSay), 1100);
-    return () => clearTimeout(t);
+    const timer = window.setTimeout(() => sayTip(tipToSay), 1100);
+    return () => clearTimeout(timer);
   }, [tipToSay, takes.length, sayTip]);
 
   const startListening = () => {
@@ -132,8 +137,8 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   const onMic = () => (take.phase === 'listening' ? void take.stop() : startListening());
 
   const finish = () => {
-    const best = Math.max(...takes.map((t) => t.assessment.overall));
-    const everMastered = takes.some((t) => isMastered(t.assessment, band));
+    const best = Math.max(...takes.map((tk) => tk.assessment.overall));
+    const everMastered = takes.some((tk) => isMastered(tk.assessment, band));
     // The onboarding check only seeds the pronunciation profile; it doesn't count as studying the item.
     if (mode === 'practice') finishItem(item, best, everMastered, takes.length);
     const first = takes[0].assessment;
@@ -161,10 +166,11 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         : playing === 'normal' || playing === 'slow' ? 'talking' : 'idle';
 
   const status =
-    phase === 'listening' ? 'I’m listening… tap when you’re done'
-      : phase === 'processing' ? (take.slowHint ? 'Still checking… almost there' : 'Checking your pronunciation…')
-        : takes.length ? 'Tap the mic and try again'
-          : effectivePrompt === 'text' ? 'Listen, then tap the mic and say it' : `Tap the mic and say it in ${item.lang ? 'Putonghua' : 'English'}`;
+    phase === 'listening' ? t('speak.status.listening')
+      : phase === 'processing' ? t(take.slowHint ? 'speak.status.processing.slow' : 'speak.status.processing')
+        : takes.length ? t('speak.status.retry')
+          : effectivePrompt === 'text' ? t('speak.status.first') : t(item.lang ? 'speak.status.first.unseen.zh' : 'speak.status.first.unseen.en');
+  const continueText = continueLabel ?? t('common.continue');
 
   return (
     <div className={`speak speak--${phase}`}>
@@ -172,19 +178,19 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         <div className={`prompt prompt--${item.kind}`}>
           {item.picture && <div className="prompt__pic" aria-hidden>{item.picture}</div>}
           {!revealed && effectivePrompt === 'translation' ? (
-            <><div className="prompt__hint">Say it in English</div><p className="prompt__translation" lang={profile.homeLanguage}>{translation}</p></>
+            <><div className="prompt__hint">{t('speak.prompt.translate')}</div><p className="prompt__translation" lang={profile.homeLanguage}>{translation}</p></>
           ) : !revealed ? (
-            <p className="prompt__hint prompt__hint--big">What is it? Say it!</p>
+            <p className="prompt__hint prompt__hint--big">{t('speak.prompt.unseen')}</p>
           ) : (
             <p className="prompt__text">
               {item.zh ? (
                 <ZhText item={item} script={profile.zhScript}
-                  marks={current && phase === 'result' ? current.assessment.words.map((w, i) => ({ tier: w.errorType === 'omission' ? 'missing' : tier(w.score), focus: i === focusIdx, label: `score ${w.score}` })) : undefined}
+                  marks={current && phase === 'result' ? current.assessment.words.map((w, i) => ({ tier: w.errorType === 'omission' ? 'missing' : tier(w.score), focus: i === focusIdx, label: t('speak.word.score', { score: w.score }) })) : undefined}
                   onTap={current && phase === 'result' ? setSheetWord : undefined} />
               ) : current && phase === 'result'
                 ? current.assessment.words.map((w, i) => (
                   <button key={i} type="button" className={`word word--${w.errorType === 'omission' ? 'missing' : tier(w.score)} ${i === focusIdx ? 'word--focus' : ''}`}
-                    onClick={() => setSheetWord(i)} aria-label={`${w.word}, score ${w.score}. Tap for help`}>
+                    onClick={() => setSheetWord(i)} aria-label={t('speak.word.aria', { word: w.word, score: w.score })}>
                     {shown[i] ?? w.word}
                   </button>
                 ))
@@ -197,11 +203,11 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
             <div className="listen-row">
               {revealed ? (
                 <>
-                  <button type="button" className={`pill ${playing === 'normal' ? 'is-playing' : ''}`} onClick={() => void play('normal')} disabled={busy}><Icon name="speaker" size={20} />Listen</button>
-                  <button type="button" className={`pill ${playing === 'slow' ? 'is-playing' : ''}`} onClick={() => void play('slow')} disabled={busy}><Icon name="turtle" size={20} />Slow</button>
+                  <button type="button" className={`pill ${playing === 'normal' ? 'is-playing' : ''}`} onClick={() => void play('normal')} disabled={busy}><Icon name="speaker" size={20} />{t('common.listen')}</button>
+                  <button type="button" className={`pill ${playing === 'slow' ? 'is-playing' : ''}`} onClick={() => void play('slow')} disabled={busy}><Icon name="turtle" size={20} />{t('common.slow')}</button>
                 </>
               ) : (
-                <button type="button" className="pill" onClick={() => { setRevealed(true); void play('normal'); }} disabled={busy}><Icon name="ear" size={20} />I need a hint</button>
+                <button type="button" className="pill" onClick={() => { setRevealed(true); void play('normal'); }} disabled={busy}><Icon name="ear" size={20} />{t('speak.prompt.hint')}</button>
               )}
             </div>
           )}
@@ -215,11 +221,11 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                 <h2 className="result__headline">{headline(current.assessment.overall, band, delta, fixable)}</h2>
                 {previous ? (
                   <div className={`delta ${delta! > 0 ? 'delta--up' : delta! < 0 ? 'delta--down' : ''}`}>
-                    <span>Before <b>{previous.assessment.overall}</b></span><Icon name="chevron" size={16} /><span>Now <b>{current.assessment.overall}</b></span>
+                    <span>{rich(t('speak.result.before', { score: previous.assessment.overall }))}</span><Icon name="chevron" size={16} /><span>{rich(t('speak.result.now', { score: current.assessment.overall }))}</span>
                     <em>{delta! > 0 ? `+${delta}` : delta}</em>
                   </div>
                 ) : (
-                  <p className="result__sub">{focus && focus.kind !== 'fine' ? (band === 'little' ? 'Listen to Pip’s tip!' : `Tap the coloured ${item.zh ? 'character' : 'word'} to see how to fix it.`) : item.zh ? 'Every character was clear.' : 'Every word was clear.'}</p>
+                  <p className="result__sub">{focus && focus.kind !== 'fine' ? t(band === 'little' ? 'speak.result.sub.tip.little' : item.zh ? 'speak.result.sub.tip.char' : 'speak.result.sub.tip.word') : t(item.zh ? 'speak.result.sub.clear.char' : 'speak.result.sub.clear.word')}</p>
                 )}
               </div>
             </div>
@@ -228,41 +234,41 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
               <button type="button" className={`fix fix--${tier(focus.score)}`} onClick={() => setSheetWord(focusIdx)}>
                 <div className="fix__head">
                   {/* One word on screen → name the sound instead of repeating the word with a second, different number. */}
-                  <span className="fix__word">{focus.zh ? <>{focus.word} <span className="py">{markSyllable(focus.zh.py)}</span></> : single && focus.phoneme ? <>The “{phonemeInfo(focus.phoneme).label}” sound</> : focus.word}</span>
-                  <span className="fix__score">{focus.kind === 'omission' ? 'missed' : single && focus.phoneme && !focus.zh ? focusPhonemeScore : focus.score}</span>
+                  <span className="fix__word">{focus.zh ? <>{focus.word} <span className="py">{markSyllable(focus.zh.py)}</span></> : single && focus.phoneme ? t('speak.fix.sound', { label: phonemeInfo(focus.phoneme).label }) : focus.word}</span>
+                  <span className="fix__score">{focus.kind === 'omission' ? t('speak.score.missed') : single && focus.phoneme && !focus.zh ? focusPhonemeScore : focus.score}</span>
                 </div>
                 <div className="fix__row">
                   {focus.kind === 'tone' && focus.zh && focus.zh.expected !== 5 && <ToneContour tone={focus.zh.expected as 1 | 2 | 3 | 4} yours={focus.zh.contour} size={96} />}
                   <div>
                     <p className="fix__problem">{focus.problem}</p>
-                    <p className="fix__tip"><b>Try:</b> {focus.tip}</p>
+                    <p className="fix__tip">{rich(t('speak.try', { tip: focus.tip }))}</p>
                   </div>
                 </div>
-                <span className="fix__more">Show me how <Icon name="chevron" size={16} /></span>
+                <span className="fix__more">{t('speak.fix.more')} <Icon name="chevron" size={16} /></span>
               </button>
             ) : (
               <div className="fix fix--good fix--static">
                 {fixed ? (
                   <>
-                    <div className="fix__head"><span className="fix__word">The “{phonemeInfo(fixed.phoneme).label}” sound</span><span className="fix__score fix__score--good">{fixed.before} → {fixed.now}</span></div>
-                    <p className="fix__problem">You fixed it! Every word is clear now.</p>
+                    <div className="fix__head"><span className="fix__word">{t('speak.fix.sound', { label: phonemeInfo(fixed.phoneme).label })}</span><span className="fix__score fix__score--good">{fixed.before} → {fixed.now}</span></div>
+                    <p className="fix__problem">{t('speak.fix.fixed')}</p>
                   </>
-                ) : <p className="fix__problem">Clear and confident — nothing to fix here.</p>}
+                ) : <p className="fix__problem">{t('speak.fix.none')}</p>}
               </div>
             )}
 
-            <div className="compare" role="group" aria-label="Listen and compare">
-              <button type="button" className={`pill pill--sm ${playing === 'normal' ? 'is-playing' : ''}`} onClick={() => void play('normal')}><Icon name="speaker" size={18} />Teacher</button>
-              <button type="button" className={`pill pill--sm ${veryLow ? 'pill--pulse' : ''} ${playing === 'slow' ? 'is-playing' : ''}`} onClick={() => void play('slow')}><Icon name="turtle" size={18} />Slow</button>
-              {previous && <button type="button" className={`pill pill--sm ${playing === 'before' ? 'is-playing' : ''}`} onClick={() => void play('before')}><Icon name="play" size={14} />Before</button>}
-              <button type="button" className={`pill pill--sm ${playing === 'now' ? 'is-playing' : ''}`} onClick={() => void play('now')}><Icon name="play" size={14} />{previous ? 'Now' : 'Me'}</button>
+            <div className="compare" role="group" aria-label={t('speak.compare.aria')}>
+              <button type="button" className={`pill pill--sm ${playing === 'normal' ? 'is-playing' : ''}`} onClick={() => void play('normal')}><Icon name="speaker" size={18} />{t('speak.compare.teacher')}</button>
+              <button type="button" className={`pill pill--sm ${veryLow ? 'pill--pulse' : ''} ${playing === 'slow' ? 'is-playing' : ''}`} onClick={() => void play('slow')}><Icon name="turtle" size={18} />{t('common.slow')}</button>
+              {previous && <button type="button" className={`pill pill--sm ${playing === 'before' ? 'is-playing' : ''}`} onClick={() => void play('before')}><Icon name="play" size={14} />{t('speak.compare.before')}</button>}
+              <button type="button" className={`pill pill--sm ${playing === 'now' ? 'is-playing' : ''}`} onClick={() => void play('now')}><Icon name="play" size={14} />{t(previous ? 'speak.compare.now' : 'speak.compare.me')}</button>
             </div>
           </div>
         )}
 
         {phase === 'error' && error && (
           <ErrorPanel code={error} onRetry={startListening}
-            onUseDemo={() => { setSettings({ demoMic: true }); setError(null); setView(takes.length ? 'result' : 'ready'); toast('Demo microphone on — scores are simulated', '🎛️'); }} />
+            onUseDemo={() => { setSettings({ demoMic: true }); setError(null); setView(takes.length ? 'result' : 'ready'); toast(t('speak.toast.demoOn'), '🎛️'); }} />
         )}
       </div>
 
@@ -278,18 +284,18 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         )}
         {phase === 'result' && current && (
           <div className="speak__actions">
-            {!mastered && outOfTries && <p className="speak__kind">{mode === 'check' ? (band === 'adult' ? 'Good to know — this will come up in your lessons.' : 'Good to know — Pip will help you with this.') : (mode === 'free' ? 'Good effort! Try it again whenever you like.' : 'Good effort! We’ll practise this one again later.')}</p>}
+            {!mastered && outOfTries && <p className="speak__kind">{t(mode === 'check' ? (band === 'adult' ? 'speak.end.check.adult' : 'speak.end.check.kid') : (mode === 'free' ? 'speak.end.free' : 'speak.end.practice'))}</p>}
             {outOfTries || (mastered && !fixable) ? (
               <>
-                <Button variant="leaf" size="lg" block onClick={finish}>{continueLabel}</Button>
-                {!outOfTries && current.assessment.overall < 95 && <Button variant="ghost" icon="retry" block onClick={startListening}>Try for a higher score</Button>}
+                <Button variant="leaf" size="lg" block onClick={finish}>{continueText}</Button>
+                {!outOfTries && current.assessment.overall < 95 && <Button variant="ghost" icon="retry" block onClick={startListening}>{t('speak.action.higher')}</Button>}
               </>
             ) : (
               <>
                 {/* A concrete fix is on screen → retrying is the main action, even if the score already passes. */}
-                <Button variant="coral" size="lg" icon="mic" block onClick={startListening}>{mastered ? 'Try the fix' : 'Try again'}</Button>
+                <Button variant="coral" size="lg" icon="mic" block onClick={startListening}>{t(mastered ? 'speak.action.tryFix' : 'common.tryAgain')}</Button>
                 {/* The learner's own page ("free"): moving on is always their choice. */}
-                {mastered || mode === 'free' ? <Button variant="ghost" block onClick={finish}>{continueLabel}</Button> : takes.length >= 2 && <Button variant="ghost" block onClick={finish}>Skip for now</Button>}
+                {mastered || mode === 'free' ? <Button variant="ghost" block onClick={finish}>{continueText}</Button> : takes.length >= 2 && <Button variant="ghost" block onClick={finish}>{t('common.skipForNow')}</Button>}
               </>
             )}
           </div>
@@ -300,9 +306,9 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         <WordSheet
           word={current.assessment.words[sheetWord]} band={band} home={profile.homeLanguage} onClose={() => setSheetWord(null)}
           // Mandarin: say the scorer's (Simplified) character — the word shown may be Traditional.
-          onListen={(slow) => void voice.speak((item.zh && hanChars(item.text)[sheetWord]) || current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow, ephemeral: mode === 'free' || undefined }).catch(() => toast('Sound isn’t working on this device right now', '🔇'))}
+          onListen={(slow) => void voice.speak((item.zh && hanChars(item.text)[sheetWord]) || current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow, ephemeral: mode === 'free' || undefined }).catch(() => toast(t('speak.toast.noSound'), '🔇'))}
           onHearMe={() => void play('now')}
-          onHearTip={sayTip}
+          onHearTip={() => { const spoken = inEnglish(() => correctionFor(current.assessment.words[sheetWord], band, profile.homeLanguage).tip); sayTip(spoken); }}
           onRetry={outOfTries ? undefined : startListening}
         />
       )}
@@ -312,9 +318,9 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
 
 const spokenTip = (a: Assessment, band: AgeBand, home?: HomeLanguage): string | null => {
   const i = focusWordIndex(a);
-  if (i < 0) return a.overall >= GOOD ? 'Great job!' : null;
+  if (i < 0) return a.overall >= GOOD ? t('speak.spoken.great') : null;
   const c = correctionFor(a.words[i], band, home);
-  return c.kind === 'fine' ? 'Great job!' : c.tip;
+  return c.kind === 'fine' ? t('speak.spoken.great') : c.tip;
 };
 
 /** The sound the last correction targeted, if this take improved it — so the learner sees exactly what got better. */

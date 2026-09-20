@@ -81,6 +81,20 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   `[read] <code> after N s` (tail it with wrangler). Leslie's first real phone photo failed with no code (before this
   logging); the most likely cause, a dense page's one-answer size/time, is fixed by the two-step read. A learner's own sentences are spoken with
   `ephemeral` (never in the shared TTS cache, 40 / 10 min per client) and left out of the recordings export.
+- **App language** (2026-09-20, Leslie's call: the user CHOOSES it — it is NOT tied to the home language): English or
+  繁體中文 (Hong Kong), chosen on the first screen and in Settings → Appearance, switches live (no reload). Only the
+  app's own wording changes — never the words being learned, the teacher's voice or pinyin; what the app SAYS ALOUD
+  (Pip's tips for 5–7s) stays English (`inEnglish()`), agreed with Leslie. `src/i18n/`: typed keys in
+  `en/<area>.json`, translations in `zh-Hant/<area>.json` (728 lines), plus `zh-Hant/content*.json` (516 lines) for
+  wording that lives with its data — sound names/tips, lesson/unit titles, badges, goals, scenarios — read through
+  `tc(key, english)` in accessors (`phonemeInfo`, `tipFor`, `lessonTitle`, `badgeName`, `goalLabel`, `scenarioTitle`…).
+  Rules, style guide and glossary: `src/i18n/README.md` (no wording in module-level constants; one sentence = one key;
+  **no —— in Chinese**: the headline font draws it as 一一). `src/__tests__/i18n.test.ts` guards coverage, placeholders
+  and bold marks. **The Chinese is a DRAFT: Leslie checks it** (they are the native reader). Until then a Chinese phone
+  still STARTS in English (`STARTS_IN` in `src/i18n/index.ts` — add `'zh-Hant'` once checked). Open wording questions
+  for Leslie: a Chinese name for "Say it right" (kept in English), 字 vs 字詞 for an English word, 家長 vs 成人,
+  badge/goal names, tone descriptions (低低轉彎…), "Buzzy/Quiet" sounds (震動的/無聲的). Bundle grew 428 → 536 kB
+  (both languages ship to everyone): load the Chinese catalogs on demand when it matters.
 - **Setup problems show before the photo** (2026-09-20, after six failed phone attempts that were all key/code
   problems): opening the camera asks `/api/health` fresh and `/api/status` (live key check); a missing/refused code or
   a refused Google key is shown in place of the shutter with a button to Settings (`/parents`, scrolls to **Beta

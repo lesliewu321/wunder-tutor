@@ -1,4 +1,5 @@
 import { isGrownUp, type AgeBand, type ContentBand, type Course, type CourseId, type Exercise, type Lesson, type PhonemeId, type SpeakItem, type Unit } from '../domain/types';
+import { tc } from '../i18n';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
 import { inScript } from './zh/script';
 
@@ -147,10 +148,25 @@ export const COURSE: Course = {
 export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE };
 export const courseFor = (id: CourseId): Course => COURSES[id] ?? COURSE;
 
-/** Course and unit names as this learner sees them: plainer for teens and adults, Chinese in their script. */
-export const courseTitle = (c: Course, band: AgeBand): string => (isGrownUp(band) && c.grownUpTitle) || c.title;
-export const unitTitle = (u: Unit, band: AgeBand): string => inScript((isGrownUp(band) && u.grownUp?.title) || u.title);
-export const unitSubtitle = (u: Unit, band: AgeBand): string => inScript((isGrownUp(band) && u.grownUp?.subtitle) || u.subtitle);
+/**
+ * Course, unit and lesson names as this learner sees them: plainer for teens and adults, Chinese in their script, and
+ * in the app's language — the English stays in the data above, the translation is looked up by id each time it is
+ * read (src/i18n/zh-Hant/content-course.json: `course.<id>.title`, `unit.<id>.title`, `unit.<id>.subtitle`, each
+ * with an `.adult` line for the plainer name, and `lesson.<id>.title`).
+ */
+export const courseTitle = (c: Course, band: AgeBand): string => {
+  const plain = isGrownUp(band) && c.grownUpTitle;
+  return plain ? tc(`course.${c.id}.title.adult`, plain) : tc(`course.${c.id}.title`, c.title);
+};
+export const unitTitle = (u: Unit, band: AgeBand): string => {
+  const plain = isGrownUp(band) && u.grownUp?.title;
+  return inScript(plain ? tc(`unit.${u.id}.title.adult`, plain) : tc(`unit.${u.id}.title`, u.title));
+};
+export const unitSubtitle = (u: Unit, band: AgeBand): string => {
+  const plain = isGrownUp(band) && u.grownUp?.subtitle;
+  return inScript(plain ? tc(`unit.${u.id}.subtitle.adult`, plain) : tc(`unit.${u.id}.subtitle`, u.subtitle));
+};
+export const lessonTitle = (l: Pick<Lesson, 'id' | 'title'>): string => tc(`lesson.${l.id}.title`, l.title);
 
 export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units].flatMap((u) => u.lessons);
 export const findLesson = (id: string): Lesson | undefined => ALL_LESSONS.find((l) => l.id === id);

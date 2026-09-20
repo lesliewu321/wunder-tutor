@@ -1,9 +1,13 @@
 import type { PhonemeId, SpeakItem } from '../domain/types';
+import { tc } from '../i18n';
 import { ZH_LADDERS } from './zh/course';
 
 export type LabStage = 'syllables' | 'words' | 'phrases' | 'sentence';
 export const LAB_STAGES: LabStage[] = ['syllables', 'words', 'phrases', 'sentence'];
+/** The rungs' names in English — the source. To show one, use `stageLabel`. */
 export const STAGE_LABEL: Record<LabStage, string> = { syllables: 'Syllables', words: 'Words', phrases: 'Phrases', sentence: 'Sentence' };
+/** A rung's name in the App language, looked up when asked for (content.json: `lab.ladder.words.name`). */
+export const stageLabel = (stage: LabStage): string => tc(`lab.ladder.${stage}.name`, STAGE_LABEL[stage]);
 
 const mk = (sound: PhonemeId, kind: SpeakItem['kind'], text: string, picture?: string, say?: string): SpeakItem => ({
   id: `lab-${sound}-${text.toLowerCase().replace(/[^a-z]+/g, '-')}`, text, kind, picture, say, focus: [sound],

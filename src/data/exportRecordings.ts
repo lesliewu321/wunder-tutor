@@ -1,5 +1,6 @@
 import type { Attempt, ChildProfile } from '../domain/types';
 import { ITEM_INDEX } from '../content/course';
+import { t } from '../i18n';
 
 // "Share recordings for testing": a parent (or an adult learner) turns this learner's saved practice recordings into
 // one file they can send to the Wunder Tutor team, so pronunciation checking can be measured on real voices — the
@@ -8,11 +9,11 @@ import { ITEM_INDEX } from '../content/course';
 
 export const EXPORT_FORMAT = 'wunder-tutor/recordings@1';
 
-/** What the grown-up agrees to before the file is made. Stored in the file with the date. */
-export const CONSENT_TEXT =
-  'I am this learner’s parent or guardian (or the learner, if an adult). I agree to share these practice recordings with ' +
-  'the Wunder Tutor team, only to test and improve how the app checks pronunciation. I can ask for them to be deleted ' +
-  'at any time.';
+/**
+ * What the grown-up agrees to before the file is made — in the language they read it in. The very words they agreed
+ * to are stored in the file with the date.
+ */
+export const consentText = (): string => t('settings.share.consent');
 
 export interface ExportTake {
   itemId: string;
@@ -81,7 +82,7 @@ export async function buildRecordingExport(
   const data: RecordingExport = {
     format: EXPORT_FORMAT, exportedAt: at,
     learner: { code, age: profile.age, band: profile.band, homeLanguage: profile.homeLanguage, accent: profile.accent, zhScript: profile.zhScript },
-    consent: { text: CONSENT_TEXT, at },
+    consent: { text: consentText(), at },
     takes,
   };
   return { file: new Blob([JSON.stringify(data)], { type: 'application/json' }), name: `wunder-tutor-recordings-${code}-${at.slice(0, 10)}.json`, takes: takes.length, skipped };

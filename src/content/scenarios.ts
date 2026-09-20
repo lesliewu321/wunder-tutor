@@ -1,4 +1,5 @@
 import type { ContentBand } from '../domain/types';
+import { tc } from '../i18n';
 
 type ByBand<T> = Record<ContentBand, T>;
 
@@ -100,3 +101,11 @@ export const SCENARIOS: Scenario[] = [
 ];
 
 export const findScenario = (id: string): Scenario | undefined => SCENARIOS.find((s) => s.id === id);
+
+/**
+ * A scenario's name and blurb in the app's language (`scenario.<id>.title`, `scenario.<id>.blurb.<band>`). Only what
+ * the screens show: the conversation itself — and the title, setting and role the tutor is briefed with — stays in
+ * the language being practised, so the tutor goes on reading the properties above.
+ */
+export const scenarioTitle = (s: Pick<Scenario, 'id' | 'title'>): string => tc(`scenario.${s.id}.title`, s.title);
+export const scenarioBlurb = (s: Pick<Scenario, 'id' | 'blurb'>, band: ContentBand): string => tc(`scenario.${s.id}.blurb.${band}`, s.blurb[band]);

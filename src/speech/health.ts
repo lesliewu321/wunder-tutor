@@ -1,4 +1,5 @@
 // Talking to the API proxy: which services exist, and the beta access code that unlocks them.
+import { t, type Key } from '../i18n';
 
 export interface ApiHealth {
   azure: boolean;
@@ -87,10 +88,13 @@ export interface ServiceStatus {
   notes?: Partial<Record<'scoring' | 'reading' | 'voice', string>>;
 }
 
-export const SERVICE_WORDS: Record<ServiceState, string> = {
-  ok: 'Working', not_set: 'Not set up', key_refused: 'Key refused', region: 'Not available here', model_missing: 'Model not found',
-  quota: 'Over its limit', unreachable: 'Can’t be reached', unchecked: 'Not checked', error: 'Problem',
+const SERVICE_KEY: Record<ServiceState, Key> = {
+  ok: 'common.service.ok', not_set: 'common.service.not_set', key_refused: 'common.service.key_refused', region: 'common.service.region',
+  model_missing: 'common.service.model_missing', quota: 'common.service.quota', unreachable: 'common.service.unreachable',
+  unchecked: 'common.service.unchecked', error: 'common.service.error',
 };
+/** What a live check found, in the app's language ("Working", "Key refused"). */
+export const serviceWords = (state: ServiceState): string => t(SERVICE_KEY[state]);
 
 /** Null when the check itself couldn't run (offline, an older server). */
 export const serviceStatus = async (): Promise<ServiceStatus | null> => {

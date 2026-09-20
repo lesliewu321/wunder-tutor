@@ -1,5 +1,6 @@
 import type { Achievement, ChildProfile } from '../domain/types';
-import { phonemeInfo } from '../content/phonemes';
+import { phonemeInfo, PHONEMES } from '../content/phonemes';
+import { tc } from '../i18n';
 import { dayKey } from '../intelligence/profile';
 
 // Light gamification: rewards effort and improvement, never raw talent.
@@ -11,6 +12,10 @@ export const DAILY_GOALS = [
   { xp: 60, label: 'Steady', detail: 'one lesson' },
   { xp: 100, label: 'Super', detail: 'a lesson + extra' },
 ];
+
+/** A daily goal's name and size in the app's language (the list above keeps the English): `goal.<xp>.label`. */
+export const goalLabel = (g: { xp: number; label: string }): string => tc(`goal.${g.xp}.label`, g.label);
+export const goalDetail = (g: { xp: number; detail: string }): string => tc(`goal.${g.xp}.detail`, g.detail);
 
 export const bumpStreak = (streak: ChildProfile['streak'], now: number): ChildProfile['streak'] => {
   const today = dayKey(now);
@@ -41,10 +46,27 @@ const DEFS: Record<string, Omit<Achievement, 'earnedAt' | 'id'>> = {
 
 export const achievement = (id: string, now: number): Achievement => {
   if (id.startsWith('sound-')) {
-    const info = phonemeInfo(id.slice(6));
+    // A badge is stored in English whatever the App language (`badgeName` shows it), so: the sound's own English name.
+    const info = PHONEMES[id.slice(6)] ?? phonemeInfo(id.slice(6));
     return { id, title: `Sound mastered: ${info.name}`, detail: `Your “${info.label}” is now clear and steady.`, icon: '👅', earnedAt: now };
   }
   return { id, ...(DEFS[id] ?? { title: id, detail: '', icon: '⭐' }), earnedAt: now };
 };
 
 export const ACHIEVEMENT_CATALOGUE = Object.entries(DEFS).map(([id, d]) => ({ id, ...d }));
+
+/**
+ * A badge's name and description in the app's language. A badge is stored with the English it was earned with, so
+ * these go by its id: `badge.<id>.name`, `badge.<id>.detail`. The "sound mastered" badges share one line each
+ * (`badge.sound.name`, `badge.sound.detail`), filled with the sound they are about — `phonemeInfo` names it in the
+ * app's language.
+ */
+const badgeSound = (id: string): string | null => (id.startsWith('sound-') ? id.slice(6) : null);
+export const badgeName = (a: Pick<Achievement, 'id' | 'title'>): string => {
+  const sound = badgeSound(a.id);
+  return sound ? tc('badge.sound.name', a.title, { name: phonemeInfo(sound).name }) : tc(`badge.${a.id}.name`, a.title);
+};
+export const badgeDetail = (a: Pick<Achievement, 'id' | 'detail'>): string => {
+  const sound = badgeSound(a.id);
+  return sound ? tc('badge.sound.detail', a.detail, { label: phonemeInfo(sound).label }) : tc(`badge.${a.id}.detail`, a.detail);
+};

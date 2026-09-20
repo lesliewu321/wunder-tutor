@@ -1,18 +1,27 @@
-import { SERVICE_WORDS, type ApiHealth, type ServiceState, type ServiceStatus } from '../../speech/health';
+import { t, type Key } from '../../i18n';
+import { serviceWords, type ApiHealth, type ServiceState, type ServiceStatus } from '../../speech/health';
 import { ReadError, type Reading } from '../../speech/read';
 
 /** What to tell the learner, and — when there is something they can do about it — where to send them. */
 export interface Problem { text: string; fix?: 'code' | 'connections' }
 
-const ERRORS: Record<Exclude<ReadError['code'], 'cancelled'>, Problem> = {
-  offline: { text: 'No internet right now — try again when you’re back online.' },
-  busy: { text: 'That was a lot of pages! Wait a few minutes, then try again.' },
-  locked: { text: 'This device’s access code isn’t accepted — it may have been changed. Enter it again to read pages.', fix: 'code' },
-  lockout: { text: 'Too many wrong codes were tried from this network, so even the right one is turned away for now. Wait 10 minutes, then enter the code again.', fix: 'code' },
-  unavailable: { text: 'Reading pages isn’t switched on yet on the Wunder Tutor server.', fix: 'connections' },
-  photo: { text: 'That photo couldn’t be opened. Take a new one, or choose a JPEG or PNG.' },
+// Keys, not wording: a message is put into the app's language when it is produced (src/i18n/README.md, rule 2).
+const ERRORS: Record<Exclude<ReadError['code'], 'cancelled'>, { key: Key; fix?: Problem['fix'] }> = {
+  offline: { key: 'home.read.error.offline' },
+  busy: { key: 'home.read.error.busy' },
+  locked: { key: 'home.read.error.locked', fix: 'code' },
+  lockout: { key: 'home.read.error.lockout', fix: 'code' },
+  unavailable: { key: 'home.read.error.unavailable', fix: 'connections' },
+  photo: { key: 'home.read.error.photo' },
   // Photo advice ("closer, brighter") is only ever given when the reader looked and found no words — see readingProblem.
-  failed: { text: 'Reading didn’t work this time — a hiccup on our side, not your photo. Try again in a moment.' },
+  failed: { key: 'home.read.error.failed' },
+};
+
+/** `detail`: the server's own reason in brackets, " (read_timeout)" — never translated; "" when there is none to show. */
+const problem = (code: keyof typeof ERRORS, detail = ''): Problem => {
+  const { key, fix } = ERRORS[code];
+  const text = t(key, { detail });
+  return fix ? { text, fix } : { text };
 };
 
 /** The server's own setup, not this attempt: a key Google refuses, a place Google doesn't serve, a model that's gone. */
@@ -22,22 +31,21 @@ const DECLINED = /\b(RECITATION|SAFETY|PROHIBITED_CONTENT|BLOCKLIST|SPII)\b/;
 
 /** Reading failed: what to say, and whose fault it is. The server's reason is added in brackets, for testers' screenshots. */
 export const readProblem = (e: unknown): Problem => {
-  if (!(e instanceof ReadError) || e.code === 'cancelled') return ERRORS.failed;
+  if (!(e instanceof ReadError) || e.code === 'cancelled') return problem('failed');
   const detail = e.detail ? ` (${e.detail})` : '';
   if (e.code === 'failed' && e.detail) {
-    if (SETUP.test(e.detail)) return { text: `Reading pages isn’t working yet — a setup problem on the Wunder Tutor server, not your photo.${detail}`, fix: 'connections' };
-    if (/^read_quota\b/.test(e.detail)) return { text: `The reading service is busy right now. Try again in a minute.${detail}` };
-    if (DECLINED.test(e.detail)) return { text: `Google’s reader wouldn’t read this page. Try another page, or type the words instead.${detail}` };
+    if (SETUP.test(e.detail)) return { text: t('home.read.error.serverSetup', { detail }), fix: 'connections' };
+    if (/^read_quota\b/.test(e.detail)) return { text: t('home.read.error.quota', { detail }) };
+    if (DECLINED.test(e.detail)) return { text: t('home.read.error.declined', { detail }) };
   }
-  const p = ERRORS[e.code];
-  return e.code === 'failed' || e.code === 'unavailable' ? { ...p, text: `${p.text}${detail}` } : p;
+  return problem(e.code, e.code === 'failed' || e.code === 'unavailable' ? detail : '');
 };
 
 /** A page with nothing to practise: why. Null when it has sentences. */
 export const readingProblem = (r: Reading, kid: boolean): string | null =>
   r.language === 'none' || !r.lines.length
-    ? (kid ? 'I couldn’t find any words. Hold the book closer, in good light.' : 'No text found. Hold the page closer, in good light.')
-    : r.language === 'other' ? 'Wunder Tutor can check English and Putonghua for now.' : null;
+    ? t(kid ? 'home.read.nothing.kid' : 'home.read.nothing.adult')
+    : r.language === 'other' ? t('home.read.nothing.otherLanguage') : null;
 
 /** A live check that found the service itself wrong. A timeout, a server error or a rate limit is NOT one: reading may well work. */
 const BROKEN: ReadonlySet<ServiceState> = new Set(['not_set', 'key_refused', 'region', 'model_missing']);
@@ -49,12 +57,12 @@ const BROKEN: ReadonlySet<ServiceState> = new Set(['not_set', 'key_refused', 're
  */
 export function setupProblem(health: ApiHealth, hasCode: boolean, status: ServiceStatus | null): Problem | null {
   if (health.needsCode && !health.authorized) {
-    if (!health.codeSet) return { text: 'This Wunder Tutor server has no access code set yet, so no code can unlock it.' };
-    return hasCode ? ERRORS.locked : { text: 'Reading pages needs the beta access code.', fix: 'code' };
+    if (!health.codeSet) return { text: t('home.read.setup.noCodeSet') };
+    return hasCode ? problem('locked') : { text: t('home.read.setup.needsCode'), fix: 'code' };
   }
-  if (!health.read) return health.needsCode || health.azure ? ERRORS.unavailable : null; // no API at all: offline, or a static preview
+  if (!health.read) return health.needsCode || health.azure ? problem('unavailable') : null; // no API at all: offline, or a static preview
   if (status && BROKEN.has(status.reading)) {
-    return { text: `Reading pages isn’t working yet: ${SERVICE_WORDS[status.reading].toLowerCase()} (Google). It’s a setup problem on the Wunder Tutor server, not your camera.`, fix: 'connections' };
+    return { text: t('home.read.setup.broken', { state: serviceWords(status.reading).toLowerCase() }), fix: 'connections' };
   }
   return null;
 }
@@ -63,10 +71,11 @@ export function setupProblem(health: ApiHealth, hasCode: boolean, status: Servic
 export function bookNotice(health: ApiHealth, hasCode: boolean, kid: boolean, settings: string): string | null {
   if (health.read) return null;
   if (health.needsCode && !health.authorized) {
-    if (!health.codeSet) return 'This Wunder Tutor server has no access code set yet, so photos can’t be read. Typed English works.';
+    if (!health.codeSet) return t('home.book.notice.noCodeSet');
+    // One whole sentence per case: who enters the code, and where, sit in different places in another language.
     return hasCode
-      ? `This device’s access code isn’t accepted any more. ${kid ? 'A grown-up can enter it again' : 'Enter it again'} in ${settings} → Beta access. Typed English works without it.`
-      : `Photos need the beta access code. ${kid ? 'A grown-up can add it' : 'Add it'} in ${settings} → Beta access. Typed English works without it.`;
+      ? t(kid ? 'home.book.notice.refused.kid' : 'home.book.notice.refused.adult', { settings })
+      : t(kid ? 'home.book.notice.needsCode.kid' : 'home.book.notice.needsCode.adult', { settings });
   }
-  return health.needsCode || health.azure ? 'Reading photos isn’t switched on yet on the Wunder Tutor server. Typed English works.' : null;
+  return health.needsCode || health.azure ? t('home.book.notice.unavailable') : null;
 }

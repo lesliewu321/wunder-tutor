@@ -1,14 +1,18 @@
+import type { Key } from '../i18n';
+import { useT } from '../i18n/useT';
 import { targetContour, type ToneContext } from '../speech/zh/tone';
 
-const SHAPE_WORDS: Record<1 | 2 | 3 | 4, string> = { 1: 'high and flat', 2: 'rising', 3: 'dipping low', 4: 'falling' };
+/** The picture in words, for a screen reader: the line about the tone to teach… */
+const SHAPE_LINE: Record<1 | 2 | 3 | 4, Key> = { 1: 'lab.tone.is.1', 2: 'lab.tone.is.2', 3: 'lab.tone.is.3', 4: 'lab.tone.is.4' };
 
-const describe = (c: number[]): string => {
+/** …and the line that adds how the learner's own pitch moved (it takes the first line as `{target}`). */
+const describe = (c: number[]): Key => {
   const d = c[4] - c[0];
   const min = Math.min(...c);
-  if (min < Math.min(c[0], c[4]) - 0.6) return 'dipped';
-  if (d > 1) return 'went up';
-  if (d < -1) return 'went down';
-  return c.reduce((a, b) => a + b, 0) / c.length > 3.2 ? 'stayed high' : 'stayed low';
+  if (min < Math.min(c[0], c[4]) - 0.6) return 'lab.tone.yours.dipped';
+  if (d > 1) return 'lab.tone.yours.up';
+  if (d < -1) return 'lab.tone.yours.down';
+  return c.reduce((a, b) => a + b, 0) / c.length > 3.2 ? 'lab.tone.yours.high' : 'lab.tone.yours.low';
 };
 
 interface Props {
@@ -25,6 +29,7 @@ interface Props {
  * five-level scale Chinese teachers draw on the board.
  */
 export function ToneContour({ tone, yours, context = 'alone', size = 132 }: Props) {
+  const { t } = useT();
   const W = size, H = Math.round(size * 0.62), padX = 10, padY = 8;
   const x = (i: number) => padX + (i * (W - 2 * padX)) / 4;
   const y = (lvl: number) => padY + ((5 - Math.max(0.6, Math.min(5.4, lvl))) * (H - 2 * padY)) / 4;
@@ -37,7 +42,7 @@ export function ToneContour({ tone, yours, context = 'alone', size = 132 }: Prop
     return d;
   };
   const target = targetContour(tone, context);
-  const label = `Tone ${tone} is ${SHAPE_WORDS[tone]}.${yours ? ` Yours ${describe(yours)}.` : ''}`;
+  const label = yours ? t(describe(yours), { target: t(SHAPE_LINE[tone]) }) : t(SHAPE_LINE[tone]);
   return (
     <figure className="tone" style={{ width: W }}>
       <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={label}>
@@ -46,8 +51,8 @@ export function ToneContour({ tone, yours, context = 'alone', size = 132 }: Prop
         {yours && <path d={path(yours)} className="tone__yours" />}
       </svg>
       <figcaption className="tone__key">
-        <span className="tone__key-target">Target</span>
-        {yours && <span className="tone__key-yours">You</span>}
+        <span className="tone__key-target">{t('lab.tone.target')}</span>
+        {yours && <span className="tone__key-yours">{t('lab.tone.you')}</span>}
       </figcaption>
     </figure>
   );

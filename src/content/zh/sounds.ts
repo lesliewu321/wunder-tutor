@@ -3,6 +3,10 @@ import type { MouthPose, PhonemeInfo } from '../phonemes';
 
 // The Mandarin "sounds" a Hong Kong child practises: the four tones, and the sound groups Cantonese speakers find
 // hardest in Putonghua. Same shape as the English catalogue so the Lab, drills and progress work unchanged.
+//
+// The wording is the English source. Other App languages translate it in src/i18n/<language>/content.json under
+// `sound.zh:…` (read by `phonemeInfo` in ../phonemes). A translation quotes characters the way they are written here —
+// in Simplified, like the scorer — and `phonemeInfo` shows them in the learner's script, as it does for the English.
 
 const pose = (p: Partial<MouthPose>): MouthPose => ({ open: 0.3, round: 0, spread: 0.2, tongue: 'rest', air: 'none', voiced: true, ...p });
 const yue = (boost: number, heardAs?: PhonemeId): Partial<Record<HomeLanguage, { boost: number; heardAs?: PhonemeId }>> => ({ yue: { boost, heardAs } });

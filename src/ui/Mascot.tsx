@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 export type Mood = 'idle' | 'listening' | 'thinking' | 'happy' | 'cheer' | 'encourage' | 'talking';
 
 /** Pip — Wunder Tutor's guide. Big ears because Pip is, above all, a very good listener. */
@@ -11,7 +12,7 @@ export function Mascot({ mood = 'idle', size = 120, className = '' }: { mood?: M
     </g>
   );
   return (
-    <svg className={`mascot mascot--${mood} ${className}`} width={size} height={size} viewBox="0 0 120 120" role="img" aria-label="Pip the tutor">
+    <svg className={`mascot mascot--${mood} ${className}`} width={size} height={size} viewBox="0 0 120 120" role="img" aria-label={t('common.pip.aria')}>
       <ellipse className="mascot__shadow" cx="60" cy="112" rx="28" ry="4.5" fill="rgba(43,33,64,.14)" />
       <g className="mascot__body">
         <g className="mascot__ear">{ear}</g>

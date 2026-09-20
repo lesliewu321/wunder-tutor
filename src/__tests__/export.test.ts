@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Attempt, ChildProfile } from '../domain/types';
-import { buildRecordingExport, CONSENT_TEXT, EXPORT_FORMAT, learnerCode, type RecordingExport } from '../data/exportRecordings';
+import { buildRecordingExport, consentText, EXPORT_FORMAT, learnerCode, type RecordingExport } from '../data/exportRecordings';
 
 const profile = { id: 'p-123', name: 'Tiger', age: 9, band: 'junior', homeLanguage: 'yue', accent: 'en-US', zhScript: 'hant' } as ChildProfile;
 const attempt = (id: string, profileId: string, audioKey?: string): Attempt => ({
@@ -24,7 +24,8 @@ describe('sharing recordings for testing', () => {
     expect(text).not.toContain('Tiger');
     const data = JSON.parse(text) as RecordingExport;
     expect(data.format).toBe(EXPORT_FORMAT);
-    expect(data.consent.text).toBe(CONSENT_TEXT);
+    expect(data.consent.text).toBe(consentText());
+    expect(data.consent.text).toMatch(/^I am this learner’s parent or guardian/);
     expect(data.learner).toEqual({ code: learnerCode('p-123'), age: 9, band: 'junior', homeLanguage: 'yue', accent: 'en-US', zhScript: 'hant' });
     expect(data.takes[0]).toMatchObject({ itemId: 'zh-mian4-bao1', text: '面包', py: 'mian4 bao1', locale: 'zh-CN', context: 'lesson' });
     expect([...atob(data.takes[0].wav)].map((c) => c.charCodeAt(0))).toEqual([...wav]);

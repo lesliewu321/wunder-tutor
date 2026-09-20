@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { SpeakItem } from '../domain/types';
 import { markSyllable, parseSyllable, splitPinyin, surfaceTones } from '../content/zh/pinyin';
 
@@ -50,7 +51,7 @@ export function ZhText({ item, script, showPinyin = true, marks, onTap, classNam
         if (!m || !onTap) return <span key={i} className="zh__char">{inner}</span>;
         return (
           <button key={i} type="button" className={`zh__char word word--${m.tier} ${m.focus ? 'word--focus' : ''}`} onClick={() => onTap(idx)}
-            aria-label={`${c} ${py[idx]}${m.label ? `, ${m.label}` : ''}. Tap for help`}>
+            aria-label={m.label ? t('common.zhChar.aria.scored', { char: c, pinyin: py[idx], label: m.label }) : t('common.zhChar.aria', { char: c, pinyin: py[idx] })}>
             {inner}
           </button>
         );

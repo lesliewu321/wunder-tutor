@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { contentBand, type Accent, type CourseId, type Goal, type HomeLanguage, type Level } from '../../domain/types';
+import { contentBand, type Accent, type AgeBand, type CourseId, type Goal, type HomeLanguage, type Level } from '../../domain/types';
 import { ASSESSMENT_ITEMS } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
-import { HOME_LANGUAGES } from '../../content/translations';
+import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
+import { LANGUAGES, language, type Key } from '../../i18n';
+import { useT } from '../../i18n/useT';
 import { labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { micSupported } from '../../speech/recorder';
 import { voice } from '../../speech/voice';
@@ -14,25 +16,36 @@ import { Mascot } from '../../ui/Mascot';
 import { SpeakExercise } from '../speak/SpeakExercise';
 
 const AVATARS = ['🦊', '🐼', '🦁', '🐸', '🦄', '🐙', '🐯', '🐨', '🚀', '⚽', '🎸', '🎨'];
-const LEVELS: { id: Level; icon: string; title: string; detail: string }[] = [
-  { id: 'new', icon: '🌱', title: 'Just starting', detail: 'Knows a few words or none yet' },
-  { id: 'some', icon: '🌿', title: 'Knows some already', detail: 'Simple words and short sentences' },
-  { id: 'confident', icon: '🌳', title: 'Quite confident', detail: 'Wants to sound clearer and more natural' },
+// The lists below hold KEYS, not wording: a constant is read once, and the App language can change (src/i18n/README.md).
+const LEVELS: { id: Level; icon: string; title: Key; detail: Key }[] = [
+  { id: 'new', icon: '🌱', title: 'onboarding.level.new.title', detail: 'onboarding.level.new.detail' },
+  { id: 'some', icon: '🌿', title: 'onboarding.level.some.title', detail: 'onboarding.level.some.detail' },
+  { id: 'confident', icon: '🌳', title: 'onboarding.level.confident.title', detail: 'onboarding.level.confident.detail' },
 ];
-const GOALS: { id: Goal; icon: string; title: string }[] = [
-  { id: 'school', icon: '🎒', title: 'School' }, { id: 'travel', icon: '✈️', title: 'Travel' },
-  { id: 'friends', icon: '💬', title: 'Friends & family' }, { id: 'fun', icon: '🎮', title: 'Just for fun' },
+const GOALS: { id: Goal; icon: string; title: Key }[] = [
+  { id: 'school', icon: '🎒', title: 'onboarding.level.goal.school' }, { id: 'travel', icon: '✈️', title: 'onboarding.level.goal.travel' },
+  { id: 'friends', icon: '💬', title: 'onboarding.level.goal.friends' }, { id: 'fun', icon: '🎮', title: 'onboarding.level.goal.fun' },
 ];
-const LEARN: { id: CourseId | 'es' | 'fr' | 'de'; label: string; ready: boolean; lang?: string }[] = [
-  { id: 'en', label: 'English', ready: true }, { id: 'zh', label: '普通話 Putonghua', ready: true, lang: 'zh-Hant' },
-  { id: 'es', label: 'Spanish', ready: false }, { id: 'fr', label: 'French', ready: false }, { id: 'de', label: 'German', ready: false },
+const LEARN: { id: CourseId | 'es' | 'fr' | 'de'; label: Key; ready: boolean; lang?: string }[] = [
+  { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
+  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'fr', label: 'onboarding.languages.learn.fr', ready: false }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
 ];
+const BAND_HINT: Partial<Record<AgeBand, Key>> = { little: 'onboarding.who.band.little', junior: 'onboarding.who.band.junior', teen: 'onboarding.who.band.teen' };
+/**
+ * Who a sentence is about: the grown-up themself, the child by nickname, or "your child" before a nickname is typed.
+ * Each is a whole sentence of its own, because the words around the name change with it (and differently in Chinese).
+ */
+type About = 'adult' | 'named' | 'unnamed';
+const LEVEL_TITLE: Record<About, Key> = { adult: 'onboarding.level.title.adult', named: 'onboarding.level.title.named', unnamed: 'onboarding.level.title.unnamed' };
+const MIC_BODY: Record<About, Key> = { adult: 'onboarding.consent.mic.body.adult', named: 'onboarding.consent.mic.body.named', unnamed: 'onboarding.consent.mic.body.unnamed' };
+const RECORDINGS_BODY: Record<About, Key> = { adult: 'onboarding.consent.recordings.body.adult', named: 'onboarding.consent.recordings.body.named', unnamed: 'onboarding.consent.recordings.body.unnamed' };
 /** Grown-ups get the adult presentation; their exact age doesn't matter. */
 const ADULT_AGE = 18;
 
 type StepId = 'welcome' | 'languages' | 'child' | 'level' | 'accent' | 'script' | 'consent' | 'handover' | 'check' | 'plan';
 
 export function Onboarding() {
+  const { t, tc } = useT();
   const nav = useNavigate();
   const [params] = useSearchParams();
   const adding = params.get('add') === '1';
@@ -68,7 +81,8 @@ export function Onboarding() {
     ...(learning.includes('en') ? ['accent' as const] : []), ...(learning.includes('zh') ? ['script' as const] : []),
     'consent', ...(adult ? [] : ['handover' as const]), 'check', 'plan',
   ];
-  const kid = adult ? 'you' : name.trim() || 'your child';
+  const about: About = adult ? 'adult' : name.trim() ? 'named' : 'unnamed';
+  const bandHint = (n: number): string => { const key = BAND_HINT[bandForAge(n)]; return key ? t(key) : ''; };
   const go = (s: StepId) => setStep(s);
   const next = () => go(order[order.indexOf(step) + 1]);
   const back = () => {
@@ -83,11 +97,11 @@ export function Onboarding() {
     setSettings({ storeRecordings: keepRecordings, consentedAt: Date.now() });
     // Ask for the microphone now, with the grown-up present, so a child never meets a permission prompt alone.
     if (micSupported()) {
-      try { (await navigator.mediaDevices.getUserMedia({ audio: true })).getTracks().forEach((t) => t.stop()); }
-      catch { toast('Microphone not allowed yet — you can fix this in a moment', '🎙️'); }
+      try { (await navigator.mediaDevices.getUserMedia({ audio: true })).getTracks().forEach((track) => track.stop()); }
+      catch { toast(t('onboarding.consent.micBlocked'), '🎙️'); }
     }
     createProfile({
-      name: name.trim() || (adult ? 'Me' : 'Explorer'), avatar, age: adult ? ADULT_AGE : age!, homeLanguage: home ?? 'other',
+      name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: adult ? ADULT_AGE : age!, homeLanguage: home ?? 'other',
       level: level!, goal: goal!, accent, learning, zhScript: script,
     });
     next();
@@ -99,13 +113,21 @@ export function Onboarding() {
     <div className="screen onboard">
       {step !== 'welcome' && step !== 'plan' && (
         <header className="lesson__bar">
-          {step !== 'handover' ? <IconButton icon="back" label="Back" onClick={back} /> : <span className="topbar__spacer" />}
+          {step !== 'handover' ? <IconButton icon="back" label={t('common.back')} onClick={back} /> : <span className="topbar__spacer" />}
           <ProgressBar value={progress} />
           <span className="topbar__spacer" />
         </header>
       )}
       <div className="onboard__body">
-        {opts.grownUp && !adult && <span className="tag tag--primary">For grown-ups</span>}
+        {/* The App language comes before every other choice, so the family can read the rest of setup. */}
+        {step === 'welcome' && (
+          <div className="segmented segmented--lang" role="group" aria-label={t('onboarding.language.aria')}>
+            {LANGUAGES.map((l) => (
+              <button key={l.id} type="button" lang={l.htmlLang} className={language() === l.id ? 'is-on' : ''} aria-pressed={language() === l.id} onClick={() => setSettings({ language: l.id })}>{l.label}</button>
+            ))}
+          </div>
+        )}
+        {opts.grownUp && !adult && <span className="tag tag--primary">{t('onboarding.grownUps')}</span>}
         {opts.mascot && <Mascot mood={opts.mascot} size={step === 'welcome' ? 168 : 96} />}
         {opts.title && <h1 className="onboard__title">{opts.title}</h1>}
         {opts.sub && <p className="onboard__sub">{opts.sub}</p>}
@@ -119,125 +141,125 @@ export function Onboarding() {
     case 'welcome':
       return shell(
         <ul className="promise">
-          <li><span>🎤</span>Say it out loud</li><li><span>🎯</span>See exactly which sound — or tone — to fix</li><li><span>📈</span>Hear yourself get better</li>
+          <li><span>🎤</span>{t('onboarding.welcome.promise.say')}</li><li><span>🎯</span>{t('onboarding.welcome.promise.see')}</li><li><span>📈</span>{t('onboarding.welcome.promise.hear')}</li>
         </ul>,
-        <><Button size="lg" block onClick={next}>Get started</Button><p className="fineprint">Setup takes about a minute.</p></>,
-        { mascot: 'happy', title: 'Wunder Tutor', sub: 'Speak with confidence — one sound at a time.' },
+        <><Button size="lg" block onClick={next}>{t('onboarding.welcome.start')}</Button><p className="fineprint">{t('onboarding.welcome.fineprint')}</p></>,
+        { mascot: 'happy', title: t('onboarding.welcome.title'), sub: t('onboarding.welcome.sub') },
       );
 
     case 'languages':
       return shell(
         <>
-          <h2 className="field-label">Learning</h2>
+          <h2 className="field-label">{t('onboarding.languages.learning')}</h2>
           <div className="chips">{LEARN.map((l) => {
             const on = l.ready && learning.includes(l.id as CourseId);
             return (
               <button key={l.id} type="button" className={`chip ${on ? 'is-on' : ''}`} disabled={!l.ready} aria-pressed={on} onClick={() => l.ready && toggleCourse(l.id as CourseId)}>
-                <span lang={l.lang}>{l.label}</span>{!l.ready && <small> · soon</small>}
+                <span lang={l.lang}>{t(l.label)}</span>{!l.ready && <small> · {t('onboarding.languages.soon')}</small>}
               </button>
             );
           })}</div>
-          <p className="hint hint--left">Pick one or both — you can switch between them any time.</p>
-          <h2 className="field-label">At home we speak</h2>
+          <p className="hint hint--left">{t('onboarding.languages.hint')}</p>
+          <h2 className="field-label">{t('onboarding.languages.home')}</h2>
           <div className="grid-2">{HOME_LANGUAGES.map((l) => (
             <button key={l.id} type="button" className={`tile ${home === l.id ? 'is-on' : ''}`} onClick={() => setHome(l.id)} aria-pressed={home === l.id}>
-              <span><b lang={l.id === 'other' ? undefined : l.id}>{l.native || l.label}</b><small>{l.label}</small></span>
+              <span><b lang={l.id === 'other' ? undefined : l.id}>{l.native || homeLanguageLabel(l.id)}</b>{homeLanguageLabel(l.id) !== l.native && <small>{homeLanguageLabel(l.id)}</small>}</span>
             </button>
           ))}</div>
         </>,
-        <Button size="lg" block disabled={!home || !learning.length} onClick={next}>Next</Button>,
-        { grownUp: true, title: 'Which languages?', sub: 'The home language shows which sounds and tones will be trickiest.' },
+        <Button size="lg" block disabled={!home || !learning.length} onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t('onboarding.languages.title'), sub: t('onboarding.languages.sub') },
       );
 
     case 'child':
       return shell(
         <>
-          <div className="segmented segmented--2" role="group" aria-label="Who is learning">
-            <button type="button" className={who === 'child' ? 'is-on' : ''} aria-pressed={who === 'child'} onClick={() => setWho('child')}>My child</button>
-            <button type="button" className={who === 'me' ? 'is-on' : ''} aria-pressed={who === 'me'} onClick={() => setWho('me')}>Me — a grown-up</button>
+          <div className="segmented segmented--2" role="group" aria-label={t('onboarding.who.aria')}>
+            <button type="button" className={who === 'child' ? 'is-on' : ''} aria-pressed={who === 'child'} onClick={() => setWho('child')}>{t('onboarding.who.child')}</button>
+            <button type="button" className={who === 'me' ? 'is-on' : ''} aria-pressed={who === 'me'} onClick={() => setWho('me')}>{t('onboarding.who.me')}</button>
           </div>
-          <h2 className="field-label">Pick a buddy</h2>
-          <div className="avatars">{AVATARS.map((a) => <button key={a} type="button" className={`avatar-pick ${avatar === a ? 'is-on' : ''}`} onClick={() => setAvatar(a)} aria-pressed={avatar === a} aria-label={`Avatar ${a}`}>{a}</button>)}</div>
-          <label className="field-label" htmlFor="nick">{adult ? 'Name' : 'Nickname'} <small>{adult ? '(what we should call you)' : '(no real names needed)'}</small></label>
-          <input id="nick" className="input" value={name} maxLength={14} onChange={(e) => setName(e.target.value)} placeholder={adult ? 'e.g. Mum' : 'e.g. Tiger'} autoComplete="off" />
+          <h2 className="field-label">{t('onboarding.who.buddy')}</h2>
+          <div className="avatars">{AVATARS.map((a) => <button key={a} type="button" className={`avatar-pick ${avatar === a ? 'is-on' : ''}`} onClick={() => setAvatar(a)} aria-pressed={avatar === a} aria-label={t('onboarding.who.avatar.aria', { avatar: a })}>{a}</button>)}</div>
+          <label className="field-label" htmlFor="nick">{t(adult ? 'onboarding.who.name.adult.label' : 'onboarding.who.name.child.label')} <small>{t(adult ? 'onboarding.who.name.adult.note' : 'onboarding.who.name.child.note')}</small></label>
+          <input id="nick" className="input" value={name} maxLength={14} onChange={(e) => setName(e.target.value)} placeholder={t(adult ? 'onboarding.who.name.adult.placeholder' : 'onboarding.who.name.child.placeholder')} autoComplete="off" />
           {!adult && (
             <>
-              <h2 className="field-label">Age</h2>
+              <h2 className="field-label">{t('onboarding.who.age')}</h2>
               <div className="ages">{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <button key={n} type="button" className={`age ${age === n ? 'is-on' : ''}`} onClick={() => setAge(n)} aria-pressed={age === n}>{n}</button>)}</div>
-              {age && <p className="hint">{{ little: 'Picture-led lessons with single words and tiny phrases.', junior: 'Playful lessons with short sentences.', teen: 'A cleaner look with full, natural sentences.', adult: '' }[bandForAge(age)]}</p>}
+              {age && <p className="hint">{bandHint(age)}</p>}
             </>
           )}
-          {adult && <p className="hint">You get the grown-up version: a clean look, natural sentences, and the phonetic detail when you want it.</p>}
+          {adult && <p className="hint">{t('onboarding.who.adultHint')}</p>}
         </>,
-        <Button size="lg" block disabled={!adult && !age} onClick={next}>Next</Button>,
-        { grownUp: true, title: adult ? 'About you' : 'Who’s learning?', sub: adult ? 'Parents learn too — and it’s more fun together.' : 'Age sets the look, the words and how much reading there is.' },
+        <Button size="lg" block disabled={!adult && !age} onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t(adult ? 'onboarding.who.title.adult' : 'onboarding.who.title.child'), sub: t(adult ? 'onboarding.who.sub.adult' : 'onboarding.who.sub.child') },
       );
 
     case 'level':
       return shell(
         <>
-          <h2 className="field-label">Level</h2>
+          <h2 className="field-label">{t('onboarding.level.label')}</h2>
           <div className="stack">{LEVELS.map((l) => (
             <button key={l.id} type="button" className={`tile tile--wide ${level === l.id ? 'is-on' : ''}`} onClick={() => setLevel(l.id)} aria-pressed={level === l.id}>
-              <span className="tile__icon">{l.icon}</span><span><b>{l.title}</b><small>{l.detail}</small></span>
+              <span className="tile__icon">{l.icon}</span><span><b>{t(l.title)}</b><small>{t(l.detail)}</small></span>
             </button>
           ))}</div>
-          <h2 className="field-label">Learning for</h2>
-          <div className="chips">{GOALS.map((g) => <button key={g.id} type="button" className={`chip ${goal === g.id ? 'is-on' : ''}`} onClick={() => setGoal(g.id)} aria-pressed={goal === g.id}>{g.icon} {g.title}</button>)}</div>
+          <h2 className="field-label">{t('onboarding.level.goal.label')}</h2>
+          <div className="chips">{GOALS.map((g) => <button key={g.id} type="button" className={`chip ${goal === g.id ? 'is-on' : ''}`} onClick={() => setGoal(g.id)} aria-pressed={goal === g.id}>{g.icon} {t(g.title)}</button>)}</div>
         </>,
-        <Button size="lg" block disabled={!level || !goal} onClick={next}>Next</Button>,
-        { grownUp: true, title: adult ? 'Where are you starting?' : `About ${kid}` },
+        <Button size="lg" block disabled={!level || !goal} onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t(LEVEL_TITLE[about], { name: name.trim() }) },
       );
 
     case 'accent':
       return shell(
         <div className="stack">
-          {([['en-US', 'US', 'American English', 'water sounds like “wah-der” · the most detailed feedback'], ['en-GB', 'UK', 'British English', 'water sounds like “waw-tuh”']] as const).map(([id, flag, title, detail]) => (
+          {([['en-US', 'onboarding.accent.us.badge', 'onboarding.accent.us.title', 'onboarding.accent.us.detail'], ['en-GB', 'onboarding.accent.uk.badge', 'onboarding.accent.uk.title', 'onboarding.accent.uk.detail']] as const).map(([id, flag, title, detail]) => (
             <button key={id} type="button" className={`tile tile--wide ${accent === id ? 'is-on' : ''}`} aria-pressed={accent === id}
               onClick={() => { setAccent(id); void voice.speak('Hello! I would like some water, please.', { accent: id }).catch(() => undefined); }}>
-              <span className="code-badge">{flag}</span><span><b>{title}</b><small>{detail}</small></span><span className="tile__aside" aria-hidden>🔈</span>
+              <span className="code-badge">{t(flag)}</span><span><b>{t(title)}</b><small>{t(detail)}</small></span><span className="tile__aside" aria-hidden>🔈</span>
             </button>
           ))}
-          <p className="hint">Both are correct English. Your choice sets the teacher’s voice, and the other accent’s sounds are never marked as mistakes.</p>
+          <p className="hint">{t('onboarding.accent.hint')}</p>
         </div>,
-        <Button size="lg" block onClick={next}>Next</Button>,
-        { grownUp: true, title: 'Which English accent?', sub: 'Tap one to hear it.' },
+        <Button size="lg" block onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t('onboarding.accent.title'), sub: t('onboarding.accent.sub') },
       );
 
     case 'script':
       return shell(
         <div className="stack">
-          {([['hant', '繁', '繁體 Traditional', '蘋果 · as in Hong Kong schools'], ['hans', '简', '简体 Simplified', '苹果 · as in mainland textbooks']] as const).map(([id, badge, title, detail]) => (
+          {([['hant', '繁', 'onboarding.script.hant.title', 'onboarding.script.hant.detail'], ['hans', '简', 'onboarding.script.hans.title', 'onboarding.script.hans.detail']] as const).map(([id, badge, title, detail]) => (
             <button key={id} type="button" className={`tile tile--wide ${script === id ? 'is-on' : ''}`} aria-pressed={script === id} onClick={() => setScript(id)}>
-              <span className="code-badge" lang={id === 'hant' ? 'zh-Hant' : 'zh-Hans'}>{badge}</span><span><b lang={id === 'hant' ? 'zh-Hant' : 'zh-Hans'}>{title}</b><small>{detail}</small></span>
+              <span className="code-badge" lang={id === 'hant' ? 'zh-Hant' : 'zh-Hans'}>{badge}</span><span><b lang={id === 'hant' ? 'zh-Hant' : 'zh-Hans'}>{t(title)}</b><small>{t(detail)}</small></span>
             </button>
           ))}
-          <p className="hint">Pinyin with tone marks is shown above every character either way.</p>
+          <p className="hint">{t('onboarding.script.hint')}</p>
         </div>,
-        <Button size="lg" block onClick={next}>Next</Button>,
-        { grownUp: true, title: 'Which Chinese characters?', sub: 'For the Putonghua lessons.' },
+        <Button size="lg" block onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t('onboarding.script.title'), sub: t('onboarding.script.sub') },
       );
 
     case 'consent':
       return shell(
         <>
           <ul className="privacy">
-            <li><span>🎙️</span><div><b>The microphone is only on while the mic button is red.</b><p>{adult ? 'You tap' : `${kid} taps`} to start and it stops by itself.</p></div></li>
-            <li><span>📱</span><div><b>Recordings stay on this device.</b><p>They let {kid} hear “before” and “now”. Scores are stored separately from voice.</p></div></li>
-            <li><span>🗑️</span><div><b>You’re in control.</b><p>Delete recordings, history or the whole profile any time in {adult ? 'Settings & privacy (on the Me tab)' : 'the Parent Zone'}.</p></div></li>
+            <li><span>🎙️</span><div><b>{t('onboarding.consent.mic.title')}</b><p>{t(MIC_BODY[about], { name: name.trim() })}</p></div></li>
+            <li><span>📱</span><div><b>{t('onboarding.consent.recordings.title')}</b><p>{t(RECORDINGS_BODY[about], { name: name.trim() })}</p></div></li>
+            <li><span>🗑️</span><div><b>{t('onboarding.consent.control.title')}</b><p>{adult ? t('onboarding.consent.control.body.adult', { settings: t('common.settings.adult'), tab: t('common.nav.me') }) : t('onboarding.consent.control.body.child', { settings: t('common.settings.parent.the') })}</p></div></li>
           </ul>
-          <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>Keep recordings on this device</span></label>
-          <label className="switch-row"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span>{adult ? 'I agree to microphone use' : 'I’m the parent or guardian and I agree to microphone use'}</span></label>
+          <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>{t('onboarding.consent.keep')}</span></label>
+          <label className="switch-row"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span>{t(adult ? 'onboarding.consent.agree.adult' : 'onboarding.consent.agree.child')}</span></label>
         </>,
-        <Button size="lg" block disabled={!agreed} icon="mic" onClick={() => void create()}>Allow microphone</Button>,
-        { grownUp: true, title: 'Voice & privacy', sub: adult ? 'Here’s exactly what happens to your recordings.' : 'A child’s voice is sensitive. Here’s exactly what happens to it.' },
+        <Button size="lg" block disabled={!agreed} icon="mic" onClick={() => void create()}>{t('onboarding.consent.allow')}</Button>,
+        { grownUp: true, title: t('onboarding.consent.title'), sub: t(adult ? 'onboarding.consent.sub.adult' : 'onboarding.consent.sub.child') },
       );
 
     case 'handover':
       return shell(
         <div className="handover"><div className="handover__avatar">{avatar}</div></div>,
-        <Button size="lg" variant="coral" block onClick={next}>I’m {name.trim() || 'ready'}!</Button>,
-        { mascot: 'cheer', title: `Now it’s ${name.trim() ? `${name.trim()}’s` : 'your'} turn!`, sub: 'Pass the device over. Pip will listen to a few words to see which sounds need help — there are no wrong answers.' },
+        <Button size="lg" variant="coral" block onClick={next}>{name.trim() ? t('onboarding.handover.go.named', { name: name.trim() }) : t('onboarding.handover.go.unnamed')}</Button>,
+        { mascot: 'cheer', title: name.trim() ? t('onboarding.handover.title.named', { name: name.trim() }) : t('onboarding.handover.title.unnamed'), sub: t('onboarding.handover.sub') },
       );
 
     case 'check': {
@@ -273,14 +295,14 @@ export function Onboarding() {
       return shell(
         <>
           <div className="card plan">
-            <h2>{zh ? 'Tones and sounds to work on' : 'Sounds to work on'}</h2>
-            <div className="plan__sounds">{focus.map((ph) => <span key={ph} className="sound-badge sound-badge--weak"><b>{phonemeInfo(ph).label}</b><small>{zh ? phonemeInfo(ph).name : phonemeInfo(ph).example}</small></span>)}</div>
-            {strong.length > 0 && (<><h2>Already strong</h2><div className="plan__sounds">{strong.map((s) => <span key={s.phoneme} className="sound-badge sound-badge--good"><b>{phonemeInfo(s.phoneme).label}</b><small>{zh ? phonemeInfo(s.phoneme).name : phonemeInfo(s.phoneme).example}</small></span>)}</div></>)}
+            <h2>{t(zh ? 'onboarding.plan.focus.zh' : 'onboarding.plan.focus.en')}</h2>
+            <div className="plan__sounds">{focus.map((ph) => <span key={ph} className="sound-badge sound-badge--weak"><b>{phonemeInfo(ph).label}</b><small>{zh ? tc(`sound.${ph}.name`, phonemeInfo(ph).name) : phonemeInfo(ph).example}</small></span>)}</div>
+            {strong.length > 0 && (<><h2>{t('onboarding.plan.strong')}</h2><div className="plan__sounds">{strong.map((s) => <span key={s.phoneme} className="sound-badge sound-badge--good"><b>{phonemeInfo(s.phoneme).label}</b><small>{zh ? tc(`sound.${s.phoneme}.name`, phonemeInfo(s.phoneme).name) : phonemeInfo(s.phoneme).example}</small></span>)}</div></>)}
           </div>
-          <p className="hint">{adult ? 'These will come up in your lessons until they’re easy.' : 'Pip will bring these into lessons and remember how they go — they’ll keep coming back until they’re easy.'}</p>
+          <p className="hint">{t(adult ? 'onboarding.plan.hint.adult' : 'onboarding.plan.hint.child')}</p>
         </>,
-        <Button size="lg" block onClick={() => nav('/', { replace: true })}>Start learning</Button>,
-        { mascot: 'happy', title: adult ? 'Your plan' : `Pip’s plan for ${profile.name}`, sub: adult ? 'Based on your speaking check.' : 'Based on what Pip just heard.' },
+        <Button size="lg" block onClick={() => nav('/', { replace: true })}>{t('onboarding.plan.start')}</Button>,
+        { mascot: 'happy', title: adult ? t('onboarding.plan.title.adult') : t('onboarding.plan.title.child', { name: profile.name }), sub: t(adult ? 'onboarding.plan.sub.adult' : 'onboarding.plan.sub.child') },
       );
     }
   }

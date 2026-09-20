@@ -3,9 +3,15 @@ import { phonemeInfo, soundLabel, tipFor } from '../content/phonemes';
 import { markSyllable, parseSyllable } from '../content/zh/pinyin';
 import { unitsFor as zhUnits } from '../speech/zh/assess';
 import { wrongSound } from '../engine/learning';
+import { sentences, t } from '../i18n';
 
-/** Substitutions that aren't English sounds get a plain description instead of a symbol. */
-const FOREIGN_SOUNDS: Record<string, string> = { 'ɾ': 'a quick tapped R', 'ʁ': 'a throaty R', 'x': 'a throaty, scratchy H' };
+/**
+ * Substitutions that aren't English sounds get a plain description instead of a symbol ("a quick tapped R"). Each
+ * has its own whole sentences in the catalog — `feedback.sound.heard.<this name>.kid` / `.adult`.
+ */
+const FOREIGN_SOUNDS: Record<string, 'tappedR' | 'throatyR' | 'throatyH'> = { 'ɾ': 'tappedR', 'ʁ': 'throatyR', 'x': 'throatyH' };
+
+export { sentences };
 
 export const GOOD = 85;
 export const OKAY = 65;
@@ -19,7 +25,7 @@ export const tier = (score: number): Tier => (score >= GOOD ? 'good' : score >= 
  * can't be lined up with the scores (a hyphenated word scored as two), the scorer's words are shown instead.
  */
 export const writtenWords = (text: string, words: readonly Pick<WordScore, 'word' | 'errorType'>[]): string[] => {
-  const written = text.split(/\s+/).filter((t) => /[\p{L}\p{N}]/u.test(t));
+  const written = text.split(/\s+/).filter((token) => /[\p{L}\p{N}]/u.test(token));
   if (written.length !== words.filter((w) => w.errorType !== 'insertion').length) return words.map((w) => w.word);
   let k = 0;
   return words.map((w) => (w.errorType === 'insertion' ? w.word : written[k++]));
@@ -42,21 +48,14 @@ export interface Correction {
   zh?: { py: string; expected: Tone; heard?: Tone; contour?: number[]; heardPy?: string };
 }
 
-const TONE_WORDS: Record<1 | 2 | 3 | 4, { shape: string; went: string }> = {
-  1: { shape: 'stays high and flat', went: 'stayed flat' },
-  2: { shape: 'rises', went: 'went up' },
-  3: { shape: 'dips down low', went: 'went down low' },
-  4: { shape: 'falls from high to low', went: 'fell' },
-};
-
 /** Why a character's tone differs from the dictionary here, in words a child can follow. */
 const sandhiNote = (z: ZhSyllable): string | undefined => {
   const citation = parseSyllable(z.py).tone;
   const said = z.accept[0];
   if (said === citation || said === 5) return undefined;
-  if (citation === 3 && said === 2) return `Here ${z.char} is said with tone 2, because the word after it is tone 3.`;
-  if (z.char === '一') return `一 changes its tone to match the word after it — here it’s tone ${said}.`;
-  if (z.char === '不') return `不 becomes tone 2 before a tone-4 word.`;
+  if (citation === 3 && said === 2) return t('feedback.zh.sandhi.third', { char: z.char });
+  if (z.char === '一') return t(`feedback.zh.sandhi.yi.${said}`);
+  if (z.char === '不') return t('feedback.zh.sandhi.bu');
   return undefined;
 };
 
@@ -64,20 +63,21 @@ const sandhiNote = (z: ZhSyllable): string | undefined => {
 const correctionForZh = (w: WordScore, z: ZhSyllable, band: AgeBand, home?: HomeLanguage): Correction => {
   const char = w.word;
   const mark = markSyllable(z.py);
-  const expected = (z.accept.find((t) => t !== 5) ?? z.accept[0]) as Tone;
+  const expected = (z.accept.find((a) => a !== 5) ?? z.accept[0]) as Tone;
   if (w.errorType === 'omission') {
-    return { word: char, score: 0, kind: 'omission', problem: band === 'little' ? `I didn’t hear “${char}”.` : `I couldn’t make out “${char}” (${mark}) — was it skipped or said differently?`, tip: 'Say every character, nice and steady — don’t rush to the end.', zh: { py: z.py, expected } };
+    return { word: char, score: 0, kind: 'omission', problem: band === 'little' ? t('feedback.omission.little', { word: char }) : t('feedback.zh.omission', { char, pinyin: mark }), tip: t('feedback.zh.omission.tip'), zh: { py: z.py, expected } };
   }
   if (z.toneHeard && expected !== 5) {
-    const t = expected as 1 | 2 | 3 | 4;
-    const heard = z.toneHeard === 5 ? undefined : TONE_WORDS[z.toneHeard as 1 | 2 | 3 | 4];
+    const tone = expected as 1 | 2 | 3 | 4;
+    const heard = z.toneHeard;
+    // Every tone has its own whole sentences (the shape it needs, the shape that came out): none is glued from parts.
     const problem = band === 'little'
-      ? `“${char}” ${TONE_WORDS[t].shape}${heard ? ` — yours ${heard.went}` : ''}!`
-      : `Your ${char} (${mark}) sounded like tone ${z.toneHeard}. It needs tone ${t}: it ${TONE_WORDS[t].shape}.`;
+      ? (heard === 5 ? t(`feedback.zh.tone.little.${tone}`, { char }) : t(`feedback.zh.tone.little.${tone}.${heard}`, { char }))
+      : sentences(t(`feedback.zh.tone.heard.${heard}`, { char, pinyin: mark }), t(`feedback.zh.tone.needs.${tone}`));
     return {
-      word: char, score: w.score, kind: 'tone', phoneme: `zh:t${t}`, problem, tip: tipFor(`zh:t${t}`, band),
-      detail: [sandhiNote(z), phonemeInfo(`zh:t${t}`).detail].filter(Boolean).join(' '),
-      zh: { py: z.py, expected: t, heard: z.toneHeard, contour: z.contour },
+      word: char, score: w.score, kind: 'tone', phoneme: `zh:t${tone}`, problem, tip: tipFor(`zh:t${tone}`, band),
+      detail: sentences(sandhiNote(z), phonemeInfo(`zh:t${tone}`).detail),
+      zh: { py: z.py, expected: tone, heard: z.toneHeard, contour: z.contour },
     };
   }
   const units = zhUnits(z.py);
@@ -86,20 +86,20 @@ const correctionForZh = (w: WordScore, z: ZhSyllable, band: AgeBand, home?: Home
     const unit = (a.initial !== b.initial ? units.initial : units.final) ?? units.initial ?? units.final;
     const heardMark = markSyllable(z.heardAs);
     return {
-      word: char, score: w.score, kind: 'sound', phoneme: unit, problem: band === 'little' ? `Your “${char}” sounded like “${heardMark}”!` : `Your ${char} (${mark}) sounded like ${heardMark}.`,
-      tip: unit ? tipFor(unit, band) : 'Listen slowly, then copy every part of the sound.', detail: unit ? phonemeInfo(unit).detail : undefined,
+      word: char, score: w.score, kind: 'sound', phoneme: unit, problem: band === 'little' ? t('feedback.zh.heard.little', { char, heard: heardMark }) : t('feedback.zh.heard', { char, pinyin: mark, heard: heardMark }),
+      tip: unit ? tipFor(unit, band) : t('feedback.zh.heard.tip'), detail: unit ? phonemeInfo(unit).detail : undefined,
       zh: { py: z.py, expected, heardPy: z.heardAs },
     };
   }
-  if (w.score >= GOOD) return { word: char, score: w.score, kind: 'fine', problem: 'This sounded clear.', tip: 'Keep saying it just like that!', zh: { py: z.py, expected } };
+  if (w.score >= GOOD) return { word: char, score: w.score, kind: 'fine', problem: t('feedback.zh.fine'), tip: t('feedback.fine.tip'), zh: { py: z.py, expected } };
   const unit = units.initial ?? units.final;
   if (!unit) {
-    return { word: char, score: w.score, kind: 'word', problem: `“${char}” (${mark}) wasn’t quite clear yet.`, tip: 'Tap Slow, listen to the whole sound, then copy it.', zh: { py: z.py, expected } };
+    return { word: char, score: w.score, kind: 'word', problem: t('feedback.zh.word', { char, pinyin: mark }), tip: t('feedback.zh.word.tip'), zh: { py: z.py, expected } };
   }
   const info = phonemeInfo(unit);
   // The scorer can't say what came out instead; for a Cantonese speaker the usual slip is a strong hint, offered as a likelihood.
-  const likely = home === 'yue' ? ` Careful — ${info.label} is easy to mix up.` : '';
-  return { word: char, score: w.score, kind: 'sound', phoneme: unit, problem: `“${char}” (${mark}) wasn’t quite clear.${likely}`, tip: tipFor(unit, band), detail: info.detail, zh: { py: z.py, expected } };
+  const problem = sentences(t('feedback.zh.sound', { char, pinyin: mark }), home === 'yue' && t('feedback.zh.sound.mixup', { label: info.label }));
+  return { word: char, score: w.score, kind: 'sound', phoneme: unit, problem, tip: tipFor(unit, band), detail: info.detail, zh: { py: z.py, expected } };
 };
 
 /** Turn provider numbers into something a child can act on: exact sound, what happened, what to do. */
@@ -109,43 +109,47 @@ export const correctionFor = (w: WordScore, band: AgeBand, home?: HomeLanguage):
   if (w.errorType === 'omission') {
     return {
       word: w.word, score: w.score, kind: 'omission',
-      problem: band === 'little' ? `I didn’t hear “${w.word}”.` : `I couldn’t make out the word “${w.word}” — was it skipped or said differently?`,
-      tip: 'Say every word, nice and steady — don’t rush to the end.',
+      problem: band === 'little' ? t('feedback.omission.little', { word: w.word }) : t('feedback.omission', { word: w.word }),
+      tip: t('feedback.omission.tip'),
     };
   }
   if (w.errorType === 'insertion') {
-    return { word: w.word, score: w.score, kind: 'insertion', problem: `I heard an extra word: “${w.word}”.`, tip: 'Say just the words on the screen.' };
+    return { word: w.word, score: w.score, kind: 'insertion', problem: t('feedback.insertion', { word: w.word }), tip: t('feedback.insertion.tip') };
   }
   const worst = [...w.phonemes].sort((a, b) => a.score - b.score)[0];
   // A clean word is fine. A word the scorer marked down is not, even if every sound individually looks passable.
   if (!worst || (worst.score >= GOOD && w.score >= GOOD)) {
-    return { word: w.word, score: w.score, kind: 'fine', problem: 'This word sounded clear.', tip: 'Keep saying it just like that!' };
+    return { word: w.word, score: w.score, kind: 'fine', problem: t('feedback.fine'), tip: t('feedback.fine.tip') };
   }
   if (!worst.phoneme) {
     // Never guess a sound's name. Honest word-level advice beats confident advice about the wrong sound.
     return {
       word: w.word, score: w.score, kind: 'word',
-      problem: band === 'little' ? `“${w.word}” wasn’t quite clear.` : `“${w.word}” wasn’t quite clear yet.`,
-      tip: 'Tap Slow, listen to each part of the word, then say it just as slowly.',
+      problem: band === 'little' ? t('feedback.word.little', { word: w.word }) : t('feedback.word', { word: w.word }),
+      tip: t('feedback.word.tip'),
     };
   }
   const info = phonemeInfo(worst.phoneme);
-  const me = isGrownUp(band) ? `/${worst.phoneme}/` : `“${info.label}”`;
+  // Children read a sound as it is spelled (“th”), grown-ups as its symbol (/θ/). The marks around it belong to the
+  // sentence, not to the sound — Chinese writes 「th」 — so each sentence has a `.kid` and an `.adult` line.
+  const who = isGrownUp(band) ? 'adult' : 'kid';
+  const sound = who === 'adult' ? worst.phoneme : info.label;
+  const written = (id: PhonemeId): string => (who === 'adult' ? id : soundLabel(id));
   let problem = info.problem;
-  if (worst.heardAs === '∅') problem = `The ${me} sound was missing.`;
+  if (worst.heardAs === '∅') problem = t(`feedback.sound.missing.${who}`, { sound });
   else if (worst.heardAs) {
     const foreign = FOREIGN_SOUNDS[worst.heardAs];
-    const other = foreign ?? (isGrownUp(band) ? `/${worst.heardAs}/` : `“${soundLabel(worst.heardAs)}”`);
-    problem = band === 'little' || foreign ? `Your ${me} sounded like ${other}.` : `Your ${me} sounded closer to ${other}.`;
+    problem = foreign
+      ? t(`feedback.sound.heard.${foreign}.${who}`, { sound })
+      : t(`feedback.sound.heard.${band === 'little' ? 'little' : who}`, { sound, other: written(worst.heardAs) });
   } else {
     // The scorer knows the sound was off but not what came out instead (Azure only reports that for en-US).
     // The learner's home language tells us the usual culprit — offered as a likelihood, never as a fact.
     const usual = home ? info.l1?.[home]?.heardAs : undefined;
     if (usual && usual !== '∅' && !FOREIGN_SOUNDS[usual]) {
-      const other = isGrownUp(band) ? `/${usual}/` : `“${soundLabel(usual)}”`;
-      problem = band === 'little' ? `Your ${me} wasn’t clear. Careful — it likes to turn into ${other}!` : `Your ${me} wasn’t clear. Careful — it easily turns into ${other}.`;
+      problem = t(`feedback.sound.likely.${band === 'little' ? 'little' : who}`, { sound, other: written(usual) });
     } else if (usual === '∅') {
-      problem = `Your ${me} wasn’t clear — make sure it doesn’t disappear.`;
+      problem = t(`feedback.sound.likelyMissing.${who}`, { sound });
     }
   }
   return {
@@ -177,14 +181,15 @@ export const focusWordIndex = (a: Assessment): number => {
 };
 
 export const headline = (score: number, band: AgeBand, delta?: number, stillFixable = false): string => {
+  const little = band === 'little';
   if (delta != null && delta >= 8) {
-    if (score >= GOOD && !stillFixable) return band === 'little' ? 'Wow, you fixed it!' : `Up ${delta} points — you fixed it!`;
-    return band === 'little' ? 'Better! Keep going!' : `Up ${delta} points — getting closer!`;
+    if (score >= GOOD && !stillFixable) return little ? t('feedback.headline.fixed.little') : t('feedback.headline.fixed', { delta });
+    return little ? t('feedback.headline.closer.little') : t('feedback.headline.closer', { delta });
   }
-  if (score >= GOOD && stillFixable) return band === 'little' ? 'So close! One fix.' : 'Strong — one word to polish.';
-  if (score >= 95) return band === 'little' ? 'Perfect!' : 'Spot on!';
-  if (score >= GOOD) return band === 'little' ? 'Great talking!' : 'Great pronunciation!';
-  if (score >= OKAY) return band === 'little' ? 'Good try! One fix.' : 'Nearly there — one thing to fix.';
-  if (score >= 40) return band === 'little' ? 'Let’s try together!' : 'Good effort. Let’s fix one sound.';
-  return band === 'little' ? 'Tricky one! Listen first.' : 'That’s a tricky one. Listen slowly, then try again.';
+  if (score >= GOOD && stillFixable) return t(little ? 'feedback.headline.polish.little' : 'feedback.headline.polish');
+  if (score >= 95) return t(little ? 'feedback.headline.top.little' : 'feedback.headline.top');
+  if (score >= GOOD) return t(little ? 'feedback.headline.good.little' : 'feedback.headline.good');
+  if (score >= OKAY) return t(little ? 'feedback.headline.okay.little' : 'feedback.headline.okay');
+  if (score >= 40) return t(little ? 'feedback.headline.weak.little' : 'feedback.headline.weak');
+  return t(little ? 'feedback.headline.hard.little' : 'feedback.headline.hard');
 };

@@ -355,3 +355,8 @@
 .camera__link.camera__pill { padding: 7px 12px; margin-top: -4px; font-size: 0.86rem; }
 .camera__reading .camera__pill { font-size: 1.1rem; padding: 10px 18px; }
 .camera:focus { outline: none; }
+.form-card--gap { margin-bottom: 12px; }
+.segmented--lang { grid-template-columns: repeat(2, 1fr); }
+/* The App language switch on the first screen: there for whoever needs it, out of the way for everyone else. */
+.onboard .segmented--lang, .segmented--lang { align-self: center; width: min(100%, 240px); }
+.segmented--lang button { min-height: 36px; font-size: 0.85rem; }

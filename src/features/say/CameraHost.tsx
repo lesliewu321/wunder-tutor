@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isGrownUp } from '../../domain/types';
+import { useT } from '../../i18n/useT';
 import { getAccessCode, refreshHealth, serviceStatus } from '../../speech/health';
 import { ReadError, readPhoto } from '../../speech/read';
 import { useProfile } from '../../state/store';
@@ -14,6 +15,7 @@ import { saveMode, savePage } from './page';
 // the page behind it — or the app. A page that is read becomes the learner's book page, and Home switches to "My
 // book" to show its sentences.
 export function CameraHost() {
+  useT(); // no wording of its own, but it passes on lines from messages.ts, which are in the app's language
   const nav = useNavigate();
   const loc = useLocation();
   const p = useProfile();

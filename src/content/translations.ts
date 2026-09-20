@@ -1,4 +1,5 @@
 import type { HomeLanguage } from '../domain/types';
+import { tc } from '../i18n';
 
 export const HOME_LANGUAGES: { id: HomeLanguage; label: string; native: string }[] = [
   { id: 'yue', label: 'Cantonese', native: '廣東話' },
@@ -13,6 +14,9 @@ export const HOME_LANGUAGES: { id: HomeLanguage; label: string; native: string }
   { id: 'ar', label: 'Arabic', native: 'العربية' },
   { id: 'other', label: 'Another language', native: '🌍' },
 ];
+
+/** A home language's name in the app's language (the list above keeps the English). */
+export const homeLanguageLabel = (id: HomeLanguage): string => tc(`homeLanguage.${id}`, HOME_LANGUAGES.find((l) => l.id === id)?.label ?? id);
 
 type T = Partial<Record<HomeLanguage, string>>;
 

@@ -2,22 +2,24 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { settingsName, type Accent, type AgeBand, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
-import { buildRecordingExport, CONSENT_TEXT } from '../../data/exportRecordings';
+import { buildRecordingExport, consentText } from '../../data/exportRecordings';
 import { blobToWav16k } from '../../speech/recorder';
-import { HOME_LANGUAGES } from '../../content/translations';
+import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
 import { inScript } from '../../content/zh/script';
-import { DAILY_GOALS, liveStreak } from '../../engine/rewards';
-import { apiHealth, getAccessCode, serviceStatus, setAccessCode, SERVICE_WORDS, type ApiHealth, type ServiceStatus } from '../../speech';
+import { DAILY_GOALS, goalDetail, goalLabel, liveStreak } from '../../engine/rewards';
+import { LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
+import { rich, useT } from '../../i18n/useT';
+import { apiHealth, getAccessCode, serviceStatus, serviceWords, setAccessCode, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
 
-/** Written in Simplified; shown in the learner's script. */
-const COURSE_NAME: Record<CourseId, string> = { en: 'English', zh: '普通话' };
-const BAND_LABEL = { little: 'Little explorer · 5–7', junior: 'Junior · 8–11', teen: 'Teen · 12–17', adult: 'Grown-up learner' } as const;
+const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
+const COURSES: CourseId[] = ['en', 'zh'];
 
 export function Me() {
   const nav = useNavigate();
+  const { t } = useT();
   const p = useActiveProfile();
   const profiles = useStore((s) => s.profiles);
   const setActive = useStore((s) => s.setActive);
@@ -27,24 +29,24 @@ export function Me() {
 
   return (
     <div className="screen me">
-      <TopBar title="Me" />
+      <TopBar title={t('settings.me.title')} />
       <section className="me__card">
         <div className="me__avatar">{p.avatar}</div>
         <h2>{p.name}</h2>
-        <p>{BAND_LABEL[p.band]} · {p.learning.map((c) => (c === 'en' ? `${p.accent === 'en-US' ? 'American' : 'British'} English` : 'Putonghua')).join(' + ')}</p>
+        <p>{t(BAND_LABEL[p.band])} · {p.learning.map((c) => t(c === 'en' ? (p.accent === 'en-US' ? 'settings.me.course.enUS' : 'settings.me.course.enGB') : 'settings.me.course.zh')).join(' + ')}</p>
         <div className="stat-row">
-          <div className="stat"><b>{level}</b><span>Level</span></div>
-          <div className="stat stat--sun"><b>{p.xp}</b><span>Total XP</span></div>
-          <div className="stat stat--coral"><b>{liveStreak(p.streak)}</b><span>Day streak</span></div>
+          <div className="stat"><b>{level}</b><span>{t('settings.me.level')}</span></div>
+          <div className="stat stat--sun"><b>{p.xp}</b><span>{t('settings.me.totalXp')}</span></div>
+          <div className="stat stat--coral"><b>{liveStreak(p.streak)}</b><span>{t('settings.me.streak')}</span></div>
         </div>
       </section>
 
       <section>
-        <h2 className="section-title">Daily goal</h2>
+        <h2 className="section-title">{t('settings.me.goal.title')}</h2>
         <div className="goal-picker">
           {DAILY_GOALS.map((g) => (
             <button key={g.xp} type="button" className={`tile ${p.dailyGoalXp === g.xp ? 'is-on' : ''}`} aria-pressed={p.dailyGoalXp === g.xp} onClick={() => patch(p.id, { dailyGoalXp: g.xp })}>
-              <span><b>{g.label}</b><small>{g.xp} XP · {g.detail}</small></span>
+              <span><b>{goalLabel(g)}</b><small>{t('settings.me.goal.line', { xp: g.xp, detail: goalDetail(g) })}</small></span>
             </button>
           ))}
         </div>
@@ -52,14 +54,14 @@ export function Me() {
 
       {others.length > 0 && (
         <section>
-          <h2 className="section-title">Switch learner</h2>
-          <div className="switcher">{others.map((o) => <button key={o.id} type="button" className="switcher__item" onClick={() => { setActive(o.id); toast(`Hi, ${o.name}!`, o.avatar); nav('/'); }}><span>{o.avatar}</span>{o.name}</button>)}</div>
+          <h2 className="section-title">{t('settings.me.switch.title')}</h2>
+          <div className="switcher">{others.map((o) => <button key={o.id} type="button" className="switcher__item" onClick={() => { setActive(o.id); toast(t('settings.me.switch.hi', { name: o.name }), o.avatar); nav('/'); }}><span>{o.avatar}</span>{o.name}</button>)}</div>
         </section>
       )}
 
       <button type="button" className="row-link" onClick={() => nav('/parents')}>
         <span className="row-link__icon"><Icon name="shield" /></span>
-        <span><b>{settingsName(p.band)}</b><small>Privacy, recordings, learners and settings</small></span>
+        <span><b>{settingsName(p.band)}</b><small>{t('settings.me.zone.detail')}</small></span>
         <Icon name="lock" size={20} />
       </button>
     </div>
@@ -67,22 +69,24 @@ export function Me() {
 }
 
 function Gate({ onPass, onCancel, band }: { onPass: () => void; onCancel: () => void; band: AgeBand }) {
+  const { t } = useT();
   const [a, b] = useMemo(() => [6 + Math.floor(Math.random() * 4), 6 + Math.floor(Math.random() * 4)], []);
   const [value, setValue] = useState('');
   const [wrong, setWrong] = useState(false);
   const submit = () => (Number(value) === a * b ? onPass() : (setWrong(true), setValue('')));
+  const adult = band === 'adult';
   return (
     <div className="screen screen--center gate">
       <span className="gate__icon"><Icon name="shield" size={36} /></span>
-      <h1>{band === 'adult' ? 'Quick check' : 'Grown-ups only'}</h1>
-      <p>To open {band === 'adult' ? 'Settings & privacy' : 'the Parent Zone'}, answer this multiplication:</p>
+      <h1>{t(adult ? 'settings.gate.title.adult' : 'settings.gate.title.parent')}</h1>
+      <p>{t(adult ? 'settings.gate.prompt.adult' : 'settings.gate.prompt.parent')}</p>
       <form onSubmit={(e) => { e.preventDefault(); submit(); }}>
         {/* Spelled out: the × glyph in the display font is easy to misread as +. */}
-        <label className="gate__q" htmlFor="gate">{a} <span className="gate__op">times</span> {b} = ?</label>
+        <label className="gate__q" htmlFor="gate">{a} <span className="gate__op">{t('settings.gate.times')}</span> {b} = ?</label>
         <input id="gate" className={`input input--center ${wrong ? 'input--wrong' : ''}`} inputMode="numeric" pattern="[0-9]*" autoFocus value={value} onChange={(e) => { setValue(e.target.value.replace(/\D/g, '')); setWrong(false); }} aria-describedby="gate-msg" />
-        <p id="gate-msg" className="gate__msg" role="status">{wrong ? `Not quite — multiply: ${a} times ${b}.` : ' '}</p>
-        <Button size="lg" block disabled={!value} onClick={submit}>Open</Button>
-        <Button variant="ghost" block onClick={onCancel}>Back</Button>
+        <p id="gate-msg" className="gate__msg" role="status">{wrong ? t('settings.gate.wrong', { a, b }) : ' '}</p>
+        <Button size="lg" block disabled={!value} onClick={submit}>{t('common.open')}</Button>
+        <Button variant="ghost" block onClick={onCancel}>{t('common.back')}</Button>
       </form>
     </div>
   );
@@ -92,6 +96,7 @@ type Danger = null | 'recordings' | 'history' | 'profile' | 'everything';
 
 export function ParentZone() {
   const nav = useNavigate();
+  const { t, tn } = useT();
   const [open, setOpen] = useState(false);
   const p = useActiveProfile();
   const profiles = useStore((s) => s.profiles);
@@ -125,11 +130,12 @@ export function ParentZone() {
 
   if (!open) return <Gate band={p.band} onPass={() => setOpen(true)} onCancel={() => nav('/me')} />;
 
+  const name = p.name;
   const DANGER: Record<Exclude<Danger, null>, { title: string; body: string; cta: string; run: () => Promise<void> }> = {
-    recordings: { title: `Delete ${p.name}’s recordings?`, body: 'All saved voice recordings are erased from this device. Scores and progress are kept.', cta: 'Delete recordings', run: async () => { const n = await store.deleteRecordings(p.id); toast(`${n} recording${n === 1 ? '' : 's'} deleted`, '🗑️'); refresh(); } },
-    history: { title: 'Delete pronunciation history?', body: `Recordings, scores, weak-sound memory and review schedule for ${p.name} are erased. Lessons completed, XP and badges are kept.`, cta: 'Delete history', run: async () => { await store.deletePronunciationHistory(p.id); toast('Pronunciation history deleted', '🗑️'); refresh(); } },
-    profile: { title: `Delete ${p.name}’s profile?`, body: 'Everything about this learner is erased from this device. This can’t be undone.', cta: 'Delete profile', run: async () => { await store.deleteProfile(p.id); nav('/', { replace: true }); } },
-    everything: { title: 'Delete the whole account?', body: 'Every learner, recording, score and setting is erased from this device. This can’t be undone.', cta: 'Delete everything', run: async () => { await store.deleteEverything(); nav('/welcome', { replace: true }); } },
+    recordings: { title: t('settings.delete.recordings.title', { name }), body: t('settings.delete.recordings.body'), cta: t('settings.delete.recordings.cta'), run: async () => { const n = await store.deleteRecordings(p.id); toast(tn('settings.delete.recordings.done', n), '🗑️'); refresh(); } },
+    history: { title: t('settings.delete.history.title'), body: t('settings.delete.history.body', { name }), cta: t('settings.delete.history.cta'), run: async () => { await store.deletePronunciationHistory(p.id); toast(t('settings.delete.history.done'), '🗑️'); refresh(); } },
+    profile: { title: t('settings.delete.profile.title', { name }), body: t('settings.delete.profile.body'), cta: t('settings.delete.profile.cta'), run: async () => { await store.deleteProfile(p.id); nav('/', { replace: true }); } },
+    everything: { title: t('settings.delete.everything.title'), body: t('settings.delete.everything.body'), cta: t('settings.delete.everything.cta'), run: async () => { await store.deleteEverything(); nav('/welcome', { replace: true }); } },
   };
 
   const adult = p.band === 'adult';
@@ -137,15 +143,15 @@ export function ParentZone() {
     setMaking(true);
     try {
       const out = await buildRecordingExport(p, attempts, (k) => audioRepo.load(k), blobToWav16k);
-      if (!out.takes) { toast('No recordings could be read on this device', '🎧'); return; }
+      if (!out.takes) { toast(t('settings.share.none'), '🎧'); return; }
       const url = URL.createObjectURL(out.file);
       const a = document.createElement('a');
       a.href = url; a.download = out.name; document.body.appendChild(a); a.click(); a.remove();
       window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
       setSharing(false);
-      toast(`Saved ${out.takes} recording${out.takes === 1 ? '' : 's'} to a file`, '📁');
+      toast(tn('settings.share.saved', out.takes), '📁');
     } catch {
-      toast('Couldn’t make the file on this device', '⚠️');
+      toast(t('settings.share.failed'), '⚠️');
     } finally {
       setMaking(false);
     }
@@ -158,105 +164,115 @@ export function ParentZone() {
     </label>
   );
 
+  const betaMessage: Key = services?.authorized ? 'settings.beta.accepted' : !services?.codeSet ? 'settings.beta.noCodeSet' : !services.needsCode ? 'settings.beta.unreachable' : getAccessCode() ? 'settings.beta.refused' : 'settings.beta.prompt';
+  const CONNECTIONS = [['scoring', 'settings.conn.scoring'], ['reading', 'settings.conn.reading'], ['voice', 'settings.conn.voice']] as const;
+  const THEMES = [['auto', 'settings.look.theme.auto'], ['light', 'settings.look.theme.light'], ['dark', 'settings.look.theme.dark']] as const;
+
   return (
     <div className="screen parents">
       <TopBar title={settingsName(p.band)} onBack={() => nav('/me')} />
 
       <section>
-        <h2 className="section-title">Learners</h2>
+        <h2 className="section-title">{t('settings.learners.title')}</h2>
         <div className="learners">
           {Object.values(profiles).map((c) => (
-            <button key={c.id} type="button" className={`learner ${c.id === p.id ? 'is-on' : ''}`} onClick={() => store.setActive(c.id)} aria-pressed={c.id === p.id}><span>{c.avatar}</span><b>{c.name}</b><small>{c.band === 'adult' ? 'Grown-up' : `${c.age} yrs`}</small></button>
+            <button key={c.id} type="button" className={`learner ${c.id === p.id ? 'is-on' : ''}`} onClick={() => store.setActive(c.id)} aria-pressed={c.id === p.id}><span>{c.avatar}</span><b>{c.name}</b><small>{c.band === 'adult' ? t('settings.learners.adult') : t('settings.learners.age', { n: c.age })}</small></button>
           ))}
-          <button type="button" className="learner learner--add" onClick={() => nav('/welcome?add=1')}><span><Icon name="plus" /></span><b>Add</b><small>learner</small></button>
+          <button type="button" className="learner learner--add" onClick={() => nav('/welcome?add=1')}><span><Icon name="plus" /></span><b>{t('settings.learners.add.title')}</b><small>{t('settings.learners.add.sub')}</small></button>
         </div>
       </section>
 
       <section>
-        <h2 className="section-title">{p.name}’s learning</h2>
+        <h2 className="section-title">{t('settings.learning.title', { name })}</h2>
         <div className="form-card">
-          <label className="select-row"><span>Age</span>
-            <select value={p.band === 'adult' ? 18 : p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}<option value={18}>Grown-up</option></select>
+          <label className="select-row"><span>{t('settings.learning.age')}</span>
+            <select value={p.band === 'adult' ? 18 : p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}<option value={18}>{t('settings.learning.age.adult')}</option></select>
           </label>
-          <div className="select-row"><span>Courses</span>
+          <div className="select-row"><span>{t('settings.learning.courses')}</span>
             <span className="course-toggles">
-              {(Object.entries(COURSE_NAME) as [CourseId, string][]).map(([id, label]) => {
+              {COURSES.map((id) => {
                 const on = p.learning.includes(id);
                 return (
                   <button key={id} type="button" className={`chip chip--sm ${on ? 'is-on' : ''}`} aria-pressed={on}
                     onClick={() => { const learning = on ? p.learning.filter((c) => c !== id) : [...p.learning, id]; if (learning.length) patch(p.id, { learning, course: learning.includes(p.course) ? p.course : learning[0] }); }}>
-                    {inScript(label, p.zhScript)}
+                    {/* Putonghua keeps its own name, in the learner's characters (written in Simplified here). */}
+                    {id === 'en' ? t('common.course.en') : inScript('普通话', p.zhScript)}
                   </button>
                 );
               })}
             </span>
           </div>
-          <label className="select-row"><span>English accent</span>
-            <select value={p.accent} onChange={(e) => patch(p.id, { accent: e.target.value as Accent })}><option value="en-US">American (most detailed feedback)</option><option value="en-GB">British</option></select>
+          <label className="select-row"><span>{t('settings.learning.accent')}</span>
+            <select value={p.accent} onChange={(e) => patch(p.id, { accent: e.target.value as Accent })}><option value="en-US">{t('settings.learning.accent.us')}</option><option value="en-GB">{t('settings.learning.accent.gb')}</option></select>
           </label>
-          <label className="select-row"><span>Chinese characters</span>
-            <select value={p.zhScript} onChange={(e) => patch(p.id, { zhScript: e.target.value as 'hant' | 'hans' })}><option value="hant">繁體 Traditional</option><option value="hans">简体 Simplified</option></select>
+          <label className="select-row"><span>{t('settings.learning.script')}</span>
+            <select value={p.zhScript} onChange={(e) => patch(p.id, { zhScript: e.target.value as 'hant' | 'hans' })}><option value="hant">{t('settings.learning.script.hant')}</option><option value="hans">{t('settings.learning.script.hans')}</option></select>
           </label>
-          <label className="select-row"><span>Home language</span>
-            <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}</select>
+          <label className="select-row"><span>{t('settings.learning.home')}</span>
+            <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{homeLanguageLabel(l.id)}</option>)}</select>
           </label>
         </div>
       </section>
 
       <section>
-        <h2 className="section-title">Voice &amp; privacy</h2>
-        {toggle('storeRecordings', 'Keep recordings on this device', 'Lets learners replay “before” and “now”. Only the newest 3 per phrase are kept. Off = audio is discarded right after scoring.')}
-        <p className="fineprint fineprint--left">{recordings == null ? 'Counting recordings…' : `${recordings} recording${recordings === 1 ? '' : 's'} stored for ${p.name}. Recordings never leave this device${services?.azure ? ' except to be scored by the speech service, which does not keep them' : ''} — unless you choose to share them below.${services?.gemini ? ' The teacher’s voice is made from lesson text only — learners’ voices are never sent for that.' : ''}`}</p>
+        <h2 className="section-title">{t('settings.voice.title')}</h2>
+        {toggle('storeRecordings', t('settings.voice.keep.label'), t('settings.voice.keep.detail'))}
+        <p className="fineprint fineprint--left">{recordings == null ? t('settings.voice.counting') : sentences(tn('settings.voice.stored', recordings, { name }), t(services?.azure ? 'settings.voice.leave.scored' : 'settings.voice.leave.never'), services?.gemini && t('settings.voice.teacher'))}</p>
         <button type="button" className="row-link row-link--share" disabled={!recordings} onClick={() => { setAgreed(false); setSharing(true); }}>
           <span className="row-link__icon"><Icon name="share" /></span>
-          <span><b>Share recordings for testing</b><small>{recordings ? 'Help check the app on real voices: make a file you can send to the Wunder Tutor team' : 'Nothing to share yet — recordings appear here after speaking practice'}</small></span>
+          <span><b>{t('settings.share.row.title')}</b><small>{t(recordings ? 'settings.share.row.ready' : 'settings.share.row.empty')}</small></span>
         </button>
         <div className="danger-list">
-          <button type="button" onClick={() => setDanger('recordings')}><Icon name="trash" size={20} />Delete recordings</button>
-          <button type="button" onClick={() => setDanger('history')}><Icon name="trash" size={20} />Delete pronunciation history</button>
-          <button type="button" onClick={() => setDanger('profile')}><Icon name="trash" size={20} />Delete {p.name}’s profile</button>
-          <button type="button" className="is-strong" onClick={() => setDanger('everything')}><Icon name="trash" size={20} />Delete account &amp; all data</button>
+          <button type="button" onClick={() => setDanger('recordings')}><Icon name="trash" size={20} />{t('settings.delete.recordings')}</button>
+          <button type="button" onClick={() => setDanger('history')}><Icon name="trash" size={20} />{t('settings.delete.history')}</button>
+          <button type="button" onClick={() => setDanger('profile')}><Icon name="trash" size={20} />{t('settings.delete.profile', { name })}</button>
+          <button type="button" className="is-strong" onClick={() => setDanger('everything')}><Icon name="trash" size={20} />{t('settings.delete.everything')}</button>
         </div>
       </section>
 
       <section>
-        <h2 className="section-title">Appearance</h2>
-        <div className="segmented" role="group" aria-label="Theme">
-          {(['auto', 'light', 'dark'] as const).map((t) => <button key={t} type="button" className={settings.theme === t ? 'is-on' : ''} aria-pressed={settings.theme === t} onClick={() => setSettings({ theme: t })}>{t === 'auto' ? 'Match device' : t === 'light' ? 'Light' : 'Dark'}</button>)}
+        <h2 className="section-title">{t('settings.look.title')}</h2>
+        {/* The app's own wording — never what is being learned. For this device, whoever is learning. */}
+        <div className="form-card form-card--gap">
+          <label className="select-row"><span>{t('settings.look.language')}</span>
+            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as Language })}>{LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}</select>
+          </label>
+        </div>
+        <div className="segmented" role="group" aria-label={t('settings.look.theme')}>
+          {THEMES.map(([id, label]) => <button key={id} type="button" className={settings.theme === id ? 'is-on' : ''} aria-pressed={settings.theme === id} onClick={() => setSettings({ theme: id })}>{t(label)}</button>)}
         </div>
       </section>
 
       {services && (services.needsCode || !!getAccessCode()) && (
         <section id="zone-code">
-          <h2 className="section-title">Beta access</h2>
+          <h2 className="section-title">{t('settings.beta.title')}</h2>
           <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); setAccessCode(code); window.location.reload(); }}>
-            <p className={services.authorized ? 'access access--ok' : 'access'}>
-              {services.authorized ? 'Access code accepted — real pronunciation scoring and the teacher voice are on.' : !services.codeSet ? 'This Wunder Tutor server has no access code set yet, so no code can unlock it.' : !services.needsCode ? 'The server couldn’t be reached to check this code. Check your connection, then save it again.' : getAccessCode() ? 'That code wasn’t accepted. Check it and try again.' : 'Enter your beta access code to switch on real pronunciation scoring and the teacher voice. Without it the app uses its built-in practice mode.'}
-            </p>
-            <label className="sr-only" htmlFor="access-code">Beta access code</label>
-            <input id="access-code" className="input" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="Access code" />
-            <Button type="submit" block disabled={!code.trim() || (services.authorized && code.trim() === getAccessCode())}>Save code</Button>
+            <p className={services.authorized ? 'access access--ok' : 'access'}>{t(betaMessage)}</p>
+            <label className="sr-only" htmlFor="access-code">{t('settings.beta.label')}</label>
+            <input id="access-code" className="input" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder={t('settings.beta.placeholder')} />
+            <Button type="submit" block disabled={!code.trim() || (services.authorized && code.trim() === getAccessCode())}>{t('settings.beta.save')}</Button>
           </form>
         </section>
       )}
 
       {services?.authorized && (services.azure || services.read) && (
         <section id="zone-connections">
-          <h2 className="section-title">Connections</h2>
+          <h2 className="section-title">{t('settings.conn.title')}</h2>
           <div className="form-card">
-            {([['scoring', 'Pronunciation scoring'], ['reading', 'Reading pages'], ['voice', 'Teacher voice']] as const).map(([key, label]) => {
+            {CONNECTIONS.map(([key, label]) => {
               const state = live && typeof live === 'object' ? live[key] : null;
               return (
                 <div key={key} className="select-row">
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <b className={state == null ? '' : state === 'ok' ? 'conn conn--ok' : state === 'unchecked' ? 'conn' : 'conn conn--bad'}>
-                    {live === 'checking' ? 'Checking…' : live === 'failed' ? 'Couldn’t check' : state == null ? '…' : `${state === 'ok' ? '✓ ' : state === 'unchecked' ? '' : '✗ '}${SERVICE_WORDS[state]}`}
+                    {live === 'checking' ? t('settings.conn.checking') : live === 'failed' ? t('settings.conn.failed') : state == null ? '…' : `${state === 'ok' ? '✓ ' : state === 'unchecked' ? '' : '✗ '}${serviceWords(state)}`}
                   </b>
                 </div>
               );
             })}
-            <div className="form-card__action"><Button variant="soft" size="sm" icon="retry" disabled={live === 'checking'} onClick={checkConnections}>Check again</Button></div>
+            <div className="form-card__action"><Button variant="soft" size="sm" icon="retry" disabled={live === 'checking'} onClick={checkConnections}>{t('settings.conn.again')}</Button></div>
           </div>
+          {/* For whoever looks after the server: the services' own words, as they came. */}
           {live && typeof live === 'object' && live.notes && Object.keys(live.notes).length > 0 && (
             <p className="fineprint fineprint--left conn__notes">{Object.entries(live.notes).map(([k, v]) => `${k}: ${v}`).join(' · ')}</p>
           )}
@@ -264,40 +280,40 @@ export function ParentZone() {
       )}
 
       <section>
-        <h2 className="section-title">Demo &amp; diagnostics</h2>
-        {toggle('demoMic', 'Demo microphone', 'Simulates speaking so the app can be shown on a device without a mic. Scores are not real.')}
+        <h2 className="section-title">{t('settings.demo.title')}</h2>
+        {toggle('demoMic', t('settings.demo.mic.label'), t('settings.demo.mic.detail'))}
         <div className="form-card">
-          <label className="select-row"><span>Simulate a problem</span>
+          <label className="select-row"><span>{t('settings.demo.simulate')}</span>
             <select value={settings.simulate} onChange={(e) => setSettings({ simulate: e.target.value as ParentSettings['simulate'] })}>
-              <option value="none">None</option><option value="network">No internet</option><option value="service">Speech service down</option><option value="slow">Slow scoring</option>
+              <option value="none">{t('settings.demo.simulate.none')}</option><option value="network">{t('settings.demo.simulate.network')}</option><option value="service">{t('settings.demo.simulate.service')}</option><option value="slow">{t('settings.demo.simulate.slow')}</option>
             </select>
           </label>
-          <div className="select-row"><span>Pronunciation scoring</span><b>{services == null ? '…' : services.azure ? 'Azure Speech' : 'Built-in practice model'}</b></div>
-          <div className="select-row"><span>Teacher voice</span><b>{services == null ? '…' : services.gemini ? 'Gemini Live (native audio)' : 'This device’s voice'}</b></div>
-          <div className="select-row"><span>Conversation tutor</span><b>{services == null ? '…' : services.claude ? 'Claude (live)' : 'Scripted'}</b></div>
-          <div className="select-row"><span>App version</span><b>{__APP_VERSION__}</b></div>
+          <div className="select-row"><span>{t('settings.demo.scoring')}</span><b>{services == null ? '…' : t(services.azure ? 'settings.demo.scoring.azure' : 'settings.demo.scoring.builtIn')}</b></div>
+          <div className="select-row"><span>{t('settings.demo.voice')}</span><b>{services == null ? '…' : t(services.gemini ? 'settings.demo.voice.gemini' : 'settings.demo.voice.device')}</b></div>
+          <div className="select-row"><span>{t('settings.demo.tutor')}</span><b>{services == null ? '…' : t(services.claude ? 'settings.demo.tutor.claude' : 'settings.demo.tutor.scripted')}</b></div>
+          <div className="select-row"><span>{t('settings.demo.version')}</span><b>{__APP_VERSION__}</b></div>
         </div>
       </section>
 
-      <Sheet open={sharing} onClose={() => setSharing(false)} label="Share recordings for testing">
+      <Sheet open={sharing} onClose={() => setSharing(false)} label={t('settings.share.sheet')}>
         <div className="confirm confirm--left">
           <span className="confirm__icon"><Icon name="share" size={30} /></span>
-          <h2>{adult ? 'Share your recordings?' : `Share ${p.name}’s recordings?`}</h2>
-          <p>This makes one file on this device with {recordings} practice recording{recordings === 1 ? '' : 's'}, what {adult ? 'you were' : `${p.name} was`} asked to say, and the app’s scores. It includes {adult ? 'your' : `${p.name}’s`} age, home language and settings — <b>no name</b>.</p>
-          <p>Nothing is sent. You choose who to give the file to. The Wunder Tutor team uses it only to test and improve how the app checks pronunciation.</p>
-          <label className="switch-row switch-row--card"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span><small>{CONSENT_TEXT}</small></span></label>
-          <Button variant="primary" size="lg" block disabled={!agreed || making} onClick={() => void shareFile()}>{making ? 'Making the file…' : 'Make the file'}</Button>
-          <Button variant="ghost" block onClick={() => setSharing(false)}>Cancel</Button>
+          <h2>{adult ? t('settings.share.title.adult') : t('settings.share.title.kid', { name })}</h2>
+          <p>{rich(tn(adult ? 'settings.share.body.adult' : 'settings.share.body.kid', recordings ?? 0, { name }))}</p>
+          <p>{t('settings.share.nothingSent')}</p>
+          <label className="switch-row switch-row--card"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span><small>{consentText()}</small></span></label>
+          <Button variant="primary" size="lg" block disabled={!agreed || making} onClick={() => void shareFile()}>{t(making ? 'settings.share.making' : 'settings.share.make')}</Button>
+          <Button variant="ghost" block onClick={() => setSharing(false)}>{t('common.cancel')}</Button>
         </div>
       </Sheet>
 
-      <Sheet open={!!danger} onClose={() => setDanger(null)} label="Confirm delete">
+      <Sheet open={!!danger} onClose={() => setDanger(null)} label={t('settings.delete.sheet')}>
         {danger && (
           <div className="confirm">
             <span className="confirm__icon"><Icon name="trash" size={30} /></span>
             <h2>{DANGER[danger].title}</h2><p>{DANGER[danger].body}</p>
             <Button variant="danger" size="lg" block onClick={() => { const d = danger; setDanger(null); void DANGER[d].run(); }}>{DANGER[danger].cta}</Button>
-            <Button variant="ghost" block onClick={() => setDanger(null)}>Cancel</Button>
+            <Button variant="ghost" block onClick={() => setDanger(null)}>{t('common.cancel')}</Button>
           </div>
         )}
       </Sheet>

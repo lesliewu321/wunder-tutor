@@ -3,7 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { contentBand, isGrownUp, type Assessment, type PhonemeId, type SpeakItem } from '../../domain/types';
 import { LADDERS } from '../../content/lab';
 import { phonemeInfo, tipFor } from '../../content/phonemes';
-import { findScenario, SCENARIOS } from '../../content/scenarios';
+import { findScenario, scenarioBlurb, SCENARIOS, scenarioTitle } from '../../content/scenarios';
+import { badgeName } from '../../engine/rewards';
+import { useT } from '../../i18n/useT';
 import type { SpeechErrorCode } from '../../speech';
 import { stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile, useStore } from '../../state/store';
@@ -17,13 +19,14 @@ import { ErrorPanel } from '../speak/ErrorPanel';
 import { useSpeechTake } from '../speak/useSpeechTake';
 
 export function PracticeHome() {
+  const { t } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
   return (
     <div className="screen practice">
-      <TopBar title={p.band === 'adult' ? 'Conversation practice' : 'Speak with Pip'} onBack={() => nav('/')} />
-      <div className="practice__intro"><Mascot mood="talking" size={92} /><p className="lead">Pick a place and have a real conversation out loud. {p.band === 'adult' ? 'Tips come at the end.' : 'Pip keeps chatting — tips come at the end.'}</p></div>
-      {p.course === 'zh' && <p className="hint hint--left">These conversations are in English for now. Putonghua conversations are coming — keep practising tones in your lessons and the Lab.</p>}
+      <TopBar title={t(p.band === 'adult' ? 'practice.home.title.adult' : 'practice.home.title.kid')} onBack={() => nav('/')} />
+      <div className="practice__intro"><Mascot mood="talking" size={92} /><p className="lead">{t(p.band === 'adult' ? 'practice.home.lead.adult' : 'practice.home.lead.kid')}</p></div>
+      {p.course === 'zh' && <p className="hint hint--left">{t('practice.home.zhNotice')}</p>}
       <ul className="scenario-list">
         {SCENARIOS.map((s) => {
           const last = [...p.conversations].reverse().find((c) => c.scenarioId === s.id);
@@ -31,7 +34,7 @@ export function PracticeHome() {
             <li key={s.id}>
               <button type="button" className="scenario" style={{ ['--tone' as string]: s.color }} onClick={() => nav(`/speak/${s.id}`)}>
                 <span className="scenario__icon">{s.icon}</span>
-                <span className="scenario__text"><b>{s.title}</b><small>{s.blurb[contentBand(p.band)]}</small></span>
+                <span className="scenario__text"><b>{scenarioTitle(s)}</b><small>{scenarioBlurb(s, contentBand(p.band))}</small></span>
                 {last ? <span className={`chip-score chip-score--${tier(last.score)}`}>{last.score}</span> : <Icon name="chevron" size={20} />}
               </button>
             </li>
@@ -45,6 +48,7 @@ export function PracticeHome() {
 interface Line { role: 'tutor' | 'child'; text: string; assessment?: Assessment; tip?: boolean }
 
 export function Conversation() {
+  const { t } = useT();
   const { scenarioId = '' } = useParams();
   const nav = useNavigate();
   const p = useActiveProfile();
@@ -110,7 +114,7 @@ export function Conversation() {
       let note: string | undefined;
       if (c && c.kind === 'sound' && c.score < 60 && tips.current < 2) {
         tips.current += 1;
-        next = [...next, { role: 'tutor', tip: true, text: `Quick tip for “${c.word}”: ${tipFor(c.phoneme!, p.band)}` }];
+        next = [...next, { role: 'tutor', tip: true, text: t('practice.line.tip', { word: c.word, tip: tipFor(c.phoneme!, p.band) }) }];
         note = `The child mispronounced "${c.word}" (sound /${c.phoneme}/). Model the word naturally once in your reply; do not lecture.`;
       }
       setLines(next);
@@ -120,15 +124,15 @@ export function Conversation() {
     },
   });
 
-  if (!scenario) return <div className="screen screen--center"><p>That conversation isn’t available.</p><Button onClick={() => nav('/speak')}>Back</Button></div>;
-  if (done) return <Summary lines={lines} scenarioId={scenario.id} title={scenario.title} onSave={recordConversation} />;
+  if (!scenario) return <div className="screen screen--center"><p>{t('practice.missing.body')}</p><Button onClick={() => nav('/speak')}>{t('common.back')}</Button></div>;
+  if (done) return <Summary lines={lines} scenarioId={scenario.id} title={scenarioTitle(scenario)} onSave={recordConversation} />;
 
   const spoken = lines.filter((l) => l.role === 'child').length;
   return (
     <div className="screen convo" style={{ ['--tone' as string]: scenario.color }}>
       <header className="convo__bar">
-        <IconButton icon="close" label="Leave conversation" onClick={() => (spoken ? setConfirmExit(true) : nav('/speak'))} />
-        <div className="convo__title"><span aria-hidden>{scenario.icon}</span><b>{scenario.title}</b></div>
+        <IconButton icon="close" label={t('practice.leave.button')} onClick={() => (spoken ? setConfirmExit(true) : nav('/speak'))} />
+        <div className="convo__title"><span aria-hidden>{scenario.icon}</span><b>{scenarioTitle(scenario)}</b></div>
         <span className="topbar__spacer" />
       </header>
 
@@ -136,7 +140,7 @@ export function Conversation() {
         {lines.map((l, i) => l.role === 'tutor' ? (
           <div key={i} className={`line line--tutor ${l.tip ? 'line--tip' : ''}`}>
             {!l.tip && <Mascot mood="idle" size={40} />}
-            <button type="button" className="bubble" onClick={() => void say(l.text)} aria-label={`Play: ${l.text}`}>{l.tip && <span aria-hidden>💡 </span>}{l.text}</button>
+            <button type="button" className="bubble" onClick={() => void say(l.text)} aria-label={t('practice.line.play', { text: l.text })}>{l.tip && <span aria-hidden>💡 </span>}{l.text}</button>
           </div>
         ) : (
           <div key={i} className="line line--child">
@@ -156,10 +160,10 @@ export function Conversation() {
       <div className="convo__dock">
         {error ? (
           <ErrorPanel code={error} onRetry={() => { setError(null); if (chosen) void take.start(toItem(chosen), 0); }}
-            onUseDemo={() => { setSettings({ demoMic: true }); setError(null); toast('Demo microphone on — scores are simulated', '🎛️'); }} />
+            onUseDemo={() => { setSettings({ demoMic: true }); setError(null); toast(t('practice.demoMic.toast'), '🎛️'); }} />
         ) : !thinking && suggestions.length > 0 && (
           <>
-            <p className="convo__hint">{chosen ? (take.phase === 'listening' ? 'I’m listening…' : take.phase === 'processing' ? 'Got it…' : 'Tap the mic and say it') : 'Choose what to say'}</p>
+            <p className="convo__hint">{t(!chosen ? 'practice.hint.choose' : take.phase === 'listening' ? 'practice.hint.listening' : take.phase === 'processing' ? 'practice.hint.processing' : 'practice.hint.ready')}</p>
             <div className="convo__replies">
               {suggestions.map((s) => (
                 <button key={s} type="button" className={`reply ${chosen === s ? 'is-on' : ''}`} disabled={take.phase !== 'idle'} onClick={() => { setChosen(s); void voice.speak(s, { accent: p.accent }).catch(() => undefined); }}>
@@ -173,9 +177,9 @@ export function Conversation() {
         )}
       </div>
 
-      <Sheet open={confirmExit} onClose={() => setConfirmExit(false)} label="Leave conversation?">
-        <div className="confirm"><h2>Leave the conversation?</h2><p>You’re doing great — only a few lines to go.</p>
-          <Button size="lg" block onClick={() => setConfirmExit(false)}>Keep talking</Button><Button variant="ghost" block onClick={() => nav('/speak')}>Leave</Button></div>
+      <Sheet open={confirmExit} onClose={() => setConfirmExit(false)} label={t('practice.leave.sheet')}>
+        <div className="confirm"><h2>{t('practice.leave.title')}</h2><p>{t('practice.leave.body')}</p>
+          <Button size="lg" block onClick={() => setConfirmExit(false)}>{t('practice.leave.stay')}</Button><Button variant="ghost" block onClick={() => nav('/speak')}>{t('practice.leave.confirm')}</Button></div>
       </Sheet>
     </div>
   );
@@ -184,6 +188,7 @@ export function Conversation() {
 const toItem = (text: string): SpeakItem => ({ id: `say-${text.toLowerCase().replace(/[^a-z]+/g, '-')}`, text, kind: 'sentence' });
 
 function Summary({ lines, scenarioId, title, onSave }: { lines: Line[]; scenarioId: string; title: string; onSave: ReturnType<typeof useStore.getState>['recordConversation'] }) {
+  const { t } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
   const saved = useRef(false);
@@ -196,17 +201,17 @@ function Summary({ lines, scenarioId, title, onSave }: { lines: Line[]; scenario
   mine.forEach((a) => a.words.forEach((w) => w.phonemes.forEach((ph) => worst.set(ph.phoneme, Math.min(worst.get(ph.phoneme) ?? 100, ph.score)))));
   const practice = [...worst.entries()].filter(([ph, s]) => s < 78 && phonemeInfo(ph).difficulty >= 0.3).sort((a, b) => a[1] - b[1]).slice(0, 2).map(([ph]) => ph);
   const strong: string[] = [];
-  if (avg((a) => a.completeness) >= 98) strong.push('saying every word');
-  if (avg((a) => a.fluency) >= 82) strong.push('smooth, steady rhythm');
-  if (avg((a) => a.prosody) >= 82) strong.push('natural melody');
-  const clear = [...worst.entries()].filter(([ph, s]) => s >= 88 && phonemeInfo(ph).difficulty >= 0.4).map(([ph]) => `a clear “${phonemeInfo(ph).label}”`)[0];
+  if (avg((a) => a.completeness) >= 98) strong.push(t('practice.summary.strong.everyWord'));
+  if (avg((a) => a.fluency) >= 82) strong.push(t('practice.summary.strong.rhythm'));
+  if (avg((a) => a.prosody) >= 82) strong.push(t('practice.summary.strong.melody'));
+  const clear = [...worst.entries()].filter(([ph, s]) => s >= 88 && phonemeInfo(ph).difficulty >= 0.4).map(([ph]) => t('practice.summary.strong.clearSound', { label: phonemeInfo(ph).label }))[0];
   if (clear) strong.push(clear);
-  if (!strong.length) strong.push('keeping the conversation going');
+  if (!strong.length) strong.push(t('practice.summary.strong.keptGoing'));
 
   useEffect(() => {
     if (saved.current) return;
     saved.current = true;
-    onSave({ scenarioId, score, strong, practice }).forEach((a) => toast(a.title, a.icon));
+    onSave({ scenarioId, score, strong, practice }).forEach((a) => toast(badgeName(a), a.icon));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -215,19 +220,19 @@ function Summary({ lines, scenarioId, title, onSave }: { lines: Line[]; scenario
     <div className="screen complete">
       <div className="complete__stage">
         <Mascot mood={score >= 80 ? 'cheer' : 'happy'} size={112} />
-        <h1>Conversation summary</h1>
+        <h1>{t('practice.summary.title')}</h1>
         <p className="complete__lesson">{title}</p>
-        <div className="stat-row"><div className="stat"><b>{score}</b><span>Pronunciation</span></div><div className="stat stat--sun"><b>{mine.length}</b><span>Things you said</span></div></div>
+        <div className="stat-row"><div className="stat"><b>{score}</b><span>{t('practice.summary.stat.pronunciation')}</span></div><div className="stat stat--sun"><b>{mine.length}</b><span>{t('practice.summary.stat.lines')}</span></div></div>
         <div className="card summary">
-          <h2><span aria-hidden>💪</span> Strong</h2>
+          <h2><span aria-hidden>💪</span> {t('practice.summary.strong.title')}</h2>
           <ul>{strong.slice(0, 3).map((s) => <li key={s}>{s}</li>)}</ul>
-          <h2><span aria-hidden>🎯</span> Practise</h2>
-          {practice.length ? <ul>{practice.map((ph) => <li key={ph}>the “{phonemeInfo(ph).label}” sound, as in “{phonemeInfo(ph).example}”{isGrownUp(p.band) ? ` — /${ph}/` : ''}</li>)}</ul> : <p>Nothing stood out — every sound was clear!</p>}
+          <h2><span aria-hidden>🎯</span> {t('practice.summary.practise.title')}</h2>
+          {practice.length ? <ul>{practice.map((ph) => <li key={ph}>{t(isGrownUp(p.band) ? 'practice.summary.practise.sound.symbol' : 'practice.summary.practise.sound', { label: phonemeInfo(ph).label, example: phonemeInfo(ph).example, symbol: ph })}</li>)}</ul> : <p>{t('practice.summary.practise.none')}</p>}
         </div>
       </div>
       <div className="complete__dock">
-        {drill && <Button variant="coral" size="lg" icon="mic" block onClick={() => nav(`/lab/${encodeURIComponent(drill)}`)}>2-minute “{phonemeInfo(drill).label}” drill</Button>}
-        <Button variant={drill ? 'ghost' : 'leaf'} size={drill ? 'md' : 'lg'} block onClick={() => nav('/speak')}>Done</Button>
+        {drill && <Button variant="coral" size="lg" icon="mic" block onClick={() => nav(`/lab/${encodeURIComponent(drill)}`)}>{t('practice.summary.drill', { label: phonemeInfo(drill).label })}</Button>}
+        <Button variant={drill ? 'ghost' : 'leaf'} size={drill ? 'md' : 'lg'} block onClick={() => nav('/speak')}>{t('common.done')}</Button>
       </div>
     </div>
   );

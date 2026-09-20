@@ -1,6 +1,7 @@
 import type { AgeBand, HomeLanguage, PhonemeId } from '../domain/types';
+import { tc } from '../i18n';
 import { ZH_SOUNDS } from './zh/sounds';
-import { displayScript, inScript } from './zh/script';
+import { inScript } from './zh/script';
 
 /** Parameters for the mouth illustration. Numeric so poses can be tweened into animation later. */
 export interface MouthPose {
@@ -47,6 +48,8 @@ const pose = (p: Partial<MouthPose>): MouthPose => ({
   open: 0.3, round: 0, spread: 0.2, tongue: 'rest', air: 'none', voiced: true, ...p,
 });
 
+// The wording below is the English source. Other App languages translate it in src/i18n/<language>/content.json under
+// `sound.<id>.…` (read by `phonemeInfo`, at the bottom) — when a line changes here, its translation needs another look.
 const list: PhonemeInfo[] = [
   // ---------- The sounds children learning English struggle with most ----------
   {
@@ -330,20 +333,35 @@ export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries([
 /** Mandarin units are namespaced "zh:…", so the two catalogues never collide. */
 export const isZhSound = (id: PhonemeId): boolean => id.startsWith('zh:');
 
-/** The Mandarin guides in Traditional characters, for learners who read them (most of Hong Kong). */
-const ZH_HANT: Record<PhonemeId, PhonemeInfo> = Object.fromEntries(ZH_SOUNDS.map((p) => [p.id, {
-  ...p, example: inScript(p.example, 'hant'), problem: inScript(p.problem, 'hant'), detail: inScript(p.detail, 'hant'),
-  steps: p.steps.map((x) => inScript(x, 'hant')),
-  tip: Object.fromEntries(Object.entries(p.tip).map(([band, x]) => [band, inScript(x, 'hant')])) as PhonemeInfo['tip'],
-}]));
-
-export const phonemeInfo = (id: PhonemeId): PhonemeInfo =>
-  (displayScript() === 'hant' ? ZH_HANT[id] : undefined) ?? PHONEMES[id] ?? {
+/**
+ * A sound's guide as the learner reads it — a copy, worked out when asked for, so it follows the App language and the
+ * learner's script while the app is open:
+ *   * name, tips, steps, problem and detail in the App language. The English is the data above; a translation is
+ *     looked up by the sound's id (src/i18n/zh-Hant/content.json: `sound.θ.name`, `sound.θ.tip.junior`,
+ *     `sound.θ.step.1`, `sound.θ.problem`, `sound.θ.detail`; a sound we have no guide for reads `sound.unknown.…`).
+ *     The label and the example are what is being learned, so they are never translated.
+ *   * for Mandarin sounds, the characters quoted in that wording in the learner's script (Traditional for most of
+ *     Hong Kong). A translation quotes them as the data does — in Simplified, like the scorer — so the English and
+ *     the translation go through the same conversion.
+ */
+export const phonemeInfo = (id: PhonemeId): PhonemeInfo => {
+  const known = PHONEMES[id];
+  const info: PhonemeInfo = known ?? {
     id, label: id, name: id, example: '', category: 'consonant', pose: pose({}),
     tip: { junior: 'Listen closely and copy the sound.' }, steps: ['Listen', 'Watch the mouth', 'Copy'],
     problem: 'This sound wasn’t quite clear.', detail: `/${id}/`, difficulty: 0.2,
   };
+  const key = known ? `sound.${id}` : 'sound.unknown';
+  const shown = (text: string): string => (isZhSound(id) ? inScript(text) : text);
+  const say = (field: string, english: string): string => shown(tc(`${key}.${field}`, english));
+  return {
+    ...info, name: say('name', info.name), example: shown(info.example), problem: say('problem', info.problem), detail: say('detail', info.detail),
+    steps: info.steps.map((x, i) => say(`step.${i + 1}`, x)),
+    tip: Object.fromEntries(Object.entries(info.tip).map(([band, x]) => [band, say(`tip.${band}`, x)])) as PhonemeInfo['tip'],
+  };
+};
 
+/** The tip for this learner's age, in the App language (it reads `phonemeInfo`). */
 export const tipFor = (id: PhonemeId, band: AgeBand): string => {
   const info = phonemeInfo(id);
   // Grown-ups get the teen wording (the most precise), never the little-ones version.
@@ -359,11 +377,14 @@ export const exampleSpeech = (id: PhonemeId): string => {
 /** Labels too long for a square glyph tile at full size ("zh ch sh", "-n / -ng"). */
 export const isLongLabel = (label: string): boolean => label.replace(/\s/g, '').length > 3;
 
-/** How to write a (possibly foreign) sound for a child: English spelling if we know it, else the symbol. */
+/**
+ * How to write a (possibly foreign) sound for a child: English spelling if we know it, else the symbol. A spelling is
+ * never translated; the few descriptions are (`sound.∅.label`, `sound.ɾ.label`, … in content.json).
+ */
 export const soundLabel = (id: PhonemeId): string => {
-  if (id === '∅') return 'nothing';
+  if (id === '∅') return tc('sound.∅.label', 'nothing');
   const foreign: Record<string, string> = { 'ɾ': 'a tapped r', 'ʁ': 'a throaty r', 'x': 'a throaty h' };
-  return foreign[id] ?? PHONEMES[id]?.label ?? id;
+  return foreign[id] ? tc(`sound.${id}.label`, foreign[id]) : PHONEMES[id]?.label ?? id;
 };
 
 /** Sounds with a full Pronunciation Lab ladder, in default teaching order. */

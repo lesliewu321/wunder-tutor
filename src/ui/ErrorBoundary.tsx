@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from 'react';
+import { t } from '../i18n';
 
 /** Last line of defence: if a screen fails, say so and offer a way on — never a blank page. */
 export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
@@ -13,9 +14,9 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
     return (
       <div className="screen screen--center gate" role="alert">
         <span className="gate__icon" aria-hidden>🛠️</span>
-        <h1>Something went wrong</h1>
-        <p>That screen couldn’t open. Your progress is safe.</p>
-        <button type="button" className="btn btn--primary btn--lg btn--block" onClick={() => { window.location.href = '/'; }}>Go to the start</button>
+        <h1>{t('common.error.title')}</h1>
+        <p>{t('common.error.body')}</p>
+        <button type="button" className="btn btn--primary btn--lg btn--block" onClick={() => { window.location.href = '/'; }}>{t('common.error.reload')}</button>
       </div>
     );
   }

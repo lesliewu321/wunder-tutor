@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 // Core domain types shared by every layer (content, speech, engine, UI).
 // These mirror the tables in supabase/schema.sql so the local repository can
 // later be swapped for a Supabase-backed one without touching the UI.
@@ -10,7 +11,7 @@ export const contentBand = (band: AgeBand): ContentBand => (band === 'adult' ? '
 /** Teens and adults get the grown-up presentation: phonetic symbols, less mascot, no stars. */
 export const isGrownUp = (band: AgeBand): boolean => band === 'teen' || band === 'adult';
 /** What the protected settings area is called: a parent's Parent Zone, or an adult learner's own settings. */
-export const settingsName = (band: AgeBand): string => (band === 'adult' ? 'Settings & privacy' : 'Parent Zone');
+export const settingsName = (band: AgeBand): string => t(band === 'adult' ? 'common.settings.adult' : 'common.settings.parent');
 /** The English accent a child is taught. */
 export type Accent = 'en-US' | 'en-GB';
 /** What a piece of speech is scored and spoken as: English in the child's accent, or Mandarin (Putonghua). */
@@ -275,4 +276,6 @@ export interface ParentSettings {
   demoMic: boolean;
   simulate: 'none' | 'network' | 'service' | 'slow';
   theme: 'auto' | 'light' | 'dark';
+  /** The app's own wording (not what is being learned). Not chosen yet: the device's language decides. */
+  language?: 'en' | 'zh-Hant';
 }

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { createPortal } from 'react-dom';
+import type { Key } from '../../i18n';
+import { useT } from '../../i18n/useT';
 import { Icon } from '../../ui/Icon';
 import { backLenses, canShowCamera, forgetLens, pickLens, rememberedLens, rememberLens, takeStill } from './camera';
 import type { Problem } from './messages';
@@ -15,16 +17,16 @@ import type { Problem } from './messages';
 // camera and cancels whatever was being taken or read.
 
 type Cam = 'starting' | 'live' | 'blocked' | 'none' | 'failed';
-const CAM_PROBLEM: Record<Exclude<Cam, 'starting' | 'live'>, string> = {
-  blocked: 'The camera is switched off for Wunder Tutor. Allow it in your browser, or use the camera app.',
-  none: 'No camera was found here. Choose a photo instead.',
-  failed: 'The camera didn’t start. Use the camera app, or choose a photo.',
+const CAM_PROBLEM: Record<Exclude<Cam, 'starting' | 'live'>, Key> = {
+  blocked: 'home.camera.problem.blocked',
+  none: 'home.camera.problem.none',
+  failed: 'home.camera.problem.failed',
 };
 const nameOf = (e: unknown): string => (e as { name?: string } | null)?.name ?? '';
 const problemOf = (e: unknown): Cam => (nameOf(e) === 'NotAllowedError' || nameOf(e) === 'SecurityError' ? 'blocked' : nameOf(e) === 'NotFoundError' ? 'none' : 'failed');
 /** This lens won't open, but another may: gone, unsuitable, or busy. Never a refused permission — asking again would nag. */
 const lensTrouble = (e: unknown): boolean => ['OverconstrainedError', 'NotFoundError', 'NotReadableError', 'AbortError'].includes(nameOf(e));
-const FIX_LABEL: Record<NonNullable<Problem['fix']>, string> = { code: 'Enter the code', connections: 'Check connections' };
+const FIX_LABEL: Record<NonNullable<Problem['fix']>, Key> = { code: 'home.camera.fix.code', connections: 'home.camera.fix.connections' };
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 interface Props {
@@ -38,6 +40,7 @@ interface Props {
 }
 
 export function CameraScreen({ kid, blocked, onClose, onFix, read }: Props) {
+  const { t } = useT();
   const root = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const track = useRef<MediaStreamTrack | null>(null);
@@ -231,7 +234,7 @@ export function CameraScreen({ kid, blocked, onClose, onFix, read }: Props) {
     try {
       const photo = await takeStill(track.current, v);
       if (signal.aborted) return; // closed while the phone was taking it: nothing is sent
-      if (photo) void readPhoto(photo); else setProblem({ text: 'The camera didn’t give a picture. Try again, or use the phone’s camera.' });
+      if (photo) void readPhoto(photo); else setProblem({ text: t('home.camera.noPicture') });
     } finally {
       if (!signal.aborted) setTaking(false);
     }
@@ -243,23 +246,23 @@ export function CameraScreen({ kid, blocked, onClose, onFix, read }: Props) {
     try { await t.applyConstraints({ advanced: [{ torch: !torch } as MediaTrackConstraintSet] }); setTorch(!torch); } catch { setTorch(null); }
   };
 
-  const trouble = cam !== 'starting' && cam !== 'live' ? CAM_PROBLEM[cam] : null;
+  const trouble = cam !== 'starting' && cam !== 'live' ? t(CAM_PROBLEM[cam]) : null;
   const at = lenses.findIndex((l) => l.deviceId === lens);
   const nextLens = lenses.length > 1 ? lenses[(at + 1) % lenses.length] : null;
   const onFile = (e: ChangeEvent<HTMLInputElement>) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void readPhoto(f); };
-  const fixButton = (p: Problem) => p.fix && <button type="button" className="camera__app" onClick={() => onFix(p.fix!)}>{FIX_LABEL[p.fix]}</button>;
+  const fixButton = (p: Problem) => p.fix && <button type="button" className="camera__app" onClick={() => onFix(p.fix!)}>{t(FIX_LABEL[p.fix])}</button>;
 
   return createPortal(
-    <div ref={root} className="camera" role="dialog" aria-modal="true" aria-label="Camera: take a photo of a page" tabIndex={-1}>
+    <div ref={root} className="camera" role="dialog" aria-modal="true" aria-label={t('home.camera.aria')} tabIndex={-1}>
       <video ref={video} className={`camera__video ${mirror ? 'camera__video--mirror' : ''} ${live && !stopped ? '' : 'camera__video--off'}`} playsInline muted aria-hidden />
       {shot && <img className="camera__shot" src={shot} alt="" />}
-      {(shot || taking) && <div className="camera__reading" role="status">{shot && <span className="camera__scan" aria-hidden />}<span className="camera__pill">{taking ? 'Hold still…' : kid ? 'Reading your page…' : 'Reading the page…'}</span></div>}
+      {(shot || taking) && <div className="camera__reading" role="status">{shot && <span className="camera__scan" aria-hidden />}<span className="camera__pill">{t(taking ? 'home.camera.holdStill' : kid ? 'home.camera.reading.kid' : 'home.camera.reading.adult')}</span></div>}
 
       <div className="camera__top">
-        <button type="button" className="camera__round" aria-label="Close the camera" onClick={onClose}><Icon name="close" /></button>
-        <span className="camera__title">Say it right</span>
+        <button type="button" className="camera__round" aria-label={t('home.camera.close')} onClick={onClose}><Icon name="close" /></button>
+        <span className="camera__title">{t('home.camera.title')}</span>
         {torch !== null && live && !stopped ? (
-          <button type="button" className={`camera__round ${torch ? 'is-on' : ''}`} aria-label={torch ? 'Torch off' : 'Torch on'} aria-pressed={torch} onClick={() => void flip()}><Icon name="bolt" fill={torch} /></button>
+          <button type="button" className={`camera__round ${torch ? 'is-on' : ''}`} aria-label={t(torch ? 'home.camera.torch.off' : 'home.camera.torch.on')} aria-pressed={torch} onClick={() => void flip()}><Icon name="bolt" fill={torch} /></button>
         ) : <span className="camera__round camera__round--empty" />}
       </div>
 
@@ -268,28 +271,28 @@ export function CameraScreen({ kid, blocked, onClose, onFix, read }: Props) {
       ) : (
         <>
           {problem && !shot && <div className="camera__problem" role="alert"><p>{problem.text}</p>{fixButton(problem)}</div>}
-          {cam === 'starting' && !shot && <p className="camera__middle">Starting the camera…</p>}
+          {cam === 'starting' && !shot && <p className="camera__middle">{t('home.camera.starting')}</p>}
           {trouble && !shot && (
             <div className="camera__middle">
               <p>{trouble}</p>
-              {cam !== 'none' && <button type="button" className="camera__app" onClick={() => cameraApp.current?.click()}><Icon name="camera" size={20} />Use the camera app</button>}
+              {cam !== 'none' && <button type="button" className="camera__app" onClick={() => cameraApp.current?.click()}><Icon name="camera" size={20} />{t('home.camera.useApp')}</button>}
             </div>
           )}
         </>
       )}
 
       <div className="camera__bottom">
-        {live && idle && !problem && <p className="camera__hint camera__pill">{kid ? 'Get the whole page in the picture, then tap the white button' : 'Get the whole page in the picture, then tap'}</p>}
+        {live && idle && !problem && <p className="camera__hint camera__pill">{t(kid ? 'home.camera.hint.kid' : 'home.camera.hint.adult')}</p>}
         {/* Always a way out to the phone's own camera (best focus, flash, every lens) if this preview looks blurry. */}
-        {live && idle && navigator.maxTouchPoints > 0 && <button type="button" className="camera__link camera__pill" onClick={() => cameraApp.current?.click()}>Blurry? Use the phone’s camera instead</button>}
+        {live && idle && navigator.maxTouchPoints > 0 && <button type="button" className="camera__link camera__pill" onClick={() => cameraApp.current?.click()}>{t('home.camera.blurry')}</button>}
         <div className="camera__bar">
           <button type="button" className="camera__side" onClick={() => gallery.current?.click()} disabled={!idle}>
-            <span className="camera__round"><Icon name="image" /></span><small>Photos</small>
+            <span className="camera__round"><Icon name="image" /></span><small>{t('home.camera.photos')}</small>
           </button>
-          <button ref={shutter} type="button" className="camera__shutter" aria-label="Take the photo" onClick={() => void take()} disabled={!live || !idle} />
+          <button ref={shutter} type="button" className="camera__shutter" aria-label={t('home.camera.shutter')} onClick={() => void take()} disabled={!live || !idle} />
           {nextLens && !stopped ? (
-            <button type="button" className="camera__side" onClick={() => control.current?.lens(nextLens.deviceId)} disabled={!idle || !live} aria-label={`Switch lens (${Math.max(at, 0) + 1} of ${lenses.length})`}>
-              <span className="camera__round"><Icon name="retry" /></span><small>Lens {Math.max(at, 0) + 1}/{lenses.length}</small>
+            <button type="button" className="camera__side" onClick={() => control.current?.lens(nextLens.deviceId)} disabled={!idle || !live} aria-label={t('home.camera.lens.aria', { n: Math.max(at, 0) + 1, total: lenses.length })}>
+              <span className="camera__round"><Icon name="retry" /></span><small>{t('home.camera.lens', { n: Math.max(at, 0) + 1, total: lenses.length })}</small>
             </button>
           ) : <span className="camera__side" aria-hidden />}
         </div>

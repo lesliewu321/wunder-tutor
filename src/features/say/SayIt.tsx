@@ -1,4 +1,5 @@
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { useT } from '../../i18n/useT';
 import { useActiveProfile } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { SpeakExercise } from '../speak/SpeakExercise';
@@ -9,6 +10,7 @@ import { sayItem } from './sayItem';
 // next. The page itself is on Home ("My book"). The sentence lives in the address, so the phone's back button
 // returns to the page.
 export function SayIt() {
+  const { t } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
   const { page, setPage } = useBook(p.id);
@@ -25,11 +27,11 @@ export function SayIt() {
   return (
     <div className="screen lesson">
       <header className="lesson__bar">
-        <button type="button" className="icon-btn" aria-label="Back to the page" onClick={close}><Icon name="back" /></button>
+        <button type="button" className="icon-btn" aria-label={t('home.say.back')} onClick={close}><Icon name="back" /></button>
         <span className="lesson__count">{active + 1}/{lines.length}</span>
       </header>
       <div className="lesson__body" key={`${active}:${current.id}`}>
-        <SpeakExercise item={current} context="practice" mode="free" continueLabel={next > 0 ? 'Next sentence' : 'Done'}
+        <SpeakExercise item={current} context="practice" mode="free" continueLabel={t(next > 0 ? 'home.say.next' : 'common.done')}
           onDone={(r) => {
             setPage({ ...page, best: { ...page.best, [active]: Math.max(page.best[active] ?? 0, r.best) } });
             if (next > 0) setParams({ s: String(next) }, { replace: true }); else close();

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon, type IconName } from './Icon';
@@ -70,7 +71,7 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
       <div className="sheet" role="dialog" aria-modal="true" aria-label={label} tabIndex={-1} ref={ref}>
         <div className="sheet__top">
           <div className="sheet__grip" />
-          <button type="button" className="sheet__close" aria-label="Close" onClick={onClose}><Icon name="close" size={20} /></button>
+          <button type="button" className="sheet__close" aria-label={t('common.close')} onClick={onClose}><Icon name="close" size={20} /></button>
         </div>
         {children}
       </div>
@@ -100,10 +101,10 @@ const useCountUp = (target: number, ms = 900): number => {
 export function ScoreRing({ score, size = 148, stars }: { score: number; size?: number; stars?: boolean }) {
   const shown = useCountUp(score);
   const r = 52, c = 2 * Math.PI * r;
-  const t = tier(score);
+  const grade = tier(score);
   const starCount = score >= 85 ? 3 : score >= 65 ? 2 : 1;
   return (
-    <div className={`ring ring--${t}`} style={{ width: size, height: size }} role="img" aria-label={`Pronunciation score ${score} out of 100`}>
+    <div className={`ring ring--${grade}`} style={{ width: size, height: size }} role="img" aria-label={t('common.score.aria', { score })}>
       <svg viewBox="0 0 120 120" width={size} height={size}>
         <circle cx="60" cy="60" r={r} className="ring__track" />
         <circle cx="60" cy="60" r={r} className="ring__value" strokeDasharray={c} strokeDashoffset={c * (1 - shown / 100)} transform="rotate(-90 60 60)" />
@@ -113,7 +114,7 @@ export function ScoreRing({ score, size = 148, stars }: { score: number; size?: 
           <div className="ring__stars" aria-hidden>{[0, 1, 2].map((i) => <span key={i} className={i < starCount ? 'on' : ''} style={{ animationDelay: `${300 + i * 160}ms` }}>★</span>)}</div>
         ) : null}
         <div className="ring__num">{shown}</div>
-        {!stars && <div className="ring__of">out of 100</div>}
+        {!stars && <div className="ring__of">{t('common.score.outOf')}</div>}
       </div>
     </div>
   );
@@ -159,7 +160,7 @@ export function Toaster() {
 export function TopBar({ title, onBack, right }: { title?: string; onBack?: () => void; right?: ReactNode }) {
   return (
     <header className="topbar">
-      {onBack ? <IconButton icon="back" label="Back" onClick={onBack} /> : <span className="topbar__spacer" />}
+      {onBack ? <IconButton icon="back" label={t('common.back')} onClick={onBack} /> : <span className="topbar__spacer" />}
       <h1 className="topbar__title">{title}</h1>
       <div className="topbar__right">{right ?? <span className="topbar__spacer" />}</div>
     </header>

@@ -127,6 +127,14 @@ practised. A dense Chinese page takes about 6–8 s. Needs the API (beta access 
 photo nor the text on its servers; the page's sentences stay on the device (per learner) until a new photo, and are
 erased with the learner's data. Not added to the review schedule.
 
+## App language
+
+The family chooses the app's language — English or 繁體中文 (Hong Kong) — on the first screen or in Settings; it is
+not tied to the learner's home language. It changes the app's own wording only (instructions, feedback, the grown-up
+screens); the words being learned, the teacher's voice and pinyin never change. Everything lives in `src/i18n/`
+(see its README for the rules, the Chinese style guide and the glossary): typed keys in `en/*.json`, translations in
+`zh-Hant/*.json`, and `zh-Hant/content*.json` for wording that lives with its data (sound tips, lesson titles, badges).
+
 ## Hong Kong and Google
 
 Google's Gemini API (reading pages, the teacher voice) refuses requests that come from Hong Kong, and the hosted API

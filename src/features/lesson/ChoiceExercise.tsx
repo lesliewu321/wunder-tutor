@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Exercise, SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
+import { useT } from '../../i18n/useT';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile } from '../../state/store';
 import { Icon } from '../../ui/Icon';
@@ -18,6 +19,7 @@ const shuffle = <T,>(xs: T[], seed: string): T[] => {
 
 /** Listening exercises: "choose what you heard" and minimal pairs (three / tree). */
 export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry: boolean) => void }) {
+  const { t } = useT();
   const profile = useActiveProfile();
   const [picked, setPicked] = useState<string | null>(null);
   const [wrong, setWrong] = useState<string[]>([]);
@@ -32,15 +34,15 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
   const locale = localeOf(answer, profile.accent);
   const say = async (text: string, slow = false) => {
     setPlaying(true);
-    try { await voice.speak(text, { accent: locale, slow }); } catch { toast('Sound isn’t working on this device right now', '🔇'); }
+    try { await voice.speak(text, { accent: locale, slow }); } catch { toast(t('lesson.choice.noSound.toast'), '🔇'); }
     if (alive.current) setPlaying(false);
   };
 
   useEffect(() => {
     alive.current = true;
     setPicked(null); setWrong([]);
-    const t = setTimeout(() => void say(answer.text), 450);
-    return () => { alive.current = false; clearTimeout(t); stopPlayback(); };
+    const timer = setTimeout(() => void say(answer.text), 450);
+    return () => { alive.current = false; clearTimeout(timer); stopPlayback(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ex.id]);
 
@@ -62,13 +64,13 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
   return (
     <div className="choice">
       <div className="choice__stage">
-        <h2 className="choice__title">{ex.type === 'minimal-pair' ? 'Which one did you hear?' : 'What did you hear?'}</h2>
-        {sound && profile.band !== 'little' && <p className="choice__sub">{sound.category === 'tone' ? `Listen for ${sound.name.toLowerCase()}.` : `Listen for the “${sound.label}” sound.`}</p>}
-        <button type="button" className={`bigplay ${playing ? 'is-playing' : ''}`} onClick={() => void say(answer.text)} aria-label="Play the sound again">
+        <h2 className="choice__title">{t(ex.type === 'minimal-pair' ? 'lesson.choice.title.pair' : 'lesson.choice.title.heard')}</h2>
+        {sound && profile.band !== 'little' && <p className="choice__sub">{sound.category === 'tone' ? t('lesson.choice.listenFor.tone', { name: sound.name.toLowerCase() }) : t('lesson.choice.listenFor.sound', { label: sound.label })}</p>}
+        <button type="button" className={`bigplay ${playing ? 'is-playing' : ''}`} onClick={() => void say(answer.text)} aria-label={t('lesson.choice.replay')}>
           <Icon name="speaker" size={40} />
         </button>
-        <button type="button" className="pill pill--sm" onClick={() => void say(answer.text, true)}><Icon name="turtle" size={18} />Slow</button>
-        {!canHear && <p className="choice__sub">Sound isn’t available on this device, so you can skip this one.</p>}
+        <button type="button" className="pill pill--sm" onClick={() => void say(answer.text, true)}><Icon name="turtle" size={18} />{t('common.slow')}</button>
+        {!canHear && <p className="choice__sub">{t('lesson.choice.noSound.skip')}</p>}
 
         <div className={`options options--${options.length}`}>
           {options.map((o) => {
@@ -87,13 +89,13 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
       <div className="choice__dock">
         {solved ? (
           <>
-            <div className="choice__cheer"><Mascot mood="happy" size={72} /><p>{wrong.length ? 'You got it!' : 'Great listening!'}</p></div>
-            <Button variant="leaf" size="lg" block onClick={() => onDone(wrong.length === 0)}>Continue</Button>
+            <div className="choice__cheer"><Mascot mood="happy" size={72} /><p>{t(wrong.length ? 'lesson.choice.cheer.retry' : 'lesson.choice.cheer.first')}</p></div>
+            <Button variant="leaf" size="lg" block onClick={() => onDone(wrong.length === 0)}>{t('common.continue')}</Button>
           </>
         ) : wrong.length > 0 ? (
-          <p className="choice__nudge">Not quite — listen again, nice and slow.</p>
+          <p className="choice__nudge">{t('lesson.choice.nudge')}</p>
         ) : !canHear ? (
-          <Button variant="ghost" block onClick={() => onDone(true)}>Skip</Button>
+          <Button variant="ghost" block onClick={() => onDone(true)}>{t('lesson.choice.skip')}</Button>
         ) : null}
       </div>
     </div>

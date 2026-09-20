@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MouthPose } from '../content/phonemes';
+import { useT } from '../i18n/useT';
 
 const REST: MouthPose = { open: 0.12, round: 0, spread: 0.2, tongue: 'rest', air: 'none', voiced: false };
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -10,6 +11,7 @@ const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) /
  * rest → target → rest; swapping in richer animation later only means changing this renderer.
  */
 export function Mouth({ pose, animate = true, size = 200 }: { pose: MouthPose; animate?: boolean; size?: number }) {
+  const { t: say } = useT(); // `t` is the animation's time here
   const [t, setT] = useState(animate ? 0 : 1);
   const raf = useRef(0);
 
@@ -63,7 +65,7 @@ export function Mouth({ pose, animate = true, size = 200 }: { pose: MouthPose; a
   const showTeethOnLip = active && pose.teethOnLip;
 
   return (
-    <svg className="mouth" width={size} height={size * 0.93} viewBox="25 0 150 140" role="img" aria-label="Mouth position">
+    <svg className="mouth" width={size} height={size * 0.93} viewBox="25 0 150 140" role="img" aria-label={say('lab.mouth.aria')}>
       <defs><clipPath id="mouth-clip"><ellipse cx={cx} cy={cy} rx={halfW} ry={halfH} /></clipPath></defs>
 
       {active && pose.air === 'nose' && (

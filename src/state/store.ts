@@ -9,6 +9,7 @@ import { nextItemProgress, starsFor } from '../engine/learning';
 import { achievement, bumpStreak, XP } from '../engine/rewards';
 import { ALL_LESSONS } from '../content/course';
 import { setDisplayScript } from '../content/zh/script';
+import { deviceLanguage, setLanguage } from '../i18n';
 import { nextVoice } from '../speech/pitch';
 import { forgetBook } from '../features/say/page';
 
@@ -256,6 +257,11 @@ export const useStore = create<AppState>()(
 const syncScript = (s: AppState) => setDisplayScript(s.profiles[s.activeId ?? '']?.zhScript ?? 'hant');
 syncScript(useStore.getState());
 useStore.subscribe(syncScript);
+
+// The app's wording follows the App language setting the same way (wording outside React reads it from src/i18n).
+const syncLanguage = (s: AppState) => setLanguage(s.settings.language ?? deviceLanguage());
+syncLanguage(useStore.getState());
+useStore.subscribe(syncLanguage);
 
 export const useProfile = (): ChildProfile | null => useStore((s) => (s.activeId ? s.profiles[s.activeId] ?? null : null));
 
