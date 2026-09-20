@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { ErrorBoundary } from './ui/ErrorBoundary';
 import { useStore } from './state/store';
+import { startAccount } from './account/account';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/speak.css';
@@ -13,6 +14,9 @@ import './styles/tablet.css';
 if (import.meta.env.DEV) (window as unknown as { __store: typeof useStore }).__store = useStore;
 
 createRoot(document.getElementById('root')!).render(<StrictMode><ErrorBoundary><App /></ErrorBoundary></StrictMode>);
+
+// A family with an account: keep its devices the same. (Nothing is loaded for a family without one.)
+startAccount();
 
 // Offline app shell — production only, so it never gets in the way of development.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {

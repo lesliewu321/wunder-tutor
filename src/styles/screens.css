@@ -313,6 +313,11 @@
 .shelf__text { flex: 1; min-width: 0; }
 .shelf__text b { display: block; color: var(--ink); font-size: 1.02rem; line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .shelf__text small { display: block; color: var(--ink-soft); font-size: 0.82rem; margin-top: 1px; }
+/* The family account, in the grown-ups' settings */
+.account__saved { color: var(--ink-soft); font-size: 0.92rem; margin: 0; }
+.account__row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
+.account__code { letter-spacing: 0.3em; font-variant-numeric: tabular-nums; text-align: center; }
+.access--bad { color: var(--weak); }
 .type-sheet { display: flex; flex-direction: column; gap: 12px; }
 .type-sheet h2 { font-size: 1.3rem; }
 .type-sheet p { color: var(--ink-soft); line-height: 1.45; margin: 0; }

@@ -12,6 +12,7 @@ import { setDisplayScript } from '../content/zh/script';
 import { deviceLanguage, setLanguage } from '../i18n';
 import { nextVoice } from '../speech/pitch';
 import { forgetBook, forgetScores } from '../features/say/page';
+import { forgetSync, noteLearnerDeleted } from '../account/pending';
 
 /** Little 5–7, Junior 8–11, Teen 12–17, Grown-up 18+. */
 export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : age <= 17 ? 'teen' : 'adult');
@@ -49,7 +50,8 @@ interface AppState {
   addXp(amount: number): void;
   deleteRecordings(profileId?: string): Promise<number>;
   deletePronunciationHistory(profileId: string): Promise<void>;
-  deleteProfile(profileId: string): Promise<void>;
+  /** `heardFromAccount`: the family deleted this learner on another device (so the account need not be told). */
+  deleteProfile(profileId: string, opts?: { heardFromAccount?: boolean }): Promise<void>;
   deleteEverything(): Promise<void>;
 }
 
@@ -215,9 +217,10 @@ export const useStore = create<AppState>()(
         });
       },
 
-      async deleteProfile(profileId) {
+      async deleteProfile(profileId, opts) {
         await audioRepo.clear(`${profileId}/`);
         forgetBook(profileId);
+        if (!opts?.heardFromAccount) noteLearnerDeleted(profileId);
         set((s) => {
           const { [profileId]: _gone, ...rest } = s.profiles;
           const ids = Object.keys(rest);
@@ -228,6 +231,7 @@ export const useStore = create<AppState>()(
       async deleteEverything() {
         await audioRepo.clear('');
         Object.keys(get().profiles).forEach(forgetBook);
+        forgetSync();
         set({ profiles: {}, activeId: null, attempts: [], settings: defaultSettings });
       },
     }),

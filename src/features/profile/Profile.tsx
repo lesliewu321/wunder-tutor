@@ -13,6 +13,8 @@ import { apiHealth, getAccessCode, serviceStatus, serviceWords, setAccessCode, t
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
+import { deleteAccount, useAccount } from '../../account/account';
+import { AccountPanel } from './AccountPanel';
 
 const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
 const COURSES: CourseId[] = ['en', 'zh'];
@@ -104,6 +106,7 @@ export function ParentZone() {
   const setSettings = useStore((s) => s.setSettings);
   const patch = useStore((s) => s.patchProfile);
   const store = useStore();
+  const account = useAccount();
   const [danger, setDanger] = useState<Danger>(null);
   const [recordings, setRecordings] = useState<number | null>(null);
   const [services, setServices] = useState<ApiHealth | null>(null);
@@ -135,7 +138,11 @@ export function ParentZone() {
     recordings: { title: t('settings.delete.recordings.title', { name }), body: t('settings.delete.recordings.body'), cta: t('settings.delete.recordings.cta'), run: async () => { const n = await store.deleteRecordings(p.id); toast(tn('settings.delete.recordings.done', n), '🗑️'); refresh(); } },
     history: { title: t('settings.delete.history.title'), body: t('settings.delete.history.body', { name }), cta: t('settings.delete.history.cta'), run: async () => { await store.deletePronunciationHistory(p.id); toast(t('settings.delete.history.done'), '🗑️'); refresh(); } },
     profile: { title: t('settings.delete.profile.title', { name }), body: t('settings.delete.profile.body'), cta: t('settings.delete.profile.cta'), run: async () => { await store.deleteProfile(p.id); nav('/', { replace: true }); } },
-    everything: { title: t('settings.delete.everything.title'), body: t('settings.delete.everything.body'), cta: t('settings.delete.everything.cta'), run: async () => { await store.deleteEverything(); nav('/welcome', { replace: true }); } },
+    everything: { title: t('settings.delete.everything.title'), body: t('settings.delete.everything.body'), cta: t('settings.delete.everything.cta'), run: async () => {
+      if (account.status !== 'signed-out' && await deleteAccount()) return toast(t('settings.account.delete.failed'), '⚠️');
+      await store.deleteEverything();
+      nav('/welcome', { replace: true });
+    } },
   };
 
   const adult = p.band === 'adult';
@@ -181,6 +188,8 @@ export function ParentZone() {
           <button type="button" className="learner learner--add" onClick={() => nav('/welcome?add=1')}><span><Icon name="plus" /></span><b>{t('settings.learners.add.title')}</b><small>{t('settings.learners.add.sub')}</small></button>
         </div>
       </section>
+
+      <AccountPanel />
 
       <section>
         <h2 className="section-title">{t('settings.learning.title', { name })}</h2>
