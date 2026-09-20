@@ -15,7 +15,6 @@
   "lab.sound.voice.on": "Voice ON — feel your throat buzz",
   "lab.sound.voice.off": "Voice OFF — just air",
   "lab.sound.listen.example": "“{example}”",
-  "lab.sound.listen.failed": "Sound isn’t working on this device right now",
   "lab.sound.score": "Your “{label}” right now: **{score}** · {status}",
   "lab.sound.ladder": "The ladder",
   "lab.sound.practise.syllables": "Practise syllables",

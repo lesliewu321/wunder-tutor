@@ -309,6 +309,17 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   lengths only. `AZURE_SPEECH_REGION` is not a secret. Don't set `AZURE_SPEECH_ENDPOINT`.
 - **The Bash tool eats backslashes** in inline scripts (`node -e`, heredocs): `/\s+/` became `/s+/` twice and shipped.
   Write code containing regexes with the Edit/Write tools. A scan for such regexes found none left.
+- **The phone app needs the API DEPLOYED, not just committed.** The app is a different origin from the API
+  (`https://localhost` → `app.wundertutor.com`), so every call is cross-origin and the browser asks permission first.
+  That permission was written in `ee1fd66` and pushed to GitHub — and a GitHub push does not deploy. On the phone,
+  every single call (voice, scoring, reading, health) was blocked before it left the device, and the only thing the
+  learner saw was "Sound isn't working on this device right now". Check it from anywhere with:
+  `curl -X OPTIONS -H "Origin: https://localhost" -H "Access-Control-Request-Method: POST" -D - https://app.wundertutor.com/api/tts`
+  — it must answer 204 with `Access-Control-Allow-Origin`, not 405.
+- **A phone app has no second voice.** Android's WebView has no `speechSynthesis` at all, so `WebSpeechVoice` is dead
+  inside the app and the Gemini teacher voice is the ONLY voice. On the web a failure quietly fell back to the phone's
+  own voice; in the app it is silence. Anything that stops the API stops sound outright — including a fresh install,
+  which has no invite code until a grown-up enters one.
 - **The phone app's microphone hangs on a permission nobody asks about.** When the page calls for the microphone,
   Capacitor asks Android for `RECORD_AUDIO` **and `MODIFY_AUDIO_SETTINGS` together**, and counts the answer as yes
   only if every one came back yes (`BridgeWebChromeClient.onPermissionRequest`). Android always answers no to a

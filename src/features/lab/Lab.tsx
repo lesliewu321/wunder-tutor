@@ -8,6 +8,7 @@ import { XP, badgeName } from '../../engine/rewards';
 import type { Key } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import { labOrder, MASTERED_AT, WEAK_BELOW } from '../../intelligence/profile';
+import { noSoundMessage } from '../../speech/health';
 import { voice } from '../../speech/voice';
 import { ToneContour } from '../../ui/ToneContour';
 import { useActiveProfile, useStore } from '../../state/store';
@@ -96,7 +97,7 @@ export function LabSound() {
   const st = status(p, sound);
   const nextStage = LAB_STAGES.find((s) => stageDone(p, sound, s) < ladder[s].length) ?? 'sentence';
   const zh = sound.startsWith('zh:');
-  const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: zh ? 'zh-CN' : p.accent, slow }).catch(() => toast(t('lab.sound.listen.failed'), '🔇'));
+  const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: zh ? 'zh-CN' : p.accent, slow }).catch(() => void noSoundMessage(p.band).then((m) => toast(m, '🔇')));
 
   return (
     <div className="screen lab-sound">

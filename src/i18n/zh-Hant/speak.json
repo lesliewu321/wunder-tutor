@@ -43,7 +43,6 @@
   "speak.toast.soundMastered": "已掌握的音：{name}",
   "speak.toast.demoSilent": "示範麥克風不會錄下聲音",
   "speak.toast.noRecording": "這一次沒有錄音",
-  "speak.toast.noSound": "這部裝置現在無法播放聲音",
   "speak.toast.demoOn": "示範麥克風已開啟，分數為模擬",
   "speak.spoken.great": "做得好！",
   "speak.sheet.aria": "「{word}」的發音提示",

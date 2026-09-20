@@ -39,5 +39,12 @@
   "common.pip.aria": "導師 Pip",
   "common.zhChar.aria": "{char} {pinyin}。按一下查看提示",
   "common.zhChar.aria.scored": "{char} {pinyin}，{label}。按一下查看提示",
-  "common.score.outOf": "滿分 100"
+  "common.score.outOf": "滿分 100",
+  "common.noSound.needsCode.kid": "導師的聲音需要邀請碼。請家長到「{settings}」→「邀請碼」加入邀請碼。",
+  "common.noSound.needsCode.adult": "導師的聲音需要邀請碼。請到「{settings}」→「邀請碼」加入邀請碼。",
+  "common.noSound.refused.kid": "這部裝置的邀請碼已不再獲接納，所以導師無法發聲。請家長到「{settings}」→「邀請碼」再輸入一次。",
+  "common.noSound.refused.adult": "這部裝置的邀請碼已不再獲接納，所以導師無法發聲。請到「{settings}」→「邀請碼」再輸入一次。",
+  "common.noSound.noCodeSet": "這個 Wunder Tutor 伺服器尚未設定邀請碼，因此無法開啟導師的聲音。",
+  "common.noSound.unavailable": "目前無法連接導師的聲音。",
+  "common.noSound.device": "這部裝置目前無法播放聲音"
 }

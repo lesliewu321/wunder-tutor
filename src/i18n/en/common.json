@@ -39,5 +39,12 @@
   "common.pip.aria": "Pip the tutor",
   "common.zhChar.aria": "{char} {pinyin}. Tap for help",
   "common.zhChar.aria.scored": "{char} {pinyin}, {label}. Tap for help",
-  "common.score.outOf": "out of 100"
+  "common.score.outOf": "out of 100",
+  "common.noSound.needsCode.kid": "The teacher’s voice needs the invite code. A grown-up can add it in {settings} → Invite code.",
+  "common.noSound.needsCode.adult": "The teacher’s voice needs the invite code. Add it in {settings} → Invite code.",
+  "common.noSound.refused.kid": "This device’s invite code isn’t accepted any more, so the teacher can’t speak. A grown-up can enter it again in {settings} → Invite code.",
+  "common.noSound.refused.adult": "This device’s invite code isn’t accepted any more, so the teacher can’t speak. Enter it again in {settings} → Invite code.",
+  "common.noSound.noCodeSet": "This Wunder Tutor server has no invite code set yet, so the teacher’s voice can’t be switched on.",
+  "common.noSound.unavailable": "The teacher’s voice can’t be reached right now.",
+  "common.noSound.device": "Sound isn’t working on this device right now"
 }

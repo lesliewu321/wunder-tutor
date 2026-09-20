@@ -24,7 +24,6 @@
   "lesson.choice.listenFor.tone": "Listen for {name}.",
   "lesson.choice.listenFor.sound": "Listen for the “{label}” sound.",
   "lesson.choice.replay": "Play the sound again",
-  "lesson.choice.noSound.toast": "Sound isn’t working on this device right now",
   "lesson.choice.noSound.skip": "Sound isn’t available on this device, so you can skip this one.",
   "lesson.choice.cheer.first": "Great listening!",
   "lesson.choice.cheer.retry": "You got it!",

@@ -19,7 +19,6 @@
   "lesson.choice.listenFor.tone": "留心聽{name}。",
   "lesson.choice.listenFor.sound": "留心聽「{label}」這個音。",
   "lesson.choice.replay": "再播放一次聲音",
-  "lesson.choice.noSound.toast": "這部裝置現在無法播放聲音",
   "lesson.choice.noSound.skip": "這部裝置無法播放聲音，你可以跳過這一題。",
   "lesson.choice.cheer.first": "聽得真準！",
   "lesson.choice.cheer.retry": "答對了！",

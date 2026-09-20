@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Exercise, SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
 import { useT } from '../../i18n/useT';
+import { noSoundMessage } from '../../speech/health';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile } from '../../state/store';
 import { Icon } from '../../ui/Icon';
@@ -34,7 +35,7 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
   const locale = localeOf(answer, profile.accent);
   const say = async (text: string, slow = false) => {
     setPlaying(true);
-    try { await voice.speak(text, { accent: locale, slow }); } catch { toast(t('lesson.choice.noSound.toast'), '🔇'); }
+    try { await voice.speak(text, { accent: locale, slow }); } catch { toast(await noSoundMessage(profile.band), '🔇'); }
     if (alive.current) setPlaying(false);
   };
 

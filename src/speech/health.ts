@@ -1,6 +1,7 @@
 // Talking to the API proxy: which services exist, and the beta access code that unlocks them.
 import { t, type Key } from '../i18n';
 import { accessToken } from '../account/pending';
+import { isGrownUp, settingsName, type AgeBand } from '../domain/types';
 import { apiUrl } from '../platform';
 
 export interface ApiHealth {
@@ -83,6 +84,33 @@ export const apiHealth = (): Promise<ApiHealth> => {
 
 /** Ask again (the code or the server may have changed since the app opened). */
 export const refreshHealth = (): Promise<ApiHealth> => { health = null; return apiHealth(); };
+
+/**
+ * Why the teacher's voice stayed silent — the sentence to show the learner.
+ *
+ * The app used to give one answer, "Sound isn't working on this device right now", and in the phone app that is
+ * usually untrue: the device is fine, but the invite code was never entered on this phone, or the API could not be
+ * reached at all. It misleads most exactly where it matters most, because a phone app has no second voice to fall
+ * back on — Android's WebView has no `speechSynthesis` at all, so the teacher's voice is the only voice there is,
+ * and a learner who is told their phone is broken has nothing left to try.
+ */
+export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand): string => {
+  if (now.needsCode && !now.authorized) {
+    if (!now.codeSet) return t('common.noSound.noCodeSet');
+    // One whole sentence per case: who enters the code, and where, sit in different places in another language.
+    const settings = settingsName(band);
+    const kid = !isGrownUp(band);
+    if (hasCode) return t(kid ? 'common.noSound.refused.kid' : 'common.noSound.refused.adult', { settings });
+    return t(kid ? 'common.noSound.needsCode.kid' : 'common.noSound.needsCode.adult', { settings });
+  }
+  // No API within reach (offline, or a build that cannot see one) lands here too: `gemini` is false until it answers.
+  if (!now.gemini) return t('common.noSound.unavailable');
+  return t('common.noSound.device');
+};
+
+/** What the screens call when a word would not play: asks the API (the answer is cached) and picks the sentence. */
+export const noSoundMessage = async (band: AgeBand): Promise<string> =>
+  soundProblem(await apiHealth(), getAccessCode() !== '', band);
 
 // ---------------------------------------------------------------- do the services actually work?
 

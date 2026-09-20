@@ -145,7 +145,12 @@ export function Toaster() {
   useEffect(() => {
     pushToast = (t) => {
       const id = Date.now() + Math.random();
-      setItems((xs) => [...xs.slice(-2), { ...t, id }]);
+      setItems((xs) => {
+        // The same sentence twice over is noise, and reads as something going wrong twice: a lesson plays its word
+        // by itself and the learner also presses Listen, so one silent word used to stack two identical messages.
+        if (xs.some((x) => x.text === t.text)) return xs;
+        return [...xs.slice(-2), { ...t, id }];
+      });
       setTimeout(() => setItems((xs) => xs.filter((x) => x.id !== id)), 3400);
     };
     return () => { pushToast = null; };

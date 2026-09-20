@@ -51,7 +51,6 @@
   "speak.toast.soundMastered": "Sound mastered: {name}",
   "speak.toast.demoSilent": "The demo microphone doesn’t record sound",
   "speak.toast.noRecording": "No recording for this try",
-  "speak.toast.noSound": "Sound isn’t working on this device right now",
   "speak.toast.demoOn": "Demo microphone on — scores are simulated",
   "speak.spoken.great": "Great job!",
 

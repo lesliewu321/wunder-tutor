@@ -15,7 +15,6 @@
   "lab.sound.voice.on": "要出聲，摸摸喉嚨，會感到震動",
   "lab.sound.voice.off": "不出聲，只有氣流",
   "lab.sound.listen.example": "「{example}」",
-  "lab.sound.listen.failed": "這部裝置現在無法播放聲音",
   "lab.sound.score": "你的「{label}」現在：**{score}** · {status}",
   "lab.sound.ladder": "練習階梯",
   "lab.sound.practise.syllables": "練習音節",
