@@ -1,5 +1,5 @@
 -- =============================================================================
--- Wunder Tutor — accounts, learners, consent, usage, plan
+-- Wunder Tutor — accounts, learners, their book pages, consent, usage, plan
 -- =============================================================================
 --
 -- THIS DATABASE HOLDS CHILDREN'S DATA (learners aged 5–17, and adult learners).
@@ -12,7 +12,9 @@
 --     on the device (src/domain/types.ts: ChildProfile). Devices sync that document; `rev` tells them who was first.
 --     An earlier draft mirrored the app in 27 tables (supabase/archive/): every table was another way for sync to go
 --     wrong, and none of them was needed to restore a learner on a new phone.
---   * NO AUDIO. Recordings stay on the device. Nothing here can hold one.
+--   * MY BOOK. The pages a learner photographed or typed (their sentences and best scores — never the photo) are
+--     one small row each, so a page added on the phone appears on the tablet.
+--   * NO AUDIO, NO PHOTOS. Recordings and photographs stay on the device. Nothing here can hold one.
 --   * DATA MINIMISATION. No legal name, date of birth, school, location, photo or device identifier.
 --   * CONSENT is an append-only ledger with the wording's version and language.
 --   * ERASURE is one call: delete_learner() leaves an empty tombstone (so other devices learn of it),
@@ -130,7 +132,56 @@ create policy "learners: write own" on public.learners for update to authenticat
 grant select, insert, update (state, schema_version, rev) on public.learners to authenticated;
 
 -- ---------------------------------------------------------------------------
--- 3. Consent ledger (append-only; a change of mind is a new row or a revoked_at)
+-- 3. My book — the pages a learner photographed or typed (text and scores only)
+-- ---------------------------------------------------------------------------
+create table public.learner_pages (
+  parent_id   uuid not null default auth.uid(),
+  learner_id  text not null,
+  -- Made on the device, like the learner's id.
+  id          text not null check (char_length(id) between 8 and 64),
+  -- The app's BookPage without its id: { reading: { language, lines[] }, best: { sentence: score }, at }. '{}' once deleted.
+  data        jsonb not null check (jsonb_typeof(data) = 'object'),
+  -- When the device last changed the page (ms since 1970). Devices keep the newer of two versions of a page.
+  changed     bigint not null check (changed > 0),
+  updated_at  timestamptz not null default now(),
+  -- A deleted page stays as an empty tombstone, so the family's other devices delete it too.
+  deleted_at  timestamptz,
+  primary key (parent_id, learner_id, id),
+  foreign key (parent_id, learner_id) references public.learners (parent_id, id) on delete cascade,
+  constraint learner_pages_small check (pg_column_size(data) < 65536),
+  constraint learner_pages_tombstone_is_empty check (deleted_at is null or data = '{}'::jsonb)
+);
+comment on table public.learner_pages is 'My book: the text of a page a learner practises, with their best score per sentence. Never the photograph.';
+alter table public.learner_pages enable row level security;
+
+create trigger learner_pages_set_updated_at before insert or update on public.learner_pages
+  for each row execute function private.set_updated_at();
+
+-- A book, not a library: the app keeps 30 pages per learner.
+create or replace function private.learner_pages_limit()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  if (select count(*) from public.learner_pages p where p.parent_id = new.parent_id and p.learner_id = new.learner_id) >= 400 then
+    raise exception 'too many pages for one learner' using errcode = '54000';
+  end if;
+  return new;
+end;
+$$;
+revoke all on function private.learner_pages_limit() from public, anon, authenticated;
+create trigger learner_pages_limit before insert on public.learner_pages
+  for each row execute function private.learner_pages_limit();
+
+create policy "pages: read own" on public.learner_pages for select to authenticated using (parent_id = (select auth.uid()));
+create policy "pages: add own" on public.learner_pages for insert to authenticated with check (parent_id = (select auth.uid()));
+create policy "pages: write own" on public.learner_pages for update to authenticated using (parent_id = (select auth.uid())) with check (parent_id = (select auth.uid()));
+-- Only old tombstones may be removed for good: a live row that vanished would be uploaded again by the next device.
+create policy "pages: purge old tombstones" on public.learner_pages for delete to authenticated
+  using (parent_id = (select auth.uid()) and deleted_at is not null and deleted_at < now() - interval '30 days');
+-- Whole-row writes (the app upserts a page in one step); the policies above keep every row inside its own family.
+grant select, insert, update, delete on public.learner_pages to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- 4. Consent ledger (append-only; a change of mind is a new row or a revoked_at)
 -- ---------------------------------------------------------------------------
 create table public.consents (
   id              uuid primary key default gen_random_uuid(),
@@ -162,7 +213,7 @@ create policy "consents: revoke own" on public.consents for update to authentica
 grant select, insert, update (revoked_at) on public.consents to authenticated;
 
 -- ---------------------------------------------------------------------------
--- 4. Usage and plan — written by the server only (the API counts and enforces), read by the family
+-- 5. Usage and plan — written by the server only (the API counts and enforces), read by the family
 -- ---------------------------------------------------------------------------
 create table public.usage_daily (
   parent_id   uuid not null references public.parents (id) on delete cascade,
@@ -180,18 +231,22 @@ grant select on public.usage_daily to authenticated;
 
 create table public.plans (
   parent_id           uuid primary key references public.parents (id) on delete cascade,
-  plan                text not null default 'beta' check (plan in ('beta', 'free', 'family')),
+  -- 'free' unless the server says otherwise: 'beta' once the family has given the beta code, 'family' once they pay.
+  plan                text not null default 'free' check (plan in ('beta', 'free', 'family')),
   status              text not null default 'active' check (status in ('active', 'past_due', 'cancelled')),
   current_period_end  timestamptz,
   source              text check (source in ('stripe', 'app_store', 'play_store', 'manual')),
   updated_at          timestamptz not null default now()
 );
-comment on table public.plans is 'What the family has paid for. Written by the payment webhooks (service role) only.';
+comment on table public.plans is 'What the family may use. Written by the API (the beta code) and the payment webhooks only.';
 alter table public.plans enable row level security;
 create trigger plans_set_updated_at before update on public.plans
   for each row execute function private.set_updated_at();
 create policy "plans: read own" on public.plans for select to authenticated using (parent_id = (select auth.uid()));
 grant select on public.plans to authenticated;
+-- The API's own role: it reads and sets plans and reads the counters. It is granted nothing on learners, pages or consents.
+grant select, insert, update on public.plans to service_role;
+grant select on public.usage_daily to service_role;
 
 -- The API's counter: one atomic step, returning the day's totals so the API can compare them with the plan's limits.
 create or replace function public.count_usage(p_parent uuid, p_kind text, p_amount integer default 1)
@@ -213,7 +268,7 @@ revoke all on function public.count_usage(uuid, text, integer) from public, anon
 grant execute on function public.count_usage(uuid, text, integer) to service_role;
 
 -- ---------------------------------------------------------------------------
--- 5. Erasure
+-- 6. Erasure
 -- ---------------------------------------------------------------------------
 -- Delete one learner: the document is emptied at once; the empty tombstone tells the family's other devices.
 create or replace function public.delete_learner(p_learner text)
@@ -226,6 +281,8 @@ begin
    where parent_id = (select auth.uid()) and learner_id = p_learner and revoked_at is null;
   -- Deleting wins over whatever another device was about to write: it takes the next rev itself, and the tombstone
   -- refuses every later write. (Clients cannot set deleted_at: they are granted state, schema_version and rev only.)
+  update public.learner_pages set data = '{}'::jsonb, deleted_at = now()
+   where parent_id = (select auth.uid()) and learner_id = p_learner and deleted_at is null;
   update public.learners set state = '{}'::jsonb, deleted_at = now(), rev = rev + 1
    where parent_id = (select auth.uid()) and id = p_learner and deleted_at is null;
 end;
@@ -242,7 +299,7 @@ begin
   if me is null then
     raise exception 'not signed in' using errcode = '28000';
   end if;
-  delete from public.parents where id = me;   -- cascades to learners, consents, usage_daily, plans
+  delete from public.parents where id = me;   -- cascades to learners (and their pages), consents, usage_daily, plans
   delete from auth.users where id = me;
 end;
 $$;
