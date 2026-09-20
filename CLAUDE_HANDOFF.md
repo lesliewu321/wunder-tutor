@@ -62,8 +62,10 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
 - **Tablet:** `src/styles/tablet.css` — side rail ≥740×600, two-column Home ≥1000 px, side-by-side speaking in
   landscape, sheets as centred dialogs. Checked at 820×1180, 1180×820, 744×1133, 375×812 and in dark mode.
 - **Two modes on Home** (Leslie's design, 2026-09-19): **Course** (lessons + "Talk with Pip" card → `/speak`) and
-  **My book**. The big centre button of the bottom bar is the **camera** (not a mic: nothing to speak into on Home;
-  lessons and conversations keep their own mic). Mode per learner in localStorage (`src/features/say/page.ts`).
+  **My book**. The bottom bar is **four plain tabs** (Learn, Lab, Progress, Me). It had a big centre camera button
+  (2026-09-19, replacing the old Speak/mic tab); Leslie, 2026-09-20, from screenshots: out of place beside the course,
+  and a duplicate of "New photo" in My book — so the camera is My book's own button only ("Take a photo" big and coral
+  before the first page, "New photo" small once there is a page to practise). Mode per learner in localStorage (`src/features/say/page.ts`).
 - **Say it right** (`src/features/say/`): camera (`CameraScreen.tsx`, full screen on every device via getUserMedia:
   shutter, gallery button inside, torch if the phone has one, photo = exactly what was on screen; blocked → "Use the
   camera app" (capture input) + gallery). Opened from anywhere with `openCamera()` → `CameraHost` (next to the
@@ -294,8 +296,8 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 Short messages and screenshots; not a terminal native. Walk through consoles step by step, say exactly where to type,
 and verify from outside afterwards. Prefers a recommendation over open-ended questions. Local commits at milestones;
 push only when asked. Tests on an Android phone (Chrome, large system font) and designs by screenshot: e.g. "two modes
-on Home — follow the curriculum, or take a photo from a book", "the centre button should be a camera", "choose a photo
-= a gallery icon inside the camera". UI work is also done "with the gauntlet method" (build, run, screenshot,
+on Home — follow the curriculum, or take a photo from a book", "the centre button should be a camera" (later: "out of place" in Course mode, "duplicate" in My book → removed),
+"choose a photo = a gallery icon inside the camera". UI work is also done "with the gauntlet method" (build, run, screenshot,
 critique, fix, retest).
 
 ## Key files

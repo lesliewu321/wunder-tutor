@@ -17,7 +17,6 @@
     border-top: 0; border-right: 1px solid var(--line);
   }
   .nav__item { font-size: 0.78rem; padding: 10px 0; }
-  .nav__item--center .nav__icon { margin-top: 0; }
   .tab-main { padding-bottom: 0; padding-left: calc(104px + var(--safe-l)); }
 
   /* Wider, calmer screens… */

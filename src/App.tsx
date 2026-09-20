@@ -16,14 +16,13 @@ import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
 import { SayIt } from './features/say/SayIt';
 import { CameraHost } from './features/say/CameraHost';
-import { openCamera } from './features/say/camera';
 
-// The big button in the middle is the camera ("Say it right": photograph a page and practise it). In a lesson or a
-// conversation the big button is the microphone instead — those screens have their own.
-const TABS: { to: string; label: Key; icon: IconName; camera?: boolean }[] = [
+// Four places to go. What a screen DOES lives on the screen: the camera is My book's own button (Home, second mode),
+// the microphone belongs to lessons and conversations. A camera in the bar was out of place beside the course and a
+// second "New photo" beside the book.
+const TABS: { to: string; label: Key; icon: IconName }[] = [
   { to: '/', label: 'common.nav.learn', icon: 'home' },
   { to: '/lab', label: 'common.nav.lab', icon: 'lab' },
-  { to: '', label: 'common.nav.photo', icon: 'camera', camera: true },
   { to: '/progress', label: 'common.nav.progress', icon: 'chart' },
   { to: '/me', label: 'common.nav.me', icon: 'user' },
 ];
@@ -39,17 +38,12 @@ function Tabs() {
     <>
       <main className="tab-main"><Outlet /></main>
       <nav className="nav" aria-label={t('common.nav.main')}>
-        {TABS.map((tab) => (tab.camera ? (
-          <button key="camera" type="button" className="nav__item nav__item--center" aria-label={t('common.nav.photo.aria')} onClick={openCamera}>
-            <span className="nav__icon"><Icon name={tab.icon} size={28} /></span>
-            <span className="nav__label">{t(tab.label)}</span>
-          </button>
-        ) : (
+        {TABS.map((tab) => (
           <NavLink key={tab.to} to={tab.to} end={tab.to === '/'} className={({ isActive }) => `nav__item ${isActive ? 'is-active' : ''}`}>
             <span className="nav__icon"><Icon name={tab.icon} size={24} /></span>
             <span className="nav__label">{t(tab.label)}</span>
           </NavLink>
-        )))}
+        ))}
       </nav>
     </>
   );
