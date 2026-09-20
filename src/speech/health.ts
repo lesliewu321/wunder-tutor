@@ -10,27 +10,37 @@ export interface ApiHealth {
   needsCode: boolean;
   /** …and the code stored on this device was accepted. */
   authorized: boolean;
+  /** False when the server has no code set at all: then nothing a learner types can unlock it. */
+  codeSet: boolean;
   /** "Say it right" can read photos and prepare typed text (Gemini). */
   read: boolean;
 }
 
-const NONE: ApiHealth = { azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, read: false };
+const NONE: ApiHealth = { azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false };
 const CODE_KEY = 'wunder-tutor/access-code';
 const ACCESS_HEADER = 'x-wunder-access';
 
-export const getAccessCode = (): string => { try { return localStorage.getItem(CODE_KEY) ?? ''; } catch { return ''; } };
+/**
+ * A code as typed or pasted: what nobody can see (a zero-width space, a line break, a non-breaking space) is taken
+ * out, the same way the server does it. One such character used to make every request fail before it was sent — the
+ * app then said "No internet", and hid the form that could fix it.
+ */
+export const normalCode = (code: string): string => code.replace(/[\p{Cc}\p{Cf}]+/gu, '').replace(/[\p{Zs}\s]+/gu, ' ').trim();
+
+export const getAccessCode = (): string => { try { return normalCode(localStorage.getItem(CODE_KEY) ?? ''); } catch { return ''; } };
 
 /** Stored only on this device, and only ever sent to this app's own /api. */
 export const setAccessCode = (code: string): void => {
-  try { code ? localStorage.setItem(CODE_KEY, code.trim()) : localStorage.removeItem(CODE_KEY); } catch { /* private mode */ }
+  const clean = normalCode(code);
+  try { clean ? localStorage.setItem(CODE_KEY, clean) : localStorage.removeItem(CODE_KEY); } catch { /* private mode */ }
   health = null;
 };
 
-/** fetch() for /api/* — attaches the access code when there is one. */
+/** fetch() for /api/* — attaches the access code when there is one (URI-encoded: a header can't carry every character). */
 export const apiFetch = (path: string, init: RequestInit = {}): Promise<Response> => {
   const headers = new Headers(init.headers);
   const code = getAccessCode();
-  if (code) headers.set(ACCESS_HEADER, code);
+  if (code) headers.set(ACCESS_HEADER, encodeURIComponent(code));
   return fetch(path, { ...init, headers });
 };
 
@@ -50,7 +60,7 @@ export const apiHealth = (): Promise<ApiHealth> => {
       const j = await res.json();
       return {
         azure: !!j.azure, claude: !!j.claude, gemini: !!j.gemini, ttsVersion: typeof j.ttsVersion === 'string' ? j.ttsVersion : '',
-        needsCode: !!j.needsCode, authorized: !!j.authorized, read: !!j.read,
+        needsCode: !!j.needsCode, authorized: !!j.authorized, codeSet: j.codeSet !== false, read: !!j.read,
       };
     } catch {
       // Offline, too slow, or a passing server fault: not remembered, so the next screen asks again.

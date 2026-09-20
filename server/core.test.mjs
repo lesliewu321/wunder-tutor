@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cleanApiKey, createApi, missingScores, oneChangeAway } from './core.mjs';
+import { cleanApiKey, createApi, missingScores, normalCode, oneChangeAway } from './core.mjs';
 
 const get = (api, path, headers) => api.handle(new Request(`http://x${path}`, { headers }));
 const post = (api, path, body, headers) => api.handle(new Request(`http://x${path}`, { method: 'POST', body, headers }));
@@ -130,4 +130,54 @@ describe('live status: do the keys actually work?', () => {
       globalThis.fetch = realFetch;
     }
   });
+
+  it('keeps a definite answer for a minute, asks again soon after a hiccup, and lets askers share one check', async () => {
+    const realFetch = globalThis.fetch, realNow = Date.now;
+    let calls = 0, google = 500;
+    globalThis.fetch = async (url) => { calls++; return String(url).includes('issueToken') ? new Response('t') : new Response('{}', { status: google }); };
+    try {
+      const api = createApi(KEYS);
+      // Three askers at once: one check (3 upstream calls), not nine.
+      const all = await Promise.all([1, 2, 3].map(async () => (await get(api, '/api/status')).json()));
+      expect(calls).toBe(3);
+      expect(all.every((r) => r.reading === 'error')).toBe(true);
+      // The hiccup passes: after the short wait, the next ask checks again and gets a definite answer…
+      google = 200;
+      Date.now = () => realNow() + 6_000;
+      expect((await (await get(api, '/api/status')).json()).reading).toBe('ok');
+      expect(calls).toBe(6);
+      // …which is kept: no new upstream calls.
+      expect((await (await get(api, '/api/status')).json()).reading).toBe('ok');
+      expect(calls).toBe(6);
+    } finally {
+      globalThis.fetch = realFetch;
+      Date.now = realNow;
+    }
+  });
 });
+
+describe('the access code as people type and paste it', () => {
+  const asks = (api) => async (code) => (await (await get(api, '/api/health', { 'x-wunder-access': code })).json()).authorized;
+
+  it('is not decided by characters nobody can see', async () => {
+    // Pasted on the server with a zero-width space and a line break; typed on the phone with a non-breaking space.
+    const ok = asks(createApi({ ...KEYS, BETA_ACCESS_CODE: 'open​ sesame\n' }));
+    expect(await ok('open sesame')).toBe(true);
+    expect(await ok(encodeURIComponent('open sesame'))).toBe(true);
+    expect(await ok(encodeURIComponent('  open   sesame '))).toBe(true);
+    expect(await ok('open sesam')).toBe(false);
+    expect(normalCode('﻿a​b  c\n')).toBe('ab c');
+  });
+
+  it('carries any passphrase: the app sends it URI-encoded, older copies of the app send it as it is', async () => {
+    const ok = asks(createApi({ ...KEYS, BETA_ACCESS_CODE: '好吃 100%' }));
+    expect(await ok(encodeURIComponent('好吃 100%'))).toBe(true);
+    expect(await ok('100%')).toBe(false); // a raw "%" that is no escape must not throw
+  });
+
+  it('says when no code is set at all: nothing the learner types can unlock that', async () => {
+    expect(await (await get(createApi(KEYS, { requireAccessCode: true }), '/api/health')).json()).toMatchObject({ needsCode: true, codeSet: false, authorized: false });
+    expect(await (await get(createApi({ ...KEYS, BETA_ACCESS_CODE: 'x' }), '/api/health')).json()).toMatchObject({ needsCode: true, codeSet: true });
+  });
+});
+

@@ -95,6 +95,19 @@ async function fetchText(url, init, timeoutMs) {
   }
 }
 
+/**
+ * An access code as it is compared: what a paste or a phone keyboard may add without anyone seeing it — a zero-width
+ * space, a byte-order mark, a non-breaking space, a line break — never decides whether the code is right. Spaces
+ * inside a passphrase still count (as one ordinary space each).
+ */
+export const normalCode = (value) => String(value ?? '')
+  .replace(/[\p{Cc}\p{Cf}]+/gu, '')
+  .replace(/[\p{Zs}\s]+/gu, ' ')
+  .trim();
+
+/** The app sends the code URI-encoded (a header can't carry every character); older copies of the app send it raw. */
+const decoded = (value) => { try { return decodeURIComponent(value); } catch { return value; } };
+
 /** Length-independent comparison so the access code can't be guessed by timing. */
 function sameSecret(a, b) {
   const x = new TextEncoder().encode(String(a));
@@ -152,7 +165,7 @@ export function createApi(rawEnv, deps = {}) {
   const GEMINI_LIVE_MODEL = env('GEMINI_LIVE_MODEL') || DEFAULT_LIVE_MODEL;
   const GEMINI_TTS_VOICE = env('GEMINI_TTS_VOICE') || DEFAULT_VOICE;
   const GEMINI_READ_MODEL = env('GEMINI_READ_MODEL') || DEFAULT_READ_MODEL;
-  const ACCESS_CODE = env('BETA_ACCESS_CODE');
+  const ACCESS_CODE = normalCode(env('BETA_ACCESS_CODE'));
 
   const canDial = deps.canDialWebSocket ?? (Boolean(deps.connectWebSocket) || typeof WebSocket === 'function');
   const status = {
@@ -416,12 +429,23 @@ export function createApi(rawEnv, deps = {}) {
     return { state, note: `google ${r.status || r.networkError || 'timeout'}${message ? `: ${message.replace(/\s+/g, ' ').slice(0, 140)}` : ''}; ${keyShape()}` };
   }
 
-  async function liveStatus() {
-    if (lastStatus && Date.now() - lastStatus.at < 60_000) return lastStatus.value;
-    const [scoring, reading, voice] = await Promise.all([checkAzure(), checkGemini(GEMINI_READ_MODEL), checkGemini(GEMINI_LIVE_MODEL)]);
-    const notes = Object.fromEntries(Object.entries({ scoring, reading, voice }).filter(([, v]) => v.note).map(([k, v]) => [k, v.note]));
-    const value = { checkedAt: new Date().toISOString(), scoring: scoring.state, reading: reading.state, voice: canDial ? voice.state : 'not_set', notes };
-    lastStatus = { at: Date.now(), value };
+  /** A definite answer ("works", "refused", "not set") keeps for a minute; a hiccup (a timeout, a 5xx, a rate limit) for 5 s. */
+  const DEFINITE = new Set(['ok', 'not_set', 'key_refused', 'region', 'model_missing', 'unchecked']);
+  function liveStatus() {
+    if (lastStatus && Date.now() < lastStatus.until) return lastStatus.value;
+    // One check at a time: everyone who asks while it runs shares its answer.
+    const value = (async () => {
+      const [scoring, reading, voice] = await Promise.all([checkAzure(), checkGemini(GEMINI_READ_MODEL), checkGemini(GEMINI_LIVE_MODEL)]);
+      const notes = Object.fromEntries(Object.entries({ scoring, reading, voice }).filter(([, v]) => v.note).map(([k, v]) => [k, v.note]));
+      const out = { checkedAt: new Date().toISOString(), scoring: scoring.state, reading: reading.state, voice: canDial ? voice.state : 'not_set', notes };
+      const sure = [out.scoring, out.reading, out.voice].every((s) => DEFINITE.has(s));
+      lastStatus = { until: Date.now() + (sure ? 60_000 : 5_000), value };
+      return out;
+    })().catch(() => {
+      lastStatus = null; // the check itself broke: say so, and ask again next time
+      return { checkedAt: new Date().toISOString(), scoring: 'error', reading: 'error', voice: 'error', notes: {} };
+    });
+    lastStatus = { until: Date.now() + 15_000, value };
     return value;
   }
   const allowStatus = createLimiter(30, 60_000);
@@ -440,7 +464,9 @@ export function createApi(rawEnv, deps = {}) {
       let authorized = !ACCESS_CODE && deps.requireAccessCode !== true;
       if (ACCESS_CODE && offered) {
         if (codeGuesses.blocked(client)) throw new HttpError(429, 'too_many_attempts');
-        authorized = sameSecret(offered, ACCESS_CODE);
+        // Both forms are always compared, so the time taken says nothing about which one matched.
+        const asSent = sameSecret(normalCode(offered), ACCESS_CODE), asDecoded = sameSecret(normalCode(decoded(offered)), ACCESS_CODE);
+        authorized = asSent || asDecoded;
         if (!authorized) codeGuesses.fail(client);
       }
 
@@ -448,7 +474,7 @@ export function createApi(rawEnv, deps = {}) {
         // Before the code is entered the app only learns that one is needed — not which services exist.
         const open = authorized;
         return json(200, {
-          ok: true, needsCode: status.needsCode, authorized,
+          ok: true, needsCode: status.needsCode, codeSet: Boolean(ACCESS_CODE), authorized,
           azure: open && status.azure, claude: open && status.claude, gemini: open && status.gemini,
           ttsVersion: open && status.gemini ? status.ttsVersion : null,
           read: open && status.read,

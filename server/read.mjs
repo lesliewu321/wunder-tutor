@@ -266,7 +266,7 @@ export function upstreamError(status, raw) {
   let message = '';
   try { message = String(JSON.parse(raw)?.error?.message ?? ''); } catch { message = String(raw ?? ''); }
   const code = /location is not supported/i.test(message) ? 'read_region'
-    : /api key/i.test(message) ? 'read_key'
+    : /api key/i.test(message) || status === 401 || status === 403 ? 'read_key'
     : status === 404 ? 'read_model'
     : status === 429 ? 'read_quota'
     : 'read_upstream';

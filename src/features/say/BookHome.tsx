@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isGrownUp, type ChildProfile } from '../../domain/types';
-import { apiHealth, type ApiHealth } from '../../speech/health';
+import { apiHealth, getAccessCode, type ApiHealth } from '../../speech/health';
 import { prepareText, splitSentences, type Reading } from '../../speech/read';
 import { tier } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast } from '../../ui/kit';
 import { ZhText } from '../../ui/ZhText';
 import { openCamera } from './camera';
-import { readProblem, readingProblem } from './messages';
+import { bookNotice, readProblem, readingProblem } from './messages';
 import { useBook } from './page';
 import { sayItem } from './sayItem';
 
@@ -33,12 +33,12 @@ export function BookHome({ p }: { p: ChildProfile }) {
   const said = open.filter((i) => best[i] != null).length;
   const next = open.find((i) => best[i] == null) ?? open[0];
   const settings = p.band === 'adult' ? 'Settings & privacy' : 'the Parent Zone';
+  // Says what is actually wrong: no code, a code that stopped working, or a server that can't read yet.
+  const notice = api ? bookNotice(api, !!getAccessCode(), kid, settings) : null;
 
   return (
     <div className="book">
-      {api && !api.read && (
-        <p className="practice-note" role="note"><span aria-hidden>🔒</span><span><b>Photos need the beta access code.</b> {kid ? 'A grown-up can add it' : 'Add it'} in {settings} → Beta access. Typed English works without it.</span></p>
-      )}
+      {notice && <p className="practice-note" role="note"><span aria-hidden>🔒</span><span>{notice}</span></p>}
 
       {!page ? (
         <section className="book__start">

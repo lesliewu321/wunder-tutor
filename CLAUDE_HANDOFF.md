@@ -89,6 +89,20 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   photographs where the browser can take one (`ImageCapture.takePhoto`, asked for ~2560 px, 4 s limit, falls back to
   the picture on screen), continuous focus, the camera restarts itself after another app took it, and "Blurry? Use
   the phone's camera instead" is always offered on touch devices.
+- **Camera review (2026-09-20, independent reviewer, all fixed):** closing the camera cancels everything (one
+  AbortController per opening; nothing is sent after close, a late answer never replaces the saved page); the camera
+  is a history entry (`location.state.camera` via `CameraHost`) so Android Back closes it, and Home *replaces* it after
+  a read; camera starts are numbered (`run.newest`) so overlapping starts can't leave the camera on; a lens that won't
+  open is skipped and the last good one comes back, the auto-picked main lens is remembered; torch/zoom/focus are read
+  after the picture is live (+500 ms); the camera is off while a setup problem is shown; the dialog makes `#app-frame`
+  `inert`; words over the picture sit on dark pills (the picture is a white page). The preflight blocks only on
+  definite faults (`not_set`, `key_refused`, `region`, `model_missing`) — never on a timeout/5xx/quota — and the server
+  keeps a hiccup for 5 s, a definite answer 60 s, one check shared by concurrent askers. The access code is normalised
+  on both sides (`normalCode`: invisible characters, NBSP, line breaks) and sent URI-encoded; `/api/health` says
+  `codeSet`. Only "no words found" gives photo advice; our-side failures say so; Google 401/403 → `read_key`;
+  `read_quota` is "busy"; `finish` (RECITATION…) reaches the app; a platform 503 is not "not switched on".
+  **Needs a real phone to confirm:** `takePhoto` still vs preview shape (guarded by `sameShape`), capabilities timing,
+  revive after the phone's camera app, iOS mute/unmute.
 - **Cheaper scoring:** takes are trimmed to speech ± margin before upload (`speechWindow`, ~42% less audio, no word
   cut in 2,541 test takes); phrases/sentences check likely mistakes on each word's clip in a second parallel round
   (`CLIP_CHECKS`: Mandarin sound slips named 27% → 58%, British swaps 0% → 88%, ~35% cheaper checks). Roughly half the

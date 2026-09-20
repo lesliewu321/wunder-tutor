@@ -97,6 +97,8 @@ describe('reading in two steps', () => {
     expect(JSON.stringify(where.body)).not.toContain('location');
     expect(upstreamError(400, JSON.stringify({ error: { message: 'API key not valid. Please pass a valid API key.' } })).body.error).toBe('read_key');
     expect(upstreamError(404, '{}').body.error).toBe('read_model');
+    // A key restricted to certain websites, or the API not switched on for the project: Google says 403 without the words "API key".
+    expect(upstreamError(403, JSON.stringify({ error: { message: 'Requests from referer <empty> are blocked.' } })).body.error).toBe('read_key');
     expect(upstreamError(500, 'oops').body.error).toBe('read_upstream');
   });
 });

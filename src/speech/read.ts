@@ -16,12 +16,14 @@ export interface ReadLine {
 export interface Reading { language: 'en' | 'zh' | 'other' | 'none'; lines: ReadLine[] }
 
 export class ReadError extends Error {
-  /** `detail`: the server's reason ("read_timeout"), shown small so a tester's screenshot says what went wrong. */
   /**
    * `locked`: this device's access code was refused (none entered, or changed on the server since).
+   * `lockout`: too many wrong codes came from this network; even the right one is turned away for a while.
    * `unavailable`: the server can't read pages at all yet (no key).
+   * `cancelled`: the learner closed the camera.
+   * `detail`: the server's reason ("read_timeout"), shown small so a tester's screenshot says what went wrong.
    */
-  constructor(readonly code: 'offline' | 'busy' | 'locked' | 'unavailable' | 'photo' | 'failed', readonly detail?: string) { super(code); }
+  constructor(readonly code: 'offline' | 'busy' | 'locked' | 'lockout' | 'unavailable' | 'photo' | 'failed' | 'cancelled', readonly detail?: string) { super(code); }
 }
 
 /** Photos are shrunk before upload: the text stays sharp and the upload stays small. */
@@ -65,8 +67,29 @@ export async function shrinkPhoto(file: Blob): Promise<Blob> {
   return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new ReadError('failed'))), 'image/jpeg', 0.85));
 }
 
-/** `cancel`: the learner closed the camera — the request stops. */
+/**
+ * What a failed answer means. Our server names its errors ("read_timeout", plus a `note` or Google's `finish`
+ * reason); anything else came from the platform in front of it — its own code is kept ("cf1102") so a screenshot says
+ * which. Only our own words decide the kind of failure: a platform's 503 is not "reading isn't set up".
+ */
+export function readFailure(status: number, body: string): ReadError {
+  const parse = (): { error?: string; note?: string; finish?: string } | null => { try { return JSON.parse(body); } catch { return null; } };
+  const ours = parse();
+  if (!ours?.error) {
+    const platform = /error code:?\s*(\d{3,4})/i.exec(body)?.[1];
+    return new ReadError(status === 429 ? 'busy' : 'failed', `http_${status}${platform ? ` cf${platform}` : ''}`);
+  }
+  const detail = [ours.error, ours.note, ours.finish].filter(Boolean).join(' ');
+  if (status === 401) return new ReadError('locked', detail);
+  if (ours.error === 'too_many_attempts') return new ReadError('lockout', detail);
+  if (status === 429) return new ReadError('busy', detail);
+  if (ours.error === 'gemini_not_configured') return new ReadError('unavailable', detail);
+  return new ReadError('failed', detail);
+}
+
+/** `cancel`: the learner closed the camera — nothing is sent, or the request stops. */
 async function post(body: Blob | string, type: string, cancel?: AbortSignal): Promise<Reading> {
+  if (cancel?.aborted) throw new ReadError('cancelled');
   const ctl = new AbortController();
   // Longer than the server's own limit (40 s), so a slow page ends with the server's answer, not ours.
   const timer = setTimeout(() => ctl.abort(), 60000);
@@ -76,30 +99,20 @@ async function post(body: Blob | string, type: string, cancel?: AbortSignal): Pr
   try {
     res = await apiFetch('/api/read', { method: 'POST', headers: { 'Content-Type': type }, body, signal: ctl.signal });
   } catch {
+    if (cancel?.aborted) throw new ReadError('cancelled');
     throw new ReadError(ctl.signal.aborted ? 'failed' : 'offline', ctl.signal.aborted ? 'app_timeout' : undefined);
   } finally {
     clearTimeout(timer);
     cancel?.removeEventListener('abort', stop);
   }
-  // Our server names its errors ("read_timeout"); anything else came from the platform in front of it — keep its own
-  // code ("error code: 1102") so a screenshot says which.
-  const reason = async () => {
-    const body = await res.text().catch(() => '');
-    try {
-      const ours = JSON.parse(body) as { error?: string; note?: string } | null;
-      if (ours?.error) return ours.note ? `${ours.error} ${ours.note}` : ours.error;
-    } catch { /* not ours */ }
-    const platform = /error code:?\s*(\d{3,4})/i.exec(body)?.[1];
-    return `http_${res.status}${platform ? ` cf${platform}` : ''}`;
-  };
-  if (res.status === 429) throw new ReadError('busy');
-  if (res.status === 401) throw new ReadError('locked', await reason());
-  if (res.status === 503) throw new ReadError('unavailable', await reason());
-  if (!res.ok) throw new ReadError('failed', await reason());
+  if (!res.ok) throw readFailure(res.status, await res.text().catch(() => ''));
   try { return (await res.json()) as Reading; } catch { throw new ReadError('failed', 'bad_answer'); }
 }
 
-export const readPhoto = async (photo: Blob, cancel?: AbortSignal): Promise<Reading> => post(await shrinkPhoto(photo), 'image/jpeg', cancel);
+export const readPhoto = async (photo: Blob, cancel?: AbortSignal): Promise<Reading> => {
+  const small = await shrinkPhoto(photo);
+  return post(small, 'image/jpeg', cancel); // closing the camera while the photo was being shrunk sends nothing
+};
 export const prepareText = (text: string): Promise<Reading> => post(JSON.stringify({ text }), 'application/json');
 
 /**

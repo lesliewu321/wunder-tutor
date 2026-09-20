@@ -226,12 +226,12 @@ export function ParentZone() {
         </div>
       </section>
 
-      {services?.needsCode && (
+      {services && (services.needsCode || !!getAccessCode()) && (
         <section id="zone-code">
           <h2 className="section-title">Beta access</h2>
           <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); setAccessCode(code); window.location.reload(); }}>
             <p className={services.authorized ? 'access access--ok' : 'access'}>
-              {services.authorized ? 'Access code accepted — real pronunciation scoring and the teacher voice are on.' : getAccessCode() ? 'That code wasn’t accepted. Check it and try again.' : 'Enter your beta access code to switch on real pronunciation scoring and the teacher voice. Without it the app uses its built-in practice mode.'}
+              {services.authorized ? 'Access code accepted — real pronunciation scoring and the teacher voice are on.' : !services.codeSet ? 'This Wunder Tutor server has no access code set yet, so no code can unlock it.' : !services.needsCode ? 'The server couldn’t be reached to check this code. Check your connection, then save it again.' : getAccessCode() ? 'That code wasn’t accepted. Check it and try again.' : 'Enter your beta access code to switch on real pronunciation scoring and the teacher voice. Without it the app uses its built-in practice mode.'}
             </p>
             <label className="sr-only" htmlFor="access-code">Beta access code</label>
             <input id="access-code" className="input" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="Access code" />

@@ -31,6 +31,8 @@ export function pickLens(lenses: Lens[], remembered?: string | null): Lens | nul
 const LENS_KEY = 'wunder-tutor/camera-lens';
 export const rememberedLens = (): string | null => { try { return localStorage.getItem(LENS_KEY); } catch { return null; } };
 export const rememberLens = (deviceId: string): void => { try { localStorage.setItem(LENS_KEY, deviceId); } catch { /* this visit only */ } };
+/** A remembered lens that no longer opens (the phone lists depth and macro cameras too) must not fail every time. */
+export const forgetLens = (): void => { try { localStorage.removeItem(LENS_KEY); } catch { /* nothing kept */ } };
 
 // ---------------------------------------------------------------- taking the photo
 
@@ -39,6 +41,7 @@ interface PhotoTaker {
   getPhotoCapabilities(): Promise<{ imageWidth?: PhotoRange }>;
   takePhoto(settings?: { imageWidth?: number }): Promise<Blob>;
 }
+interface Size { width: number; height: number }
 
 const TIMED_OUT = 'timed-out';
 const within = <T>(p: Promise<T>, ms: number): Promise<T> => new Promise((resolve, reject) => {
@@ -56,35 +59,63 @@ export const frameOf = (video: HTMLVideoElement): Promise<Blob | null> => new Pr
   canvas.toBlob((b) => resolve(b), 'image/jpeg', 0.92);
 });
 
-/** Wide enough for a page of small print (it is shrunk to 1600 px before upload); a 50-megapixel photo can be too big for a phone's browser to open. */
+const sizeOf = async (photo: Blob): Promise<Size> => {
+  const bmp = await createImageBitmap(photo);
+  const size = { width: bmp.width, height: bmp.height };
+  bmp.close?.();
+  return size;
+};
+
+/** Long side over short side: the same for a picture and its rotated copy. */
+const shape = (s: Size): number => Math.max(s.width, s.height) / Math.max(1, Math.min(s.width, s.height));
+
+/**
+ * Does the photograph show what the learner framed? Asked for a width alone, Chrome may pick a 16:9 photo size for a
+ * 4:3 preview — the photo then misses an eighth of the page at each side, the start and end of every line.
+ */
+export const sameShape = (photo: Size, preview: Size): boolean => Math.abs(shape(photo) - shape(preview)) / shape(preview) < 0.04;
+
+/** Wide enough for a page of small print (it is shrunk to 1600 px before upload). */
 const PHOTO_WIDTH = 2560;
+/** The phone's largest photo is only asked for up to about 16 megapixels: a 50-megapixel one can be too big for its browser to open. */
+const MAX_SAFE_WIDTH = 4700;
 
 /**
  * Take the photo. Where the browser can take a real photograph (Android Chrome), use it: the phone focuses first and
  * uses far more of its sensor than the moving preview, and a page of small print is often unreadable in a preview
- * frame. If that isn't possible, fails, or takes too long, the picture on screen is used instead.
+ * frame. The photograph must show what was framed (see sameShape): if the page-sized one is cropped, the phone's
+ * largest is tried. If no photograph can be had — not possible here, refused, cropped, or too slow — the picture on
+ * screen is used instead.
  */
 export async function takeStill(
   track: MediaStreamTrack | null, video: HTMLVideoElement,
-  // Replaced in tests: the browser's photo taker (absent on iPhones and computers), and the picture-on-screen fallback.
+  // Replaced in tests: the browser's photo taker (absent on iPhones and computers), the picture-on-screen fallback,
+  // and how a photo is measured.
   Taker: (new (t: MediaStreamTrack) => PhotoTaker) | undefined = (globalThis as { ImageCapture?: new (t: MediaStreamTrack) => PhotoTaker }).ImageCapture,
   frame: (v: HTMLVideoElement) => Promise<Blob | null> = frameOf,
+  measure: (photo: Blob) => Promise<Size> = sizeOf,
 ): Promise<Blob | null> {
   if (Taker && track?.readyState === 'live') {
     try {
       const taker = new Taker(track);
-      let sized: { imageWidth: number } | undefined;
+      const preview = { width: video.videoWidth, height: video.videoHeight };
+      let tries: ({ imageWidth: number } | undefined)[] = [undefined];
       try {
         const w = (await within(taker.getPhotoCapabilities(), 1500)).imageWidth;
-        if (w?.max) sized = { imageWidth: Math.max(w.min ?? 0, Math.min(w.max, PHOTO_WIDTH)) };
+        if (w?.max) {
+          const page = Math.max(w.min ?? 0, Math.min(w.max, PHOTO_WIDTH));
+          tries = [{ imageWidth: page }, ...(w.max > page && w.max <= MAX_SAFE_WIDTH ? [{ imageWidth: w.max }] : []), undefined];
+        }
       } catch { /* the phone's own size */ }
-      // A phone that rejects the size gets one more try at its own size; one that hangs does not (the wait is the cost).
-      for (const settings of sized ? [sized, undefined] : [undefined]) {
+      for (const settings of tries) {
         try {
           const photo = await within(taker.takePhoto(settings), 4000);
-          if (photo.size > 10_000) return photo;
+          if (photo.size <= 10_000) continue;
+          // A photo that can't be measured is taken on trust; one that is cropped is not.
+          const fits = !preview.width || (await measure(photo).then((size) => sameShape(size, preview), () => true));
+          if (fits) return photo;
         } catch (e) {
-          if ((e as Error | null)?.message === TIMED_OUT) break;
+          if ((e as Error | null)?.message === TIMED_OUT) break; // a phone that hangs gets no second wait
         }
       }
     } catch { /* the picture on screen instead */ }

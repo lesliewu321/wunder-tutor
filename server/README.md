@@ -48,7 +48,8 @@ public deployment with no code set fails closed.
 - `GET /api/status` → `{ checkedAt, scoring, reading, voice }`, each `ok | not_set | key_refused | region | model_missing |
   quota | unreachable | unchecked | error`: asks the services themselves whether the keys **work** (health only says they
   are present) with calls that cost nothing — Azure issues a token, Google describes the read and live models —
-  remembered 60 s per isolate, 30 requests / min per client. Public on purpose (coarse words, like a status page): after
+  remembered 60 s per isolate when every answer is definite (5 s after a timeout, a 5xx or a rate limit; concurrent
+  askers share one check), 30 requests / min per client. Public on purpose (coarse words, like a status page): after
   changing a secret and redeploying, `curl https://app.wundertutor.com/api/status` says whether it took. With the
   access code the answer adds `notes` — Google's own words and `key N/M` (usable characters of those stored; never
   the key). Keys are cleaned of whitespace and invisible characters before use (`cleanApiKey`): a pasted line break
