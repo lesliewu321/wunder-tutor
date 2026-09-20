@@ -18,7 +18,7 @@ describe('the camera: setup problems show before the photo, not after it', () =>
 
   it('does not send anyone to type a code that cannot work: a server with no code set', () => {
     const p = setupProblem(health({ needsCode: true, codeSet: false }), true, null)!;
-    expect(p.text).toMatch(/no access code set/);
+    expect(p.text).toMatch(/no invite code set/);
     expect(p.fix).toBeUndefined();
   });
 
@@ -39,7 +39,7 @@ describe('the camera: setup problems show before the photo, not after it', () =>
 
   it('tells My book what is actually wrong', () => {
     expect(bookNotice(READY, true, true, 'the Parent Zone')).toBeNull();
-    expect(bookNotice(health({ needsCode: true }), false, true, 'the Parent Zone')).toMatch(/need the beta access code.*grown-up/);
+    expect(bookNotice(health({ needsCode: true }), false, true, 'the Parent Zone')).toMatch(/need the invite code.*grown-up/);
     expect(bookNotice(health({ needsCode: true }), true, false, 'Settings & privacy')).toMatch(/isn’t accepted any more/);
     expect(bookNotice(health({ needsCode: true, authorized: true, azure: true }), true, false, 'Settings & privacy')).toMatch(/isn’t switched on/);
     expect(bookNotice(health({}), false, false, 'Settings & privacy')).toBeNull(); // offline: we can’t tell

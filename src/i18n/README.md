@@ -81,7 +81,7 @@ example words being practised.
 | Score / Streak / Today's goal | 分數 / 連續日數 / 今日目標 |
 | Recording(s) / Delete | 錄音 / 刪除 |
 | Privacy / Consent / I agree | 私隱 / 同意 / 我同意 |
-| Beta access / Access code | 測試版存取 / 存取碼 |
+| Invite code (the code that switches on the real services during the beta; was "Beta access code") | 邀請碼 |
 | Practice mode — scores are simulated | 練習模式——分數為模擬 |
 | Camera / Photos / Take a photo / Torch / Lens | 相機 / 相片 / 拍照 / 電筒 / 鏡頭 |
 | Conversation / Talk with Pip | 對話 / 和 Pip 聊天 |
