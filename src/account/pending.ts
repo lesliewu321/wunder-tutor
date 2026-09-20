@@ -34,3 +34,11 @@ export function noteLearnerDeleted(id: string): void {
 export function forgetSync(): void { try { localStorage.removeItem(META); } catch { /* nothing kept */ } }
 
 export const hasAccountHere = (): boolean => { try { return localStorage.getItem(SESSION) != null; } catch { return false; } };
+
+/** The signed-in parent's token, for this app's own /api (it recognises the family by it). Null when signed out or expired. */
+export const accessToken = (): string | null => {
+  try {
+    const s = JSON.parse(localStorage.getItem(SESSION) ?? 'null') as { access_token?: string; expires_at?: number } | null;
+    return s?.access_token && (s.expires_at ?? 0) * 1000 > Date.now() + 10_000 ? s.access_token : null;
+  } catch { return null; }
+};

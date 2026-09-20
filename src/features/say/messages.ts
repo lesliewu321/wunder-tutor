@@ -9,6 +9,7 @@ export interface Problem { text: string; fix?: 'code' | 'connections' }
 const ERRORS: Record<Exclude<ReadError['code'], 'cancelled'>, { key: Key; fix?: Problem['fix'] }> = {
   offline: { key: 'home.read.error.offline' },
   busy: { key: 'home.read.error.busy' },
+  limit: { key: 'home.read.error.limit' },
   locked: { key: 'home.read.error.locked', fix: 'code' },
   lockout: { key: 'home.read.error.lockout', fix: 'code' },
   unavailable: { key: 'home.read.error.unavailable', fix: 'connections' },

@@ -117,6 +117,7 @@
   "home.camera.fix.connections": "檢查連線狀態",
   "home.read.error.offline": "現在沒有網絡連線，連線後請再試一次。",
   "home.read.error.busy": "剛才讀了很多頁呢！請等幾分鐘再試。",
+  "home.read.error.limit": "你們一家今天可閱讀的頁數已用完，明天會重新計算。輸入英文仍然可以使用。",
   "home.read.error.locked": "這部裝置的存取碼不獲接納，存取碼可能已經更改。請再輸入一次，才可以閱讀頁面。",
   "home.read.error.lockout": "這個網絡已多次輸入錯誤的存取碼，所以現在連正確的存取碼也暫時不獲接納。請等 10 分鐘，然後再輸入存取碼。",
   "home.read.error.unavailable": "Wunder Tutor 伺服器尚未開啟閱讀頁面的功能。{detail}",

@@ -104,6 +104,17 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   for Leslie: a Chinese name for "Say it right" (kept in English), 字 vs 字詞 for an English word, 家長 vs 成人,
   badge/goal names, tone descriptions (低低轉彎…), "Buzzy/Quiet" sounds (震動的/無聲的). Bundle grew 428 → 536 kB
   (both languages ship to everyone): load the Chinese catalogs on demand when it matters.
+- **Family accounts (2026-09-20, built; NOT yet tried with a real sign-in, NOT deployed).** Everything is in
+  `supabase/README.md`: the database is applied to project `xzghsihffoliduqkjvck` (2 migrations; `supabase/tests/rls.sql`
+  = 39 access checks, ALL OK; advisors clean except the two erasure functions parents are meant to call), the app has
+  Parent Zone → Family account (email → 6-digit code; `src/account/`, libraries lazy-loaded, 31 kB gz), learners and
+  My book pages sync (merge rules + engine tested with pretend devices), the API recognises a signed-in family
+  (`server/family.mjs`: ES256 token check against the public keys, plan, daily limits; `beta` plan granted when the
+  access code arrives with a sign-in). Leslie's decisions: **email code/link sign-in; recordings never leave the
+  device.** WAITING ON LESLIE (dashboard, by hand): Site URL + redirect URLs, the two email templates with
+  `{{ .Token }}`, the secret key into `.env` → `npm run keys:push` → deploy. Until the secret key is there the API
+  still verifies tokens but knows no plans: only the access code unlocks it, as before. First real test = Leslie
+  signs in on the phone and a second device; watch `[account] sync` warnings in the console.
 - **Checking the Chinese** (2026-09-20): Leslie checks it on a private Artifact page, **Wunder Tutor Chinese Check**
   (https://claude.ai/artifact/QThnysyrfPbFeSeyUq4Ejp) — all 1,240 lines by section, English | 繁體中文, Change → type →
   Save per line, "mark section as checked", and 8 open wording questions to answer first. Everything is saved in the

@@ -14,6 +14,10 @@ compatibility_date = "2026-06-01"
 compatibility_flags = ["nodejs_compat"] # Buffer and node:crypto for server/tts.mjs
 
 # Accepted teacher takes, so each phrase is generated (and paid for) once across all devices.
+# Families' accounts (server/family.mjs). The address is public; SUPABASE_SECRET_KEY is a secret (npm run keys:push).
+[vars]
+SUPABASE_URL = "https://xzghsihffoliduqkjvck.supabase.co"
+
 [[kv_namespaces]]
 binding = "TTS_CACHE"
 id = "138ec3dd03034f40ab92a58125cd6b07"

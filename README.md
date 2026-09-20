@@ -128,6 +128,13 @@ practised. A dense Chinese page takes about 6–8 s. Needs the API (beta access 
 photo nor the text on its servers; the page's sentences stay on the device (per learner) until a new photo, and are
 erased with the learner's data. Not added to the review schedule.
 
+## Family accounts
+
+Optional: in the Parent Zone a grown-up signs in with a code sent by email, and the family's learners — progress,
+scores and the pages of My book, never recordings — are kept in an account and are the same on all their devices. The
+app stays local-first: it works without an account and offline. Database, sign-in settings and design:
+`supabase/README.md`; app code `src/account/`; the API's side `server/family.mjs`.
+
 ## App language
 
 The family chooses the app's language — English or 繁體中文 (Hong Kong) — on the first screen or in Settings; it is

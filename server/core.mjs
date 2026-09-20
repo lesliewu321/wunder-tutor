@@ -11,6 +11,7 @@
 // API keys stay on the server. Nothing here logs a key, an access code, audio, or a request body.
 
 import { HttpError } from './http-error.mjs';
+import { createFamilies } from './family.mjs';
 import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, TtsError } from './tts.mjs';
 import { DEFAULT_READ_MODEL, readText } from './read.mjs';
 import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, TUTOR_SCHEMA, validateTutorInput } from './tutor.mjs';
@@ -170,6 +171,8 @@ export function createApi(rawEnv, deps = {}) {
   const GEMINI_TTS_VOICE = env('GEMINI_TTS_VOICE') || DEFAULT_VOICE;
   const GEMINI_READ_MODEL = env('GEMINI_READ_MODEL') || DEFAULT_READ_MODEL;
   const ACCESS_CODE = normalCode(env('BETA_ACCESS_CODE'));
+  // Families with an account (server/family.mjs). SUPABASE_URL is public; SUPABASE_SECRET_KEY is a secret like the others.
+  const families = deps.families ?? (env('SUPABASE_URL') ? createFamilies({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log }) : null);
 
   const canDial = deps.canDialWebSocket ?? (Boolean(deps.connectWebSocket) || typeof WebSocket === 'function');
   const status = {
@@ -476,11 +479,26 @@ export function createApi(rawEnv, deps = {}) {
         if (!authorized) codeGuesses.fail(client);
       }
 
+      // A signed-in family: the account unlocks the API once it has a plan — 'beta' from the first time the access code
+      // came with the sign-in (on any device), 'family' once they pay. Its use is counted per day against the plan.
+      const token = /^Bearer\s+(\S+)$/i.exec(request.headers.get('authorization') ?? '')?.[1];
+      const family = families && token ? await families.verify(token) : null;
+      let plan = family ? await families.plan(family) : null;
+      if (family && authorized && ACCESS_CODE && plan === 'free' && await families.grantBeta(family)) plan = 'beta';
+      const byAccount = plan === 'beta' || plan === 'family';
+      authorized = authorized || byAccount;
+      const spend = async (kind) => {
+        if (!family || !byAccount) return;
+        const use = await families.use(family, plan, kind);
+        if (!use.ok) throw new HttpError(429, 'daily_limit', { kind, used: use.used, limit: use.limit });
+      };
+
       if (route === 'GET /api/health') {
         // Before the code is entered the app only learns that one is needed — not which services exist.
         const open = authorized;
         return json(200, {
           ok: true, needsCode: status.needsCode, codeSet: Boolean(ACCESS_CODE), authorized,
+          family: Boolean(family), plan: family ? plan : null,
           azure: open && status.azure, claude: open && status.claude, gemini: open && status.gemini,
           ttsVersion: open && status.gemini ? status.ttsVersion : null,
           read: open && status.read,
@@ -496,17 +514,21 @@ export function createApi(rawEnv, deps = {}) {
       if (!authorized) throw new HttpError(401, 'access_code_required');
 
       if (path === '/api/assess') {
+        await spend('scorings');
         return await handleAssess(request, url, client);
       }
       if (path === '/api/read') {
         if (!allowRead(client)) throw new HttpError(429, 'rate_limited');
+        await spend('reads');
         return await handleRead(request);
       }
       if (path === '/api/tts') {
         if (!allowTts(client)) throw new HttpError(429, 'rate_limited');
+        await spend('voice');
         return await handleTts(request, client);
       }
       if (!allowTutor(client)) throw new HttpError(429, 'rate_limited');
+      await spend('tutor');
       return await handleTutor(request);
     } catch (err) {
       if (err instanceof HttpError) return json(err.status, err.body, err.status === 413 ? { Connection: 'close' } : undefined);

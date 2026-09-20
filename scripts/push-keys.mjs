@@ -16,6 +16,9 @@ import { fileURLToPath } from 'node:url';
 
 const PROJECT = 'wunder-tutor';
 const NAMES = ['AZURE_SPEECH_KEY', 'AZURE_SPEECH_REGION', 'GEMINI_API_KEY'];
+// Families' accounts (server/family.mjs): optional — without it the app works as before, accounts just have no plans or daily limits.
+const OPTIONAL = ['SUPABASE_SECRET_KEY'];
+const SUPABASE_URL = 'https://xzghsihffoliduqkjvck.supabase.co'; // public (also in wrangler.toml)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const checkOnly = process.argv.includes('--check');
 const selfTest = process.argv.includes('--self-test'); // uploads one harmless dummy value, to prove the upload works
@@ -73,6 +76,13 @@ for (const n of NAMES) {
   console.log(`  ${n.padEnd(20)} ${v ? `${String(v.length).padStart(3)} characters${clean ? '' : ' — has spaces or odd characters'}` : 'MISSING'}`);
   if (!v || !clean) good = false;
 }
+for (const n of OPTIONAL) {
+  const v = env.get(n) ?? '';
+  const clean = /^[!-~]+$/.test(v);
+  console.log(`  ${n.padEnd(20)} ${v ? `${String(v.length).padStart(3)} characters${clean ? '' : ' — has spaces or odd characters'}` : 'not set (optional: family accounts get no plans or daily limits without it)'}`);
+  if (v && !clean) good = false;
+  if (v && clean) values[n] = v;
+}
 if (!good) { console.log('\n✗ Fix the lines above in .env first. Nothing was uploaded.'); process.exit(1); }
 
 console.log('\nAsking the services whether these keys work…');
@@ -80,10 +90,17 @@ const azure = await ask(`https://${values.AZURE_SPEECH_REGION.toLowerCase()}.api
 const google = await ask('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash', { headers: { 'x-goog-api-key': values.GEMINI_API_KEY } });
 console.log(`  Pronunciation scoring (Microsoft Azure): ${azure.ok ? '✓ works' : `✗ refused (${azure.status || 'no answer'}) ${azure.message}`}`);
 console.log(`  Reading pages + teacher voice (Google):  ${google.ok ? '✓ works' : `✗ refused (${google.status || 'no answer'}) ${google.message}`}`);
-if (!azure.ok || !google.ok) { console.log('\n✗ A key in .env does not work, so nothing was uploaded.'); process.exit(1); }
-if (checkOnly) { console.log('\n✓ Both work. (--check: nothing was uploaded.)'); process.exit(0); }
+let supabaseOk = true;
+if (values.SUPABASE_SECRET_KEY) {
+  const k = values.SUPABASE_SECRET_KEY;
+  const supabase = await ask(`${SUPABASE_URL}/rest/v1/plans?select=parent_id&limit=1`, { headers: { apikey: k, ...(k.startsWith('sb_') ? {} : { Authorization: `Bearer ${k}` }) } });
+  supabaseOk = supabase.ok;
+  console.log(`  Family accounts (Supabase secret key):   ${supabase.ok ? '✓ works' : `✗ refused (${supabase.status || 'no answer'}) ${supabase.message} — it must be the SECRET key (sb_secret_…), not the publishable one`}`);
+}
+if (!azure.ok || !google.ok || !supabaseOk) { console.log('\n✗ A key in .env does not work, so nothing was uploaded.'); process.exit(1); }
+if (checkOnly) { console.log('\n✓ They work. (--check: nothing was uploaded.)'); process.exit(0); }
 
-console.log(`\nUploading ${NAMES.join(', ')} to the live app (${PROJECT})…`);
+console.log(`\nUploading ${Object.keys(values).join(', ')} to the live app (${PROJECT})…`);
 if (!(await upload(values))) { console.log('\n✗ The upload failed — see the message above. Nothing else was changed.'); process.exit(1); }
 console.log('\n✓ Uploaded. The live app uses them after the next deploy:  npm run deploy');
 console.log('  Then this must say "ok" three times:  https://app.wundertutor.com/api/status');

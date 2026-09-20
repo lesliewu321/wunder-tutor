@@ -20,10 +20,11 @@ export class ReadError extends Error {
    * `locked`: this device's access code was refused (none entered, or changed on the server since).
    * `lockout`: too many wrong codes came from this network; even the right one is turned away for a while.
    * `unavailable`: the server can't read pages at all yet (no key).
+   * `limit`: the family's account has read its pages for today (the plan's daily limit).
    * `cancelled`: the learner closed the camera.
    * `detail`: the server's reason ("read_timeout"), shown small so a tester's screenshot says what went wrong.
    */
-  constructor(readonly code: 'offline' | 'busy' | 'locked' | 'lockout' | 'unavailable' | 'photo' | 'failed' | 'cancelled', readonly detail?: string) { super(code); }
+  constructor(readonly code: 'offline' | 'busy' | 'limit' | 'locked' | 'lockout' | 'unavailable' | 'photo' | 'failed' | 'cancelled', readonly detail?: string) { super(code); }
 }
 
 /** Photos are shrunk before upload: the text stays sharp and the upload stays small. */
@@ -82,6 +83,7 @@ export function readFailure(status: number, body: string): ReadError {
   const detail = [ours.error, ours.note, ours.finish].filter(Boolean).join(' ');
   if (status === 401) return new ReadError('locked', detail);
   if (ours.error === 'too_many_attempts') return new ReadError('lockout', detail);
+  if (ours.error === 'daily_limit') return new ReadError('limit', detail);
   if (status === 429) return new ReadError('busy', detail);
   if (ours.error === 'gemini_not_configured') return new ReadError('unavailable', detail);
   return new ReadError('failed', detail);

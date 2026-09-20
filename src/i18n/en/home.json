@@ -121,6 +121,7 @@
   "home.camera.fix.connections": "Check connections",
   "home.read.error.offline": "No internet right now — try again when you’re back online.",
   "home.read.error.busy": "That was a lot of pages! Wait a few minutes, then try again.",
+  "home.read.error.limit": "Your family has read today’s pages: the limit starts again tomorrow. Typed English still works.",
   "home.read.error.locked": "This device’s access code isn’t accepted — it may have been changed. Enter it again to read pages.",
   "home.read.error.lockout": "Too many wrong codes were tried from this network, so even the right one is turned away for now. Wait 10 minutes, then enter the code again.",
   "home.read.error.unavailable": "Reading pages isn’t switched on yet on the Wunder Tutor server.{detail}",

@@ -1,5 +1,6 @@
 // Talking to the API proxy: which services exist, and the beta access code that unlocks them.
 import { t, type Key } from '../i18n';
+import { accessToken } from '../account/pending';
 
 export interface ApiHealth {
   azure: boolean;
@@ -15,6 +16,9 @@ export interface ApiHealth {
   codeSet: boolean;
   /** "Say it right" can read photos and prepare typed text (Gemini). */
   read: boolean;
+  /** The API recognised the signed-in family, and what their account may use ('beta', 'family', 'free', 'unknown'). */
+  family?: boolean;
+  plan?: string | null;
 }
 
 const NONE: ApiHealth = { azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false };
@@ -42,6 +46,9 @@ export const apiFetch = (path: string, init: RequestInit = {}): Promise<Response
   const headers = new Headers(init.headers);
   const code = getAccessCode();
   if (code) headers.set(ACCESS_HEADER, encodeURIComponent(code));
+  // A signed-in family: the API knows them by their token (their plan unlocks it; their use is counted per day).
+  const token = accessToken();
+  if (token) headers.set('Authorization', `Bearer ${token}`);
   return fetch(path, { ...init, headers });
 };
 
