@@ -44,6 +44,7 @@ npx vite-node eval/run-en.ts            # English accuracy report (cached, free)
 npx vite-node eval/report-zh.ts --cv    # Mandarin accuracy report (cached, free)
 cd site && npm run dev | npm run deploy # marketing site
 npm run app:apk      # the Android app as a file to install on a phone (no Android Studio needed)
+npm run app:ios      # sync, then open the iOS project in Xcode — ON A MAC; it cannot be built on Windows
 ```
 
 Preview configs for the Browser pane: `.claude/launch.json` (`wunder-tutor` has `autoPort`, `wundertutor-website`).
@@ -135,6 +136,21 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
     (`drawable/splash.xml`, cream, and `values-night/` dark so a dark phone gets no bright flash). All vector: sharp at
     any size, no PNG per density. Checked by re-rendering the very same paths and transforms as SVG in the browser and
     measuring the bounds, not by eye. **Google Play will still want a 512×512 PNG for the listing.**
+  - **iOS (2026-09-20): the project exists and is dressed, but has never been built** — building it needs a Mac with
+    Xcode, and this machine is Windows. `ios/` is a real Xcode project (`npx cap add ios`), bundle id
+    `com.wundertutor.app` like Android, deployment target iOS 15, portrait and landscape on both phone and iPad.
+    Capacitor 8 uses **Swift Package Manager, not CocoaPods**, so there is no `pod install` step: on the Mac it should
+    be `npm run app:ios` (syncs the web files, opens Xcode), pick a team for signing, and run.
+    - The **three usage strings are in `Info.plist`** (microphone, camera, photo library) and they are not optional:
+      iOS does not refuse an app that asks for the microphone without a reason to show, it **kills the app**. They are
+      English only for now — iOS localises them through `InfoPlist.strings`, which the app's own i18n does not cover;
+      worth doing for 繁體中文 once Leslie has checked the wording.
+    - Icon and launch images are Pip, rasterised from the same drawing: `AppIcon-512@2x.png` at 1024×1024, and the
+      launch image at 2732×2732 with a **dark variant** (`Splash.imageset`, `luminosity/dark`). All written **without
+      an alpha channel** — Apple rejects an app icon that has one, and a browser canvas only makes RGBA, so they were
+      re-encoded as plain opaque PNGs. The launch storyboard is Capacitor's, untouched on purpose: it is known-good
+      and nothing here could compile it to check.
+    - The API already answers `capacitor://localhost`, which is the origin iOS uses (`APP_ORIGINS` in `server/core.mjs`).
   - **Edge to edge:** Android 15+ draws apps behind the status and navigation bars and there is no opting out. The app
     already copes (`viewport-fit=cover` in `index.html`, `env(safe-area-inset-*)` in `src/styles/tokens.css`), and
     `SystemBars: { initialViewportFitValueHint: 'cover' }` in `capacitor.config.ts` tells Capacitor so before it reads
@@ -237,7 +253,9 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   check, in this order: it opens at all; the app's own icon and launch screen; the microphone prompt appears on the
   first speaking take and scoring comes back; the camera opens for "Say it right" and reads a page; Android's Back
   button closes the camera rather than the app; the layout clears the status and navigation bars top and bottom.
-- iPhone/iPad Safari — and there is **no iOS project yet** (`npx cap add ios`, needs Leslie's Mac).
+- iPhone/iPad Safari — and the **iOS app has never been compiled**: the project is prepared but only a Mac can build
+  it. Nothing about it is proven beyond the files being well-formed (plist parses, asset catalogs parse, images are
+  the right size and carry no alpha).
 - The Claude tutor (no key). Supabase. Teacher-take quality thresholds for Mandarin
   (`TEACHER_MIN_ACCURACY` 85 / `TEACHER_MIN_SYLLABLE` 70 in `server/core.mjs`) are uncalibrated.
 
@@ -266,8 +284,11 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 
 - Create the Wunder Tutor **Supabase** project ($10/month on org `lesliewu321`) — accounts + sync. Not approved yet.
 - **Install the Android app on the phone and open it** (`npm run app:apk`, copy the file across, tap it) — the first
-  time any of this has run on a device. Then: the iOS project needs Leslie's Mac (`npx cap add ios`), and a real
-  Play Store upload needs a signing key of their own plus a 512×512 icon for the listing.
+  time any of this has run on a device.
+- **Build the iOS app on the Mac** (`npm run app:ios`, choose a signing team in Xcode, run on the iPhone). Everything
+  is prepared; only a Mac can do it.
+- A Play Store upload needs a signing key of Leslie's own plus a 512×512 icon for the listing (the App Store takes
+  its icon from the build, so iOS needs no separate file).
 - SpeechSuper trial for Mandarin sounds. Mandarin: pinyin always shown or fading? First cohort beginners or school
   learners?
 - Suggested stack for 1M users (discussed, nothing bought): Capacitor, RevenueCat + Stripe, FCM push, Cloudflare R2,

@@ -19,11 +19,13 @@
     "i18n:import": "node scripts/i18n-import.mjs",
     "build:app": "node scripts/build-app.mjs",
     "app:android": "npm run build:app && npx cap open android",
-    "app:apk": "npm run build:app && node scripts/build-apk.mjs"
+    "app:apk": "npm run build:app && node scripts/build-apk.mjs",
+    "app:ios": "npm run build:app && npx cap open ios"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
     "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
     "@supabase/auth-js": "^2.116.0",
     "@supabase/postgrest-js": "^2.116.0",
     "idb-keyval": "^6.2.1",
