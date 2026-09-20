@@ -36,7 +36,7 @@ export function Home() {
   const measured = weakSoundsIn(p.pronunciation, p.course).some((s) => s.phoneme === focus);
   const due = dueItems(p, Date.now()).filter((d) => d.itemId.startsWith('zh-') === (p.course === 'zh')).length;
   const review = unit.lessons[unit.lessons.length - 1];
-  const { mode, setMode, page } = useBook(p.id);
+  const { mode, setMode, pages } = useBook(p.id);
   const [api, setApi] = useState<ApiHealth | null>(null);
   useEffect(() => { void apiHealth().then(setApi); }, []);
   // Never let simulated scores pass for real ones.
@@ -65,7 +65,7 @@ export function Home() {
         </button>
         <button type="button" role="tab" aria-selected={mode === 'book'} className={`mode ${mode === 'book' ? 'is-on' : ''}`} onClick={() => setMode('book')}>
           <span className="mode__icon" aria-hidden><Icon name="book" size={22} /></span>
-          <span className="mode__text"><b>{t('home.mode.book')}</b><small>{page ? tn('home.mode.book.sentences', page.reading.lines.length) : t('home.mode.book.empty')}</small></span>
+          <span className="mode__text"><b>{t('home.mode.book')}</b><small>{pages.length ? tn('home.mode.book.pages', pages.length) : t('home.mode.book.empty')}</small></span>
         </button>
       </div>
 

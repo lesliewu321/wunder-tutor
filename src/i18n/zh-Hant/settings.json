@@ -70,7 +70,7 @@
   "settings.delete.recordings.cta": "刪除錄音",
   "settings.delete.recordings.done.other": "已刪除 {n} 段錄音",
   "settings.delete.history.title": "刪除發音記錄？",
-  "settings.delete.history.body": "{name} 的錄音、分數、弱項記錄及複習時間表都會被清除。已完成的課、XP 和徽章會保留。",
+  "settings.delete.history.body": "{name} 的錄音、分數、弱項記錄及複習時間表都會被清除。已完成的課、「我的書」裏的書頁、XP 和徽章會保留。",
   "settings.delete.history.cta": "刪除記錄",
   "settings.delete.history.done": "已刪除發音記錄",
   "settings.delete.profile.title": "刪除 {name} 的個人檔案？",

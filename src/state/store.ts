@@ -11,7 +11,7 @@ import { ALL_LESSONS } from '../content/course';
 import { setDisplayScript } from '../content/zh/script';
 import { deviceLanguage, setLanguage } from '../i18n';
 import { nextVoice } from '../speech/pitch';
-import { forgetBook } from '../features/say/page';
+import { forgetBook, forgetScores } from '../features/say/page';
 
 /** Little 5–7, Junior 8–11, Teen 12–17, Grown-up 18+. */
 export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <= 11 ? 'junior' : age <= 17 ? 'teen' : 'adult');
@@ -204,7 +204,7 @@ export const useStore = create<AppState>()(
 
       async deletePronunciationHistory(profileId) {
         await audioRepo.clear(`${profileId}/`);
-        forgetBook(profileId);
+        forgetScores(profileId); // the pages of My book stay, like completed lessons
         set((s) => {
           const p = s.profiles[profileId];
           if (!p) return s;

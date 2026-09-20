@@ -81,7 +81,7 @@
   "settings.delete.recordings.done.one": "{n} recording deleted",
   "settings.delete.recordings.done.other": "{n} recordings deleted",
   "settings.delete.history.title": "Delete pronunciation history?",
-  "settings.delete.history.body": "Recordings, scores, weak-sound memory and review schedule for {name} are erased. Lessons completed, XP and badges are kept.",
+  "settings.delete.history.body": "Recordings, scores, weak-sound memory and review schedule for {name} are erased. Lessons completed, the pages in My book, XP and badges are kept.",
   "settings.delete.history.cta": "Delete history",
   "settings.delete.history.done": "Pronunciation history deleted",
   "settings.delete.profile.title": "Delete {name}’s profile?",

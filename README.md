@@ -114,7 +114,8 @@ feedback), and for Mandarin, Traditional (default) or Simplified characters. Azu
 
 Home has two modes: **Course** (the lessons, plus conversations with Pip) and **My book**. My book has the camera
 button (the bottom bar is four plain tabs): point it at a page (a school book, a menu, a sign), take the photo — or pick
-one from the gallery inside the camera — and the page's sentences appear under My book. Tap one to hear it, say it and get the
+one from the gallery inside the camera — and the page's sentences appear under My book. My book keeps every page (the last 30,
+on the device): the newest is open, the others wait below it and open with a tap; a page can be deleted. Tap one to hear it, say it and get the
 same feedback as a lesson. The camera is the same on phones, tablets and computers (shown inside the app, with a torch
 where the phone has one; if the browser blocks it, the phone's own camera app and the gallery still work). Typing is
 the quiet alternative. English typed text is split on the device; photos and Chinese text go to `POST /api/read`, where

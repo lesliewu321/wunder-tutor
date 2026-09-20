@@ -69,7 +69,14 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
 - **Say it right** (`src/features/say/`): camera (`CameraScreen.tsx`, full screen on every device via getUserMedia:
   shutter, gallery button inside, torch if the phone has one, photo = exactly what was on screen; blocked → "Use the
   camera app" (capture input) + gallery). Opened from anywhere with `openCamera()` → `CameraHost` (next to the
-  toasts). A read page is saved per learner (`wunder-tutor/book/<id>`, erased with the learner/all data) and Home
+  toasts). **My book keeps every page** (Leslie, 2026-09-20: "scanned items cannot be saved" — it used to hold one page, and
+  each new photo replaced it): `src/features/say/page.ts` is a shelf per learner in localStorage
+  (`wunder-tutor/pages/<id>`: `{ pages: [{ id, reading, best, at, changed }], open }`, newest first, 30 pages, the
+  oldest makes room and the learner is told; the old single `wunder-tutor/book/<id>` becomes the first page; a browser
+  that stores nothing keeps the book for the visit). Home shows the open page in full, the others under "My other
+  pages" (tap = open), "Delete this page" with a confirm. Erased with the learner/all data; "Delete pronunciation
+  history" erases the pages' scores only (`forgetScores`). On this device only for now: `id` + `changed` are there so
+  pages can sync with the learner once accounts exist. A new page is added and Home
   switches to My book; each sentence is `/say?s=N` (same speaking screen, `mode="free"`: "Next sentence" always
   offered, not added to the review schedule). `Permissions-Policy: camera=(self)` (was `camera=()`, which blocked
   it). Photos and Chinese text go to `POST /api/read` (`server/read.mjs`, Gemini 3.8 Flash, two steps: sentences, then

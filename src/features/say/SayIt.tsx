@@ -6,14 +6,14 @@ import { SpeakExercise } from '../speak/SpeakExercise';
 import { useBook } from './page';
 import { sayItem } from './sayItem';
 
-// "Say it right": one sentence of the learner's book page (/say?s=3) — hear it, say it, get corrected — then the
+// "Say it right": one sentence of the page that is open in the learner's book (/say?s=3) — hear it, say it, get corrected — then the
 // next. The page itself is on Home ("My book"). The sentence lives in the address, so the phone's back button
 // returns to the page.
 export function SayIt() {
   const { t } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
-  const { page, setPage } = useBook(p.id);
+  const { page, scorePage } = useBook(p.id);
   const [params, setParams] = useSearchParams();
   const active = Number(params.get('s'));
   const lines = page?.reading.lines ?? [];
@@ -33,7 +33,7 @@ export function SayIt() {
       <div className="lesson__body" key={`${active}:${current.id}`}>
         <SpeakExercise item={current} context="practice" mode="free" continueLabel={t(next > 0 ? 'home.say.next' : 'common.done')}
           onDone={(r) => {
-            setPage({ ...page, best: { ...page.best, [active]: Math.max(page.best[active] ?? 0, r.best) } });
+            scorePage(page.id, active, r.best);
             if (next > 0) setParams({ s: String(next) }, { replace: true }); else close();
           }} />
       </div>

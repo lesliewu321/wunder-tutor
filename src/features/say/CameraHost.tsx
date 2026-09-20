@@ -8,7 +8,8 @@ import { useProfile } from '../../state/store';
 import { CameraScreen } from './CameraScreen';
 import { onOpenCamera } from './camera';
 import { readProblem, readingProblem, setupProblem, type Problem } from './messages';
-import { saveMode, savePage } from './page';
+import { tellIfFull } from './BookHome';
+import { addPage, saveMode } from './page';
 
 // The one camera screen, opened from anywhere with openCamera(). Being open is a step in the browser's history
 // (`state.camera` on the page the learner was on), so the phone's Back button closes the camera instead of leaving
@@ -60,10 +61,10 @@ export function CameraHost() {
       read={async (photo, signal) => {
         try {
           const reading = await readPhoto(photo, signal);
-          if (signal.aborted) return null; // closed meanwhile: the page the learner has is not replaced
+          if (signal.aborted) return null; // closed meanwhile: nothing is added to the book
           const nothing = readingProblem(reading, kid);
           if (nothing) return { text: nothing };
-          savePage(p.id, { reading, best: {}, at: Date.now() });
+          tellIfFull(addPage(p.id, reading).dropped);
           saveMode(p.id, 'book');
           nav('/', { replace: true }); // Home takes the camera's place in the history
           return null;
