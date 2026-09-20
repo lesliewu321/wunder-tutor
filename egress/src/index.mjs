@@ -22,7 +22,17 @@ export class GoogleEgress extends DurableObject {
 
   async fetch(request) {
     const url = new URL(request.url);
-    if (url.hostname === 'egress.internal') return Response.json({ colo: await this.where() });
+    if (url.hostname === 'egress.internal') {
+      // A relay lives where it is first used FROM. "spawn" first-uses another relay from here — a place outside Hong
+      // Kong — so an Asia-Pacific relay does not end up in Hong Kong just because a Hong Kong learner was first.
+      const name = url.searchParams.get('name'), hint = url.searchParams.get('hint');
+      if (url.pathname === '/spawn' && name) {
+        const child = this.env.EGRESS.get(this.env.EGRESS.idFromName(name), hint ? { locationHint: hint } : undefined);
+        const livesAt = await child.fetch('https://egress.internal/where').then((r) => r.json()).then((j) => j.colo, () => '?');
+        return Response.json({ from: await this.where(), name, hint, livesAt });
+      }
+      return Response.json({ colo: await this.where() });
+    }
     if (url.protocol !== 'https:' || url.hostname !== GOOGLE) return new Response('only Google', { status: 403 });
     if (request.headers.get('Upgrade')?.toLowerCase() !== 'websocket') return fetch(request);
 

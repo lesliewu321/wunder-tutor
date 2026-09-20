@@ -231,10 +231,14 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   HKG-entering request still ran at HKG. Fix: **all Google calls (read, status check, the Live voice WebSocket) leave
   through a Durable Object relay** — Worker `wunder-egress` (`egress/`, `npm run deploy:egress`, no public address),
   bound to the Pages project as `EGRESS`; `functions/api/[[path]].js` probes relays in order (free `models` call) and
-  keeps the first one Google accepts: `google-oc` (landed in **Auckland**, ~0.15 s from HK) then `google-wnam` (Dallas).
-  Relays with hint `apac` landed in HKG every time (first used by HKG-entering requests) and are refused — to get one in
-  Taiwan/Singapore/Japan it must be FIRST used by a request entering outside HK (idea: create only when
-  `request.cf.colo !== 'HKG'`, publish the name via KV). `/api/status` shows `egress` ("google-oc AKL"). The same block
+  keeps the first one Google accepts: **`google-apac-a` (Tokyo, NRT, ~50 ms from HK)**, `google-apac-c` (Osaka, KIX),
+  then `google-oc` (Auckland) and `google-wnam` (Dallas). A relay lives where it is FIRST used from; `apac`-hinted ones
+  first used by HKG-entering requests landed in HKG (refused). The Japan ones were first used from the Auckland relay
+  via the relay's own `/spawn` (egress/src/index.mjs): six tries gave NRT, KIX, KIX, HKG, HKG(from Dallas) — never
+  Singapore, which Leslie asked for; Japan is ~15 ms slower, irrelevant next to model time. To make another: add a
+  temporary guarded route in `functions/api/[[path]].js` that calls `relay('google-oc').fetch('https://egress.internal/spawn?name=…&hint=apac')`,
+  read `livesAt`, list it if it isn't HKG, remove the route (see commit history, 2026-09-20). Sending a first request
+  from the Supabase database in Singapore (pg_net) was blocked by the permission classifier — don't retry that. `/api/status` shows `egress` ("google-oc AKL"). The same block
   will hit any provider that geo-blocks Hong Kong (OpenAI and Anthropic do too) — route them through the relay as well
   (its allow-list is one hostname). The voice WebSocket through the relay was NOT yet seen working end to end (no
   access code on my side): check that the KV cache gains `tts:` keys after Leslie uses Listen on the live app.

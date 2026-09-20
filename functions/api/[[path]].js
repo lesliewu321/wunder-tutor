@@ -12,14 +12,14 @@ import { cleanApiKey, createApi } from '../../server/core.mjs';
 // Google's Gemini service refuses requests that leave from Hong Kong, and this Function runs at the Cloudflare location
 // nearest the learner — for the launch market, Hong Kong (seen live, 2026-09-20: the same code and key answered "ok"
 // at TPE and "User location is not supported" at HKG). So every Google request goes through a relay that lives in one
-// place (egress/src/index.mjs). A relay lives where Cloudflare put it on first use: within the region of its hint,
-// next to whoever used it first. For "apac" that was Hong Kong every time (google-apac, -2 and -3, all first used by
-// requests entering at HKG on 2026-09-20, all refused by Google) — so they are not in this list: each new isolate would
-// only waste two round trips on them. Relays are tried in this order and the first one Google accepts is kept for the
-// life of this isolate: Oceania (it landed in Auckland, ~0.15 s from Hong Kong), then western North America (Dallas,
-// ~0.2 s, always served). To do, for speed: a relay in Taiwan, Singapore or Japan — it has to be FIRST used by a request
-// entering outside Hong Kong (e.g. only create it when request.cf.colo isn't HKG, and publish its name through KV).
-const RELAYS = [{ name: 'google-oc', hint: 'oc' }, { name: 'google-wnam', hint: 'wnam' }];
+// place (egress/src/index.mjs). A relay lives where Cloudflare put it on FIRST use: somewhere in the region of its hint,
+// and for "apac" that is often Hong Kong itself when a Hong Kong request is first (google-apac, -2, -3: all HKG, all
+// refused by Google). So the Asia-Pacific relays below were first used from the Auckland relay instead (the relay's
+// own "spawn", 2026-09-20): google-apac-a landed in Tokyo (NRT), -c in Osaka (KIX) — ~50 ms from Hong Kong, served by
+// Google. (-b and -e landed in HKG and are not listed; Singapore never came up in six tries.) They are tried in this
+// order and the first one Google accepts is kept for the life of this isolate; Auckland (~150 ms) and Dallas
+// (~200 ms) remain as the last resorts. To make another: see "spawn" in egress/src/index.mjs and the handoff.
+const RELAYS = [{ name: 'google-apac-a', hint: 'apac' }, { name: 'google-apac-c', hint: 'apac' }, { name: 'google-oc', hint: 'oc' }, { name: 'google-wnam', hint: 'wnam' }];
 const REFUSED_HERE = /location is not supported/i;
 const relay = (env, i) => env.EGRESS.get(env.EGRESS.idFromName(RELAYS[i].name), { locationHint: RELAYS[i].hint });
 const whereIs = (env, i) => relay(env, i).fetch('https://egress.internal/where').then((r) => r.json()).then((j) => j.colo, () => '?');
