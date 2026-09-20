@@ -17,3 +17,13 @@ compatibility_flags = ["nodejs_compat"] # Buffer and node:crypto for server/tts.
 [[kv_namespaces]]
 binding = "TTS_CACHE"
 id = "138ec3dd03034f40ab92a58125cd6b07"
+
+# Calls to Google leave through a relay outside Hong Kong (the `wunder-egress` Worker, egress/): Google's Gemini service
+# refuses requests that leave from Hong Kong ("User location is not supported"), and a Function runs at the Cloudflare
+# location nearest the learner — for the launch market, Hong Kong. (Cloudflare's [placement] was tried first,
+# 2026-09-20: it is only a hint, and every request entering at HKG still ran at HKG.) Deploy the relay before the app:
+#   npm run deploy:egress
+[[durable_objects.bindings]]
+name = "EGRESS"
+class_name = "GoogleEgress"
+script_name = "wunder-egress"

@@ -80,12 +80,12 @@ async function readJson(request) {
   }
 }
 
-/** fetch() with a hard deadline that also covers reading the body. */
-async function fetchText(url, init, timeoutMs) {
+/** fetch() with a hard deadline that also covers reading the body. `fetchFn`: the way out to use (see googleFetch). */
+async function fetchText(url, init, timeoutMs, fetchFn = fetch) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, { ...init, signal: controller.signal });
+    const response = await fetchFn(url, { ...init, signal: controller.signal });
     return { status: response.status, ok: response.ok, text: await response.text(), timedOut: false };
   } catch (err) {
     if (controller.signal.aborted) return { status: 0, ok: false, text: '', timedOut: true };
@@ -149,12 +149,16 @@ function createFailureCounter(max, windowMs) {
  * @param {Record<string, string|undefined>} rawEnv  AZURE_SPEECH_KEY, AZURE_SPEECH_REGION, AZURE_SPEECH_ENDPOINT,
  *   GEMINI_API_KEY, GEMINI_LIVE_MODEL, GEMINI_TTS_VOICE, GEMINI_LIVE_ENDPOINT, ANTHROPIC_API_KEY, CLAUDE_MODEL,
  *   BETA_ACCESS_CODE (when set, every endpoint except /api/health requires it in the x-wunder-access header)
- * @param {{ ttsCache?: object, connectWebSocket?: Function, canDialWebSocket?: boolean, requireAccessCode?: boolean, log?: Console }} [deps]
+ * @param {{ ttsCache?: object, connectWebSocket?: Function, canDialWebSocket?: boolean, requireAccessCode?: boolean, log?: Console,
+ *   googleFetch?: typeof fetch, egressInfo?: () => Promise<string> }} [deps]
+ *   googleFetch: how requests reach Google. Google refuses requests that leave from Hong Kong, where the hosted API
+ *   runs for Hong Kong learners — there it is a relay elsewhere (functions/api/[[path]].js); locally, plain fetch.
  *   requireAccessCode: public deployments fail closed — with no BETA_ACCESS_CODE configured, nothing is unlocked.
  */
 export function createApi(rawEnv, deps = {}) {
   const env = (name) => String(rawEnv?.[name] ?? '').trim();
   const log = deps.log ?? console;
+  const googleFetch = deps.googleFetch ?? ((url, init) => fetch(url, init));
 
   const AZURE_SPEECH_KEY = cleanApiKey(env('AZURE_SPEECH_KEY'));
   const AZURE_SPEECH_REGION = cleanApiKey(env('AZURE_SPEECH_REGION')).toLowerCase();
@@ -314,7 +318,7 @@ export function createApi(rawEnv, deps = {}) {
     }
     const started = Date.now();
     try {
-      return json(200, await readText({ apiKey: GEMINI_API_KEY, model: GEMINI_READ_MODEL, ...input }));
+      return json(200, await readText({ apiKey: GEMINI_API_KEY, model: GEMINI_READ_MODEL, fetchImpl: googleFetch, ...input }));
     } catch (err) {
       // What failed and how long it took — never the photo, the text, or a key. For a key that can't be sent, how
       // much of the stored value is usable at all says whether it is empty, padded or the wrong value entirely.
@@ -416,7 +420,7 @@ export function createApi(rawEnv, deps = {}) {
 
   async function checkGemini(model) {
     if (!GEMINI_API_KEY) return { state: 'not_set', note: keyShape() };
-    const r = await fetchText(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}`, { headers: { 'x-goog-api-key': GEMINI_API_KEY } }, 8000);
+    const r = await fetchText(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}`, { headers: { 'x-goog-api-key': GEMINI_API_KEY } }, 8000, googleFetch);
     if (r.ok) return { state: 'ok' };
     let message = '';
     try { message = String(JSON.parse(r.text)?.error?.message ?? ''); } catch { /* not JSON */ }
@@ -437,7 +441,9 @@ export function createApi(rawEnv, deps = {}) {
     const value = (async () => {
       const [scoring, reading, voice] = await Promise.all([checkAzure(), checkGemini(GEMINI_READ_MODEL), checkGemini(GEMINI_LIVE_MODEL)]);
       const notes = Object.fromEntries(Object.entries({ scoring, reading, voice }).filter(([, v]) => v.note).map(([k, v]) => [k, v.note]));
-      const out = { checkedAt: new Date().toISOString(), scoring: scoring.state, reading: reading.state, voice: canDial ? voice.state : 'not_set', notes };
+      // Where calls to Google leave from ("apac NRT") — it decides whether Google serves them at all.
+      const egress = deps.egressInfo ? await deps.egressInfo().catch(() => '?') : 'direct';
+      const out = { checkedAt: new Date().toISOString(), scoring: scoring.state, reading: reading.state, voice: canDial ? voice.state : 'not_set', egress, notes };
       const sure = [out.scoring, out.reading, out.voice].every((s) => DEFINITE.has(s));
       lastStatus = { until: Date.now() + (sure ? 60_000 : 5_000), value };
       return out;

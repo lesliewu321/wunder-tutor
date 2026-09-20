@@ -13,7 +13,8 @@
     "deploy": "npm run build && wrangler pages deploy dist --project-name wunder-tutor --branch main --commit-dirty=true",
     "cf:dev": "npm run build && wrangler pages dev dist --port 8788",
     "keys:check": "node scripts/push-keys.mjs --check",
-    "keys:push": "node scripts/push-keys.mjs"
+    "keys:push": "node scripts/push-keys.mjs",
+    "deploy:egress": "wrangler deploy -c egress/wrangler.toml"
   },
   "dependencies": {
     "idb-keyval": "^6.2.1",

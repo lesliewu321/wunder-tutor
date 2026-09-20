@@ -127,6 +127,14 @@ practised. A dense Chinese page takes about 6–8 s. Needs the API (beta access 
 photo nor the text on its servers; the page's sentences stay on the device (per learner) until a new photo, and are
 erased with the learner's data. Not added to the review schedule.
 
+## Hong Kong and Google
+
+Google's Gemini API (reading pages, the teacher voice) refuses requests that come from Hong Kong, and the hosted API
+runs at the Cloudflare location nearest the learner — in Hong Kong, for Hong Kong learners. So every call to Google
+leaves through a small relay that lives elsewhere (`egress/`, a Durable Object; currently Auckland, with Dallas as the
+fallback). `GET /api/status` shows whether Google is serving and which relay is in use. Deploy the relay with
+`npm run deploy:egress` (rarely needed), then the app with `npm run deploy`.
+
 ## Tablets
 
 From 760 px wide the app becomes a home learning screen: a side navigation rail, wider screens, grids for sounds,

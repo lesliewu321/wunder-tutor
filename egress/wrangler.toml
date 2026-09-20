@@ -1,0 +1,17 @@
+# wunder-egress: the relay the app's API uses for every call to Google (see ../wrangler.toml for why).
+# It has no address of its own — no workers.dev URL, no route — and is reached only through the app's binding.
+# Deploy: npm run deploy:egress   (rarely needed: only when this folder changes)
+name = "wunder-egress"
+main = "src/index.mjs"
+compatibility_date = "2026-06-01"
+workers_dev = false
+preview_urls = false
+
+[[durable_objects.bindings]]
+name = "EGRESS"
+class_name = "GoogleEgress"
+
+# SQLite-backed classes are the kind the free plan includes; nothing is stored in it.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["GoogleEgress"]

@@ -224,6 +224,20 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   and the Gemini voice had never worked on the live app; `.env` keys were verified good (Azure 84 chars, region 8,
   Gemini 53). **Leslie ran it on 2026-09-20; after the redeploy `/api/status` said `ok` for scoring, reading and
   voice — the first time the live app's services worked.** Still to see on a real phone: a photo read end to end.
+- **Google's Gemini API refuses requests that leave from Hong Kong** ("User location is not supported") — and a Pages
+  Function runs at the Cloudflare location nearest the learner, which for the launch market IS Hong Kong. Found
+  2026-09-20 once the keys worked: the same code and key said `reading: ok` when a request entered at TPE and
+  `region` at HKG (Leslie's phone). Cloudflare `[placement]` (smart or `region = "gcp:asia-east1"`) is only a hint: every
+  HKG-entering request still ran at HKG. Fix: **all Google calls (read, status check, the Live voice WebSocket) leave
+  through a Durable Object relay** — Worker `wunder-egress` (`egress/`, `npm run deploy:egress`, no public address),
+  bound to the Pages project as `EGRESS`; `functions/api/[[path]].js` probes relays in order (free `models` call) and
+  keeps the first one Google accepts: `google-oc` (landed in **Auckland**, ~0.15 s from HK) then `google-wnam` (Dallas).
+  Relays with hint `apac` landed in HKG every time (first used by HKG-entering requests) and are refused — to get one in
+  Taiwan/Singapore/Japan it must be FIRST used by a request entering outside HK (idea: create only when
+  `request.cf.colo !== 'HKG'`, publish the name via KV). `/api/status` shows `egress` ("google-oc AKL"). The same block
+  will hit any provider that geo-blocks Hong Kong (OpenAI and Anthropic do too) — route them through the relay as well
+  (its allow-list is one hostname). The voice WebSocket through the relay was NOT yet seen working end to end (no
+  access code on my side): check that the KV cache gains `tts:` keys after Leslie uses Listen on the live app.
 - **Secrets need a deploy, and a check:** after Leslie runs `wrangler pages secret put …`, run `npm run deploy`, then
   `curl https://app.wundertutor.com/api/status` — `reading`/`voice`/`scoring` must say `ok`. A pasted key can be
   present and wrong: on 2026-09-19/20 the live Gemini key was first invalid (Google 400 in 0.1 s), then held a line

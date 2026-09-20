@@ -54,6 +54,9 @@ public deployment with no code set fails closed.
   access code the answer adds `notes` — Google's own words and `key N/M` (usable characters of those stored; never
   the key). Keys are cleaned of whitespace and invisible characters before use (`cleanApiKey`): a pasted line break
   otherwise makes the request header invalid and the call fails before reaching Google.
+  The answer also has `egress`: where calls to Google leave from (`google-oc AKL`; `direct` locally). Google refuses
+  requests that leave from Hong Kong, so on Cloudflare every Google call goes through a relay elsewhere
+  (`deps.googleFetch` — see `functions/api/[[path]].js` and `egress/`).
 - `POST /api/read`: "Say it right". Body = a photo (`image/jpeg|png|webp`, the app sends a ≤1600 px JPEG) or JSON
   `{ "text": "…" }` (≤ 2000 chars) → `{ language: "en"|"zh"|"other"|"none", lines: [{ text, lang: "en"|"zh"|"other",
   traditional?, simplified?, pinyin? }] }`. Every sentence has its own language, so a bilingual page (a Hong Kong menu or
