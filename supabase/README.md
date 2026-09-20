@@ -33,6 +33,13 @@ are in `server/family.mjs`.
 4. Before real families: **custom SMTP** (Authentication → Emails → SMTP; e.g. Resend on wundertutor.com). The
    built-in mailer only writes to the project's own team and only a few emails an hour.
 
+### How long the code is
+
+A dashboard setting (Authentication → Sign In / Providers → Email OTP length): Supabase's default is 6, **this
+project is set to 8**, and 10 is the most it allows. The app deliberately never says a number — it asks for "the code
+from the email" and accepts 6 to 10 digits — so changing this setting can never make the app tell a parent something
+untrue. The templates below use `{{ .Token }}`, which is whatever length is set.
+
 ### Email templates (both "Confirm signup" and "Magic Link")
 
 Subject: `Your Wunder Tutor code: {{ .Token }}`

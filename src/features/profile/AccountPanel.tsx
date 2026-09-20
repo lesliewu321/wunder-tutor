@@ -54,7 +54,9 @@ export function AccountPanel() {
         <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); void run(() => signInWithCode(sentTo, code, { version: CONSENT_VERSION, language: language(), wording: t('settings.account.consent') })); }}>
           <p className="access">{t('settings.account.sent', { email: sentTo })}</p>
           <label className="sr-only" htmlFor="account-code">{t('settings.account.code.label')}</label>
-          <input id="account-code" className="input account__code" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 8))} inputMode="numeric" autoComplete="one-time-code" placeholder={t('settings.account.code.placeholder')} />
+          {/* How long the code is, is a setting on the account server — 6 by default, 8 here, up to 10. So the app
+              never names a length, and takes any of them: a pasted code is stripped to its digits and kept whole. */}
+          <input id="account-code" className="input account__code" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 10))} inputMode="numeric" autoComplete="one-time-code" placeholder={t('settings.account.code.placeholder')} />
           {error && <p className="access access--bad" role="alert">{t(ERRORS[error])}</p>}
           <Button type="submit" block disabled={busy || code.length < 6}>{t(busy ? 'settings.account.checking' : 'settings.account.signIn')}</Button>
           <div className="account__row">

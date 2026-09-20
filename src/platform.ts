@@ -17,7 +17,7 @@ export const apiUrl = (path: string): string => (API_BASE && path.startsWith('/'
 
 /**
  * Where the sign-in email's link should land. In the phone app the page itself lives on the device, so a link to
- * localhost would open nothing: it points at the website instead, which explains what to do. The 6-digit code in the
+ * localhost would open nothing: it points at the website instead, which explains what to do. The code in the
  * same email is what the phone app actually uses.
  */
 export const emailReturnUrl = (): string => `${API_BASE || (typeof window === 'undefined' ? '' : window.location.origin)}/parents`;

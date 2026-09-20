@@ -51,7 +51,9 @@ Preview configs for the Browser pane: `.claude/launch.json` (`wunder-tutor` has 
 
 ## State of the product (all on `main`)
 
-Onboarding (grown-up setup, or "Me — a grown-up") → languages (English / 普通話 Putonghua, either or both) → accent
+Onboarding ("Who's learning?" — **"A child (5–17)" or "An adult (18+)"**, reworded 2026-09-20 after Leslie saw the
+phone: the ages stopped at 17, "My child" was preselected, and the adult path called the learner a parent
+("Parents learn too", name placeholder "e.g. Mum"), so an adult learning for themselves appeared nowhere) → languages (English / 普通話 Putonghua, either or both) → accent
 (American default, British) → characters (Traditional default / Simplified) → speaking check → plan → Home (course
 switcher) → lessons (speak, listen, minimal pairs, dialogue, adaptive drill) → retry with before/after → progress →
 Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conversations (English only) → Parent Zone.
@@ -109,7 +111,7 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
 - **Family accounts (2026-09-20, built; NOT yet tried with a real sign-in, NOT deployed).** Everything is in
   `supabase/README.md`: the database is applied to project `xzghsihffoliduqkjvck` (2 migrations; `supabase/tests/rls.sql`
   = 39 access checks, ALL OK; advisors clean except the two erasure functions parents are meant to call), the app has
-  Parent Zone → Family account (email → 6-digit code; `src/account/`, libraries lazy-loaded, 31 kB gz), learners and
+  Parent Zone → Family account (email → a code, 8 digits as the project is set, any of 6-10 accepted; `src/account/`, libraries lazy-loaded, 31 kB gz), learners and
   My book pages sync (merge rules + engine tested with pretend devices), the API recognises a signed-in family
   (`server/family.mjs`: ES256 token check against the public keys, plan, daily limits; `beta` plan granted when the
   access code arrives with a sign-in). Leslie's decisions: **email code/link sign-in; recordings never leave the
