@@ -81,7 +81,10 @@ async function post(body: Blob | string, type: string, cancel?: AbortSignal): Pr
   // code ("error code: 1102") so a screenshot says which.
   const reason = async () => {
     const body = await res.text().catch(() => '');
-    try { const e = (JSON.parse(body) as { error?: string } | null)?.error; if (e) return e; } catch { /* not ours */ }
+    try {
+      const ours = JSON.parse(body) as { error?: string; note?: string } | null;
+      if (ours?.error) return ours.note ? `${ours.error} ${ours.note}` : ours.error;
+    } catch { /* not ours */ }
     const platform = /error code:?\s*(\d{3,4})/i.exec(body)?.[1];
     return `http_${res.status}${platform ? ` cf${platform}` : ''}`;
   };

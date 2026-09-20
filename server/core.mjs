@@ -305,7 +305,10 @@ export function createApi(rawEnv, deps = {}) {
       // What failed and how long it took — never the photo, the text, or a key. For a key that can't be sent, how
       // much of the stored value is usable at all says whether it is empty, padded or the wrong value entirely.
       const what = input.image ? `photo ${Math.round(input.image.bytes.length / 1024)} KB` : `text ${input.text.length} chars`;
-      if (err?.body?.error === 'read_key') log.warn?.(`[read] stored Gemini key: ${GEMINI_API_KEY.length} usable characters of ${env('GEMINI_API_KEY').length}`);
+      // A key that can't be used: how much of the stored value is usable at all (never the value) says whether it is
+      // empty, padded, or the wrong value entirely — in the app's message too, since a tester's screenshot is the
+      // fastest way back to me.
+      if (err?.body?.error === 'read_key') err.body.note = `${GEMINI_API_KEY.length}/${env('GEMINI_API_KEY').length}`;
       log.warn?.(`[read] ${err?.body?.error ?? err?.name ?? 'error'}${err.upstreamMessage ? ` (${err?.body?.status ? `gemini ${err.body.status}: ` : ''}${err.upstreamMessage})` : ''}${err?.body?.finish ? ` (${err.body.finish})` : ''} after ${((Date.now() - started) / 1000).toFixed(1)} s, ${what}`);
       throw err;
     }
