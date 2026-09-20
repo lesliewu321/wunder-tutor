@@ -45,7 +45,8 @@ export function AccountPanel() {
           <p className="account__saved" role="status">{t(SAVED[account.sync])}</p>
           {account.full && <p className="access">{t('settings.account.full')}</p>}
           <div className="account__row">
-            <Button variant="soft" size="sm" icon="retry" disabled={account.sync === 'saving'} onClick={() => void syncNow()}>{t('settings.account.syncNow')}</Button>
+            {/* Saving is automatic. The button is only for when it did not happen (no internet, the account out of reach). */}
+            {(account.sync === 'failed' || account.sync === 'offline') ? <Button variant="soft" size="sm" icon="retry" onClick={() => void syncNow()}>{t('settings.account.syncNow')}</Button> : <span />}
             <Button variant="ghost" size="sm" disabled={busy} onClick={() => { setBusy(true); void signOut().finally(() => setBusy(false)); }}>{t('settings.account.signOut')}</Button>
           </div>
         </div>
