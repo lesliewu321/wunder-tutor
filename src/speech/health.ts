@@ -60,3 +60,36 @@ export const apiHealth = (): Promise<ApiHealth> => {
   })();
   return health;
 };
+
+/** Ask again (the code or the server may have changed since the app opened). */
+export const refreshHealth = (): Promise<ApiHealth> => { health = null; return apiHealth(); };
+
+// ---------------------------------------------------------------- do the services actually work?
+
+/** What a live check of one service found (server: GET /api/status). */
+export type ServiceState = 'ok' | 'not_set' | 'key_refused' | 'region' | 'model_missing' | 'quota' | 'unreachable' | 'unchecked' | 'error';
+export interface ServiceStatus {
+  checkedAt: string;
+  scoring: ServiceState;
+  reading: ServiceState;
+  voice: ServiceState;
+  /** Only for a device with the access code: what helps repair a key (never the key). */
+  notes?: Partial<Record<'scoring' | 'reading' | 'voice', string>>;
+}
+
+export const SERVICE_WORDS: Record<ServiceState, string> = {
+  ok: 'Working', not_set: 'Not set up', key_refused: 'Key refused', region: 'Not available here', model_missing: 'Model not found',
+  quota: 'Over its limit', unreachable: 'Can’t be reached', unchecked: 'Not checked', error: 'Problem',
+};
+
+/** Null when the check itself couldn't run (offline, an older server). */
+export const serviceStatus = async (): Promise<ServiceStatus | null> => {
+  try {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 12000);
+    const res = await apiFetch('/api/status', { signal: ctl.signal });
+    clearTimeout(t);
+    if (!res.ok || !res.headers.get('content-type')?.includes('json')) return null;
+    return (await res.json()) as ServiceStatus;
+  } catch { return null; }
+};

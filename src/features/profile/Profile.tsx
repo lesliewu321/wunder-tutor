@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { settingsName, type Accent, type AgeBand, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
 import { buildRecordingExport, CONSENT_TEXT } from '../../data/exportRecordings';
@@ -7,7 +7,7 @@ import { blobToWav16k } from '../../speech/recorder';
 import { HOME_LANGUAGES } from '../../content/translations';
 import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, liveStreak } from '../../engine/rewards';
-import { apiHealth, getAccessCode, setAccessCode, type ApiHealth } from '../../speech';
+import { apiHealth, getAccessCode, serviceStatus, setAccessCode, SERVICE_WORDS, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
@@ -103,13 +103,25 @@ export function ParentZone() {
   const [recordings, setRecordings] = useState<number | null>(null);
   const [services, setServices] = useState<ApiHealth | null>(null);
   const [code, setCode] = useState(getAccessCode);
+  // Sent here to fix something (the camera's "Enter the code" / "Check connections"): show that part, not the top.
+  const show = (useLocation().state as { show?: 'code' | 'connections' } | null)?.show;
+  // A live check of the services behind the app: a key can be present and still be refused.
+  const [live, setLive] = useState<ServiceStatus | 'checking' | 'failed' | null>(null);
+  const checkConnections = () => { setLive('checking'); void serviceStatus().then((s) => setLive(s ?? 'failed')); };
   const attempts = useStore((s) => s.attempts);
   const [sharing, setSharing] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [making, setMaking] = useState(false);
 
   const refresh = () => void audioRepo.count(`${p.id}/`).then(setRecordings);
-  useEffect(() => { if (open) { refresh(); void apiHealth().then(setServices); } }, [open, p.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (open) { refresh(); void apiHealth().then((h) => { setServices(h); if (h.authorized && (h.azure || h.read)) checkConnections(); }); } }, [open, p.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!open || !show || !services) return;
+    // A refused code has no Connections section yet: the code comes first.
+    const el = document.getElementById(show === 'connections' ? 'zone-connections' : 'zone-code') ?? document.getElementById('zone-code');
+    el?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, [open, show, services]);
 
   if (!open) return <Gate band={p.band} onPass={() => setOpen(true)} onCancel={() => nav('/me')} />;
 
@@ -215,7 +227,7 @@ export function ParentZone() {
       </section>
 
       {services?.needsCode && (
-        <section>
+        <section id="zone-code">
           <h2 className="section-title">Beta access</h2>
           <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); setAccessCode(code); window.location.reload(); }}>
             <p className={services.authorized ? 'access access--ok' : 'access'}>
@@ -225,6 +237,29 @@ export function ParentZone() {
             <input id="access-code" className="input" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="Access code" />
             <Button type="submit" block disabled={!code.trim() || (services.authorized && code.trim() === getAccessCode())}>Save code</Button>
           </form>
+        </section>
+      )}
+
+      {services?.authorized && (services.azure || services.read) && (
+        <section id="zone-connections">
+          <h2 className="section-title">Connections</h2>
+          <div className="form-card">
+            {([['scoring', 'Pronunciation scoring'], ['reading', 'Reading pages'], ['voice', 'Teacher voice']] as const).map(([key, label]) => {
+              const state = live && typeof live === 'object' ? live[key] : null;
+              return (
+                <div key={key} className="select-row">
+                  <span>{label}</span>
+                  <b className={state == null ? '' : state === 'ok' ? 'conn conn--ok' : state === 'unchecked' ? 'conn' : 'conn conn--bad'}>
+                    {live === 'checking' ? 'Checking…' : live === 'failed' ? 'Couldn’t check' : state == null ? '…' : `${state === 'ok' ? '✓ ' : state === 'unchecked' ? '' : '✗ '}${SERVICE_WORDS[state]}`}
+                  </b>
+                </div>
+              );
+            })}
+            <div className="form-card__action"><Button variant="soft" size="sm" icon="retry" disabled={live === 'checking'} onClick={checkConnections}>Check again</Button></div>
+          </div>
+          {live && typeof live === 'object' && live.notes && Object.keys(live.notes).length > 0 && (
+            <p className="fineprint fineprint--left conn__notes">{Object.entries(live.notes).map(([k, v]) => `${k}: ${v}`).join(' · ')}</p>
+          )}
         </section>
       )}
 

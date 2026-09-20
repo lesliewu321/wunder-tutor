@@ -81,6 +81,14 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   `[read] <code> after N s` (tail it with wrangler). Leslie's first real phone photo failed with no code (before this
   logging); the most likely cause, a dense page's one-answer size/time, is fixed by the two-step read. A learner's own sentences are spoken with
   `ephemeral` (never in the shared TTS cache, 40 / 10 min per client) and left out of the recordings export.
+- **Setup problems show before the photo** (2026-09-20, after six failed phone attempts that were all key/code
+  problems): opening the camera asks `/api/health` fresh and `/api/status` (live key check); a missing/refused code or
+  a refused Google key is shown in place of the shutter with a button to Settings (`/parents`, scrolls to **Beta
+  access** or **Connections**). Settings → Connections shows ✓/✗ per service plus repair notes (`key N/M`). A failed
+  read names whose fault it is (`readProblem`: key/region/model/quota are "not your photo"). Photos are real
+  photographs where the browser can take one (`ImageCapture.takePhoto`, asked for ~2560 px, 4 s limit, falls back to
+  the picture on screen), continuous focus, the camera restarts itself after another app took it, and "Blurry? Use
+  the phone's camera instead" is always offered on touch devices.
 - **Cheaper scoring:** takes are trimmed to speech ± margin before upload (`speechWindow`, ~42% less audio, no word
   cut in 2,541 test takes); phrases/sentences check likely mistakes on each word's clip in a second parallel round
   (`CLIP_CHECKS`: Mandarin sound slips named 27% → 58%, British swaps 0% → 88%, ~35% cheaper checks). Roughly half the
@@ -195,6 +203,14 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   cropped while the pane is hidden — retry, or verify with `javascript_tool` measurements.
 - **Leslie's network intercepts/caches DNS** — verify with DNS-over-HTTPS and `curl --resolve`, not nslookup.
 - **Wrangler**: Pages/KV write, no DNS write. Local workerd needs `compatibility_date` ≤ 2026-08-08 (we use 2026-06-01).
+- **Secrets need a deploy, and a check:** after Leslie runs `wrangler pages secret put …`, run `npm run deploy`, then
+  `curl https://app.wundertutor.com/api/status` — `reading`/`voice`/`scoring` must say `ok`. A pasted key can be
+  present and wrong: on 2026-09-19/20 the live Gemini key was first invalid (Google 400 in 0.1 s), then held a line
+  break (the request never left the Worker), then invisible characters. Cloudflare also replaces a Function's 502/504
+  body with its own page — upstream failures answer 424 so the app can read the reason.
+- **`wrangler pages deployment tail`** goes quiet after ~2 minutes and exits when stdin closes: loop it
+  (`sleep 140 | timeout 145 node <wrangler.js> pages deployment tail <deployment-url> --format json`), and even then it
+  misses events — prefer `/api/status` and the code shown in the app's message.
 - **Checking a deploy:** first wait until `https://app.wundertutor.com/` serves the new `index.html` (new
   `assets/index-*.js` name), only then fetch the new asset. Fetching it earlier gets the old deployment's SPA fallback
   (HTML) cached at the edge under the asset URL for a year (`/assets/*` is immutable) → blank app on that edge. Happened

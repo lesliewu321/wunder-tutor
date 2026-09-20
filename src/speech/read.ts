@@ -17,7 +17,11 @@ export interface Reading { language: 'en' | 'zh' | 'other' | 'none'; lines: Read
 
 export class ReadError extends Error {
   /** `detail`: the server's reason ("read_timeout"), shown small so a tester's screenshot says what went wrong. */
-  constructor(readonly code: 'offline' | 'busy' | 'unavailable' | 'photo' | 'failed', readonly detail?: string) { super(code); }
+  /**
+   * `locked`: this device's access code was refused (none entered, or changed on the server since).
+   * `unavailable`: the server can't read pages at all yet (no key).
+   */
+  constructor(readonly code: 'offline' | 'busy' | 'locked' | 'unavailable' | 'photo' | 'failed', readonly detail?: string) { super(code); }
 }
 
 /** Photos are shrunk before upload: the text stays sharp and the upload stays small. */
@@ -89,7 +93,8 @@ async function post(body: Blob | string, type: string, cancel?: AbortSignal): Pr
     return `http_${res.status}${platform ? ` cf${platform}` : ''}`;
   };
   if (res.status === 429) throw new ReadError('busy');
-  if (res.status === 401 || res.status === 503) throw new ReadError('unavailable', await reason());
+  if (res.status === 401) throw new ReadError('locked', await reason());
+  if (res.status === 503) throw new ReadError('unavailable', await reason());
   if (!res.ok) throw new ReadError('failed', await reason());
   try { return (await res.json()) as Reading; } catch { throw new ReadError('failed', 'bad_answer'); }
 }

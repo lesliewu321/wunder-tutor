@@ -31,3 +31,63 @@ export function pickLens(lenses: Lens[], remembered?: string | null): Lens | nul
 const LENS_KEY = 'wunder-tutor/camera-lens';
 export const rememberedLens = (): string | null => { try { return localStorage.getItem(LENS_KEY); } catch { return null; } };
 export const rememberLens = (deviceId: string): void => { try { localStorage.setItem(LENS_KEY, deviceId); } catch { /* this visit only */ } };
+
+// ---------------------------------------------------------------- taking the photo
+
+interface PhotoRange { min?: number; max?: number }
+interface PhotoTaker {
+  getPhotoCapabilities(): Promise<{ imageWidth?: PhotoRange }>;
+  takePhoto(settings?: { imageWidth?: number }): Promise<Blob>;
+}
+
+const TIMED_OUT = 'timed-out';
+const within = <T>(p: Promise<T>, ms: number): Promise<T> => new Promise((resolve, reject) => {
+  const t = setTimeout(() => reject(new Error(TIMED_OUT)), ms);
+  p.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+});
+
+/** The picture on screen, as a JPEG. */
+export const frameOf = (video: HTMLVideoElement): Promise<Blob | null> => new Promise((resolve) => {
+  if (!video.videoWidth) return resolve(null);
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d')!.drawImage(video, 0, 0);
+  canvas.toBlob((b) => resolve(b), 'image/jpeg', 0.92);
+});
+
+/** Wide enough for a page of small print (it is shrunk to 1600 px before upload); a 50-megapixel photo can be too big for a phone's browser to open. */
+const PHOTO_WIDTH = 2560;
+
+/**
+ * Take the photo. Where the browser can take a real photograph (Android Chrome), use it: the phone focuses first and
+ * uses far more of its sensor than the moving preview, and a page of small print is often unreadable in a preview
+ * frame. If that isn't possible, fails, or takes too long, the picture on screen is used instead.
+ */
+export async function takeStill(
+  track: MediaStreamTrack | null, video: HTMLVideoElement,
+  // Replaced in tests: the browser's photo taker (absent on iPhones and computers), and the picture-on-screen fallback.
+  Taker: (new (t: MediaStreamTrack) => PhotoTaker) | undefined = (globalThis as { ImageCapture?: new (t: MediaStreamTrack) => PhotoTaker }).ImageCapture,
+  frame: (v: HTMLVideoElement) => Promise<Blob | null> = frameOf,
+): Promise<Blob | null> {
+  if (Taker && track?.readyState === 'live') {
+    try {
+      const taker = new Taker(track);
+      let sized: { imageWidth: number } | undefined;
+      try {
+        const w = (await within(taker.getPhotoCapabilities(), 1500)).imageWidth;
+        if (w?.max) sized = { imageWidth: Math.max(w.min ?? 0, Math.min(w.max, PHOTO_WIDTH)) };
+      } catch { /* the phone's own size */ }
+      // A phone that rejects the size gets one more try at its own size; one that hangs does not (the wait is the cost).
+      for (const settings of sized ? [sized, undefined] : [undefined]) {
+        try {
+          const photo = await within(taker.takePhoto(settings), 4000);
+          if (photo.size > 10_000) return photo;
+        } catch (e) {
+          if ((e as Error | null)?.message === TIMED_OUT) break;
+        }
+      }
+    } catch { /* the picture on screen instead */ }
+  }
+  return frame(video);
+}

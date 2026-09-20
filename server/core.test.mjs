@@ -96,3 +96,38 @@ describe('reading text', () => {
     expect((await post(api, '/api/read', new Uint8Array(10), { 'content-type': 'image/jpeg' })).status).toBe(400);
   });
 });
+
+describe('live status: do the keys actually work?', () => {
+  const upstream = (google) => async (url) => (String(url).includes('issueToken')
+    ? new Response('token', { status: 200 })
+    : new Response(JSON.stringify(google.body), { status: google.status }));
+
+  it('asks the services themselves, tells anyone the coarse words and only a trusted device the details', async () => {
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = upstream({ status: 400, body: { error: { message: 'API key not valid. Please pass a valid API key.' } } });
+    try {
+      const api = createApi({ ...KEYS, GEMINI_API_KEY: ' AIza\u200bbad\n', BETA_ACCESS_CODE: 'open-sesame' });
+      const anyone = await (await get(api, '/api/status')).json();
+      expect(anyone).toMatchObject({ scoring: 'ok', reading: 'key_refused', voice: 'key_refused' });
+      expect(anyone.notes).toBeUndefined();
+      const trusted = await (await get(api, '/api/status', { 'x-wunder-access': 'open-sesame' })).json();
+      // 7 usable characters of the 8 stored (the invisible one is dropped) — never the key itself.
+      expect(trusted.notes.reading).toContain('API key not valid');
+      expect(trusted.notes.reading).toContain('key 7/8');
+      expect(JSON.stringify(trusted)).not.toContain('AIza');
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+
+  it('says so when everything works, and when nothing is set up', async () => {
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = upstream({ status: 200, body: { name: 'models/x' } });
+    try {
+      expect(await (await get(createApi(KEYS), '/api/status')).json()).toMatchObject({ scoring: 'ok', reading: 'ok', voice: 'ok' });
+      expect(await (await get(createApi({}), '/api/status')).json()).toMatchObject({ scoring: 'not_set', reading: 'not_set', voice: 'not_set' });
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+});

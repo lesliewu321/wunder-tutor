@@ -5,7 +5,7 @@ import type { PronunciationProvider } from './types';
 
 export * from './types';
 
-export { apiFetch, apiHealth, getAccessCode, setAccessCode, type ApiHealth } from './health';
+export { apiFetch, apiHealth, getAccessCode, refreshHealth, serviceStatus, setAccessCode, SERVICE_WORDS, type ApiHealth, type ServiceState, type ServiceStatus } from './health';
 
 let provider: Promise<PronunciationProvider> | null = null;
 

@@ -8,7 +8,7 @@ import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast } from '../../ui/kit';
 import { ZhText } from '../../ui/ZhText';
 import { openCamera } from './camera';
-import { readErrorMessage, readingProblem } from './messages';
+import { readProblem, readingProblem } from './messages';
 import { useBook } from './page';
 import { sayItem } from './sayItem';
 
@@ -99,7 +99,7 @@ function TypeSheet({ open, kid, onClose, onReady }: { open: boolean; kid: boolea
       const problem = readingProblem(r, kid);
       if (problem) toast(problem, '🔍'); else { onReady(r); setText(''); }
     } catch (e) {
-      toast(readErrorMessage(e), '⚠️');
+      toast(readProblem(e).text, '⚠️');
     } finally {
       setBusy(false);
     }

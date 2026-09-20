@@ -1,7 +1,8 @@
 // Wunder Tutor API — runtime-neutral core. Standard Request in, standard Response out.
 // Adapters: server/index.mjs (Node, local development) and functions/api/[[path]].js (Cloudflare Pages).
 //
-//   GET  /api/health  -> { ok, azure, claude, gemini, ttsVersion, needsCode, authorized }
+//   GET  /api/health  -> { ok, azure, claude, gemini, ttsVersion, needsCode, authorized } — which keys are PRESENT
+//   GET  /api/status  -> { scoring, reading, voice } — whether the keys actually WORK (free live checks, cached 60 s)
 //   POST /api/assess  -> Azure pronunciation assessment (raw 16 kHz WAV in, Azure JSON out)
 //   POST /api/tts     -> teacher voice via Gemini Live native audio ({ text, accent, slow, kind } in, WAV out)
 //   POST /api/tutor   -> Claude conversation partner ({ reply, suggestions, done })
@@ -380,6 +381,51 @@ export function createApi(rawEnv, deps = {}) {
     return json(200, result);
   }
 
+  // ---------------------------------------------------------------- live status: do the keys actually work?
+  // /api/health only says which keys are present. A pasted key can be present and wrong (2026-09-20: three photo
+  // attempts failed on the live app before anyone could see that Google refused the key). This asks the services
+  // themselves, with calls that cost nothing — Azure issues a token, Google describes a model — and remembers the
+  // answer for a minute per isolate. The coarse words are public, like any status page, so the keys can be checked
+  // from outside right after they are changed; what helps repair a pasted key (how many usable characters it has,
+  // Google's own words) goes only to a device with the access code. Never a key, never part of one.
+  let lastStatus = null;
+  const keyShape = () => `key ${GEMINI_API_KEY.length}/${env('GEMINI_API_KEY').length}`;
+
+  async function checkAzure() {
+    if (!status.azure) return { state: 'not_set' };
+    if (AZURE_SPEECH_ENDPOINT) return { state: 'unchecked' }; // a custom endpoint has no token service to ask
+    const r = await fetchText(`https://${AZURE_SPEECH_REGION}.api.cognitive.microsoft.com/sts/v1.0/issueToken`,
+      { method: 'POST', headers: { 'Ocp-Apim-Subscription-Key': AZURE_SPEECH_KEY }, body: '' }, 8000);
+    if (r.ok) return { state: 'ok' };
+    if (r.status === 401 || r.status === 403) return { state: 'key_refused', note: `azure ${r.status}` };
+    return { state: r.status ? 'error' : 'unreachable', note: `azure ${r.status || r.networkError || 'timeout'}` };
+  }
+
+  async function checkGemini(model) {
+    if (!GEMINI_API_KEY) return { state: 'not_set', note: keyShape() };
+    const r = await fetchText(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}`, { headers: { 'x-goog-api-key': GEMINI_API_KEY } }, 8000);
+    if (r.ok) return { state: 'ok' };
+    let message = '';
+    try { message = String(JSON.parse(r.text)?.error?.message ?? ''); } catch { /* not JSON */ }
+    const state = !r.status ? 'unreachable'
+      : /location is not supported/i.test(message) ? 'region'
+      : /api key/i.test(message) || r.status === 401 || r.status === 403 ? 'key_refused'
+      : r.status === 404 ? 'model_missing'
+      : r.status === 429 ? 'quota'
+      : 'error';
+    return { state, note: `google ${r.status || r.networkError || 'timeout'}${message ? `: ${message.replace(/\s+/g, ' ').slice(0, 140)}` : ''}; ${keyShape()}` };
+  }
+
+  async function liveStatus() {
+    if (lastStatus && Date.now() - lastStatus.at < 60_000) return lastStatus.value;
+    const [scoring, reading, voice] = await Promise.all([checkAzure(), checkGemini(GEMINI_READ_MODEL), checkGemini(GEMINI_LIVE_MODEL)]);
+    const notes = Object.fromEntries(Object.entries({ scoring, reading, voice }).filter(([, v]) => v.note).map(([k, v]) => [k, v.note]));
+    const value = { checkedAt: new Date().toISOString(), scoring: scoring.state, reading: reading.state, voice: canDial ? voice.state : 'not_set', notes };
+    lastStatus = { at: Date.now(), value };
+    return value;
+  }
+  const allowStatus = createLimiter(30, 60_000);
+
   // ---------------------------------------------------------------- router
   const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read']);
 
@@ -407,6 +453,11 @@ export function createApi(rawEnv, deps = {}) {
           ttsVersion: open && status.gemini ? status.ttsVersion : null,
           read: open && status.read,
         });
+      }
+      if (route === 'GET /api/status') {
+        if (!allowStatus(client)) throw new HttpError(429, 'rate_limited');
+        const { notes, ...words } = await liveStatus();
+        return json(200, authorized ? { ...words, notes } : words);
       }
       if (!ROUTES.has(path)) return json(404, { error: 'not_found' });
       if (request.method !== 'POST') return json(405, { error: 'method_not_allowed' });
