@@ -222,7 +222,8 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
   stdin (`pages secret bulk`), and prints names/lengths/✓✗ only. `npm run keys:check` uploads nothing. On 2026-09-20
   `/api/status` showed the live app with `scoring: key_refused, reading/voice: not_set` — i.e. real scoring, reading
   and the Gemini voice had never worked on the live app; `.env` keys were verified good (Azure 84 chars, region 8,
-  Gemini 53).
+  Gemini 53). **Leslie ran it on 2026-09-20; after the redeploy `/api/status` said `ok` for scoring, reading and
+  voice — the first time the live app's services worked.** Still to see on a real phone: a photo read end to end.
 - **Secrets need a deploy, and a check:** after Leslie runs `wrangler pages secret put …`, run `npm run deploy`, then
   `curl https://app.wundertutor.com/api/status` — `reading`/`voice`/`scoring` must say `ok`. A pasted key can be
   present and wrong: on 2026-09-19/20 the live Gemini key was first invalid (Google 400 in 0.1 s), then held a line
