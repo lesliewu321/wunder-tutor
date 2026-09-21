@@ -22,7 +22,13 @@ export type Tone = 1 | 2 | 3 | 4 | 5;
 /** 'yue' = Cantonese, 'zh' = Mandarin — their speakers make different mistakes in English, so they are kept apart. */
 export type HomeLanguage = 'yue' | 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'hi' | 'ar' | 'other';
 export type Level = 'new' | 'some' | 'confident';
-export type Goal = 'school' | 'travel' | 'fun' | 'friends';
+/**
+ * Why someone is learning. A child's reasons and a grown-up's are not the same four — a 40-year-old is not learning
+ * for school, and a 7-year-old is not learning to order in a restaurant — so both sets live here and setup offers
+ * whichever fits the age. Stored with the learner (inside the synced JSON, so no column constrains it); nothing
+ * teaches from it yet.
+ */
+export type Goal = 'school' | 'travel' | 'fun' | 'friends' | 'work' | 'everyday';
 
 export type PhonemeId = string; // IPA symbol, e.g. 'θ', 'r', 'æ'
 

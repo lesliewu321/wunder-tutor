@@ -22,9 +22,14 @@ const LEVELS: { id: Level; icon: string; title: Key; detail: Key }[] = [
   { id: 'some', icon: '🌿', title: 'onboarding.level.some.title', detail: 'onboarding.level.some.detail' },
   { id: 'confident', icon: '🌳', title: 'onboarding.level.confident.title', detail: 'onboarding.level.confident.detail' },
 ];
-const GOALS: { id: Goal; icon: string; title: Key }[] = [
+/** Travel and fun are anyone's; school and work are not, and neither is what you do with the language all day. */
+const GOALS_CHILD: { id: Goal; icon: string; title: Key }[] = [
   { id: 'school', icon: '🎒', title: 'onboarding.level.goal.school' }, { id: 'travel', icon: '✈️', title: 'onboarding.level.goal.travel' },
   { id: 'friends', icon: '💬', title: 'onboarding.level.goal.friends' }, { id: 'fun', icon: '🎮', title: 'onboarding.level.goal.fun' },
+];
+const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
+  { id: 'work', icon: '💼', title: 'onboarding.level.goal.work' }, { id: 'travel', icon: '✈️', title: 'onboarding.level.goal.travel' },
+  { id: 'everyday', icon: '🛒', title: 'onboarding.level.goal.everyday' }, { id: 'fun', icon: '🎮', title: 'onboarding.level.goal.fun' },
 ];
 const LEARN: { id: CourseId | 'es' | 'fr' | 'de'; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
@@ -95,6 +100,9 @@ export function Onboarding() {
     'consent', ...(adult ? [] : ['handover' as const]), 'check', 'plan',
   ];
   const about: About = adult ? 'adult' : name.trim() ? 'named' : 'unnamed';
+  // Crossing the line between a child and a grown-up changes which reasons for learning are offered, so a reason
+  // chosen from the other list cannot stay selected behind the scenes.
+  const pickAge = (years: number) => { if ((years === ADULT_AGE) !== adult) setGoal(null); setAge(years); };
   const go = (s: StepId) => setStep(s);
   const next = () => go(order[order.indexOf(step) + 1]);
   const back = () => {
@@ -190,7 +198,7 @@ export function Onboarding() {
               setup is a parent's or the learner's own. 18+ is simply the last of the four. */}
           <h2 className="field-label">{t('onboarding.who.age')}</h2>
           <div className="stack">{BANDS.map((b) => (
-            <button key={b.band} type="button" className={`tile tile--wide ${age === b.age ? 'is-on' : ''}`} onClick={() => setAge(b.age)} aria-pressed={age === b.age}>
+            <button key={b.band} type="button" className={`tile tile--wide ${age === b.age ? 'is-on' : ''}`} onClick={() => pickAge(b.age)} aria-pressed={age === b.age}>
               <span><b>{t(b.label)}</b><small>{t(b.hint)}</small></span>
             </button>
           ))}</div>
@@ -213,7 +221,7 @@ export function Onboarding() {
             </button>
           ))}</div>
           <h2 className="field-label">{t('onboarding.level.goal.label')}</h2>
-          <div className="chips">{GOALS.map((g) => <button key={g.id} type="button" className={`chip ${goal === g.id ? 'is-on' : ''}`} onClick={() => setGoal(g.id)} aria-pressed={goal === g.id}>{g.icon} {t(g.title)}</button>)}</div>
+          <div className="chips">{(adult ? GOALS_ADULT : GOALS_CHILD).map((g) => <button key={g.id} type="button" className={`chip ${goal === g.id ? 'is-on' : ''}`} onClick={() => setGoal(g.id)} aria-pressed={goal === g.id}>{g.icon} {t(g.title)}</button>)}</div>
         </>,
         <Button size="lg" block disabled={!level || !goal} onClick={next}>{t('onboarding.next')}</Button>,
         { grownUp: true, title: t(LEVEL_TITLE[about], { name: name.trim() }) },
