@@ -182,7 +182,8 @@ const foodLessons: Lesson[] = [
   lesson('zh-food-4', 'Listen closely', '👂', 'listening', {
     little: [heard(W.xiangjiao, W.pingguo, W.yu), pair(W.ma1, W.ma3, 1, 'zh:t3'), heard(W.shui, W.niunai, W.xiangjiao), speak(W.yu)],
     junior: [pair(W.shi1, W.si1, 0, 'zh:sh'), heard(W.miantiao, W.mifan, W.mianbao), pair(W.tang, W.tangSweet, 0, 'zh:t1'), pair(W.shi4, W.si4, 1, 'zh:sh'), speak(W.si4)],
-    teen: [pair(W.shi2, W.si4, 1, 'zh:sh'), pair(W.mai3, W.mai4, 1, 'zh:t4'), heard(P.xihuanYu, P.xiangHeShui, P.henHaochi), pair(W.ni3, W.li3, 0, 'zh:n'), speak(P.nihao)],
+    // 诗/丝, not 十/四: 十 alone scores 83 against the teacher's floor of 85, so it cannot be played (eval/teacher-gate.mjs).
+    teen: [pair(W.shi1, W.si1, 1, 'zh:sh'), pair(W.mai3, W.mai4, 1, 'zh:t4'), heard(P.xihuanYu, P.xiangHeShui, P.henHaochi), pair(W.ni3, W.li3, 0, 'zh:n'), speak(P.nihao)],
   }),
   lesson('zh-food-5', 'Say what you see', '🗣️', 'speaking', {
     little: [speak(W.pingguo, 'image'), speak(W.shui, 'image'), speak(W.yu, 'image'), speak(W.xiangjiao, 'image')],

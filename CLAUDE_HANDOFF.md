@@ -1,5 +1,30 @@
 # Wunder Tutor — handoff (2026-09-21)
 
+## Start here: Leslie's two requests left open when this session ended
+
+Asked while looking at the Parent Zone on the phone (screenshot showed "Bro's learning"). **Neither is started.**
+
+1. **"courses use dropdown."** The Courses row uses three big pill toggles and, with three courses, 普通话 wraps to one
+   character per line. Every other row there is a dropdown. **Catch:** courses are MULTI-select (`p.learning` is an
+   array; setup says "pick one or both"), and a plain `<select>` is single-select — a straight swap would quietly
+   remove taking two languages at once. Suggested: a control that LOOKS like the other dropdowns ("English · Français
+   ⌄") and opens the existing `Sheet` with a checkbox per course, keeping at least one. `COURSES` in
+   src/features/profile/Profile.tsx. Also visible there: "American (most detailed feedback)" is cut off in its dropdown.
+2. **"help improve wunder tutor always enabled."** Leslie's phone shows the switch OFF, because a profile set up before
+   the box existed is deliberately NOT opted in (they agreed to "recordings stay on this device"). **Ambiguous, and the
+   two readings differ in consent, so ask before building:** (a) turn it on for existing users too, still switchable;
+   or (b) always on, no switch — beta participation means recordings are kept. If (b): replace the checkbox and the
+   Parent Zone switch with a plain statement of it, keep deletion-on-request, and note that the few existing testers
+   agreed to different words (before 2026-09-21 only the master code existed, so that is mostly Leslie).
+
+Other open design questions, raised with Leslie and not decided:
+- **Signing in to a different family's account carries this device's learners into it** (src/account/sync.ts,
+  `syncOnce`: a new account resets the bookkeeping and step 3 inserts every local learner). Right for a second parent,
+  wrong for a device changing hands. Suggested: ask "add these learners / start fresh" when an unseen account signs in
+  with learners already here.
+- **Tongue-twister game + leaderboard** — shape agreed (English first, each twister measured first, pass/fail + speed),
+  child-safety call on a public board of children still Leslie's. See "Asked for, not built" below.
+
 Read this first in a new session. Then `README.md` for architecture, `server/README.md` for the API, `eval/README.md`
 for how accuracy is measured.
 
@@ -37,7 +62,7 @@ A pronunciation-first language tutor. Core loop:
 ```bash
 npm run dev          # app (port from $PORT, default 5173 — other sessions often hold 5173)
 npm run server       # local API proxy on :8787 (reads .env) — needed for real Azure/Gemini locally
-npm test             # 59 tests (vitest)
+npm test             # 197 tests (vitest)
 npm run build        # typecheck + production build
 npm run deploy       # build + deploy the app to Cloudflare Pages
 npx vite-node eval/run-en.ts            # English accuracy report (cached, free)
@@ -64,7 +89,7 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
 - **Tablet:** `src/styles/tablet.css` — side rail ≥740×600, two-column Home ≥1000 px, side-by-side speaking in
   landscape, sheets as centred dialogs. Checked at 820×1180, 1180×820, 744×1133, 375×812 and in dark mode.
 - **Two modes on Home** (Leslie's design, 2026-09-19): **Course** (lessons + "Talk with Pip" card → `/speak`) and
-  **My book**. The bottom bar is **four plain tabs** (Learn, Lab, Progress, Me). It had a big centre camera button
+  **Snap & say** (renamed from "My book" on 2026-09-21: an adult photographs a menu or a sign, rarely a book; code identifiers still say `book`). The bottom bar is **four plain tabs** (Learn, Lab, Progress, Me). It had a big centre camera button
   (2026-09-19, replacing the old Speak/mic tab); Leslie, 2026-09-20, from screenshots: out of place beside the course,
   and a duplicate of "New photo" in My book — so the camera is My book's own button only ("Take a photo" big and coral
   before the first page, "New photo" small once there is a page to practise). Mode per learner in localStorage (`src/features/say/page.ts`).
@@ -262,8 +287,7 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 ## French (2026-09-21): the foundation, no lessons
 
 Leslie asked for French lessons; we agreed to build the part that is the same whoever learns first, and pick the
-audience when the first unit is written. **There is no French course yet** — no `CourseId` 'fr', nothing to tap in the
-app. What exists is everything a French lesson would stand on:
+audience when the first unit is written. **Then built the same day, for every age** (Leslie: "why not kids to adult??"): `src/content/fr/course.ts`, unit "At the Café", 7 lessons × 3 bands — little ones name colours and animals from pictures, juniors ask for a croissant, teens and adults order and ask for the bill. `CourseId` gained 'fr'; French is selectable in setup and the Parent Zone. A test refuses any course word the lexicon cannot name the sounds of. Underneath it:
 
 - **`src/content/fr/sounds.ts`** — nine sounds, chosen because an English or Cantonese speaker gets them wrong:
   y (tu), ʁ (rouge), the three nasals ɑ̃ ɛ̃ ɔ̃, ø (deux), œ (sœur), ʒ (je), ɲ (montagne). Same `PhonemeInfo` shape as
@@ -284,6 +308,39 @@ empty, one score per phoneme in our sequence. If Azure's French phoneme count fo
 the alignment finds no fit and the sounds stay **unnamed**, which is the safe failure: the learner gets a word-level
 score and no wrong diagnosis. First real step: score a French take and compare Azure's phoneme count per word with
 `frAlignmentCandidates`, the way en-GB was measured (93% direct match).
+
+## The teacher's voice on the phone (2026-09-21)
+
+Three separate faults all showed Leslie the same toast, "Sound isn't working on this device" — which is why it kept
+looking like "the problem is back":
+
+1. **The API was never deployed** with the cross-origin support the app needs (commit ee1fd66 was pushed, not
+   deployed). Every call from the phone was blocked. Fixed by `npm run deploy`. See Gotchas.
+2. **A fresh install has no invite code**, and a phone app has no browser voice to fall back on (Android's WebView has
+   no `speechSynthesis`), so the Gemini voice is the ONLY voice.
+3. **The server refuses a teacher take that does not score as its own text** (`verifyTake`, server/core.mjs) — right,
+   because a wrong model teaches a wrong sound — and some lines never pass.
+
+What was done, all measured from cached takes with **`node eval/teacher-gate.mjs`** (free; `--sweep` for thresholds):
+
+- The voice now says WHICH half failed (`VoiceError('take' | 'playback')`, src/speech/types.ts) and the app says the
+  matching thing: "The teacher can't say this one clearly enough… try the next one" vs the device message.
+  `soundProblem()` in src/speech/health.ts names the invite code, the connection, the line or the device.
+- The gate was calibrated against 107 course lines AND 456 takes saying the right syllable with the WRONG tone (the
+  transcript check before it already catches wrong words): neutral-tone syllables ignored, Azure's Mispronunciation/
+  Insertion labels ignored on synthetic speech, Omission still fatal, syllable floor 70 → 55, **accuracy floor kept
+  at 85**. Lines with a voice 98 → 101; wrong tones refused 342 → 341. Rejected after measuring: trusting Azure's
+  recognised text (catches 38–171 of 456 — its language model "corrects" a wrong tone), judging single characters
+  by the syllable floor (341 → 155), accuracy 83 to rescue 十 (341 → 321).
+- **四是四，十是十。 is out of every lesson.** Said alone 四 scores 95 and 是 90; in that sequence 四 drops to 56 and
+  all six Gemini voices score 28–82. The scorer cannot mark the sequence — so a learner saying it right would be
+  marked wrong. Replacements chosen by score: 诗/丝, 電視, 請給我一杯水。, 獅子. The teen speaking check had held 十 and
+  the twister: two of its three items were silent. The item stays in zh/course.ts, unused, with the numbers.
+- **Still silent (5): 十, 八, 大, 吃鱼, 喝牛奶.** None is in a lesson any more (十 was also in lesson 4's teen listening
+  pair — missed the first time, swapped for 诗/丝 before this handoff). The other four are **Pronunciation Lab ladders
+  only**: 八 (zh:t1 syllables), 大 (zh:t4 syllables), 吃鱼 (zh:t2 and zh:ü phrases), 喝牛奶 (zh:n phrases), in
+  `ZH_LADDERS`. A learner meets them as a Lab rung that will not play. Swap them for passing items the same way, or
+  record those few by hand.
 
 ## Invite codes and recordings that come back (2026-09-21, built)
 

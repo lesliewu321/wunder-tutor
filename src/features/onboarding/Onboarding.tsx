@@ -152,7 +152,10 @@ export function Onboarding() {
             ))}
           </div>
         )}
-        {opts.grownUp && !adult && <span className="tag tag--primary">{t('onboarding.grownUps')}</span>}
+        {/* Before the age is known the one setting up may be a parent or a grown-up learner: "For grown-ups" is true
+            of both. Once a child's age is chosen, everything after speaks to a parent ("I'm the parent or guardian",
+            "the Parent Zone"), so the badge says so too — two words for one person read as two different people. */}
+        {opts.grownUp && !adult && <span className="tag tag--primary">{t(age === null ? 'onboarding.grownUps' : 'onboarding.parents')}</span>}
         {opts.mascot && <Mascot mood={opts.mascot} size={step === 'welcome' ? 168 : 96} />}
         {opts.title && <h1 className="onboard__title">{opts.title}</h1>}
         {opts.sub && <p className="onboard__sub">{opts.sub}</p>}

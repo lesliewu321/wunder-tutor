@@ -1,6 +1,7 @@
 {
   "onboarding.language.aria": "App language",
   "onboarding.grownUps": "For grown-ups",
+  "onboarding.parents": "For parents",
   "onboarding.next": "Next",
   "onboarding.welcome.title": "Wunder Tutor",
   "onboarding.welcome.sub": "Speak with confidence — one sound at a time.",
@@ -77,7 +78,7 @@
   "onboarding.consent.mic.title": "The microphone is only on while the mic button is red.",
   "onboarding.consent.mic.body.adult": "You tap to start and it stops by itself.",
   "onboarding.consent.mic.body.named": "{name} taps to start and it stops by itself.",
-  "onboarding.consent.mic.body.unnamed": "your child taps to start and it stops by itself.",
+  "onboarding.consent.mic.body.unnamed": "Your child taps to start and it stops by itself.",
   "onboarding.consent.recordings.title": "Recordings are kept on this device.",
   "onboarding.consent.recordings.body.adult": "They let you hear “before” and “now”. Scores are stored separately from voice.",
   "onboarding.consent.recordings.body.named": "They let {name} hear “before” and “now”. Scores are stored separately from voice.",
