@@ -16,7 +16,7 @@ export const settingsName = (band: AgeBand): string => t(band === 'adult' ? 'com
 export type Accent = 'en-US' | 'en-GB';
 /** What a piece of speech is scored and spoken as: English in the child's accent, or Mandarin (Putonghua). */
 export type Locale = Accent | 'zh-CN' | 'fr-FR';
-export type CourseId = 'en' | 'zh';
+export type CourseId = 'en' | 'zh' | 'fr';
 /** Mandarin tone: 1–4, and 5 for the neutral (light) tone. */
 export type Tone = 1 | 2 | 3 | 4 | 5;
 /** 'yue' = Cantonese, 'zh' = Mandarin — their speakers make different mistakes in English, so they are kept apart. */
@@ -46,8 +46,8 @@ export interface SpeakItem {
   focus?: PhonemeId[];
   /** Spoken form for the reference voice when it differs from the text (e.g. isolated sounds). */
   say?: string;
-  /** Mandarin items are always Mandarin; everything else is English in the child's accent. */
-  lang?: 'zh-CN';
+  /** Mandarin and French items carry their own language; everything else is English in the learner's accent. */
+  lang?: 'zh-CN' | 'fr-FR';
   /** Mandarin items: `text` is Simplified (what the scorer is sent); this adds what the child reads. */
   zh?: ZhText;
 }

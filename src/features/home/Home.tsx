@@ -42,7 +42,7 @@ export function Home() {
   // Never let simulated scores pass for real ones.
   const practiceMode = api !== null && !api.azure;
   // The Putonghua course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
-  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua' };
+  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', fr: 'Français' };
 
   return (
     <div className="screen home">

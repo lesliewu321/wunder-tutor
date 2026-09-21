@@ -57,9 +57,16 @@ const RAW: Record<string, string> = {
   jour: 'jour|ʒ u ʁ', nuit: 'nuit|n ɥ i', matin: 'ma.tin|m a . t ɛ̃', temps: 'temps|t ɑ̃',
 
   // Doing things
-  voudrais: 'vou.drais|v u . d ʁ ɛ', veux: 'veux|v ø', peux: 'peux|p ø', aime: 'ai.me|ɛ m',
+  voudrais: 'vou.drais|v u . d ʁ ɛ', voudriez: 'vou.dri.ez|v u . d ʁ i . j e',
+  veux: 'veux|v ø', peux: 'peux|p ø', aime: 'ai.me|ɛ m',
   manger: 'man.ger|m ɑ̃ . ʒ e', boire: 'boi.re|b w a ʁ', parler: 'par.ler|p a ʁ . l e',
   écouter: 'é.cou.ter|e . k u . t e', répéter: 'ré.pé.ter|ʁ e . p e . t e',
+
+  // Elision is not optional in French — "le addition" is not a thing anyone says — so the elided forms are written
+  // out rather than looked up from their stem: the /l/ and /ʒ/ belong to the word being scored.
+  "l'addition": "l'ad.di.tion|l a . d i . s j ɔ̃", "j'aime": "j'ai.me|ʒ ɛ m", "l'eau": "l'eau|l o",
+  "d'eau": "d'eau|d o", "c'est": "c'est|s ɛ", "j'ai": "j'ai|ʒ e",
+  cafés: 'ca.fés|k a . f e', croissants: 'crois.sants|k ʁ w a . s ɑ̃', pommes: 'pom.mes|p ɔ m',
 
   // Small words that hold a sentence together
   le: 'le|l ə', la: 'la|l a', les: 'les|l e', de: 'de|d ə', du: 'du|d y', et: 'et|e', est: 'est|ɛ',

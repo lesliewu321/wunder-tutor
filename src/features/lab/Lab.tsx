@@ -97,7 +97,7 @@ export function LabSound() {
   const st = status(p, sound);
   const nextStage = LAB_STAGES.find((s) => stageDone(p, sound, s) < ladder[s].length) ?? 'sentence';
   const zh = sound.startsWith('zh:');
-  const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: zh ? 'zh-CN' : p.accent, slow }).catch(() => void noSoundMessage(p.band).then((m) => toast(m, '🔇')));
+  const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: zh ? 'zh-CN' : p.accent, slow }).catch((e) => void noSoundMessage(p.band, e).then((m) => toast(m, '🔇')));
 
   return (
     <div className="screen lab-sound">

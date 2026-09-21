@@ -101,8 +101,8 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         if (!blob) { toast(t(demoMic ? 'speak.toast.demoSilent' : 'speak.toast.noRecording'), '🎧'); return; }
         await playBlob(blob);
       }
-    } catch {
-      void noSoundMessage(profile.band).then((m) => toast(m, '🔇'));
+    } catch (e) {
+      void noSoundMessage(profile.band, e).then((m) => toast(m, '🔇'));
     } finally {
       if (alive.current) setPlaying((p) => (p === kind ? null : p));
     }
@@ -307,7 +307,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         <WordSheet
           word={current.assessment.words[sheetWord]} band={band} home={profile.homeLanguage} onClose={() => setSheetWord(null)}
           // Mandarin: say the scorer's (Simplified) character — the word shown may be Traditional.
-          onListen={(slow) => void voice.speak((item.zh && hanChars(item.text)[sheetWord]) || current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow, ephemeral: mode === 'free' || undefined }).catch(() => void noSoundMessage(profile.band).then((m) => toast(m, '🔇')))}
+          onListen={(slow) => void voice.speak((item.zh && hanChars(item.text)[sheetWord]) || current.assessment.words[sheetWord].word, { accent: localeOf(item, profile.accent), slow, ephemeral: mode === 'free' || undefined }).catch((e) => void noSoundMessage(profile.band, e).then((m) => toast(m, '🔇')))}
           onHearMe={() => void play('now')}
           onHearTip={() => { const spoken = inEnglish(() => correctionFor(current.assessment.words[sheetWord], band, profile.homeLanguage).tip); sayTip(spoken); }}
           onRetry={outOfTries ? undefined : startListening}

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { FR_SOUNDS } from '../content/fr/sounds';
 import { FR_LEXICON_WORDS, frAlignmentCandidates, frPhonemesIn, frSyllableCount, frWordPhones } from '../content/fr/lexicon';
+import { FR_COURSE, FR_COURSE_WORDS, FR_ITEMS, FR_LAB_SOUNDS, FR_LADDERS, frFullyKnown } from '../content/fr/course';
+import { COURSES, ITEM_INDEX } from '../content/course';
 import { PHONEMES, phonemeInfo } from '../content/phonemes';
 
 /**
@@ -87,6 +89,54 @@ describe('the French sounds', () => {
       for (const [home, l1] of Object.entries(s.l1 ?? {})) {
         if (l1?.heardAs) expect(PHONEMES[l1.heardAs], `${s.id} / ${home}`).toBeTruthy();
       }
+    }
+  });
+});
+
+describe('the French course', () => {
+  /**
+   * The one that matters. A course word the lexicon does not know is scored but never diagnosed — the learner is
+   * told a number and nothing else — and nobody would notice by reading the lesson. So: every word, every band.
+   */
+  it('says no word the lexicon cannot name the sounds of', () => {
+    const unknown = FR_COURSE_WORDS.filter((w) => !frWordPhones(w).syllables.some((s) => s.phonemes.length));
+    expect(unknown, `not in fr/lexicon.ts: ${unknown.join(', ')}`).toEqual([]);
+    for (const item of FR_ITEMS) expect(frFullyKnown(item), item.text).toBe(true);
+  });
+
+  it('teaches all three age bands, not the same lesson three times', () => {
+    const unit = FR_COURSE.units[0];
+    expect(unit.lessons).toHaveLength(7);
+    for (const l of unit.lessons) {
+      // Three is the floor: a conversation lesson is three exchanges, the rest are five or six exercises.
+      for (const band of ['little', 'junior', 'teen'] as const) expect(l.exercises[band].length, `${l.id}/${band}`).toBeGreaterThanOrEqual(3);
+      // A five-year-old and an adult should not be handed identical exercises.
+      expect(JSON.stringify(l.exercises.little), l.id).not.toEqual(JSON.stringify(l.exercises.teen));
+    }
+  });
+
+  it('gives the little ones single words and the grown-ups whole sentences', () => {
+    const kinds = (band: 'little' | 'teen') => FR_COURSE.units[0].lessons
+      .flatMap((l) => l.exercises[band]).flatMap((ex) => (ex.type === 'speak' ? [ex.item.kind] : []));
+    expect(kinds('little').every((k) => k === 'word' || k === 'phrase')).toBe(true);
+    expect(kinds('teen').some((k) => k === 'phrase' || k === 'sentence')).toBe(true);
+  });
+
+  it('is registered where the app looks for a course', () => {
+    expect(COURSES.fr).toBe(FR_COURSE);
+    expect(FR_COURSE.language).toBe('fr');
+    for (const it of FR_ITEMS) expect(ITEM_INDEX[it.id], it.id).toBeTruthy();
+  });
+
+  it('marks every item as French, or the scorer would be sent the wrong language', () => {
+    for (const it of FR_ITEMS) expect(it.lang, it.text).toBe('fr-FR');
+  });
+
+  it('has a Lab ladder for every sound it teaches', () => {
+    for (const id of FR_LAB_SOUNDS) {
+      const ladder = FR_LADDERS[id];
+      expect(ladder, id).toBeTruthy();
+      for (const stage of ['syllables', 'words', 'phrases', 'sentence'] as const) expect(ladder[stage].length, `${id}/${stage}`).toBeGreaterThan(0);
     }
   });
 });

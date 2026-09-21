@@ -4,6 +4,7 @@ import { contentBand, type Accent, type AgeBand, type CourseId, type Goal, type 
 import { ASSESSMENT_ITEMS } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
+import { FR_CHECK_ITEMS } from '../../content/fr/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { LANGUAGES, language, type Key } from '../../i18n';
 import { useT } from '../../i18n/useT';
@@ -33,7 +34,7 @@ const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
 ];
 const LEARN: { id: CourseId | 'es' | 'fr' | 'de'; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
-  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'fr', label: 'onboarding.languages.learn.fr', ready: false }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
+  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
 ];
 /**
  * Who a sentence is about: the grown-up themself, the child by nickname, or "your child" before a nickname is typed.
@@ -283,7 +284,7 @@ export function Onboarding() {
     case 'check': {
       const profile = useStore.getState().profiles[useStore.getState().activeId ?? ''];
       const band = contentBand(profile?.band ?? 'junior');
-      const items = (firstCourse === 'zh' ? ZH_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
+      const items = (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
       const item = items[checkIndex];
       return (
         <div className="screen lesson">

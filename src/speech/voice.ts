@@ -1,6 +1,7 @@
 import { createStore, get, set } from 'idb-keyval';
 import type { Accent, Locale, SpeakItem } from '../domain/types';
 import { apiFetch, apiHealth } from './health';
+import { VoiceError } from './types';
 import { teacherToneOk } from './zh/teacherCheck';
 
 /** Mandarin items always speak Mandarin; everything else is English in the child's accent. */
@@ -189,17 +190,30 @@ class TeacherVoice implements ReferenceVoice {
     pauseCurrent();
     await this.ready;
     if (mine !== this.seq) return;
+    // Which half failed matters to the learner. On the web a failure quietly became the device voice and nobody had
+    // to know; in the phone app there is no device voice (Android's WebView has no speechSynthesis), so whatever
+    // went wrong is what they are told — and "your device has no sound" is a lie when the truth is that the teacher
+    // could not say this particular line. 四是四，十是十。 is exactly that case: the server scores its own take and
+    // will not serve one that is not clean enough, and for the hardest tongue twister it never gets one.
+    let refused = false;
     if (this.gemini) {
+      let blob: Blob | undefined;
       try {
-        const blob = await this.takes.fetch(text, opts);
-        if (mine !== this.seq) return;
-        return await playBlob(blob);
+        blob = await this.takes.fetch(text, opts);
       } catch {
-        if (mine !== this.seq) return;
-        // Generation failed or was rejected as inexact — the device voice is better than silence.
+        refused = true;                                   // the take was never made, or was judged not good enough
+      }
+      if (mine !== this.seq) return;
+      if (blob) {
+        try {
+          return await playBlob(blob);
+        } catch {
+          if (mine !== this.seq) return;                  // a real playback fault: the device, or the audio itself
+        }
       }
     }
-    return this.web.speak(text, opts);
+    if (this.web.available()) return this.web.speak(text, opts);
+    throw new VoiceError(refused ? 'take' : 'playback');
   }
 
   stop(): void {

@@ -19,6 +19,21 @@ export class SpeechError extends Error {
   }
 }
 
+/**
+ * Why nothing was heard when the teacher should have spoken. 'take' = the voice could not produce this line (the
+ * server refused it, or judged its own recording too unclear to teach from); 'playback' = the audio existed and the
+ * device would not play it. They deserve different sentences: one is about the line, the other about the phone.
+ *
+ * It lives here, with the other speech error, rather than beside the voice: the health module has to recognise it,
+ * and the voice module reads the health module, so the other direction would be a circle.
+ */
+export class VoiceError extends Error {
+  constructor(readonly reason: 'take' | 'playback') {
+    super(`voice: ${reason}`);
+    this.name = 'VoiceError';
+  }
+}
+
 /** Signal-level facts about a recording, computed on-device before any provider is called. */
 export interface AudioAnalysis {
   durationMs: number;

@@ -39,4 +39,24 @@ describe('why a word would not play', () => {
   it('only blames the device once the voice is known to be there', () => {
     expect(soundProblem(WORKING, true, 'junior')).toMatch(/this device/);
   });
+
+  /**
+   * 四是四，十是十。 — the tongue twister the teacher voice cannot say cleanly enough to teach from. The server scores
+   * its own recording and refuses to serve one that would teach the wrong thing, so the learner hears nothing; the
+   * app used to blame their phone for it.
+   */
+  it('blames the line, not the phone, when the teacher refuses one take', () => {
+    const text = soundProblem(WORKING, true, 'junior', 'take');
+    expect(text).not.toMatch(/this device/);
+    expect(text).toMatch(/try the next one/i);
+  });
+
+  it('still blames the device when the audio arrived and would not play', () => {
+    expect(soundProblem(WORKING, true, 'junior', 'playback')).toMatch(/this device/);
+  });
+
+  it('does not excuse a refused take when the voice is not switched on at all', () => {
+    // 'take' with no voice behind it is just the voice being unavailable — say that, not "this one line".
+    expect(soundProblem(health({ needsCode: true, authorized: true }), true, 'junior', 'take')).toMatch(/can’t be reached/);
+  });
 });

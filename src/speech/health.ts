@@ -2,6 +2,7 @@
 import { t, type Key } from '../i18n';
 import { accessToken } from '../account/pending';
 import { isGrownUp, settingsName, type AgeBand } from '../domain/types';
+import { VoiceError } from './types';
 import { apiUrl } from '../platform';
 
 export interface ApiHealth {
@@ -94,7 +95,9 @@ export const refreshHealth = (): Promise<ApiHealth> => { health = null; return a
  * back on — Android's WebView has no `speechSynthesis` at all, so the teacher's voice is the only voice there is,
  * and a learner who is told their phone is broken has nothing left to try.
  */
-export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand): string => {
+export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand, reason?: 'take' | 'playback'): string => {
+  // The teacher refusing one line says nothing about the code, the connection or the phone: it is about the line.
+  if (reason === 'take' && now.gemini) return t('common.noSound.line');
   if (now.needsCode && !now.authorized) {
     if (!now.codeSet) return t('common.noSound.noCodeSet');
     // One whole sentence per case: who enters the code, and where, sit in different places in another language.
@@ -109,8 +112,8 @@ export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand): s
 };
 
 /** What the screens call when a word would not play: asks the API (the answer is cached) and picks the sentence. */
-export const noSoundMessage = async (band: AgeBand): Promise<string> =>
-  soundProblem(await apiHealth(), getAccessCode() !== '', band);
+export const noSoundMessage = async (band: AgeBand, error?: unknown): Promise<string> =>
+  soundProblem(await apiHealth(), getAccessCode() !== '', band, error instanceof VoiceError ? error.reason : undefined);
 
 // ---------------------------------------------------------------- do the services actually work?
 

@@ -35,7 +35,7 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
   const locale = localeOf(answer, profile.accent);
   const say = async (text: string, slow = false) => {
     setPlaying(true);
-    try { await voice.speak(text, { accent: locale, slow }); } catch { toast(await noSoundMessage(profile.band), '🔇'); }
+    try { await voice.speak(text, { accent: locale, slow }); } catch (e) { toast(await noSoundMessage(profile.band, e), '🔇'); }
     if (alive.current) setPlaying(false);
   };
 

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { contentBand } from '../../domain/types';
 import { ASSESSMENT_ITEMS } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
+import { FR_CHECK_ITEMS } from '../../content/fr/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { useT } from '../../i18n/useT';
 import { labOrder, WEAK_BELOW } from '../../intelligence/profile';
@@ -18,7 +19,7 @@ export function CourseCheck() {
   const { course = 'zh' } = useParams();
   const p = useActiveProfile();
   const patch = useStore((s) => s.patchProfile);
-  const items = (course === 'zh' ? ZH_CHECK_ITEMS : ASSESSMENT_ITEMS)[contentBand(p.band)];
+  const items = (course === 'zh' ? ZH_CHECK_ITEMS : course === 'fr' ? FR_CHECK_ITEMS : ASSESSMENT_ITEMS)[contentBand(p.band)];
   const [index, setIndex] = useState(0);
   const [done, setDone] = useState(false);
 
