@@ -39,10 +39,12 @@ type About = 'adult' | 'named' | 'unnamed';
 const LEVEL_TITLE: Record<About, Key> = { adult: 'onboarding.level.title.adult', named: 'onboarding.level.title.named', unnamed: 'onboarding.level.title.unnamed' };
 const MIC_BODY: Record<About, Key> = { adult: 'onboarding.consent.mic.body.adult', named: 'onboarding.consent.mic.body.named', unnamed: 'onboarding.consent.mic.body.unnamed' };
 const RECORDINGS_BODY: Record<About, Key> = { adult: 'onboarding.consent.recordings.body.adult', named: 'onboarding.consent.recordings.body.named', unnamed: 'onboarding.consent.recordings.body.unnamed' };
-/** Grown-ups get the adult presentation; their exact age doesn't matter. */
+/** Grown-ups get the adult presentation; their exact age doesn't matter, so 18+ is one button, not a number. */
 const ADULT_AGE = 18;
+/** 5 to 17 one by one, then "18+" — fourteen buttons, which is two full rows of the age grid. */
+const AGES = [...Array.from({ length: 13 }, (_, i) => i + 5), ADULT_AGE];
 
-type StepId = 'welcome' | 'languages' | 'child' | 'level' | 'accent' | 'script' | 'consent' | 'handover' | 'check' | 'plan';
+type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script' | 'consent' | 'handover' | 'check' | 'plan';
 
 export function Onboarding() {
   const { t, tc } = useT();
@@ -59,7 +61,6 @@ export function Onboarding() {
   const [step, setStep] = useState<StepId>(adding ? 'languages' : 'welcome');
   const [learning, setLearning] = useState<CourseId[]>(['en']);
   const [home, setHome] = useState<HomeLanguage | null>(existing?.homeLanguage ?? null);
-  const [who, setWho] = useState<'child' | 'me'>('child');
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState(AVATARS[0]);
   const [age, setAge] = useState<number | null>(null);
@@ -75,9 +76,11 @@ export function Onboarding() {
 
   if (hadProfileOnMount.current && !adding) return <Navigate to="/" replace />;
 
-  const adult = who === 'me';
+  // There is no "is this for you or for a child?" question: the age answers it. A grown-up setting the app up for
+  // themselves is not a special case of a parent, and asking made the app look as though it were only for children.
+  const adult = age === ADULT_AGE;
   const order: StepId[] = [
-    ...(adding ? [] : ['welcome' as const]), 'languages', 'child', 'level',
+    ...(adding ? [] : ['welcome' as const]), 'languages', 'learner', 'level',
     ...(learning.includes('en') ? ['accent' as const] : []), ...(learning.includes('zh') ? ['script' as const] : []),
     'consent', ...(adult ? [] : ['handover' as const]), 'check', 'plan',
   ];
@@ -101,7 +104,7 @@ export function Onboarding() {
       catch { toast(t('onboarding.consent.micBlocked'), '🎙️'); }
     }
     createProfile({
-      name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: adult ? ADULT_AGE : age!, homeLanguage: home ?? 'other',
+      name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: age!, homeLanguage: home ?? 'other',
       level: level!, goal: goal!, accent, learning, zhScript: script,
     });
     next();
@@ -171,28 +174,25 @@ export function Onboarding() {
         { grownUp: true, title: t('onboarding.languages.title'), sub: t('onboarding.languages.sub') },
       );
 
-    case 'child':
+    case 'learner':
       return shell(
         <>
-          <div className="segmented segmented--2" role="group" aria-label={t('onboarding.who.aria')}>
-            <button type="button" className={who === 'child' ? 'is-on' : ''} aria-pressed={who === 'child'} onClick={() => setWho('child')}>{t('onboarding.who.child')}</button>
-            <button type="button" className={who === 'me' ? 'is-on' : ''} aria-pressed={who === 'me'} onClick={() => setWho('me')}>{t('onboarding.who.me')}</button>
-          </div>
+          {/* Age comes first because it answers everything else: the band, the look, the wording, and whether the
+              rest of setup is a parent's or the learner's own. 18+ is simply the last button. */}
+          <h2 className="field-label">{t('onboarding.who.age')}</h2>
+          <div className="ages">{AGES.map((n) => (
+            <button key={n} type="button" className={`age ${n === ADULT_AGE ? 'age--adult' : ''} ${age === n ? 'is-on' : ''}`} onClick={() => setAge(n)} aria-pressed={age === n} aria-label={n === ADULT_AGE ? t('onboarding.who.adult.aria') : undefined}>
+              {n === ADULT_AGE ? t('onboarding.who.adult') : n}
+            </button>
+          ))}</div>
+          {age !== null && <p className="hint">{adult ? t('onboarding.who.adultHint') : bandHint(age)}</p>}
           <h2 className="field-label">{t('onboarding.who.buddy')}</h2>
           <div className="avatars">{AVATARS.map((a) => <button key={a} type="button" className={`avatar-pick ${avatar === a ? 'is-on' : ''}`} onClick={() => setAvatar(a)} aria-pressed={avatar === a} aria-label={t('onboarding.who.avatar.aria', { avatar: a })}>{a}</button>)}</div>
           <label className="field-label" htmlFor="nick">{t(adult ? 'onboarding.who.name.adult.label' : 'onboarding.who.name.child.label')} <small>{t(adult ? 'onboarding.who.name.adult.note' : 'onboarding.who.name.child.note')}</small></label>
           <input id="nick" className="input" value={name} maxLength={14} onChange={(e) => setName(e.target.value)} placeholder={t(adult ? 'onboarding.who.name.adult.placeholder' : 'onboarding.who.name.child.placeholder')} autoComplete="off" />
-          {!adult && (
-            <>
-              <h2 className="field-label">{t('onboarding.who.age')}</h2>
-              <div className="ages">{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <button key={n} type="button" className={`age ${age === n ? 'is-on' : ''}`} onClick={() => setAge(n)} aria-pressed={age === n}>{n}</button>)}</div>
-              {age && <p className="hint">{bandHint(age)}</p>}
-            </>
-          )}
-          {adult && <p className="hint">{t('onboarding.who.adultHint')}</p>}
         </>,
-        <Button size="lg" block disabled={!adult && !age} onClick={next}>{t('onboarding.next')}</Button>,
-        { grownUp: true, title: t(adult ? 'onboarding.who.title.adult' : 'onboarding.who.title.child'), sub: t(adult ? 'onboarding.who.sub.adult' : 'onboarding.who.sub.child') },
+        <Button size="lg" block disabled={age === null} onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t('onboarding.who.title'), sub: t('onboarding.who.sub') },
       );
 
     case 'level':

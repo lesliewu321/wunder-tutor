@@ -14,6 +14,8 @@
 .ages { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
 .age { text-align: center; min-height: 48px; border-radius: 14px; background: var(--surface); border: 2px solid var(--line); font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; }
 .age.is-on { border-color: var(--primary); background: var(--primary); color: #fff; }
+/* "18+" is three characters in a cell built for two, and it is the one button an adult is looking for. */
+.age--adult { font-size: 0.95rem; letter-spacing: -0.02em; }
 .privacy { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
 .privacy li { display: flex; gap: 12px; background: var(--surface); border-radius: var(--r-md); padding: 14px; box-shadow: var(--shadow-card); }
 .privacy li > span { font-size: 1.6rem; }
