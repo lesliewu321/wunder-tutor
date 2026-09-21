@@ -46,8 +46,8 @@ A pronunciation-first language tutor. Core loop:
 
 | Thing | Where |
 | --- | --- |
-| Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — pushed 2026-09-19 at Leslie's request (push only when asked) |
-| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. Deployed 2026-09-19 with adult mode, tablet layout and the Mandarin course (`npm run deploy`; a GitHub push does NOT deploy) |
+| Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — last pushed 2026-09-20 at Leslie's request; **13 commits since are local only** at the end of 2026-09-21 (push only when asked) |
+| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = main as of 2026-09-21** (commit 516e6d1, verified by bundle hash and `/api/status` ok ×3). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:_CloudDropboxAIWunderTutorwunder-tutor-2026-09-21e.apk` (= main) |
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
