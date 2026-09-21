@@ -87,6 +87,8 @@ export function Onboarding() {
   const [accent, setAccent] = useState<Accent>('en-US');
   const [script, setScript] = useState<'hant' | 'hans'>('hant');
   const [keepRecordings, setKeepRecordings] = useState(settings.storeRecordings);
+  // Ticked by default (Leslie's decision, 2026-09-21). It is shown, and it can be unticked here or in Settings later.
+  const [contribute, setContribute] = useState(true);
   const [agreed, setAgreed] = useState(false);
   const [checkIndex, setCheckIndex] = useState(0);
 
@@ -115,7 +117,7 @@ export function Onboarding() {
   const firstCourse: CourseId = learning[0] ?? 'en';
 
   const create = async () => {
-    setSettings({ storeRecordings: keepRecordings, consentedAt: Date.now() });
+    setSettings({ storeRecordings: keepRecordings, contributeRecordings: contribute, consentedAt: Date.now() });
     // Ask for the microphone now, with the grown-up present, so a child never meets a permission prompt alone.
     if (micSupported()) {
       try { (await navigator.mediaDevices.getUserMedia({ audio: true })).getTracks().forEach((track) => track.stop()); }
@@ -267,8 +269,12 @@ export function Onboarding() {
             <li><span>📱</span><div><b>{t('onboarding.consent.recordings.title')}</b><p>{t(RECORDINGS_BODY[about], { name: name.trim() })}</p></div></li>
             <li><span>🗑️</span><div><b>{t('onboarding.consent.control.title')}</b><p>{adult ? t('onboarding.consent.control.body.adult', { settings: t('common.settings.adult'), tab: t('common.nav.me') }) : t('onboarding.consent.control.body.child', { settings: t('common.settings.parent.the') })}</p></div></li>
           </ul>
-          <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>{t('onboarding.consent.keep')}</span></label>
+          {/* The one switch that must be on comes first: last, it fell below the fold on a phone (worse with a large
+              system font) behind the button it unlocks, and "Allow microphone" looked broken for no visible reason.
+              The two choices after it are preferences, both changeable later in Settings. */}
           <label className="switch-row"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span>{t(adult ? 'onboarding.consent.agree.adult' : 'onboarding.consent.agree.child')}</span></label>
+          <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>{t('onboarding.consent.keep')}</span></label>
+          <label className="switch-row"><input type="checkbox" checked={contribute} onChange={(e) => setContribute(e.target.checked)} /><span className="switch" aria-hidden /><span>{t(adult ? 'onboarding.consent.contribute.adult' : 'onboarding.consent.contribute.child')}</span></label>
         </>,
         <Button size="lg" block disabled={!agreed} icon="mic" onClick={() => void create()}>{t('onboarding.consent.allow')}</Button>,
         { grownUp: true, title: t('onboarding.consent.title'), sub: t(adult ? 'onboarding.consent.sub.adult' : 'onboarding.consent.sub.child') },

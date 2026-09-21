@@ -68,6 +68,8 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
         speaker: fresh.voice && fresh.voice.takes >= 3 ? fresh.voice : null,
         band: fresh.band, homeLanguage: fresh.homeLanguage, profileId: fresh.id,
         attemptIndex: j.attemptIndex, profile: fresh.pronunciation, simulate: st.settings.simulate,
+        // A missing value is NO: see ParentSettings.contributeRecordings.
+        contribute: st.settings.contributeRecordings === true,
       });
       if (!alive.current) return;
       await handlers.current.onAssessed(assessment, rec);

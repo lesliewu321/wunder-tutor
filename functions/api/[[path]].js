@@ -75,11 +75,12 @@ const kvCache = (kv) => ({
 
 let api; // one per isolate; env bindings are stable for its lifetime
 
-export async function onRequest({ request, env }) {
+export async function onRequest({ request, env, waitUntil }) {
   api ??= createApi(env, {
     connectWebSocket: connectWebSocket(env), canDialWebSocket: true, requireAccessCode: true,
     ttsCache: env.TTS_CACHE ? kvCache(env.TTS_CACHE) : undefined,
     googleFetch: googleFetch(env), egressInfo: egressInfo(env),
   });
-  return api.handle(request, { clientId: request.headers.get('cf-connecting-ip') ?? 'unknown' });
+  // waitUntil: a contributed recording is stored after the score has gone back (server/core.mjs keepIfAsked).
+  return api.handle(request, { clientId: request.headers.get('cf-connecting-ip') ?? 'unknown', waitUntil });
 }

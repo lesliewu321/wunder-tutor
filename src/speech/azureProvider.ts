@@ -3,7 +3,7 @@ import { englishAlternatives, type EnAlternative } from '../content/alternatives
 import { frAlignmentCandidates } from '../content/fr/lexicon';
 import { alignmentCandidates, tokenize } from '../content/lexicon';
 import { alternativeRequests } from '../content/zh/alternatives';
-import { apiFetch } from './health';
+import { apiFetch, deviceId } from './health';
 import { speakerMedian, type PitchTrack } from './pitch';
 import { SpeechError, type AssessContext, type PronunciationProvider, type Recording } from './types';
 import { assessZh, readCharacters, type AzureZhResponse } from './zh/assess';
@@ -282,6 +282,15 @@ export class AzurePronunciationProvider implements PronunciationProvider {
     if (ctx.locale === 'en-US') params.set('nbest', '5');
     if (ctx.locale === 'en-GB') params.set('dual', '1');
     if (altTexts.length && !clips) params.set('alts', JSON.stringify(altTexts));
+    // The learner agreed to help improve the app: the server keeps this take after scoring it, with no name. Only on
+    // this request — the whole take — and never on a word's clip below, which builds its own parameters.
+    if (ctx.contribute) {
+      params.set('keep', '1');
+      params.set('device', deviceId());
+      params.set('band', ctx.band);
+      params.set('home', ctx.homeLanguage);
+      params.set('v', __APP_VERSION__);
+    }
 
     const body = await postAssess(params, rec.wav, 20000);
     const main = body.main ?? body;

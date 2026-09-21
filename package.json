@@ -20,7 +20,10 @@
     "build:app": "node scripts/build-app.mjs",
     "app:android": "npm run build:app && npx cap open android",
     "app:apk": "npm run build:app && node scripts/build-apk.mjs",
-    "app:ios": "npm run build:app && npx cap open ios"
+    "app:ios": "npm run build:app && npx cap open ios",
+    "codes:new": "node scripts/invite-codes.mjs new",
+    "codes:list": "node scripts/invite-codes.mjs list",
+    "codes:off": "node scripts/invite-codes.mjs off"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

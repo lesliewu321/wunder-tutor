@@ -44,6 +44,52 @@ export const setAccessCode = (code: string): void => {
   health = null;
 };
 
+const DEVICE_KEY = 'wunder-tutor/device';
+
+/**
+ * A random id this device makes once and keeps. It is how an invite code counts its places (one per device) and how
+ * a contributed recording can be found again to be deleted. It is not a person, a phone number or a sign-in, and it
+ * is never sent anywhere but this app's own API.
+ */
+export const deviceId = (): string => {
+  try {
+    const kept = localStorage.getItem(DEVICE_KEY);
+    if (kept && /^[A-Za-z0-9_-]{8,64}$/.test(kept)) return kept;
+    const made = `d-${crypto.randomUUID().replace(/-/g, '')}`;
+    localStorage.setItem(DEVICE_KEY, made);
+    return made;
+  } catch {
+    // Storage refused (a private window): an id for this visit only. It still counts one place, once.
+    return `d-${crypto.randomUUID().replace(/-/g, '')}`;
+  }
+};
+
+export interface InviteAnswer {
+  ok: boolean;
+  /** 'new' / 'again' / 'master' when accepted; 'full', 'expired', 'disabled', 'unknown' when not. */
+  reason: string;
+  places?: number;
+  used?: number;
+  expiresAt?: string;
+}
+
+/**
+ * Take a place on an invite code for this device. The code is kept on the device only when the server accepted it,
+ * so a full or expired code never sits there looking like it should work. Throws only when the server can't be asked.
+ */
+export async function redeemInvite(code: string): Promise<InviteAnswer> {
+  const clean = normalCode(code);
+  const res = await fetch(apiUrl('/api/redeem'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: clean, device: deviceId() }),
+  });
+  if (!res.ok) throw new Error(`redeem ${res.status}`);
+  const answer = (await res.json()) as InviteAnswer;
+  if (answer.ok) setAccessCode(clean);
+  return answer;
+}
+
 /** fetch() for /api/* — attaches the access code when there is one (URI-encoded: a header can't carry every character). */
 export const apiFetch = (path: string, init: RequestInit = {}): Promise<Response> => {
   const headers = new Headers(init.headers);

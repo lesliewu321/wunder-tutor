@@ -1,4 +1,4 @@
-# Wunder Tutor — handoff (2026-09-20, evening)
+# Wunder Tutor — handoff (2026-09-21)
 
 Read this first in a new session. Then `README.md` for architecture, `server/README.md` for the API, `eval/README.md`
 for how accuracy is measured.
@@ -26,7 +26,7 @@ A pronunciation-first language tutor. Core loop:
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
-| Learner data | On the device: localStorage (state) + IndexedDB (recordings, which never leave it). Learners and My book pages also sync through a family account — Supabase project `xzghsihffoliduqkjvck`, built but not yet used by a real sign-in (see Family accounts below, and `supabase/README.md`) |
+| Learner data | On the device: localStorage (state) + IndexedDB (recordings). A recording goes to the server to be scored and, **only with the learner's consent**, is kept there with no name (see Invite codes and recordings below). Learners and My book pages also sync through a family account — Supabase project `xzghsihffoliduqkjvck`, built but not yet used by a real sign-in (see Family accounts below, and `supabase/README.md`) |
 | Accuracy test set | `eval/.cache` (gitignored, ~160 MB of cached Gemini takes + Azure responses) — reruns are free |
 | Domain | `wundertutor.com`, registrar Namecheap, DNS on Cloudflare (`annabel`/`porter.ns.cloudflare.com`) |
 | Azure | Speech resource `wunder-tutor-speech`, resource group `wunder-tutor`, region **eastasia**, tier S0 |
@@ -51,9 +51,7 @@ Preview configs for the Browser pane: `.claude/launch.json` (`wunder-tutor` has 
 
 ## State of the product (all on `main`)
 
-Onboarding ("Who's learning?" — **"A child (5–17)" or "An adult (18+)"**, reworded 2026-09-20 after Leslie saw the
-phone: the ages stopped at 17, "My child" was preselected, and the adult path called the learner a parent
-("Parents learn too", name placeholder "e.g. Mum"), so an adult learning for themselves appeared nowhere) → languages (English / 普通話 Putonghua, either or both) → accent
+Onboarding ("Who's learning?" — **four age ranges, 5–7 / 8–11 / 12–17 / 18+**, one screen, no "for you or your child" question; the age decides the rest. Was a 5–17 grid with "My child" preselected and a parent-shaped adult path, so an adult learning for themselves appeared nowhere — Leslie, 2026-09-20/21) → languages (English / 普通話 Putonghua, either or both) → accent
 (American default, British) → characters (Traditional default / Simplified) → speaking check → plan → Home (course
 switcher) → lessons (speak, listen, minimal pairs, dialogue, adaptive drill) → retry with before/after → progress →
 Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conversations (English only) → Parent Zone.
@@ -287,27 +285,53 @@ the alignment finds no fit and the sounds stay **unnamed**, which is the safe fa
 score and no wrong diagnosis. First real step: score a French take and compare Azure's phoneme count per word with
 `frAlignmentCandidates`, the way en-GB was measured (93% direct match).
 
+## Invite codes and recordings that come back (2026-09-21, built)
+
+**The phone's speaking loop works end to end** — Leslie, 2026-09-21: "I can already say words and it gives a score".
+First real speaking take scored on the device; it confirms the MODIFY_AUDIO_SETTINGS fix that was made blind.
+
+Built so volunteer families can be recruited and their children's voices measured — the one claim nothing has
+checked (every accuracy number is from synthetic adult voices). Two migrations, both applied to
+`xzghsihffoliduqkjvck`: `20260921100000_invites_and_contributions.sql`, `20260921103000_invite_disabled_means_everyone.sql`.
+
+- **Invite codes** (`invite_codes`, `invite_redemptions`, `redeem_invite()`). Each good for **10 devices, 14 days**
+  (Leslie's choices). A device takes a place by REDEEMING (`POST /api/redeem`, the one POST needing no code); the app
+  keeps a code only once accepted. Expiry and a full code stop only NEW joiners. **Switching a code off stops
+  everyone using it** — it is the lever against a leaked code (the first version let a joined device keep going;
+  caught before any code was handed out). The master `BETA_ACCESS_CODE` still works and takes no place.
+  Per request the API asks "is this one of ours and not off?", cached 60 s (`server/invites.mjs`). Accepted for a
+  beta: a code copied into browser storage by hand, never redeemed, is not counted against its places.
+  **`npm run codes:new -- 5 "note"` / `codes:list` / `codes:off -- CODE`** (Leslie runs them; they read the secret
+  key from `.env` and never print it). First batch of 5 made 2026-09-21, closing 5 Oct: WUNDER-HD2X8, -DGCKM, -P44UC,
+  -BE374, -VKHPP.
+- **Contributions** (`contributions` table + private Storage bucket `contributions`). A recording already goes to
+  the server to be scored; with consent the server KEEPS that copy instead of discarding it, so nothing new leaves
+  the device. Only the main take, never a word's clip check. Stored with no name: device id, band, home language,
+  locale, what was asked, the scorer's raw answer, app version. Kept after the score has gone back (`waitUntil`), so
+  a failure costs a recording, never a lesson. Silent takes are not kept. Files land at
+  `contributions/<locale>/<day>/<id>.wav`; query them with SQL on `public.contributions` / `storage.objects`.
+- **Consent.** Setup shows "Help improve Wunder Tutor", **ticked by default for everyone** (Leslie's decision, made
+  after being told a pre-ticked box for a child's voice is consent a regulator discounts). Changeable in the Parent
+  Zone. **People who agreed before the box existed are NOT opted in** — a missing setting means no, because they
+  agreed to "recordings stay on this device". Three promises that became false were rewritten: "Recordings stay on
+  this device" → "are kept on", the Parent Zone line now changes with the switch, and the account blurb says
+  recordings are never saved *to the account*. The required "I agree" switch moved ABOVE the two preferences: last,
+  it fell below the fold behind the button it unlocks. **Known limit:** on a small screen (375×812) the pre-ticked
+  box itself sits partly below the fold — fine on Leslie's taller phone, but a hidden pre-ticked box is the weakest
+  form of consent there is. Revisit before real families.
+- **Deletion is manual**: the consent says "ask us"; delete by device id (`delete from public.contributions where
+  device = …` plus the files). No in-app button yet.
+
 ## Asked for on 2026-09-20/21, not built yet
 
-Leslie's own words, in the order they came. None of these exist yet.
+Items 1 and 2 of this list (recordings that come back, invite codes) were built on 2026-09-21 — see the section above.
 
-1. **Testing data should come back by itself.** Today a parent has to open Settings → Share recordings, export a
-   file and send it. Leslie: a **checkbox in beta mode, "data will be used to improve app", ticked by default**, "so
-   parents don't need to download and send data for testing". Needs somewhere to put the audio (R2 or Supabase
-   Storage — neither exists yet) and a consent wording that matches what actually leaves the device. Note what the
-   app promises today: recordings stay on the device and leave only to be scored. Whatever is built must not make
-   that sentence untrue, and a pre-ticked box for a child's voice is the kind of consent a regulator discounts —
-   worth Leslie deciding knowingly, not by default.
-2. **Invite codes, plural, each good for 10 referrals**, with **a sense of urgency** (read as: the code shows how
-   many of its 10 places are left, and expires). Today there is ONE shared passphrase, `BETA_ACCESS_CODE`, a
-   Cloudflare secret compared as a string (`server/core.mjs`). Real codes need a table (Supabase is already wired up
-   with RLS and migrations), a generator Leslie can run, a count per code, and the API checking the table instead of
-   one secret.
 3. **A bonus game: tongue twisters**, said aloud and scored, with **a central leaderboard** of the highest scorers.
-   The scoring pipeline already exists (`SpeakExercise`, `/api/assess`); what is new is the content, a game mode with
-   a score worth competing over, and a shared board. **A public board of children ranked by name is a child-safety
-   decision, not a technical one** — nicknames are already "no real names needed", which helps, but who can see whom
-   needs Leslie's explicit answer before it is built.
+   Agreed shape (2026-09-21): **English first** (its scorer names each sound, the strongest of the three), each
+   twister **measured through the scorer before it goes in** — 四是四，十是十。 proved a scorer can fail a whole
+   sequence while marking every syllable in it perfectly — and ranked on **"said it right" (pass/fail) plus speed**
+   rather than the fine score, which is both fairer and what a tongue-twister contest is. **A public board of children
+   ranked by nickname is a child-safety decision** still waiting on Leslie before the board is built.
 
 ## Open items
 

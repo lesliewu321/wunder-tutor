@@ -78,6 +78,11 @@ export interface AssessContext {
   /** Lets a provider (the mock) model long-term improvement. Real providers ignore it. */
   profile?: PronunciationProfile;
   simulate?: 'none' | 'network' | 'service' | 'slow';
+  /**
+   * The learner agreed to help improve the app: the server keeps this take after scoring it, with no name, instead
+   * of discarding it. The recording goes to the server to be scored either way; this only decides whether it stays.
+   */
+  contribute?: boolean;
 }
 
 /**

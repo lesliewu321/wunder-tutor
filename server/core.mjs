@@ -12,6 +12,7 @@
 
 import { HttpError } from './http-error.mjs';
 import { createFamilies } from './family.mjs';
+import { createInvites } from './invites.mjs';
 import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, TtsError } from './tts.mjs';
 import { DEFAULT_READ_MODEL, readText } from './read.mjs';
 import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, TUTOR_SCHEMA, validateTutorInput } from './tutor.mjs';
@@ -179,6 +180,8 @@ export function createApi(rawEnv, deps = {}) {
   const ACCESS_CODE = normalCode(env('BETA_ACCESS_CODE'));
   // Families with an account (server/family.mjs). SUPABASE_URL is public; SUPABASE_SECRET_KEY is a secret like the others.
   const families = deps.families ?? (env('SUPABASE_URL') ? createFamilies({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log }) : null);
+  // Invite codes and contributed recordings (server/invites.mjs): the same database, the same secret key.
+  const invites = deps.invites ?? (env('SUPABASE_URL') ? createInvites({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log }) : null);
 
   const canDial = deps.canDialWebSocket ?? (Boolean(deps.connectWebSocket) || typeof WebSocket === 'function');
   const status = {
@@ -298,7 +301,35 @@ export function createApi(rawEnv, deps = {}) {
    *   dual=1             British: the same audio as US English too, for "what was said instead" on consonants
    * With either, the response is { main, alts?, us? } holding Azure's JSON objects; without, Azure's JSON unchanged.
    */
-  async function handleAssess(request, url, client) {
+  const BANDS = new Set(['little', 'junior', 'teen', 'adult']);
+  /**
+   * A learner who agreed to help keeps this recording: the one the scorer just heard, with the scorer's answer. Only
+   * ever the main take — the app asks on that request alone, never on a word's clip check. It runs after the score
+   * is already on its way (waitUntil on Cloudflare), so it can cost a recording but never slow or fail a lesson.
+   */
+  function keepIfAsked(url, audio, text, locale, raw, ctx) {
+    if (url.searchParams.get('keep') !== '1' || !invites?.enabled) return;
+    let azure = null;
+    try { azure = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { /* the audio is still worth keeping */ }
+    if (azure?.RecognitionStatus && azure.RecognitionStatus !== 'Success') return; // silence or noise: nothing to learn from
+    const best = azure?.NBest?.[0];
+    const overall = best?.PronunciationAssessment?.AccuracyScore ?? best?.AccuracyScore;
+    const band = url.searchParams.get('band');
+    const job = invites.contribute({
+      device: url.searchParams.get('device') ?? '',
+      locale,
+      band: BANDS.has(band) ? band : null,
+      homeLanguage: (url.searchParams.get('home') ?? '').slice(0, 16) || null,
+      reference: text,
+      overall,
+      azure,
+      wav: audio,
+      appVersion: url.searchParams.get('v'),
+    }).catch((e) => log.warn?.(`[contribute] not kept: ${e?.message ?? e}`));
+    if (typeof ctx.waitUntil === 'function') ctx.waitUntil(job);
+  }
+
+  async function handleAssess(request, url, client, ctx = {}) {
     if (!status.azure) throw new HttpError(503, 'azure_not_configured');
     const text = (url.searchParams.get('text') ?? '').trim();
     if (!text) throw new HttpError(400, 'missing_text');
@@ -320,7 +351,9 @@ export function createApi(rawEnv, deps = {}) {
 
     if (!alts.length && !dual) {
       // Azure's JSON unchanged. RecognitionStatus may still be NoMatch / InitialSilenceTimeout with HTTP 200.
-      return json(200, await scoreOnce(audio, text, locale, nbest));
+      const raw = await scoreOnce(audio, text, locale, nbest);
+      keepIfAsked(url, audio, text, locale, raw, ctx);
+      return json(200, raw);
     }
     const [main, us, ...altTexts] = await Promise.all([
       scoreOnce(audio, text, locale, nbest),
@@ -328,6 +361,7 @@ export function createApi(rawEnv, deps = {}) {
       dual ? scoreOnce(audio, text, 'en-US', 5).catch(() => null) : Promise.resolve(null),
       ...alts.map((a) => scoreOnce(audio, a, locale, 0).catch(() => null)),
     ]);
+    keepIfAsked(url, audio, text, locale, main, ctx);
     const parse = (t) => { try { return t ? JSON.parse(t) : null; } catch { return null; } };
     return json(200, { main: parse(main), us: dual ? parse(us) : undefined, alts: alts.length ? altTexts.map(parse) : undefined });
   }
@@ -365,6 +399,34 @@ export function createApi(rawEnv, deps = {}) {
       log.warn?.(`[read] ${err?.body?.error ?? err?.name ?? 'error'}${err.upstreamMessage ? ` (${err?.body?.status ? `gemini ${err.body.status}: ` : ''}${err.upstreamMessage})` : ''}${err?.body?.finish ? ` (${err.body.finish})` : ''} after ${((Date.now() - started) / 1000).toFixed(1)} s, ${what}`);
       throw err;
     }
+  }
+
+  // ---------------------------------------------------------------- /api/redeem
+  // { code, device } → a place on an invite code for this device. The one POST that needs no code already, because
+  // it is how a device gets one. Rate-limited like any code guess: only a code that does not exist counts as a guess
+  // (a full or expired code is a real code someone was given).
+  async function handleRedeem(request, client) {
+    if (codeGuesses.blocked(client)) throw new HttpError(429, 'too_many_attempts');
+    const input = await readJson(request);
+    const code = String(input?.code ?? ''), device = String(input?.device ?? '');
+    // The master code is not an invite and takes no place; it is accepted exactly as it always was.
+    if (ACCESS_CODE && (sameSecret(normalCode(code), ACCESS_CODE) || sameSecret(normalCode(decoded(code)), ACCESS_CODE))) {
+      return json(200, { ok: true, reason: 'master' });
+    }
+    if (!invites?.enabled) {
+      codeGuesses.fail(client);
+      return json(200, { ok: false, reason: 'unknown' });
+    }
+    let answer;
+    try {
+      answer = await invites.redeem(code, device);
+    } catch (e) {
+      if (/bad device/.test(String(e?.message))) throw new HttpError(400, 'bad_device');
+      log.warn?.(`[invite] redeem failed: ${e?.message ?? e}`);
+      throw new HttpError(424, 'redeem_unavailable');
+    }
+    if (!answer.ok && answer.reason === 'unknown') codeGuesses.fail(client);
+    return json(200, answer);
   }
 
   async function handleTts(request, client) {
@@ -492,7 +554,7 @@ export function createApi(rawEnv, deps = {}) {
   const allowStatus = createLimiter(30, 60_000);
 
   // ---------------------------------------------------------------- router
-  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read']);
+  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read', '/api/redeem']);
 
   /**
    * The phone apps (Capacitor) run the same web app from inside a WebView, where the page's origin is localhost —
@@ -535,6 +597,8 @@ export function createApi(rawEnv, deps = {}) {
         // Both forms are always compared, so the time taken says nothing about which one matched.
         const asSent = sameSecret(normalCode(offered), ACCESS_CODE), asDecoded = sameSecret(normalCode(decoded(offered)), ACCESS_CODE);
         authorized = asSent || asDecoded;
+        // Not the master code: perhaps one of the invite codes handed out to families (server/invites.mjs).
+        if (!authorized && invites) authorized = await invites.isValid(decoded(offered));
         if (!authorized) codeGuesses.fail(client);
       }
 
@@ -570,11 +634,12 @@ export function createApi(rawEnv, deps = {}) {
       }
       if (!ROUTES.has(path)) return json(404, { error: 'not_found' });
       if (request.method !== 'POST') return json(405, { error: 'method_not_allowed' });
+      if (path === '/api/redeem') return await handleRedeem(request, client);
       if (!authorized) throw new HttpError(401, 'access_code_required');
 
       if (path === '/api/assess') {
         await spend('scorings');
-        return await handleAssess(request, url, client);
+        return await handleAssess(request, url, client, ctx);
       }
       if (path === '/api/read') {
         if (!allowRead(client)) throw new HttpError(429, 'rate_limited');

@@ -279,6 +279,13 @@ export interface ConversationRecord {
 
 export interface ParentSettings {
   storeRecordings: boolean;
+  /**
+   * "Help improve Wunder Tutor": the server keeps practice recordings, with no name, to test and improve how
+   * pronunciation is checked. Ticked by default in setup (Leslie, 2026-09-21) — but only for people who set up after
+   * the box existed and saw it. Anyone who agreed earlier agreed to recordings staying on the device, so a missing
+   * value means NO: nobody is moved onto terms they were never shown.
+   */
+  contributeRecordings?: boolean;
   consentedAt: number | null;
   /** Dev/demo aid: simulate the microphone so the full flow works on devices without one. */
   demoMic: boolean;
