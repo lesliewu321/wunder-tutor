@@ -72,6 +72,18 @@ const RAW: Record<string, string> = {
   le: 'le|l ə', la: 'la|l a', les: 'les|l e', de: 'de|d ə', du: 'du|d y', et: 'et|e', est: 'est|ɛ',
   que: 'que|k ə', qui: 'qui|k i', où: 'où|u', dans: 'dans|d ɑ̃', sur: 'sur|s y ʁ', avec: 'a.vec|a . v ɛ k',
   pour: 'pour|p u ʁ', comment: 'com.ment|k ɔ . m ɑ̃', ça: 'ça|s a', va: 'va|v a', bien: 'bien|b j ɛ̃',
+
+  // What a learner says back in the conversations (fr/scenarios.ts): the café, the zoo, a new friend.
+  faim: 'faim|f ɛ̃', tout: 'tout|t u', délicieux: 'dé.li.cieux|d e . l i . s j ø', beau: 'beau|b o',
+  lion: 'lion|l j ɔ̃', lions: 'lions|l j ɔ̃', singe: 'singe|s ɛ̃ ʒ', singes: 'singes|s ɛ̃ ʒ',
+  tigre: 'ti.gre|t i . g ʁ ə', tigres: 'ti.gres|t i . g ʁ ə', zoo: 'zoo|z o', animal: 'a.ni.mal|a . n i . m a l',
+  vois: 'vois|v w a', voir: 'voir|v w a ʁ', préfère: 'pré.fère|p ʁ e . f ɛ ʁ', préférée: 'pré.fé.rée|p ʁ e . f e . ʁ e',
+  "c'était": "c'é.tait|s e . t ɛ", super: 'su.per|s y . p ɛ ʁ', génial: 'gé.nial|ʒ e . n j a l', aimé: 'ai.mé|ɛ . m e',
+  ma: 'ma|m a', première: 'pre.mière|p ʁ ə . m j ɛ ʁ', visite: 'vi.site|v i . z i t', fois: 'fois|f w a', ici: 'i.ci|i . s i',
+  "j'adore": "j'a.dore|ʒ a . d ɔ ʁ", ce: 'ce|s ə', ne: 'ne|n ə', crois: 'crois|k ʁ w a', pas: 'pas|p a',
+  léo: 'lé.o|l e . o', aussi: 'aus.si|o . s i', on: 'on|ɔ̃', joue: 'joue|ʒ u', ensemble: 'en.sem.ble|ɑ̃ . s ɑ̃ . b l ə',
+  couleur: 'cou.leur|k u . l œ ʁ', foot: 'foot|f u t', lire: 'lire|l i ʁ', dessiner: 'des.si.ner|d e . s i . n e',
+  plaisir: 'plai.sir|p l e . z i ʁ',
 };
 
 /** é and è are different words from e; the key keeps them, and only punctuation is thrown away. */

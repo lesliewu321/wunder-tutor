@@ -1,15 +1,24 @@
-import type { ContentBand } from '../domain/types';
+import type { ContentBand, CourseId, SpeakItem } from '../domain/types';
 import { tc } from '../i18n';
+import { FR_SCENARIOS } from './fr/scenarios';
+import { ZH_SCENARIOS } from './zh/scenarios';
 
 type ByBand<T> = Record<ContentBand, T>;
 
+/** One exchange: what the tutor says, and what the learner may say back (each a line to speak and be scored on). */
 export interface ScenarioTurn {
-  tutor: ByBand<string>;
-  replies: ByBand<string[]>;
+  tutor: ByBand<SpeakItem>;
+  replies: ByBand<SpeakItem[]>;
 }
 
+/**
+ * A role-play in the language of one course. The lines are speakable items in that language, so a Putonghua
+ * conversation is spoken by the Mandarin voice, scored in Mandarin with its tones, and shown in the learner's
+ * characters with pinyin — exactly as its lessons are. `setting`, `tutorRole` and `goals` brief the live tutor.
+ */
 export interface Scenario {
   id: string;
+  course: CourseId;
   title: string;
   icon: string;
   color: string;
@@ -18,12 +27,28 @@ export interface Scenario {
   tutorRole: string;
   goals: string[];
   turns: ScenarioTurn[];
+  closing: ByBand<SpeakItem>;
+}
+
+/** An English conversation line, with the id English lines have always had, so a learner's history still matches. */
+export const sayLine = (text: string): SpeakItem => ({ id: `say-${text.toLowerCase().replace(/[^a-z]+/g, '-')}`, text, kind: 'sentence' });
+
+const byBand = <A, B>(v: ByBand<A>, f: (a: A) => B): ByBand<B> => ({ little: f(v.little), junior: f(v.junior), teen: f(v.teen) });
+
+/** The English scenarios are written as plain text below and turned into lines here. */
+interface TextScenario extends Omit<Scenario, 'course' | 'turns' | 'closing'> {
+  turns: { tutor: ByBand<string>; replies: ByBand<string[]> }[];
   closing: ByBand<string>;
 }
+const english = (s: TextScenario): Scenario => ({
+  ...s, course: 'en',
+  turns: s.turns.map((t) => ({ tutor: byBand(t.tutor, sayLine), replies: byBand(t.replies, (r) => r.map(sayLine)) })),
+  closing: byBand(s.closing, sayLine),
+});
 
 const same = (s: string): ByBand<string> => ({ little: s, junior: s, teen: s });
 
-export const SCENARIOS: Scenario[] = [
+const EN_SCENARIOS: Scenario[] = ([
   {
     id: 'cafe', title: 'The Wunder Café', icon: '☕', color: 'var(--coral)',
     blurb: { little: 'Ask for yummy food!', junior: 'Order a snack and a drink.', teen: 'Order a meal and chat with the waiter.' },
@@ -98,7 +123,14 @@ export const SCENARIOS: Scenario[] = [
     ],
     closing: { little: 'That was fun! Bye-bye!', junior: 'That was fun! See you tomorrow!', teen: 'That was fun. See you around!' },
   },
-];
+] satisfies TextScenario[]).map(english);
+
+/** Every conversation, each in its course's language. */
+export const SCENARIOS: Scenario[] = [...EN_SCENARIOS, ...ZH_SCENARIOS, ...FR_SCENARIOS];
+
+/** The conversations for the course being learned: a Putonghua learner talks in Putonghua. */
+export const scenariosFor = (course: CourseId): Scenario[] => SCENARIOS.filter((s) => s.course === course);
+
 
 export const findScenario = (id: string): Scenario | undefined => SCENARIOS.find((s) => s.id === id);
 

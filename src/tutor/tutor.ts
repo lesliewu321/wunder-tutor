@@ -1,13 +1,14 @@
-import { contentBand, type AgeBand } from '../domain/types';
-import type { Scenario } from '../content/scenarios';
+import { contentBand, type AgeBand, type SpeakItem } from '../domain/types';
+import { sayLine, type Scenario } from '../content/scenarios';
 import { apiFetch, apiHealth } from '../speech';
 
 export interface TutorTurn { role: 'tutor' | 'child'; text: string }
 
 export interface TutorReply {
-  reply: string;
+  /** What the tutor says, as a line in the conversation's language. */
+  reply: SpeakItem;
   /** Things the child could say next. Empty when the conversation is over. */
-  suggestions: string[];
+  suggestions: SpeakItem[];
   done: boolean;
 }
 
@@ -32,7 +33,11 @@ export class ScriptedTutor implements ConversationTutor {
   }
 }
 
-/** Live tutor through the server proxy (server/index.mjs → Claude). Falls back to the script on any failure. */
+/**
+ * Live tutor through the server proxy (server/index.mjs → Claude), for English only: its brief and its safety rules
+ * are written for an English partner, and a Mandarin line needs Traditional characters and exact pinyin that a
+ * generated reply cannot be trusted to carry. Falls back to the script on any failure.
+ */
 export class ClaudeTutor implements ConversationTutor {
   readonly name = 'claude';
   private fallback = new ScriptedTutor();
@@ -47,18 +52,25 @@ export class ClaudeTutor implements ConversationTutor {
         }),
       });
       if (!res.ok) throw new Error(`tutor ${res.status}`);
-      const j = (await res.json()) as TutorReply;
+      const j = (await res.json()) as { reply?: string; suggestions?: string[]; done?: boolean };
       if (!j.reply) throw new Error('empty reply');
       const scripted = await this.fallback.next(scenario, band, history);
-      return { reply: j.reply, done: !!j.done, suggestions: j.done ? [] : j.suggestions?.length ? j.suggestions.slice(0, 2) : scripted.suggestions };
+      return {
+        reply: sayLine(j.reply), done: !!j.done,
+        suggestions: j.done ? [] : j.suggestions?.length ? j.suggestions.slice(0, 2).map(sayLine) : scripted.suggestions,
+      };
     } catch {
       return this.fallback.next(scenario, band, history);
     }
   }
 }
 
-let tutor: Promise<ConversationTutor> | null = null;
-export const getTutor = (): Promise<ConversationTutor> => {
-  tutor ??= apiHealth().then((h) => (h.claude ? new ClaudeTutor() : new ScriptedTutor()));
-  return tutor;
+const scripted = new ScriptedTutor();
+let live: Promise<ConversationTutor> | null = null;
+
+/** The partner for this scenario: the live tutor for English when the server has one, otherwise the script. */
+export const getTutor = (scenario: Scenario): Promise<ConversationTutor> => {
+  if (scenario.course !== 'en') return Promise.resolve(scripted);
+  live ??= apiHealth().then((h) => (h.claude ? new ClaudeTutor() : scripted));
+  return live;
 };

@@ -1,6 +1,6 @@
 import type { Course, Exercise, Lesson, PhonemeId, SpeakItem, Unit } from '../../domain/types';
 import type { LabStage } from '../lab';
-import { frSyllableCount, frWordPhones } from './lexicon';
+import { frSyllableCount, frTokenize, frWordPhones } from './lexicon';
 
 // French for everyone from five to grown-up, like the English and Mandarin courses — the bands are not the same
 // lesson three times over. A six-year-old names colours and animals from pictures; an eleven-year-old asks for
@@ -11,9 +11,9 @@ import { frSyllableCount, frWordPhones } from './lexicon';
 // exactly that, because a word that slips through is not an error anyone would notice by reading.
 
 /** A French speaking item. `focus` names the sounds the item is really here to practise. */
-const fr = (text: string, meaning: string, picture?: string, focus?: PhonemeId[]): SpeakItem => {
+export const fr = (text: string, meaning: string, picture?: string, focus?: PhonemeId[]): SpeakItem => {
   const syllables = frSyllableCount(text);
-  const words = text.split(/\s+/).length;
+  const words = frTokenize(text).length;
   return {
     id: `fr-${text.toLowerCase().replace(/[^a-zà-ÿœ']+/gu, '-').replace(/^-|-$/g, '')}`,
     text,
@@ -224,4 +224,5 @@ export const FR_COURSE_WORDS: string[] = [
 
 /** True when every word of an item is in the lexicon, so its sounds can be named. */
 export const frFullyKnown = (item: SpeakItem): boolean =>
-  item.text.split(/\s+/).every((w) => frWordPhones(w.replace(/^[^\p{L}']+|[^\p{L}']+$/gu, '')).syllables.some((s) => s.phonemes.length));
+  // Words only: French sets ! and ? apart with a space ("Merci !"), and a lone mark is not a word to look up.
+  frTokenize(item.text).every((w) => frWordPhones(w).syllables.some((s) => s.phonemes.length));

@@ -48,7 +48,9 @@ export function ZhText({ item, script, showPinyin = true, marks, onTap, classNam
             <rp>(</rp><rt className="zh__py" aria-hidden={!showPinyin} style={showPinyin ? undefined : { visibility: 'hidden' }}>{py[idx]}</rt><rp>)</rp>
           </ruby>
         );
-        if (!m || !onTap) return <span key={i} className="zh__char">{inner}</span>;
+        if (!m) return <span key={i} className="zh__char">{inner}</span>;
+        // Marks with nothing to open (a conversation's own line): coloured like the words of an English line.
+        if (!onTap) return <span key={i} className={`zh__char w w--${m.tier === 'missing' ? 'weak' : m.tier}`}>{inner}</span>;
         return (
           <button key={i} type="button" className={`zh__char word word--${m.tier} ${m.focus ? 'word--focus' : ''}`} onClick={() => onTap(idx)}
             aria-label={m.label ? t('common.zhChar.aria.scored', { char: c, pinyin: py[idx], label: m.label }) : t('common.zhChar.aria', { char: c, pinyin: py[idx] })}>

@@ -3,7 +3,6 @@
   "practice.home.title.kid": "和 Pip 聊天",
   "practice.home.lead.adult": "選一個場景，開口說一段真正的對話。提示會留到最後。",
   "practice.home.lead.kid": "選一個地方，開口說一段真正的對話。Pip 會一直陪你聊，提示會留到最後。",
-  "practice.home.zhNotice": "這些對話暫時只有英文。普通話對話即將推出，請繼續在課程和練習室裏練習聲調。",
   "practice.missing.body": "找不到這段對話。",
   "practice.leave.button": "離開對話",
   "practice.leave.sheet": "離開對話？",
@@ -30,6 +29,7 @@
   "practice.summary.practise.title": "要多練習",
   "practice.summary.practise.sound": "「{label}」音，例如「{example}」",
   "practice.summary.practise.sound.symbol": "「{label}」音，例如「{example}」，/{symbol}/",
+  "practice.summary.practise.tone": "{name}，例如「{example}」",
   "practice.summary.practise.none": "沒有特別要留意的地方，每個音都很清晰！",
   "practice.summary.drill": "2 分鐘「{label}」音練習"
 }

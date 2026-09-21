@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { contentBand, isGrownUp, type Assessment, type PhonemeId, type SpeakItem } from '../../domain/types';
+import { contentBand, isGrownUp, type AgeBand, type Assessment, type PhonemeId, type SpeakItem } from '../../domain/types';
 import { LADDERS } from '../../content/lab';
-import { phonemeInfo, tipFor } from '../../content/phonemes';
-import { findScenario, scenarioBlurb, SCENARIOS, scenarioTitle } from '../../content/scenarios';
+import { isZhSound, phonemeInfo, tipFor } from '../../content/phonemes';
+import { findScenario, scenarioBlurb, scenariosFor, scenarioTitle } from '../../content/scenarios';
+import type { ZhScript } from '../../content/zh/script';
 import { badgeName } from '../../engine/rewards';
+import { language } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import type { SpeechErrorCode } from '../../speech';
-import { stopPlayback, voice } from '../../speech/voice';
+import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile, useStore } from '../../state/store';
 import { correctionFor, focusWordIndex, tier, writtenWords } from '../../tutor/feedback';
 import { getTutor, type TutorTurn } from '../../tutor/tutor';
@@ -15,6 +17,7 @@ import { Icon } from '../../ui/Icon';
 import { Button, IconButton, Sheet, toast, TopBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
 import { MicButton } from '../../ui/MicButton';
+import { ZhText } from '../../ui/ZhText';
 import { ErrorPanel } from '../speak/ErrorPanel';
 import { useSpeechTake } from '../speak/useSpeechTake';
 
@@ -22,13 +25,14 @@ export function PracticeHome() {
   const { t } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
+  // In the language being learned: a Putonghua learner talks in Putonghua, a French learner in French.
+  const scenarios = scenariosFor(p.course);
   return (
     <div className="screen practice">
       <TopBar title={t(p.band === 'adult' ? 'practice.home.title.adult' : 'practice.home.title.kid')} onBack={() => nav('/')} />
       <div className="practice__intro"><Mascot mood="talking" size={92} /><p className="lead">{t(p.band === 'adult' ? 'practice.home.lead.adult' : 'practice.home.lead.kid')}</p></div>
-      {p.course === 'zh' && <p className="hint hint--left">{t('practice.home.zhNotice')}</p>}
       <ul className="scenario-list">
-        {SCENARIOS.map((s) => {
+        {scenarios.map((s) => {
           const last = [...p.conversations].reverse().find((c) => c.scenarioId === s.id);
           return (
             <li key={s.id}>
@@ -45,7 +49,23 @@ export function PracticeHome() {
   );
 }
 
-interface Line { role: 'tutor' | 'child'; text: string; assessment?: Assessment; tip?: boolean }
+type Line =
+  | { role: 'tutor'; it: SpeakItem }
+  | { role: 'tip'; text: string }
+  | { role: 'child'; it: SpeakItem; assessment: Assessment };
+
+/**
+ * A line in its own language: characters with pinyin for Putonghua, and — past the picture-book age — what a line in
+ * another language means, as the lessons show it.
+ */
+function LineText({ it, band, script }: { it: SpeakItem; band: AgeBand; script: ZhScript }) {
+  return (
+    <span className="line-text">
+      {it.zh ? <ZhText item={it} script={script} /> : <span lang={it.lang === 'fr-FR' ? 'fr' : undefined}>{it.text}</span>}
+      {it.lang && it.meaning && band !== 'little' && <small className="bubble__meaning">{it.meaning}</small>}
+    </span>
+  );
+}
 
 export function Conversation() {
   const { t } = useT();
@@ -58,8 +78,8 @@ export function Conversation() {
   const setSettings = useStore((s) => s.setSettings);
 
   const [lines, setLines] = useState<Line[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [chosen, setChosen] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<SpeakItem[]>([]);
+  const [chosen, setChosen] = useState<SpeakItem | null>(null);
   const [thinking, setThinking] = useState(true);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<SpeechErrorCode | null>(null);
@@ -70,17 +90,21 @@ export function Conversation() {
   const endRef = useRef<HTMLDivElement>(null);
   const alive = useRef(true);
 
-  const say = (text: string) => voice.speak(text, { accent: p.accent }).catch(() => undefined);
+  // Each line in its own voice: the Mandarin teacher for Putonghua, the French one for French, the learner's accent
+  // for English.
+  const say = (it: SpeakItem) => voice.speak(it.say ?? it.text, { accent: localeOf(it, p.accent), kind: it.kind }).catch(() => undefined);
+  // A tip is advice in the app's language; it is read aloud only when that is English, the teacher's own language.
+  const sayTip = (text: string) => (language() === 'en' ? voice.speak(text, { accent: p.accent }).catch(() => undefined) : undefined);
 
   const tutorTurn = async (history: Line[], note?: string) => {
     if (!scenario) return;
     setThinking(true);
     const run = runId.current;
-    const tutor = await getTutor();
-    const turns: TutorTurn[] = history.filter((l) => !l.tip).map((l) => ({ role: l.role, text: l.text }));
+    const tutor = await getTutor(scenario);
+    const turns: TutorTurn[] = history.flatMap((l) => (l.role === 'tip' ? [] : [{ role: l.role, text: l.it.text }]));
     const r = await tutor.next(scenario, p.band, turns, note);
     if (!alive.current || run !== runId.current) return;
-    setLines((ls) => [...ls, { role: 'tutor', text: r.reply }]);
+    setLines((ls) => [...ls, { role: 'tutor', it: r.reply }]);
     setSuggestions(r.suggestions);
     setChosen(r.suggestions.length === 1 ? r.suggestions[0] : null);
     setThinking(false);
@@ -103,19 +127,19 @@ export function Conversation() {
     micRef,
     onError: setError,
     onAssessed: async (assessment, rec) => {
-      if (!chosen) return;
-      await recordAttempt({ item: toItem(chosen), assessment, audio: rec.blob, context: 'practice', isRetry: false });
+      if (!chosen || !scenario) return;
+      await recordAttempt({ item: chosen, assessment, audio: rec.blob, context: 'practice', isRetry: false });
       if (!alive.current) return;
-      const mine: Line = { role: 'child', text: chosen, assessment };
-      let next = [...lines, mine];
-      // Let the conversation flow: at most two gentle tips, and only for a clearly mispronounced word.
+      let next: Line[] = [...lines, { role: 'child', it: chosen, assessment }];
+      // Let the conversation flow: at most two gentle tips — a clearly mispronounced sound, or a Mandarin tone.
       const fi = focusWordIndex(assessment);
       const c = fi >= 0 ? correctionFor(assessment.words[fi], p.band, p.homeLanguage) : null;
       let note: string | undefined;
-      if (c && c.kind === 'sound' && c.score < 60 && tips.current < 2) {
+      if (c?.phoneme && ((c.kind === 'sound' && c.score < 60) || c.kind === 'tone') && tips.current < 2) {
         tips.current += 1;
-        next = [...next, { role: 'tutor', tip: true, text: t('practice.line.tip', { word: c.word, tip: tipFor(c.phoneme!, p.band) }) }];
-        note = `The child mispronounced "${c.word}" (sound /${c.phoneme}/). Model the word naturally once in your reply; do not lecture.`;
+        next = [...next, { role: 'tip', text: t('practice.line.tip', { word: c.word, tip: tipFor(c.phoneme, p.band) }) }];
+        // Only the live English tutor reads notes.
+        if (scenario.course === 'en') note = `The child mispronounced "${c.word}" (sound /${c.phoneme}/). Model the word naturally once in your reply; do not lecture.`;
       }
       setLines(next);
       setChosen(null);
@@ -138,19 +162,25 @@ export function Conversation() {
 
       <div className="convo__scroll">
         {lines.map((l, i) => l.role === 'tutor' ? (
-          <div key={i} className={`line line--tutor ${l.tip ? 'line--tip' : ''}`}>
-            {!l.tip && <Mascot mood="idle" size={40} />}
-            <button type="button" className="bubble" onClick={() => void say(l.text)} aria-label={t('practice.line.play', { text: l.text })}>{l.tip && <span aria-hidden>💡 </span>}{l.text}</button>
+          <div key={i} className="line line--tutor">
+            <Mascot mood="idle" size={40} />
+            <button type="button" className="bubble" onClick={() => void say(l.it)} aria-label={t('practice.line.play', { text: l.it.text })}><LineText it={l.it} band={p.band} script={p.zhScript} /></button>
+          </div>
+        ) : l.role === 'tip' ? (
+          <div key={i} className="line line--tutor line--tip">
+            <button type="button" className="bubble" onClick={() => void sayTip(l.text)}><span aria-hidden>💡 </span>{l.text}</button>
           </div>
         ) : (
           <div key={i} className="line line--child">
             <div className="bubble bubble--me">
-              {l.assessment ? writtenWords(l.text, l.assessment.words).map((word, j) => {
-                const w = l.assessment!.words[j];
+              {l.it.zh ? (
+                <ZhText item={l.it} script={p.zhScript} marks={l.assessment.words.map((w) => ({ tier: w.errorType === 'omission' ? 'missing' : tier(w.score) }))} />
+              ) : writtenWords(l.it.text, l.assessment.words).map((word, j) => {
+                const w = l.assessment.words[j];
                 return <span key={j} className={`w w--${w.errorType === 'omission' ? 'weak' : tier(w.score)}`}>{word} </span>;
-              }) : l.text}
+              })}
             </div>
-            {l.assessment && <span className={`chip-score chip-score--${tier(l.assessment.overall)}`}>{l.assessment.overall}</span>}
+            <span className={`chip-score chip-score--${tier(l.assessment.overall)}`}>{l.assessment.overall}</span>
           </div>
         ))}
         {thinking && <div className="line line--tutor"><Mascot mood="thinking" size={40} /><div className="bubble bubble--typing"><i /><i /><i /></div></div>}
@@ -159,20 +189,20 @@ export function Conversation() {
 
       <div className="convo__dock">
         {error ? (
-          <ErrorPanel code={error} onRetry={() => { setError(null); if (chosen) void take.start(toItem(chosen), 0); }}
+          <ErrorPanel code={error} onRetry={() => { setError(null); if (chosen) void take.start(chosen, 0); }}
             onUseDemo={() => { setSettings({ demoMic: true }); setError(null); toast(t('practice.demoMic.toast'), '🎛️'); }} />
         ) : !thinking && suggestions.length > 0 && (
           <>
             <p className="convo__hint">{t(!chosen ? 'practice.hint.choose' : take.phase === 'listening' ? 'practice.hint.listening' : take.phase === 'processing' ? 'practice.hint.processing' : 'practice.hint.ready')}</p>
             <div className="convo__replies">
               {suggestions.map((s) => (
-                <button key={s} type="button" className={`reply ${chosen === s ? 'is-on' : ''}`} disabled={take.phase !== 'idle'} onClick={() => { setChosen(s); void voice.speak(s, { accent: p.accent }).catch(() => undefined); }}>
-                  {s}<Icon name="speaker" size={16} />
+                <button key={s.id} type="button" className={`reply ${chosen?.id === s.id ? 'is-on' : ''}`} disabled={take.phase !== 'idle'} onClick={() => { setChosen(s); void say(s); }}>
+                  <LineText it={s} band={p.band} script={p.zhScript} /><Icon name="speaker" size={16} />
                 </button>
               ))}
             </div>
             <MicButton ref={micRef} size={84} state={!chosen ? 'disabled' : take.phase === 'idle' ? 'ready' : take.phase}
-              onPress={() => (take.phase === 'listening' ? void take.stop() : chosen && void take.start(toItem(chosen), 0))} />
+              onPress={() => (take.phase === 'listening' ? void take.stop() : chosen && void take.start(chosen, 0))} />
           </>
         )}
       </div>
@@ -185,14 +215,12 @@ export function Conversation() {
   );
 }
 
-const toItem = (text: string): SpeakItem => ({ id: `say-${text.toLowerCase().replace(/[^a-z]+/g, '-')}`, text, kind: 'sentence' });
-
 function Summary({ lines, scenarioId, title, onSave }: { lines: Line[]; scenarioId: string; title: string; onSave: ReturnType<typeof useStore.getState>['recordConversation'] }) {
   const { t } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
   const saved = useRef(false);
-  const mine = lines.filter((l) => l.assessment).map((l) => l.assessment!);
+  const mine = lines.flatMap((l) => (l.role === 'child' ? [l.assessment] : []));
   const avg = (f: (a: Assessment) => number | undefined) => { const v = mine.map(f).filter((x): x is number => x != null); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : 0; };
   const score = avg((a) => a.overall);
 
@@ -216,6 +244,8 @@ function Summary({ lines, scenarioId, title, onSave }: { lines: Line[]; scenario
   }, []);
 
   const drill = practice.find((ph) => LADDERS[ph]);
+  // A grown-up sees the sound's symbol too — an IPA one; a Mandarin tone or pinyin sound has no symbol worth showing.
+  const withSymbol = (ph: PhonemeId) => isGrownUp(p.band) && !isZhSound(ph);
   return (
     <div className="screen complete">
       <div className="complete__stage">
@@ -227,7 +257,12 @@ function Summary({ lines, scenarioId, title, onSave }: { lines: Line[]; scenario
           <h2><span aria-hidden>💪</span> {t('practice.summary.strong.title')}</h2>
           <ul>{strong.slice(0, 3).map((s) => <li key={s}>{s}</li>)}</ul>
           <h2><span aria-hidden>🎯</span> {t('practice.summary.practise.title')}</h2>
-          {practice.length ? <ul>{practice.map((ph) => <li key={ph}>{t(isGrownUp(p.band) ? 'practice.summary.practise.sound.symbol' : 'practice.summary.practise.sound', { label: phonemeInfo(ph).label, example: phonemeInfo(ph).example, symbol: ph })}</li>)}</ul> : <p>{t('practice.summary.practise.none')}</p>}
+          {practice.length ? <ul>{practice.map((ph) => {
+            const info = phonemeInfo(ph);
+            // A tone is named as a tone ("Tone 3 · low dip"), not as "the ǎ sound".
+            if (info.category === 'tone') return <li key={ph}>{t('practice.summary.practise.tone', { name: info.name, example: info.example })}</li>;
+            return <li key={ph}>{t(withSymbol(ph) ? 'practice.summary.practise.sound.symbol' : 'practice.summary.practise.sound', { label: info.label, example: info.example, symbol: ph })}</li>;
+          })}</ul> : <p>{t('practice.summary.practise.none')}</p>}
         </div>
       </div>
       <div className="complete__dock">

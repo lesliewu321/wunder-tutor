@@ -268,6 +268,13 @@
 .practice-note--check { background: var(--primary-soft); }
 .practice-note--check b { color: var(--primary); }
 .bubble__meaning { display: block; margin-top: 4px; font-weight: 700; }
+/* A conversation line in its own language, and what it means under it. */
+.line-text { display: block; min-width: 0; }
+.reply .line-text { flex: 1; }
+.line-text .zh { line-height: 1.9; }
+/* Pinyin is wider than a character at this size: without a gap the syllables run together (huānyíngguāng). */
+.line-text .zh__char { margin: 0 0.16em; }
+.bubble--me .zh__py { color: inherit; opacity: 0.85; }
 .segmented--2 { grid-template-columns: 1fr 1fr; margin-bottom: 4px; }
 .hint--left { text-align: left; margin: 6px 2px 0; }
 .home__cols, .home__main { display: flex; flex-direction: column; gap: 16px; }

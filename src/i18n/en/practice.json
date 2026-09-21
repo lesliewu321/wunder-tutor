@@ -3,7 +3,6 @@
   "practice.home.title.kid": "Speak with Pip",
   "practice.home.lead.adult": "Pick a place and have a real conversation out loud. Tips come at the end.",
   "practice.home.lead.kid": "Pick a place and have a real conversation out loud. Pip keeps chatting — tips come at the end.",
-  "practice.home.zhNotice": "These conversations are in English for now. Putonghua conversations are coming — keep practising tones in your lessons and the Lab.",
 
   "practice.missing.body": "That conversation isn’t available.",
 
@@ -35,6 +34,7 @@
   "practice.summary.practise.title": "Practise",
   "practice.summary.practise.sound": "the “{label}” sound, as in “{example}”",
   "practice.summary.practise.sound.symbol": "the “{label}” sound, as in “{example}” — /{symbol}/",
+  "practice.summary.practise.tone": "{name}, as in “{example}”",
   "practice.summary.practise.none": "Nothing stood out — every sound was clear!",
   "practice.summary.drill": "2-minute “{label}” drill"
 }
