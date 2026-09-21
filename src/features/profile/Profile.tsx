@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { settingsName, type Accent, type AgeBand, type CourseId, type ParentSettings } from '../../domain/types';
+import { settingsName, type Accent, type AgeBand, type ChildProfile, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
 import { buildRecordingExport, consentText } from '../../data/exportRecordings';
 import { blobToWav16k } from '../../speech/recorder';
@@ -20,6 +20,62 @@ const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', ju
 const COURSES: CourseId[] = ['en', 'zh', 'fr'];
 /** A course's name on the Me card: English carries the accent; Putonghua and French keep their own names. */
 const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { zh: 'settings.me.course.zh', fr: 'settings.me.course.fr' };
+
+/**
+ * The courses row, looking like the dropdowns around it (Leslie, 2026-09-21). It opens a list to tick rather than being
+ * a native <select>: a learner can take more than one course, and a <select> picks one. Changes apply as they are
+ * ticked, like the other rows; the last course left cannot be unticked.
+ */
+function CoursePicker({ p }: { p: ChildProfile }) {
+  const { t } = useT();
+  const patch = useStore((s) => s.patchProfile);
+  const [open, setOpen] = useState(false);
+  // Said after trying to untick the only course left, until the next change.
+  const [keep, setKeep] = useState(false);
+  const id = useId();
+  // Putonghua keeps its own name, in the learner's characters (written in Simplified here); French its own.
+  const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : 'Français');
+  const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'fr' ? 'fr' : undefined);
+  // In the list, what the course's own name may not tell the grown-up reading it.
+  const gloss = (c: CourseId) => (c === 'fr' || (c === 'zh' && language() !== 'zh-Hant') ? t(COURSE_LABEL[c]) : null);
+  const toggle = (c: CourseId) => {
+    const on = p.learning.includes(c);
+    if (on && p.learning.length === 1) { setKeep(true); return; }
+    setKeep(false);
+    const learning = on ? p.learning.filter((x) => x !== c) : [...p.learning, c];
+    patch(p.id, { learning, course: learning.includes(p.course) ? p.course : learning[0] });
+  };
+  const title = t('settings.learning.courses.title', { name: p.name });
+  return (
+    <>
+      <div className="select-row"><span id={`${id}label`}>{t('settings.learning.courses')}</span>
+        <button type="button" className="select-button" aria-haspopup="dialog" aria-expanded={open} aria-labelledby={`${id}label ${id}value`} onClick={() => { setKeep(false); setOpen(true); }}>
+          {/* Three names wrap on a phone: never inside a name (普通話 must not break), and the dot stays with the name before it. */}
+          <span id={`${id}value`}>{COURSES.filter((c) => p.learning.includes(c)).map((c, i, all) => <Fragment key={c}>{i > 0 && ' '}<span className="select-button__name"><span lang={lang(c)}>{name(c)}</span>{i < all.length - 1 && <span aria-hidden>{'\u00a0·'}</span>}</span></Fragment>)}</span>
+        </button>
+      </div>
+      <Sheet open={open} onClose={() => setOpen(false)} label={title}>
+        <div className="course-sheet">
+          <h2>{title}</h2>
+          <div className="course-sheet__list">
+            {COURSES.map((c) => {
+              const on = p.learning.includes(c);
+              const more = gloss(c);
+              return (
+                <button key={c} type="button" className={`tile ${on ? 'is-on' : ''}`} aria-pressed={on} onClick={() => toggle(c)}>
+                  <span><b lang={lang(c)}>{name(c)}</b>{more && <small>{more}</small>}</span>
+                  <span className="tile__tick" aria-hidden>{on && <Icon name="check" size={18} />}</span>
+                </button>
+              );
+            })}
+          </div>
+          <p className={keep ? 'course-sheet__keep' : undefined} role="status">{t(keep ? 'settings.learning.courses.keep' : 'settings.learning.courses.hint')}</p>
+          <Button size="lg" block onClick={() => setOpen(false)}>{t('common.done')}</Button>
+        </div>
+      </Sheet>
+    </>
+  );
+}
 
 export function Me() {
   const nav = useNavigate();
@@ -234,20 +290,7 @@ export function ParentZone() {
           <label className="select-row"><span>{t('settings.learning.age')}</span>
             <select value={p.band === 'adult' ? 18 : p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}<option value={18}>{t('settings.learning.age.adult')}</option></select>
           </label>
-          <div className="select-row"><span>{t('settings.learning.courses')}</span>
-            <span className="course-toggles">
-              {COURSES.map((id) => {
-                const on = p.learning.includes(id);
-                return (
-                  <button key={id} type="button" className={`chip chip--sm ${on ? 'is-on' : ''}`} aria-pressed={on}
-                    onClick={() => { const learning = on ? p.learning.filter((c) => c !== id) : [...p.learning, id]; if (learning.length) patch(p.id, { learning, course: learning.includes(p.course) ? p.course : learning[0] }); }}>
-                    {/* Putonghua keeps its own name, in the learner's characters (written in Simplified here); French its own. */}
-                    {id === 'en' ? t('common.course.en') : id === 'zh' ? inScript('普通话', p.zhScript) : 'Français'}
-                  </button>
-                );
-              })}
-            </span>
-          </div>
+          <CoursePicker p={p} />
           <label className="select-row"><span>{t('settings.learning.accent')}</span>
             <select value={p.accent} onChange={(e) => patch(p.id, { accent: e.target.value as Accent })}><option value="en-US">{t('settings.learning.accent.us')}</option><option value="en-GB">{t('settings.learning.accent.gb')}</option></select>
           </label>

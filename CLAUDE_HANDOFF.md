@@ -2,14 +2,17 @@
 
 ## Start here: Leslie's two requests left open when this session ended
 
-Asked while looking at the Parent Zone on the phone (screenshot showed "Bro's learning"). **Neither is started.**
+Asked while looking at the Parent Zone on the phone (screenshot showed "Bro's learning"). **#1 is done (local commit,
+not deployed, not in the phone build); #2 is not started.**
 
-1. **"courses use dropdown."** The Courses row uses three big pill toggles and, with three courses, 普通话 wraps to one
-   character per line. Every other row there is a dropdown. **Catch:** courses are MULTI-select (`p.learning` is an
-   array; setup says "pick one or both"), and a plain `<select>` is single-select — a straight swap would quietly
-   remove taking two languages at once. Suggested: a control that LOOKS like the other dropdowns ("English · Français
-   ⌄") and opens the existing `Sheet` with a checkbox per course, keeping at least one. `COURSES` in
-   src/features/profile/Profile.tsx. Also visible there: "American (most detailed feedback)" is cut off in its dropdown.
+1. ~~"courses use dropdown."~~ **Done 2026-09-21** (Leslie asked again: "courses in dropdown like age"). `CoursePicker`
+   in src/features/profile/Profile.tsx: a button styled exactly like the other dropdowns ("English · 普通話 · Français
+   ⌄") that opens a `Sheet` with a tick per course — still multi-select, changes apply as ticked, the last course
+   cannot be unticked (the hint turns into a red "At least one course has to stay"). Every `.select-row select` now
+   draws the same arrow (`appearance: none` + `--chevron` in tokens.css, one per theme) so the button can match it on
+   every platform; a name never breaks inside itself when three wrap on a phone. "American (most detailed feedback)"
+   still does not fit a phone, but now ends in "…" instead of being cut mid-word. Three new lines in 繁體中文 are drafts
+   (`settings.learning.courses.title/hint/keep`) — not yet on the Chinese check page.
 2. **"help improve wunder tutor always enabled."** Leslie's phone shows the switch OFF, because a profile set up before
    the box existed is deliberately NOT opted in (they agreed to "recordings stay on this device"). **Ambiguous, and the
    two readings differ in consent, so ask before building:** (a) turn it on for existing users too, still switchable;
@@ -46,7 +49,7 @@ A pronunciation-first language tutor. Core loop:
 
 | Thing | Where |
 | --- | --- |
-| Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — last pushed 2026-09-20 at Leslie's request; **13 commits since are local only** at the end of 2026-09-21 (push only when asked) |
+| Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — last pushed 2026-09-20 at Leslie's request; **15 commits since are local only** at the end of 2026-09-21 (the last one, the Courses dropdown, is not live either) (push only when asked) |
 | App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = main as of 2026-09-21** (commit 516e6d1, verified by bundle hash and `/api/status` ok ×3). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:_CloudDropboxAIWunderTutorwunder-tutor-2026-09-21e.apk` (= main) |
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |

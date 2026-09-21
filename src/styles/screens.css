@@ -237,7 +237,13 @@
 .form-card { background: var(--surface); border-radius: var(--r-md); box-shadow: var(--shadow-card); padding: 2px 16px; margin-bottom: 10px; }
 .select-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; font-weight: 700; }
 .select-row + .select-row { border-top: 1px solid var(--line); }
-.select-row select { border: 0; background: var(--surface-2); border-radius: 12px; padding: 8px 10px; font-weight: 800; color: var(--primary); max-width: 58%; }
+/* A dropdown in a row: the <select>s and the Courses button (which opens a list to tick) look alike, down to the arrow. */
+.select-row select, .select-button {
+  appearance: none; -webkit-appearance: none; border: 0; border-radius: 12px; padding: 8px 30px 8px 10px;
+  background: var(--surface-2) var(--chevron) no-repeat right 8px center / 20px; font-weight: 800; color: var(--primary);
+  max-width: 58%; text-overflow: ellipsis; line-height: 1.3;
+}
+.select-button__name { white-space: nowrap; }
 .select-row b { color: var(--ink-soft); font-size: 0.92rem; text-align: right; }
 .danger-list { display: flex; flex-direction: column; background: var(--surface); border-radius: var(--r-md); box-shadow: var(--shadow-card); margin-top: 12px; overflow: hidden; }
 .danger-list button { display: flex; align-items: center; gap: 12px; min-height: 54px; padding: 0 16px; font-weight: 800; color: var(--weak); }
@@ -264,8 +270,6 @@
 .bubble__meaning { display: block; margin-top: 4px; font-weight: 700; }
 .segmented--2 { grid-template-columns: 1fr 1fr; margin-bottom: 4px; }
 .hint--left { text-align: left; margin: 6px 2px 0; }
-.course-toggles { display: flex; gap: 6px; }
-.chip--sm { min-height: 36px; padding: 0 12px; font-size: 0.9rem; }
 .home__cols, .home__main { display: flex; flex-direction: column; gap: 16px; }
 
 /* ---------- Say it right: type or photograph any text ---------- */
@@ -315,9 +319,13 @@
 .account__row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
 .account__code { letter-spacing: 0.3em; font-variant-numeric: tabular-nums; text-align: center; }
 .access--bad { color: var(--weak); }
-.type-sheet { display: flex; flex-direction: column; gap: 12px; }
-.type-sheet h2 { font-size: 1.3rem; }
-.type-sheet p { color: var(--ink-soft); line-height: 1.45; margin: 0; }
+.type-sheet, .course-sheet { display: flex; flex-direction: column; gap: 12px; }
+.type-sheet h2, .course-sheet h2 { font-size: 1.3rem; }
+.type-sheet p, .course-sheet p { color: var(--ink-soft); line-height: 1.45; margin: 0; }
+.course-sheet__list { display: flex; flex-direction: column; gap: 10px; }
+.course-sheet .course-sheet__keep { color: var(--weak); font-weight: 800; }
+.tile__tick { flex: none; margin-left: auto; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; color: #fff; }
+.tile.is-on .tile__tick { background: var(--primary); border-color: var(--primary); }
 
 /* The camera: full screen on every device */
 .camera { position: fixed; inset: 0; z-index: 70; background: #000; color: #fff; overflow: hidden; }

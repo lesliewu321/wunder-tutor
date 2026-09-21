@@ -11,6 +11,8 @@
   --primary: #6c4df5;
   --primary-deep: #5236d1;
   --primary-soft: #ece7ff;
+  /* The dropdown arrow, drawn in --primary (a picture cannot read the variable, so each theme names its colour). */
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c4df5' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 9.5 12 15l5.5-5.5'/%3E%3C/svg%3E");
   --coral: #ff6b5e;
   --coral-deep: #df4a3e;
   --coral-soft: #ffe6e2;
@@ -81,6 +83,7 @@
   --primary: #8f78ff;
   --primary-deep: #6c4df5;
   --primary-soft: #2f2556;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f78ff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 9.5 12 15l5.5-5.5'/%3E%3C/svg%3E");
   --coral-soft: #4a2230;
   --sun-soft: #43361a;
   --leaf-soft: #173a2a;
