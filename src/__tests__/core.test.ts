@@ -8,7 +8,7 @@ import { applyAssessment, emptyProfile, labOrder, masteredSounds, weakSounds } f
 import { MockPronunciationProvider } from '../speech/mockProvider';
 import { simulatedRecording } from '../speech/recorder';
 import { SpeechError, type AssessContext, type Recording } from '../speech/types';
-import { correctionFor, focusWordIndex } from '../tutor/feedback';
+import { correctionFor, focusWordIndex, soundToDrill } from '../tutor/feedback';
 
 const provider = new MockPronunciationProvider({ latency: false });
 const ctx = (over: Partial<AssessContext> = {}): AssessContext => ({
@@ -123,5 +123,32 @@ describe('learning engine', () => {
     expect(s.count).toBe(2);
     s = bumpStreak(s, d1 + 4 * DAY);
     expect(s).toMatchObject({ count: 1, best: 2 });
+  });
+});
+
+describe('the sound workout after an item', () => {
+  // fromage as Leslie met it: the r at 38 on the first take, fixed to 71 on the retry ("You fixed it!").
+  const take = (overall: number, r: number): Assessment => ({
+    provider: 'test', referenceText: 'fromage', overall, accuracy: overall, fluency: 90, completeness: 100, durationMs: 900,
+    words: [{ word: 'fromage', score: overall, errorType: 'none', syllables: [], phonemes: [['f', 96], ['ʁ', r], ['ɔ', 93], ['m', 97], ['a', 95], ['ʒ', 92]].map(([phoneme, score]) => ({ phoneme: phoneme as string, score: score as number })) }],
+  });
+
+  it('is not given for a sound the learner fixed on the retry', () => {
+    expect(soundToDrill([take(78, 38), take(88, 71)], 'teen', 'yue')).toBeUndefined();
+  });
+
+  it('is given for a sound still wrong after every try', () => {
+    expect(soundToDrill([take(62, 30), take(66, 33), take(70, 34)], 'teen', 'yue')).toBe('ʁ');
+  });
+
+  it('is not given when the first take was already clear', () => {
+    expect(soundToDrill([take(93, 90)], 'teen', 'yue')).toBeUndefined();
+  });
+
+  it('comes from French sounds when the demo microphone scores French', async () => {
+    const a = await provider.assess(simulatedRecording(1), 'croissant', ctx({ itemId: 'fr-croissant', locale: 'fr-FR', homeLanguage: 'yue' }));
+    const sounds = a.words[0].phonemes.map((p) => p.phoneme);
+    expect(sounds).toContain('ʁ');
+    expect(sounds).not.toContain('r');
   });
 });

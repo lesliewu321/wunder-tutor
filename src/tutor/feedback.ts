@@ -2,7 +2,7 @@ import { isGrownUp, type AgeBand, type Assessment, type HomeLanguage, type Phone
 import { phonemeInfo, soundLabel, tipFor } from '../content/phonemes';
 import { markSyllable, parseSyllable } from '../content/zh/pinyin';
 import { unitsFor as zhUnits } from '../speech/zh/assess';
-import { wrongSound } from '../engine/learning';
+import { isMastered, wrongSound } from '../engine/learning';
 import { sentences, t } from '../i18n';
 
 /**
@@ -178,6 +178,23 @@ export const focusWordIndex = (a: Assessment): number => {
   min = GOOD;
   a.words.forEach((w, i) => { if (w.score < min) { min = w.score; idx = i; } });
   return idx;
+};
+
+/**
+ * The sound worth a quick workout once the learner moves on, or undefined. Judged on the LAST take: a learner who fixed
+ * the sound on the retry was told "You fixed it! Every word is clear now." and, when this read the first take, was then
+ * sent to a workout for that very sound — the lesson seemed to refuse to move on (Leslie, French, 78 → 88). A sound
+ * still wrong in the last take is drilled, as it always was, when the item took a retry or was never mastered.
+ */
+export const soundToDrill = (takes: Assessment[], band: AgeBand, home?: HomeLanguage): PhonemeId | undefined => {
+  const last = takes[takes.length - 1];
+  if (!last) return undefined;
+  const i = focusWordIndex(last);
+  const c = i >= 0 ? correctionFor(last.words[i], band, home) : null;
+  if (!c?.phoneme || c.kind === 'fine') return undefined;
+  const stillWrong = c.score < 80 || !isMastered(last, band);
+  const struggled = takes.length > 1 || !takes.some((a) => isMastered(a, band));
+  return stillWrong && struggled ? c.phoneme : undefined;
 };
 
 export const headline = (score: number, band: AgeBand, delta?: number, stillFixable = false): string => {

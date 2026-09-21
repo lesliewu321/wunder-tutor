@@ -70,13 +70,12 @@ export function Home() {
       </div>
 
       {mode === 'book' ? <BookHome p={p} /> : <>
-      <div className="segmented segmented--course" role="group" aria-label={t('home.course.aria')}>
-        {(Object.entries(courseLabel) as [CourseId, string][]).map(([id, label]) => (
-          <button key={id} type="button" className={p.course === id ? 'is-on' : ''} aria-pressed={p.course === id} onClick={() => setCourse(id)}>
-            <span lang={id === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : undefined}>{inScript(label, p.zhScript)}</span>
-          </button>
-        ))}
-      </div>
+      {/* A dropdown, like the settings rows (Leslie, 2026-09-21): side-by-side buttons ran out of room at three courses. */}
+      <label className="course-pick"><span>{t('home.course.aria')}</span>
+        <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
+          {(Object.entries(courseLabel) as [CourseId, string][]).map(([id, label]) => <option key={id} value={id}>{inScript(label, p.zhScript)}</option>)}
+        </select>
+      </label>
 
       {p.course === 'zh' && !p.zhChecked && (
         <button type="button" className="practice-note practice-note--check" onClick={() => nav('/check/zh')}>

@@ -1,6 +1,7 @@
 import type { Assessment, PhonemeScore, Tone, WordScore, ZhSyllable } from '../domain/types';
 import { phonemeInfo } from '../content/phonemes';
 import { textPhones } from '../content/lexicon';
+import { frTokenize, frWordPhones } from '../content/fr/lexicon';
 import { alternativesFor } from '../content/zh/alternatives';
 import { parseSyllable, splitPinyin, surfaceTones } from '../content/zh/pinyin';
 import { unitsFor } from './zh/assess';
@@ -47,7 +48,8 @@ export class MockPronunciationProvider implements PronunciationProvider {
     }
     if (ctx.locale === 'zh-CN' && ctx.zh) return mockZh(referenceText, ctx.zh.py, ctx, rand, a.durationMs, ctx.script === 'hant' ? ctx.zh.hant : undefined);
 
-    const words = textPhones(referenceText, ctx.accent);
+    // French is scored with French sounds: the English lexicon turned croissant into an English r ("closer to /w/").
+    const words = ctx.locale === 'fr-FR' ? frTokenize(referenceText).map(frWordPhones) : textPhones(referenceText, ctx.accent);
     const syllables = words.reduce((n, w) => n + w.syllables.length, 0);
 
     // Completeness: was there enough speech for the whole text? If not, trailing words were dropped.

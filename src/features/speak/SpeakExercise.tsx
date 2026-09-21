@@ -13,7 +13,7 @@ import { hanChars } from '../../content/zh/script';
 import { inEnglish, t } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
 import { useActiveProfile, useStore } from '../../state/store';
-import { correctionFor, focusWordIndex, GOOD, headline, tier, writtenWords } from '../../tutor/feedback';
+import { correctionFor, focusWordIndex, GOOD, headline, soundToDrill, tier, writtenWords } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
 import { Button, ScoreRing, toast } from '../../ui/kit';
 import { Mascot, type Mood } from '../../ui/Mascot';
@@ -143,9 +143,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     // The onboarding check only seeds the pronunciation profile; it doesn't count as studying the item.
     if (mode === 'practice') finishItem(item, best, everMastered, takes.length);
     const first = takes[0].assessment;
-    const fi = focusWordIndex(first);
-    const c = fi >= 0 ? correctionFor(first.words[fi], band, profile.homeLanguage) : null;
-    onDone({ best, first: first.overall, mastered: everMastered, tries: takes.length, troubleSound: takes.length > 1 || !everMastered ? c?.phoneme : undefined });
+    onDone({ best, first: first.overall, mastered: everMastered, tries: takes.length, troubleSound: soundToDrill(takes.map((tk) => tk.assessment), band, profile.homeLanguage) });
   };
 
   const busy = take.phase !== 'idle';
