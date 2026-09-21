@@ -19,7 +19,9 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   and Continue opened a workout for that same r — the drill was picked from the FIRST take. Now `soundToDrill`
   (tutor/feedback.ts, tested) picks from the last take. The demo microphone also scored French with the English
   lexicon; fixed.
-- **Home course switcher → dropdown** (`.course-pick` in Home.tsx), like the settings rows.
+- **Home course switcher → dropdown** (`.course-pick` in Home.tsx), like the settings rows. Later (14:45, commit 81ae290,
+  phone build 2026-09-21i, NOT deployed to the web yet): it lists only the learner's own courses (chosen in Settings) and
+  disappears when there is one — Leslie: "even if I select only 2 languages in settings, all 4 appear in front page".
 - **Conversations follow the course** (`scenariosFor(p.course)`): three scenes per course, lines are speakable items in
   the course's language (voice, scorer, pinyin/furigana all follow). zh/scenarios.ts (小文), fr/scenarios.ts (Léo, 40
   words added to the French lexicon), ja/scenarios.ts (ゆい). The live Claude tutor stays English-only. Mandarin lines
