@@ -7,7 +7,13 @@ chinese, french and japanese"). All in phone build `C:/_Cloud/Dropbox/AI/WunderT
 **Deployed at Leslie's OK, 2026-09-21 14:32** (Pages deployment 717e8c93): app.wundertutor.com serves index-CHaFx5l2.js
 (contains the Japanese course), /api/status ok ×3, phone preflight 204. Before it, the phone showed "The teacher can't
 say this one" on every Japanese line — the old server refused Japanese text (invalid_text) and locale ja-JP. Japanese
-spoken and scored on a real phone NOT yet seen: that is the first thing to check.
+spoken and scored on a real phone NOT yet seen: that is the first thing to check. **Checked live with Leslie's invite
+code (14:35, no /api/redeem, so no place taken):** Japanese voice ok (ぎょうざ was already cached — the phone had made
+it), Japanese scoring ok (切手 96, 水をください 94 via /api/assess ja-JP), Mandarin and French conversation lines ok —
+except "Bonjour ! Tu as faim ?", refused twice: the voice GLITCHES now and then (locally a 19.6 s take whose
+transcript stopped at "Bonjour ! Tu"), and the server waited each glitch out and gave up after two takes. Fixed and
+**deployed 14:41** (deployment 7ad44a55, commit 23f55d2): a take running longer than the line could is cut off, and a
+glitch gets another take, up to three (server/tts.mjs, tested with a fake voice). The line then played live.
 
 - **French "would not proceed even at 88%"** (fromage 78 → 88): the retry fixed the r, the screen said "You fixed it!",
   and Continue opened a workout for that same r — the drill was picked from the FIRST take. Now `soundToDrill`
