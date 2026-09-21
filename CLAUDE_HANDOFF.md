@@ -1,6 +1,40 @@
 # Wunder Tutor — handoff (2026-09-21)
 
-## Start here: Leslie's two requests left open when this session ended
+## Start here: 2026-09-21 afternoon — Japanese, and conversations in every course (local commits, NOT deployed)
+
+Built at Leslie's request ("add japanese lessons for 5-adult … conversation need to follow language selected — eng,
+chinese, french and japanese"). All in phone build `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk`.
+**Japanese needs `npm run deploy` before it works on the phone or the web**: the live server still refuses locale
+ja-JP for scoring and Japanese text for the voice (server/core.mjs `LOCALES`, server/tts.mjs). Everything else below
+works against the live server as it is. Ask Leslie before deploying.
+
+- **French "would not proceed even at 88%"** (fromage 78 → 88): the retry fixed the r, the screen said "You fixed it!",
+  and Continue opened a workout for that same r — the drill was picked from the FIRST take. Now `soundToDrill`
+  (tutor/feedback.ts, tested) picks from the last take. The demo microphone also scored French with the English
+  lexicon; fixed.
+- **Home course switcher → dropdown** (`.course-pick` in Home.tsx), like the settings rows.
+- **Conversations follow the course** (`scenariosFor(p.course)`): three scenes per course, lines are speakable items in
+  the course's language (voice, scorer, pinyin/furigana all follow). zh/scenarios.ts (小文), fr/scenarios.ts (Léo, 40
+  words added to the French lexicon), ja/scenarios.ts (ゆい). The live Claude tutor stays English-only. Mandarin lines
+  were run through the real teacher-voice gate: 95/98 passed; 我喜欢！ and 你好，小文！ are refused every time and were
+  replaced; 你看，那边有什么？ passed only on a retry (flaky — rephrase if a phone shows it silent).
+- **Japanese course** (src/content/ja/): kana.ts (beats, romaji with macrons, sounds per beat, `{漢字|かな}` markup with
+  spaces marking words for the romaji only; `writtenKana` for display — は, never the わ it is said as), sounds.ts (nine:
+  ja:long, ja:Q, ja:N, ja:r, ja:ts, ja:f, ja:z, ja:voiced, ja:y), course.ts (unit "Yummy Food おいしい", 7 lessons × 3
+  bands, ladders, check items), speech/ja/assess.ts (lines Azure's unnamed ja-JP scores up with our beats: by sound if
+  exactly one variant fits, else by syllable, else no names). UI: `ItemText`/`JaText` (furigana, kana-only for 5–7,
+  romaji) and `JaBeats` (results coloured per beat). Azure probe (scratchpad, 2026-09-21): it names nothing, splits
+  words its own way, catches a shortened おばあさん (42) and a missing っ (51), but NOT voicing (が→か 84) or every long
+  vowel (ビル for ビール 96). Teacher voice: 39/40 sampled Japanese lines voiced locally; the 40th hit **Google's quota
+  ("Resource has been exhausted") — this session made many Gemini calls on the key the live app also uses**.
+- Fixed for every course on the way: Review/"due" count and the course check/setup plan split items and sounds into
+  "Mandarin / everything else" (a French review could serve English words) → `itemCourse`, `unitCourse`, `inCourse`;
+  Lab and drill intro spoke French examples in the English voice → `soundLocale`; unit badges for fr-cafe and ja-food.
+- Open: French already has unit 1 for every age — Leslie also said "add 5-adult lessons for french too"; ask whether
+  that means a second unit (the locked ones are Out and About, People, At Work). French course/lesson/sound names have
+  no Traditional Chinese yet (Japanese has all of it). The new zh-Hant lines are drafts, not on the Chinese check page.
+
+## Earlier today: Leslie's two requests from the Parent Zone
 
 Asked while looking at the Parent Zone on the phone (screenshot showed "Bro's learning"). **#1 is done (local commit,
 not deployed; in phone build 2026-09-21f); #2 is not started.**
@@ -50,7 +84,7 @@ A pronunciation-first language tutor. Core loop:
 | Thing | Where |
 | --- | --- |
 | Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — last pushed 2026-09-20 at Leslie's request; **15 commits since are local only** at the end of 2026-09-21 (the last one, the Courses dropdown, is not live either) (push only when asked) |
-| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = commit 516e6d1 of 2026-09-21** (verified by bundle hash and `/api/status` ok ×3); main has only the Courses dropdown on top (screen only, no server change). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21f.apk` (= main with the Courses dropdown, built 11:37; `npm run app:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` there with the next letter) |
+| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = commit 516e6d1 of 2026-09-21** (verified by bundle hash and `/api/status` ok ×3). Main is ahead: the Courses dropdown, the French drill fix, conversations per course, and Japanese (server change: ja-JP scoring and voice). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk` (= main with Japanese and course-aware conversations, built 13:38 — Japanese needs a deploy to work; `npm run app:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` there with the next letter) |
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
