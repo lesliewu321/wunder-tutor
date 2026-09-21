@@ -43,6 +43,7 @@
   "home.path.upNext": "接下來",
   "home.path.ready": "可以開始",
   "home.path.locked": "先完成「{title}」",
+  "home.path.soon": "即將推出",
   "home.path.done.aria": "已完成",
   "home.path.stars.aria.other": "{n} 顆星",
   "home.book.notice.noCodeSet": "這個 Wunder Tutor 伺服器尚未設定邀請碼，因此無法閱讀相片。輸入英文文字則可以照常練習。",

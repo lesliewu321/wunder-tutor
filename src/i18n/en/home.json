@@ -45,6 +45,7 @@
   "home.path.upNext": "Up next",
   "home.path.ready": "Ready",
   "home.path.locked": "Finish “{title}” first",
+  "home.path.soon": "Coming soon",
   "home.path.done.aria": "Done",
   "home.path.stars.aria.one": "{n} star",
   "home.path.stars.aria.other": "{n} stars",

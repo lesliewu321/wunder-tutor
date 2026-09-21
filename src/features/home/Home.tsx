@@ -135,7 +135,9 @@ export function Home() {
         <ol className="path__list">
           {unit.lessons.map((l, i) => {
             const done = p.lessonsCompleted[l.id];
-            const unlocked = i === 0 || !!p.lessonsCompleted[unit.lessons[i - 1].id];
+            // Children follow the path one lesson at a time. Grown-ups may open any lesson; "Up next" still shows the way
+            // (Leslie, 2026-09-21: kids in order, grown-ups free).
+            const unlocked = p.band === 'adult' || i === 0 || !!p.lessonsCompleted[unit.lessons[i - 1].id];
             const current = l.id === nextId;
             return (
               <li key={l.id}>
@@ -148,8 +150,9 @@ export function Home() {
             );
           })}
         </ol>
+        {/* Units still being written. Nothing a learner does opens them, so no padlock (Leslie asked why they were locked). */}
         {COURSE.units.slice(1).map((u) => (
-          <div key={u.id} className="unit-locked"><span className="unit-locked__icon">{u.icon}</span><span><b>{unitTitle(u, p.band)}</b><small>{unitSubtitle(u, p.band)}</small></span><Icon name="lock" size={20} /></div>
+          <div key={u.id} className="unit-soon"><span className="unit-soon__icon" aria-hidden>{u.icon}</span><span><b>{unitTitle(u, p.band)}</b><small>{unitSubtitle(u, p.band)}</small></span><span className="unit-soon__tag">{t('home.path.soon')}</span></div>
         ))}
       </section>
       </div>

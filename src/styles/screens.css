@@ -82,10 +82,11 @@
 .node__stars i { font-style: normal; color: var(--line); }
 .node__go { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; padding-left: 2px; }
 .node__go--done { background: var(--good-soft); color: var(--good); padding-left: 0; }
-.unit-locked { display: flex; align-items: center; gap: 14px; padding: 14px; margin-top: 10px; border-radius: var(--r-lg); border: 2px dashed var(--line); color: var(--ink-faint); }
-.unit-locked b { display: block; color: var(--ink-soft); font-family: var(--font-display); }
-.unit-locked span:nth-child(2) { flex: 1; }
-.unit-locked__icon { font-size: 1.8rem; filter: grayscale(0.7); opacity: 0.8; }
+.unit-soon { display: flex; align-items: center; gap: 14px; padding: 14px; margin-top: 10px; border-radius: var(--r-lg); border: 2px dashed var(--line); color: var(--ink-faint); }
+.unit-soon b { display: block; color: var(--ink-soft); font-family: var(--font-display); }
+.unit-soon span:nth-child(2) { flex: 1; min-width: 0; }
+.unit-soon__icon { font-size: 1.8rem; filter: grayscale(0.7); opacity: 0.8; }
+.unit-soon__tag { flex: none; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft); font-size: 0.78rem; font-weight: 800; white-space: nowrap; }
 
 /* ---------- Lab ---------- */
 .sound-list, .scenario-list { display: flex; flex-direction: column; gap: 10px; }
