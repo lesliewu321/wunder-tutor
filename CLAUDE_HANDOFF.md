@@ -15,6 +15,10 @@ transcript stopped at "Bonjour ! Tu"), and the server waited each glitch out and
 **deployed 14:41** (deployment 7ad44a55, commit 23f55d2): a take running longer than the line could is cut off, and a
 glitch gets another take, up to three (server/tts.mjs, tested with a fake voice). The line then played live.
 
+- **Locked lessons (16:40, commit 62e17df, phone build 2026-09-21j, NOT deployed):** Leslie asked "WHY SOME ARE
+  LOCKED" and chose: children keep the lessons in order ("Finish X first"); grown-ups (band `adult`) may open any lesson,
+  "Up next" still marks the first unfinished one. The unwritten future units lost their padlock and say "Coming soon" /
+  即將推出 (`.unit-soon` in Home.tsx). Checked in a separate preview: child vs grown-up, phone size, dark, 繁體中文.
 - **French "would not proceed even at 88%"** (fromage 78 → 88): the retry fixed the r, the screen said "You fixed it!",
   and Continue opened a workout for that same r — the drill was picked from the FIRST take. Now `soundToDrill`
   (tutor/feedback.ts, tested) picks from the last take. The demo microphone also scored French with the English
