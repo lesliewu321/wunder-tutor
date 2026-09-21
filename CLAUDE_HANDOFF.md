@@ -20,7 +20,7 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   (tutor/feedback.ts, tested) picks from the last take. The demo microphone also scored French with the English
   lexicon; fixed.
 - **Home course switcher → dropdown** (`.course-pick` in Home.tsx), like the settings rows. Later (14:45, commit 81ae290,
-  phone build 2026-09-21i, NOT deployed to the web yet): it lists only the learner's own courses (chosen in Settings) and
+  phone build 2026-09-21i, deployed 14:48 as b61fdc81 — index-B89G6MeO, /api/status ok ×3, preflight 204): it lists only the learner's own courses (chosen in Settings) and
   disappears when there is one — Leslie: "even if I select only 2 languages in settings, all 4 appear in front page".
 - **Conversations follow the course** (`scenariosFor(p.course)`): three scenes per course, lines are speakable items in
   the course's language (voice, scorer, pinyin/furigana all follow). zh/scenarios.ts (小文), fr/scenarios.ts (Léo, 40
@@ -93,7 +93,7 @@ A pronunciation-first language tutor. Core loop:
 | Thing | Where |
 | --- | --- |
 | Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — last pushed 2026-09-20 at Leslie's request; **15 commits since are local only** at the end of 2026-09-21 (the last one, the Courses dropdown, is not live either) (push only when asked) |
-| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = main as of 2026-09-21 14:32** (commit 366cf24, deployment 717e8c93, verified by bundle hash, `/api/status` ok ×3 and the phone preflight). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk` (= main with Japanese and course-aware conversations, built 13:38 — Japanese needs a deploy to work; `npm run app:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` there with the next letter) |
+| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = main as of 2026-09-21 14:48** (commit f562955, deployment b61fdc81, verified by bundle hash, `/api/status` ok ×3 and the phone preflight). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk` (= main with Japanese and course-aware conversations, built 13:38 — Japanese needs a deploy to work; `npm run app:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` there with the next letter) |
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
