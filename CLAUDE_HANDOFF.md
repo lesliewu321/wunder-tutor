@@ -3,7 +3,7 @@
 ## Start here: Leslie's two requests left open when this session ended
 
 Asked while looking at the Parent Zone on the phone (screenshot showed "Bro's learning"). **#1 is done (local commit,
-not deployed, not in the phone build); #2 is not started.**
+not deployed; in phone build 2026-09-21f); #2 is not started.**
 
 1. ~~"courses use dropdown."~~ **Done 2026-09-21** (Leslie asked again: "courses in dropdown like age"). `CoursePicker`
    in src/features/profile/Profile.tsx: a button styled exactly like the other dropdowns ("English · 普通話 · Français
@@ -50,7 +50,7 @@ A pronunciation-first language tutor. Core loop:
 | Thing | Where |
 | --- | --- |
 | Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — last pushed 2026-09-20 at Leslie's request; **15 commits since are local only** at the end of 2026-09-21 (the last one, the Courses dropdown, is not live either) (push only when asked) |
-| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = main as of 2026-09-21** (commit 516e6d1, verified by bundle hash and `/api/status` ok ×3). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:_CloudDropboxAIWunderTutorwunder-tutor-2026-09-21e.apk` (= main) |
+| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = commit 516e6d1 of 2026-09-21** (verified by bundle hash and `/api/status` ok ×3); main has only the Courses dropdown on top (screen only, no server change). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21f.apk` (= main with the Courses dropdown, built 11:37; `npm run app:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` there with the next letter) |
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
