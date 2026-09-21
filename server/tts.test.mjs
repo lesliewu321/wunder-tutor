@@ -17,9 +17,11 @@ function fakeLive(script) {
         if (msg.setup) { log.setups.push(msg.setup); reply({ setupComplete: {} }); return; }
         const prompt = msg.clientContent.turns[0].parts[0].text;
         log.prompts.push(prompt);
-        const said = script(prompt, session);
-        const pcm = Buffer.alloc(4800); // 100 ms of 24 kHz audio
-        for (let i = 400; i < 2000; i++) pcm.writeInt16LE(6000, i * 2);
+        const answer = script(prompt, session);
+        const said = typeof answer === 'string' ? answer : answer.said;
+        const seconds = typeof answer === 'string' ? 0.1 : answer.seconds;
+        const pcm = Buffer.alloc(Math.round(24000 * seconds) * 2); // 100 ms of 24 kHz audio unless the script says otherwise
+        for (let i = 400; i < Math.min(2000, pcm.length / 2); i++) pcm.writeInt16LE(6000, i * 2);
         reply({ serverContent: { modelTurn: { parts: [{ inlineData: { mimeType: 'audio/pcm;rate=24000', data: pcm.toString('base64') } }] }, outputTranscription: { text: said } } });
         reply({ serverContent: { turnComplete: true } });
       },
@@ -55,6 +57,22 @@ describe('Gemini Live teacher voice', () => {
     await tts.speak({ text: 'three red apples', accent: 'en-US' });
     expect(live.log.sessions).toBe(2);
     expect(live.log.setups[1].systemInstruction.parts[0].text).toMatch(/Say ONLY the text/);
+  });
+
+  it('cuts off a take that runs on far past the line, and tries again (the live Bonjour ! Tu as faim ?)', async () => {
+    const live = fakeLive((prompt, session) => (session === 0 ? { said: 'Bonjour ! Tu', seconds: 19.6 } : prompt.replace('SAY: ', '')));
+    const { wav } = await createTts({ apiKey: 'k', connect: live.connect }).speak({ text: 'Bonjour ! Tu as faim ?', accent: 'fr-FR' });
+    expect(wav.subarray(0, 4).toString()).toBe('RIFF');
+    expect(live.log.sessions).toBe(2);
+  });
+
+  it('gets a third try when the first two glitch, and no more', async () => {
+    const glitchTwice = fakeLive((prompt, session) => (session < 2 ? { said: 'Bon', seconds: 30 } : prompt.replace('SAY: ', '')));
+    await createTts({ apiKey: 'k', connect: glitchTwice.connect }).speak({ text: 'Tu veux du lait ?', accent: 'fr-FR' });
+    expect(glitchTwice.log.sessions).toBe(3);
+    const glitchAlways = fakeLive(() => ({ said: 'Bon', seconds: 30 }));
+    await expect(createTts({ apiKey: 'k', connect: glitchAlways.connect }).speak({ text: 'Tu veux du lait ?', accent: 'fr-FR' })).rejects.toMatchObject({ code: 'tts_mismatch' });
+    expect(glitchAlways.log.sessions).toBe(3);
   });
 
   it('refuses to serve a reference take that still does not match', async () => {

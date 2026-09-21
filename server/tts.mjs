@@ -2,8 +2,9 @@
 //
 // A Live model is a conversational model, not a TTS engine, so three things keep it honest:
 //   1. the system instruction allows nothing but the requested words,
-//   2. the model's own output transcription is checked against the request (retry once, then fail —
-//      a reference pronunciation that ad-libs is worse than none; the app falls back to device TTS),
+//   2. the model's own output transcription is checked against the request (up to three takes, then fail —
+//      a reference pronunciation that ad-libs is worse than none; the app falls back to device TTS), and a take
+//      that runs on far longer than the line could (the model glitching) is cut off and tried again,
 //   3. accepted audio is cached on disk, so every learner hears the same take and each phrase is
 //      generated (and paid for) once.
 //
@@ -170,7 +171,7 @@ const decodeFrame = (data) => (typeof data === 'string' ? data : Buffer.from(dat
  * (Cloudflare's fetch-upgrade sockets are open by the time they are handed over). Default: the runtime's
  * WebSocket (Node 22+).
  */
-export async function synthesizeOnce({ apiKey, model, voiceName, text, accent, slow, kind, endpoint, connect, timeoutMs = 25_000, firm = false }) {
+export async function synthesizeOnce({ apiKey, model, voiceName, text, accent, slow, kind, endpoint, connect, timeoutMs = 25_000, firm = false, maxAudioSeconds = Infinity }) {
   const open = connect ?? ((url) => new WebSocket(url));
   let ws;
   let alreadyOpen = false;
@@ -186,6 +187,7 @@ export async function synthesizeOnce({ apiKey, model, voiceName, text, accent, s
   return new Promise((resolvePromise, reject) => {
 
     const chunks = [];
+    let bytes = 0;
     let transcript = '';
     let rate = OUTPUT_RATE;
     let settled = false;
@@ -229,7 +231,12 @@ export async function synthesizeOnce({ apiKey, model, voiceName, text, accent, s
         const inline = part.inlineData;
         if (inline?.data && String(inline.mimeType ?? '').startsWith('audio/pcm')) {
           rate = Number(/rate=(\d+)/.exec(inline.mimeType)?.[1]) || rate;
-          chunks.push(Buffer.from(inline.data, 'base64'));
+          const chunk = Buffer.from(inline.data, 'base64');
+          chunks.push(chunk);
+          bytes += chunk.length;
+          // A glitching voice streams on long after the line is said (19.6 s of audio for a 2 s line, the transcript
+          // stopping at the second word): stop listening instead of waiting it out, so there is time to try again.
+          if (bytes / 2 / rate > maxAudioSeconds) { finish(new TtsError('gemini_runaway')); return; }
         }
       }
       if (sc.outputTranscription?.text) transcript += sc.outputTranscription.text;
@@ -273,6 +280,9 @@ export function toWav16k(pcm, rate) {
  *   Optional quality gate for a new take (the server wires Azure scoring in for Mandarin): a take whose tones or
  *   sounds don't score as the text is rejected, exactly like one that ad-libbed.
  */
+/** Failures of one take that the next take may not repeat (the model, not the key or the network). */
+const GLITCHES = new Set(['gemini_runaway', 'gemini_timeout', 'gemini_no_audio']);
+
 export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, verify, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
   const inflight = new Map();
   let windowStart = Date.now();
@@ -284,9 +294,20 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     // A small budget guard: this endpoint fronts a paid API.
     if (Date.now() - windowStart > windowMs) { windowStart = Date.now(); generated = 0; }
     if (generated >= maxGenerationsPerWindow) throw new TtsError('tts_budget_exceeded', 429);
-    for (const firm of [false, true]) {
+    // Longer than any clean take of this line could be (a line of n characters takes well under 0.35 s each).
+    const maxAudioSeconds = (req.slow ? 2 : 1) * (4 + [...req.text].length * 0.35);
+    // Three tries: a take that ad-libs, fails the Mandarin gate or glitches is followed by a firmer one. A glitch used to
+    // end the request outright (a timeout was thrown, not retried), and two in a row silenced a line that the voice
+    // says perfectly well the next time — Bonjour ! Tu as faim ? on the live app, 2026-09-21.
+    for (const firm of [false, true, true]) {
       generated += 1;
-      const out = await synthesizeOnce({ apiKey, model, voiceName, endpoint, connect, firm, ...req });
+      let out;
+      try {
+        out = await synthesizeOnce({ apiKey, model, voiceName, endpoint, connect, firm, maxAudioSeconds, ...req });
+      } catch (e) {
+        if (e instanceof TtsError && GLITCHES.has(e.code)) continue;
+        throw e;
+      }
       if (!transcriptMatches(req.text, out.transcript)) continue;
       const pcm = trimSilence(out.pcm, out.sampleRate);
       if (verify && req.accent === 'zh-CN') {
