@@ -56,6 +56,18 @@ export function buildInstruction({ accent, slow, kind }) {
         : 'Speak at a calm, natural pace, with the liaisons a French speaker would naturally make.',
     ].join(' ');
   }
+  if (accent === 'ja-JP') {
+    return [
+      'You are the recorded model voice inside a pronunciation app for children learning Japanese.',
+      'Each user message is one line starting with "SAY:". Speak exactly the Japanese text after "SAY:", once, in clear, warm, standard Japanese (Tokyo), as on a school recording.',
+      // The beats a learner is listening for, and the ones a generative voice is most likely to rush.
+      'Give every beat its full length: hold long vowels (ー, おばあさん) for two beats, keep the small っ as a clear pause, and give ん a beat of its own. Use the flapped Japanese r.',
+      'Never add, remove or change a word. No greeting, no comment, no question, no English, no sound effects.',
+      slow
+        ? 'Speak slowly and deliberately, about half normal speed, beat by beat, without distorting any sound.'
+        : 'Speak at a calm, natural pace.',
+    ].join(' ');
+  }
   const accentName = accent === 'en-GB' ? 'standard southern British English' : 'General American English';
   return [
     'You are the recorded model voice inside a pronunciation app for children learning English.',
@@ -84,7 +96,18 @@ export const tokens = (s) =>
  */
 const han = (s) => [...String(s)].filter((c) => /\p{Script=Han}/u.test(c));
 
+const kana = (s) => [...String(s)].filter((c) => /[\p{Script=Hiragana}\p{Script=Katakana}ー]/u.test(c));
+
 export function transcriptMatches(expected, heard) {
+  if (kana(expected).length) {
+    // Japanese: the transcript may write a word in kanji that the line has in kana (みず / 水), or the reverse, so it
+    // cannot be compared letter by letter — only checked for what must never be served: English, or a lot of extra
+    // speech (a greeting, a comment).
+    if (!String(heard).trim()) return true;
+    if (/[a-z]{3,}/i.test(heard)) return false;
+    const size = (t) => kana(t).length + han(t).length * 2;
+    return size(heard) <= size(expected) * 2 + 2;
+  }
   if (han(expected).length) {
     // Mandarin: the transcript may use Traditional forms or a homophone for a lone syllable, so compare loosely —
     // but never accept extra speech (a greeting, a comment in English).
@@ -283,9 +306,10 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     if (text.length > MAX_TTS_CHARS) throw new TtsError('text_too_long', 400);
     const locale = input.locale ?? input.accent;
     const zh = locale === 'zh-CN';
-    if (zh ? !han(text).length : !/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
+    const ja = locale === 'ja-JP';
+    if (ja ? !kana(text).length && !han(text).length : zh ? !han(text).length : !/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
     const fr = locale === 'fr-FR';
-    const req = { text, accent: zh ? 'zh-CN' : fr ? 'fr-FR' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !zh && !fr && input.kind === 'syllable' ? 'syllable' : undefined };
+    const req = { text, accent: zh ? 'zh-CN' : ja ? 'ja-JP' : fr ? 'fr-FR' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !zh && !fr && !ja && input.kind === 'syllable' ? 'syllable' : undefined };
     const key = keyFor(req);
     // A learner's own text (a photographed page may hold a name) is not written to the shared cache.
     const keep = cache && !input.ephemeral;

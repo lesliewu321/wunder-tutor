@@ -8,7 +8,7 @@ import { useActiveProfile } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, toast } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
-import { ZhText } from '../../ui/ZhText';
+import { ItemText } from '../../ui/ItemText';
 
 type ChoiceEx = Extract<Exercise, { type: 'choose-heard' | 'minimal-pair' }>;
 
@@ -79,7 +79,7 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
             return (
               <button key={o.id} type="button" className={`option option--${state} ${o.picture && o.text.length <= 14 ? '' : 'option--text'}`} onClick={() => choose(o)} disabled={wrong.includes(o.id)}>
                 {o.picture && <span className="option__pic" aria-hidden>{o.picture}</span>}
-                {showText && <span className="option__text">{o.zh ? <ZhText item={o} script={profile.zhScript} /> : o.text}</span>}
+                {showText && <span className="option__text"><ItemText item={o} band={profile.band} script={profile.zhScript} /></span>}
                 {!showText && <span className="sr-only">{o.text}</span>}
               </button>
             );

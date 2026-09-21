@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiHealth, type ApiHealth } from '../../speech';
-import { courseFor, courseTitle, lessonTitle, unitSubtitle, unitTitle } from '../../content/course';
+import { courseFor, courseTitle, ITEM_INDEX, lessonTitle, unitSubtitle, unitTitle } from '../../content/course';
 import { inScript } from '../../content/zh/script';
 import { isLongLabel, phonemeInfo } from '../../content/phonemes';
-import { dueItems, nextLessonId } from '../../engine/learning';
+import { dueItems, itemCourse, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
 import { focusSound, weakSoundsIn } from '../../intelligence/profile';
 import { useActiveProfile, useStore } from '../../state/store';
@@ -34,7 +34,8 @@ export function Home() {
   const focus = focusSound(p.pronunciation, p.homeLanguage, p.course);
   const focusInfo = phonemeInfo(focus);
   const measured = weakSoundsIn(p.pronunciation, p.course).some((s) => s.phoneme === focus);
-  const due = dueItems(p, Date.now()).filter((d) => d.itemId.startsWith('zh-') === (p.course === 'zh')).length;
+  // What this course's Review would hand out: items of this course that a review can find (buildReview).
+  const due = dueItems(p, Date.now()).filter((d) => { const it = ITEM_INDEX[d.itemId]; return !!it && itemCourse(it) === p.course; }).length;
   const review = unit.lessons[unit.lessons.length - 1];
   const { mode, setMode, pages } = useBook(p.id);
   const [api, setApi] = useState<ApiHealth | null>(null);
@@ -42,7 +43,7 @@ export function Home() {
   // Never let simulated scores pass for real ones.
   const practiceMode = api !== null && !api.azure;
   // The Putonghua course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
-  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', fr: 'Français' };
+  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', fr: 'Français', ja: '日本語 Japanese' };
 
   return (
     <div className="screen home">

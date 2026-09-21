@@ -6,6 +6,7 @@ import { alternativeRequests } from '../content/zh/alternatives';
 import { apiFetch, deviceId } from './health';
 import { speakerMedian, type PitchTrack } from './pitch';
 import { SpeechError, type AssessContext, type PronunciationProvider, type Recording } from './types';
+import { nameJapanese } from './ja/assess';
 import { assessZh, readCharacters, type AzureZhResponse } from './zh/assess';
 import { cutWav } from './wav';
 import type { SpeakerRef } from './zh/tone';
@@ -46,6 +47,8 @@ const namePhonemes = (word: string, scored: PhonemeScore[], locale: Locale): Pho
   if (!scored.length || scored.some((p) => p.phoneme)) return scored;
   // French is the same gap as British English — scores arrive, names do not — so it is named the same way, from its
   // own lexicon (src/content/fr/lexicon.ts). A word neither lexicon knows yields no candidates and stays unnamed.
+  // Japanese is named for the whole line at once, after mapping (ja/assess.ts): its words are Azure's own splits.
+  if (locale === 'ja-JP') return scored;
   const candidates = locale === 'fr-FR' ? frAlignmentCandidates(word) : alignmentCandidates(word, locale as Accent);
   const fit = candidates.find((c) => c.phonemes.length === scored.length);
   if (!fit) return scored;
@@ -270,10 +273,13 @@ export class AzurePronunciationProvider implements PronunciationProvider {
   async assess(rec: Recording, referenceText: string, ctx: AssessContext): Promise<Assessment> {
     if (!rec.wav) throw new SpeechError('service', 'no audio to assess');
     const zh = ctx.locale === 'zh-CN' && ctx.zh ? ctx.zh : null;
+    const ja = ctx.locale === 'ja-JP' && ctx.ja ? ctx.ja : null;
+    // English 'likely mistakes' are English words: never checked against a French or Japanese line.
+    const english = ctx.locale === 'en-US' || ctx.locale === 'en-GB';
     // Extra scorings for accuracy: the take against likely mistakes ("what did it sound like instead"), and for
     // British takes the same take as US English (named sounds, and "heard as" for sounds both accents share).
     const alts = zh ? alternativeRequests(referenceText, zh.py, ctx.focus) : [];
-    const enAlts = zh ? [] : englishAlternatives(referenceText, ctx.focus, ctx.accent, ctx.homeLanguage);
+    const enAlts = english ? englishAlternatives(referenceText, ctx.focus, ctx.accent, ctx.homeLanguage) : [];
     const altTexts = zh ? alts.map((a) => a.text) : enAlts.map((a) => a.text);
     const units = zh ? [...referenceText].filter((c) => /\p{Script=Han}/u.test(c)) : tokenize(referenceText);
     // More than one word: score the take first, then each checked word's clip (in parallel) — see CLIP_CHECKS.
@@ -334,7 +340,8 @@ export class AzurePronunciationProvider implements PronunciationProvider {
       : enAlts.map((alt, i) => ({ alt, json: body.alts?.[i] }));
     // The locale, not the accent: for a French take they differ, and it is the locale that says which lexicon names
     // the sounds. For an English take the two are the same thing (`localeOf` falls back to the accent).
-    return mapAzure(main, referenceText, rec.analysis.durationMs, ctx.locale, body.us ?? undefined, enResults);
+    const assessed = mapAzure(main, referenceText, rec.analysis.durationMs, ctx.locale, body.us ?? undefined, enResults);
+    return ja ? { ...assessed, words: nameJapanese(assessed.words, ja) } : assessed;
   }
 }
 

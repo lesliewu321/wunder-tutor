@@ -11,11 +11,11 @@ const linesOf = (s: Scenario): SpeakItem[] => [
   ...s.turns.flatMap((t) => BANDS.flatMap((b) => [t.tutor[b], ...t.replies[b]])),
   ...BANDS.map((b) => s.closing[b]),
 ];
-const LANG: Record<CourseId, SpeakItem['lang']> = { en: undefined, zh: 'zh-CN', fr: 'fr-FR' };
+const LANG: Record<CourseId, SpeakItem['lang']> = { en: undefined, zh: 'zh-CN', fr: 'fr-FR', ja: 'ja-JP' };
 
 describe('conversations follow the course being learned', () => {
   it('gives every course its own three scenes', () => {
-    for (const course of ['en', 'zh', 'fr'] as CourseId[]) expect(scenariosFor(course).map((s) => s.course)).toEqual([course, course, course]);
+    for (const course of ['en', 'zh', 'fr', 'ja'] as CourseId[]) expect(scenariosFor(course).map((s) => s.course)).toEqual([course, course, course]);
   });
 
   it('never repeats a scenario id — a score is kept against it', () => {

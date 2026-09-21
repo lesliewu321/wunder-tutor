@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { contentBand } from '../../domain/types';
+import { contentBand, type CourseId } from '../../domain/types';
 import { ASSESSMENT_ITEMS } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
 import { FR_CHECK_ITEMS } from '../../content/fr/course';
+import { JA_CHECK_ITEMS } from '../../content/ja/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { useT } from '../../i18n/useT';
-import { labOrder, WEAK_BELOW } from '../../intelligence/profile';
+import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { useActiveProfile, useStore } from '../../state/store';
 import { Button, ProgressBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
@@ -19,14 +20,15 @@ export function CourseCheck() {
   const { course = 'zh' } = useParams();
   const p = useActiveProfile();
   const patch = useStore((s) => s.patchProfile);
-  const items = (course === 'zh' ? ZH_CHECK_ITEMS : course === 'fr' ? FR_CHECK_ITEMS : ASSESSMENT_ITEMS)[contentBand(p.band)];
+  const courseId: CourseId = course === 'zh' || course === 'fr' || course === 'ja' ? course : 'en';
+  const items = (courseId === 'zh' ? ZH_CHECK_ITEMS : courseId === 'fr' ? FR_CHECK_ITEMS : courseId === 'ja' ? JA_CHECK_ITEMS : ASSESSMENT_ITEMS)[contentBand(p.band)];
   const [index, setIndex] = useState(0);
   const [done, setDone] = useState(false);
 
   if (done) {
     const zh = course === 'zh';
-    const heard = Object.values(p.pronunciation.phonemes).filter((s) => s.phoneme.startsWith('zh:') === zh && s.ema < WEAK_BELOW).sort((a, b) => a.ema - b.ema).map((s) => s.phoneme);
-    const focus = [...new Set([...heard, ...labOrder(p.pronunciation, p.homeLanguage, zh ? 'zh' : 'en')])].slice(0, 3);
+    const heard = Object.values(p.pronunciation.phonemes).filter((s) => inCourse(s.phoneme, courseId) && s.ema < WEAK_BELOW).sort((a, b) => a.ema - b.ema).map((s) => s.phoneme);
+    const focus = [...new Set([...heard, ...labOrder(p.pronunciation, p.homeLanguage, courseId)])].slice(0, 3);
     return (
       <div className="screen onboard">
         <div className="onboard__body">

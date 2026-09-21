@@ -5,10 +5,11 @@ import { ASSESSMENT_ITEMS } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
 import { FR_CHECK_ITEMS } from '../../content/fr/course';
+import { JA_CHECK_ITEMS } from '../../content/ja/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { LANGUAGES, language, type Key } from '../../i18n';
 import { useT } from '../../i18n/useT';
-import { labOrder, WEAK_BELOW } from '../../intelligence/profile';
+import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { micSupported } from '../../speech/recorder';
 import { voice } from '../../speech/voice';
 import { useProfile, useStore } from '../../state/store';
@@ -32,9 +33,9 @@ const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
   { id: 'work', icon: '💼', title: 'onboarding.level.goal.work' }, { id: 'travel', icon: '✈️', title: 'onboarding.level.goal.travel' },
   { id: 'everyday', icon: '🛒', title: 'onboarding.level.goal.everyday' }, { id: 'fun', icon: '🎮', title: 'onboarding.level.goal.fun' },
 ];
-const LEARN: { id: CourseId | 'es' | 'fr' | 'de'; label: Key; ready: boolean; lang?: string }[] = [
+const LEARN: { id: CourseId | 'es' | 'de'; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
-  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
+  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
 ];
 /**
  * Who a sentence is about: the grown-up themself, the child by nickname, or "your child" before a nickname is typed.
@@ -293,7 +294,7 @@ export function Onboarding() {
     case 'check': {
       const profile = useStore.getState().profiles[useStore.getState().activeId ?? ''];
       const band = contentBand(profile?.band ?? 'junior');
-      const items = (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
+      const items = (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : firstCourse === 'ja' ? JA_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
       const item = items[checkIndex];
       return (
         <div className="screen lesson">
@@ -315,17 +316,19 @@ export function Onboarding() {
       const zh = firstCourse === 'zh';
       // One low take is enough evidence for a starting plan; home-language predictions fill any gaps.
       const heardLow = Object.values(profile.pronunciation.phonemes)
-        .filter((s) => s.phoneme.startsWith('zh:') === zh && s.ema < WEAK_BELOW && phonemeInfo(s.phoneme).difficulty >= 0.3)
+        .filter((s) => inCourse(s.phoneme, firstCourse) && s.ema < WEAK_BELOW && phonemeInfo(s.phoneme).difficulty >= 0.3)
         .sort((a, b) => a.ema - b.ema).map((s) => s.phoneme);
       const focus = [...new Set([...heardLow, ...labOrder(profile.pronunciation, profile.homeLanguage, firstCourse)])].slice(0, 3);
       const strong = Object.values(profile.pronunciation.phonemes)
-        .filter((s) => s.phoneme.startsWith('zh:') === zh && s.ema >= 88 && phonemeInfo(s.phoneme).difficulty >= 0.35 && !focus.includes(s.phoneme)).slice(0, 3);
+        .filter((s) => inCourse(s.phoneme, firstCourse) && s.ema >= 88 && phonemeInfo(s.phoneme).difficulty >= 0.35 && !focus.includes(s.phoneme)).slice(0, 3);
+      // Tones and Japanese beats are known by their names; English and French sounds by an example word.
+      const byName = zh || firstCourse === 'ja';
       return shell(
         <>
           <div className="card plan">
             <h2>{t(zh ? 'onboarding.plan.focus.zh' : 'onboarding.plan.focus.en')}</h2>
-            <div className="plan__sounds">{focus.map((ph) => <span key={ph} className="sound-badge sound-badge--weak"><b>{phonemeInfo(ph).label}</b><small>{zh ? tc(`sound.${ph}.name`, phonemeInfo(ph).name) : phonemeInfo(ph).example}</small></span>)}</div>
-            {strong.length > 0 && (<><h2>{t('onboarding.plan.strong')}</h2><div className="plan__sounds">{strong.map((s) => <span key={s.phoneme} className="sound-badge sound-badge--good"><b>{phonemeInfo(s.phoneme).label}</b><small>{zh ? tc(`sound.${s.phoneme}.name`, phonemeInfo(s.phoneme).name) : phonemeInfo(s.phoneme).example}</small></span>)}</div></>)}
+            <div className="plan__sounds">{focus.map((ph) => <span key={ph} className="sound-badge sound-badge--weak"><b>{phonemeInfo(ph).label}</b><small>{byName ? tc(`sound.${ph}.name`, phonemeInfo(ph).name) : phonemeInfo(ph).example}</small></span>)}</div>
+            {strong.length > 0 && (<><h2>{t('onboarding.plan.strong')}</h2><div className="plan__sounds">{strong.map((s) => <span key={s.phoneme} className="sound-badge sound-badge--good"><b>{phonemeInfo(s.phoneme).label}</b><small>{byName ? tc(`sound.${s.phoneme}.name`, phonemeInfo(s.phoneme).name) : phonemeInfo(s.phoneme).example}</small></span>)}</div></>)}
           </div>
           <p className="hint">{t(adult ? 'onboarding.plan.hint.adult' : 'onboarding.plan.hint.child')}</p>
         </>,

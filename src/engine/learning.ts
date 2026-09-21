@@ -1,7 +1,7 @@
-import { contentBand, type AgeBand, type Assessment, type ChildProfile, type Exercise, type ItemProgress, type Lesson, type PhonemeId, type PhonemeScore, type SpeakItem, type WordScore } from '../domain/types';
+import { contentBand, type AgeBand, type Assessment, type ChildProfile, type CourseId, type Exercise, type ItemProgress, type Lesson, type PhonemeId, type PhonemeScore, type SpeakItem, type WordScore } from '../domain/types';
 import { ITEM_INDEX } from '../content/course';
 import { LADDERS } from '../content/lab';
-import { weakSounds } from '../intelligence/profile';
+import { inCourse, weakSounds } from '../intelligence/profile';
 
 // Learning Engine: mastery rules, spaced repetition and in-lesson adaptation.
 
@@ -58,13 +58,22 @@ export const drillFor = (sound: PhonemeId, skipText?: string): Exercise[] => {
 
 export const isDrill = (ex: Exercise): boolean => ex.id.startsWith('drill-');
 
-/** Review lessons are personal: what's due for repetition plus a word for each weak sound — from this lesson's course only. */
+const LANG_COURSE: Record<string, CourseId> = { 'zh-CN': 'zh', 'fr-FR': 'fr', 'ja-JP': 'ja' };
+/** The course a practice item belongs to: its language says so, and English items carry none. */
+export const itemCourse = (item: Pick<SpeakItem, 'lang'>): CourseId => (item.lang ? LANG_COURSE[item.lang] : 'en');
+/** The course a unit belongs to, from its id (zh-food, fr-cafe, ja-food; English units have no prefix). */
+export const unitCourse = (unitId: string): CourseId => (/^(zh|fr|ja)-/.exec(unitId)?.[1] as CourseId | undefined) ?? 'en';
+
+/**
+ * Review lessons are personal: what's due for repetition plus a word for each weak sound — from this lesson's course
+ * only. (It used to split items into Mandarin and everything else, so a French review could hand out English words.)
+ */
 export const buildReview = (lesson: Lesson, profile: ChildProfile, now: number): Exercise[] => {
   const fallback = lesson.exercises[contentBand(profile.band)];
-  const zh = lesson.unitId.startsWith('zh-');
-  const sameCourse = (i: SpeakItem) => (i.lang === 'zh-CN') === zh;
+  const course = unitCourse(lesson.unitId);
+  const sameCourse = (i: SpeakItem) => itemCourse(i) === course;
   const due = dueItems(profile, now).map((p) => ITEM_INDEX[p.itemId]).filter((i): i is SpeakItem => !!i && sameCourse(i)).slice(0, 4);
-  const weak = weakSounds(profile.pronunciation).filter((s) => s.phoneme.startsWith('zh:') === zh)
+  const weak = weakSounds(profile.pronunciation).filter((s) => inCourse(s.phoneme, course))
     .map((s) => LADDERS[s.phoneme]?.words[0]).filter((i): i is SpeakItem => !!i).slice(0, 2);
   const picked = [...due, ...weak];
   if (picked.length < 3) {

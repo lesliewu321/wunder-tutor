@@ -106,6 +106,19 @@ describe('Gemini Live teacher voice', () => {
     expect(transcriptMatches('water', '')).toBe(true);
   });
 
+  it('accepts a Japanese take written in kanji where the line has kana, and the reverse, but not English or chatter', () => {
+    expect(transcriptMatches('みずをください', '水をください')).toBe(true);
+    expect(transcriptMatches('ラーメンをお願いします。', 'ラーメンをおねがいします')).toBe(true);
+    expect(transcriptMatches('ありがとう', '')).toBe(true);
+    expect(transcriptMatches('ありがとう', 'Sure! ありがとう')).toBe(false);
+    expect(transcriptMatches('はい', 'はい、わかりました。それでは次の文を読みますね。どうぞよろしくお願いします。')).toBe(false);
+  });
+
+  it('gives the Japanese voice its beats', () => {
+    expect(buildInstruction({ accent: 'ja-JP' })).toMatch(/standard Japanese/);
+    expect(buildInstruction({ accent: 'ja-JP' })).toMatch(/long vowels/);
+  });
+
   it('describes syllables differently from sentences', () => {
     expect(buildInstruction({ accent: 'en-US', kind: 'syllable' })).toMatch(/single syllable/);
     expect(buildInstruction({ accent: 'en-US' })).toMatch(/General American/);

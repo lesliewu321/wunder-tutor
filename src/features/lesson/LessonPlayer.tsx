@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { Achievement, Exercise, PhonemeId, SpeakItem } from '../../domain/types';
 import { findLesson, lessonTitle } from '../../content/course';
 import { LADDERS } from '../../content/lab';
-import { exampleSpeech, phonemeInfo, tipFor } from '../../content/phonemes';
+import { exampleSpeech, phonemeInfo, soundLocale, tipFor } from '../../content/phonemes';
 import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
@@ -14,7 +14,7 @@ import { Button, Confetti, IconButton, ProgressBar, Sheet, toast } from '../../u
 import { Mascot } from '../../ui/Mascot';
 import { Mouth } from '../../ui/Mouth';
 import { ToneContour } from '../../ui/ToneContour';
-import { ZhText } from '../../ui/ZhText';
+import { ItemText } from '../../ui/ItemText';
 import { SpeakExercise, type SpeakResult } from '../speak/SpeakExercise';
 import { ChoiceExercise } from './ChoiceExercise';
 
@@ -139,7 +139,7 @@ function DrillIntro({ sound, onDone }: { sound: PhonemeId; onDone: () => void })
         <h2>{info.category === 'tone' ? t('lesson.drill.title.tone', { tone }) : t('lesson.drill.title.sound', { label: info.label })}</h2>
         {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={210} /> : <Mouth pose={info.pose} size={210} />}
         <p className="drill-intro__tip">{tipFor(sound, profile.band)}</p>
-        <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: sound.startsWith('zh:') ? 'zh-CN' : profile.accent, slow: true }).catch(() => undefined)}>🔈 {t('lesson.drill.hear', { example: info.example })}</button>
+        <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: soundLocale(sound, profile.accent), slow: true }).catch(() => undefined)}>🔈 {t('lesson.drill.hear', { example: info.example })}</button>
       </div>
       <div className="drill-intro__dock"><Button variant="primary" size="lg" block onClick={onDone}>{t('lesson.drill.ready')}</Button></div>
     </div>
@@ -161,8 +161,8 @@ function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialo
     <div className="bubble-row">
       <span className="bubble-row__who" aria-hidden>{ex.picture ?? '🧑‍🍳'}</span>
       <button type="button" className="bubble" onClick={() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined)}>
-        {ex.tutor?.zh ? <ZhText item={ex.tutor} script={profile.zhScript} /> : ex.tutorLine} <span aria-hidden>🔈</span>
-        {ex.tutor?.zh && ex.tutor.meaning && profile.band !== 'little' && <small className="bubble__meaning">{ex.tutor.meaning}</small>}
+        {ex.tutor ? <ItemText item={ex.tutor} band={profile.band} script={profile.zhScript} /> : ex.tutorLine} <span aria-hidden>🔈</span>
+        {ex.tutor?.lang && ex.tutor.meaning && profile.band !== 'little' && <small className="bubble__meaning">{ex.tutor.meaning}</small>}
       </button>
     </div>
   );
@@ -174,7 +174,7 @@ function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialo
         <h2 className="dialogue__title">{t('lesson.dialogue.title')}</h2>
         <div className="dialogue__replies">
           {ex.replies.map((r) => (
-            <button key={r.id} type="button" className="reply" onClick={() => setChoice(r)}>{r.picture && <span aria-hidden>{r.picture}</span>}{r.zh ? <ZhText item={r} script={profile.zhScript} /> : r.text}</button>
+            <button key={r.id} type="button" className="reply" onClick={() => setChoice(r)}>{r.picture && <span aria-hidden>{r.picture}</span>}<ItemText item={r} band={profile.band} script={profile.zhScript} /></button>
           ))}
         </div>
       </div>

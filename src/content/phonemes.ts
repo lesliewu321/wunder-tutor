@@ -1,6 +1,7 @@
-import type { AgeBand, HomeLanguage, PhonemeId } from '../domain/types';
+import type { Accent, AgeBand, HomeLanguage, Locale, PhonemeId } from '../domain/types';
 import { tc } from '../i18n';
 import { FR_SOUNDS } from './fr/sounds';
+import { JA_SOUNDS } from './ja/sounds';
 import { ZH_SOUNDS } from './zh/sounds';
 import { inScript } from './zh/script';
 
@@ -331,10 +332,18 @@ export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries([
   ...ZH_SOUNDS.map((p) => [p.id, p] as const),
   // French ids are plain IPA and none of them is an English one, so no namespace is needed (see fr/sounds.ts).
   ...FR_SOUNDS.map((p) => [p.id, p] as const),
+  // Japanese beats and sound classes are namespaced "ja:…" like the Mandarin units (see ja/sounds.ts).
+  ...JA_SOUNDS.map((p) => [p.id, p] as const),
 ]);
 
 /** Mandarin units are namespaced "zh:…", so the two catalogues never collide. */
 export const isZhSound = (id: PhonemeId): boolean => id.startsWith('zh:');
+export const isJaSound = (id: PhonemeId): boolean => id.startsWith('ja:');
+const FR_IDS = new Set<PhonemeId>(FR_SOUNDS.map((p) => p.id));
+
+/** The language a sound's example is spoken in: a French or Japanese sound's example is a French or Japanese word. */
+export const soundLocale = (id: PhonemeId, accent: Accent): Locale =>
+  isZhSound(id) ? 'zh-CN' : isJaSound(id) ? 'ja-JP' : FR_IDS.has(id) ? 'fr-FR' : accent;
 
 /**
  * A sound's guide as the learner reads it — a copy, worked out when asked for, so it follows the App language and the

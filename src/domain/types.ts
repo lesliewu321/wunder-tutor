@@ -14,9 +14,9 @@ export const isGrownUp = (band: AgeBand): boolean => band === 'teen' || band ===
 export const settingsName = (band: AgeBand): string => t(band === 'adult' ? 'common.settings.adult' : 'common.settings.parent');
 /** The English accent a child is taught. */
 export type Accent = 'en-US' | 'en-GB';
-/** What a piece of speech is scored and spoken as: English in the child's accent, or Mandarin (Putonghua). */
-export type Locale = Accent | 'zh-CN' | 'fr-FR';
-export type CourseId = 'en' | 'zh' | 'fr';
+/** What a piece of speech is scored and spoken as: English in the child's accent, or the language of another course. */
+export type Locale = Accent | 'zh-CN' | 'fr-FR' | 'ja-JP';
+export type CourseId = 'en' | 'zh' | 'fr' | 'ja';
 /** Mandarin tone: 1–4, and 5 for the neutral (light) tone. */
 export type Tone = 1 | 2 | 3 | 4 | 5;
 /** 'yue' = Cantonese, 'zh' = Mandarin — their speakers make different mistakes in English, so they are kept apart. */
@@ -46,10 +46,21 @@ export interface SpeakItem {
   focus?: PhonemeId[];
   /** Spoken form for the reference voice when it differs from the text (e.g. isolated sounds). */
   say?: string;
-  /** Mandarin and French items carry their own language; everything else is English in the learner's accent. */
-  lang?: 'zh-CN' | 'fr-FR';
+  /** Mandarin, French and Japanese items carry their own language; everything else is English in the learner's accent. */
+  lang?: 'zh-CN' | 'fr-FR' | 'ja-JP';
   /** Mandarin items: `text` is Simplified (what the scorer is sent); this adds what the child reads. */
   zh?: ZhText;
+  /** Japanese items: `text` is the line as written (kanji and kana, what the scorer is sent); this adds how it is read. */
+  ja?: JaText;
+}
+
+export interface JaText {
+  /** The whole line in kana, as it is said (the particle は as わ): what the sound model and the voice go by. */
+  kana: string;
+  /** Hepburn romaji with long vowels marked (arigatō), for a learner who cannot read kana yet. */
+  romaji: string;
+  /** The line in pieces for printing: each piece's kana reading is printed over it when the piece is kanji. */
+  ruby: { text: string; reading?: string }[];
 }
 
 export interface ZhText {

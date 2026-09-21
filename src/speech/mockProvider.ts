@@ -2,6 +2,7 @@ import type { Assessment, PhonemeScore, Tone, WordScore, ZhSyllable } from '../d
 import { phonemeInfo } from '../content/phonemes';
 import { textPhones } from '../content/lexicon';
 import { frTokenize, frWordPhones } from '../content/fr/lexicon';
+import { morae } from '../content/ja/kana';
 import { alternativesFor } from '../content/zh/alternatives';
 import { parseSyllable, splitPinyin, surfaceTones } from '../content/zh/pinyin';
 import { unitsFor } from './zh/assess';
@@ -49,7 +50,10 @@ export class MockPronunciationProvider implements PronunciationProvider {
     if (ctx.locale === 'zh-CN' && ctx.zh) return mockZh(referenceText, ctx.zh.py, ctx, rand, a.durationMs, ctx.script === 'hant' ? ctx.zh.hant : undefined);
 
     // French is scored with French sounds: the English lexicon turned croissant into an English r ("closer to /w/").
-    const words = ctx.locale === 'fr-FR' ? frTokenize(referenceText).map(frWordPhones) : textPhones(referenceText, ctx.accent);
+    // Japanese is one line of beats, each named by the sound it is taught as (or unnamed), as the real scorer's are.
+    const words = ctx.locale === 'ja-JP' && ctx.ja
+      ? [{ word: referenceText, key: referenceText, syllables: morae(ctx.ja.kana).map((m) => ({ text: m.kana, phonemes: [m.unit ?? ''] })) }]
+      : ctx.locale === 'fr-FR' ? frTokenize(referenceText).map(frWordPhones) : textPhones(referenceText, ctx.accent);
     const syllables = words.reduce((n, w) => n + w.syllables.length, 0);
 
     // Completeness: was there enough speech for the whole text? If not, trailing words were dropped.

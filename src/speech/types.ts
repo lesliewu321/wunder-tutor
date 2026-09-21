@@ -1,4 +1,4 @@
-import type { Accent, AgeBand, Assessment, HomeLanguage, Locale, PhonemeId, PronunciationProfile, ZhText } from '../domain/types';
+import type { Accent, AgeBand, Assessment, HomeLanguage, JaText, Locale, PhonemeId, PronunciationProfile, ZhText } from '../domain/types';
 import type { PitchTrack } from './pitch';
 import type { SpeakerRef } from './zh/tone';
 
@@ -64,6 +64,8 @@ export interface AssessContext {
   accent: Accent;
   /** Mandarin items: Traditional form and numbered pinyin. */
   zh?: ZhText;
+  /** Japanese items: the kana reading, which puts beats on Azure's unnamed scores (speech/ja/assess.ts). */
+  ja?: JaText;
   /** Mandarin: the characters the learner reads — feedback uses them (scoring always uses Simplified). */
   script?: 'hant' | 'hans';
   /** Sounds the item deliberately practises — checked first when extra scorings are rationed. */

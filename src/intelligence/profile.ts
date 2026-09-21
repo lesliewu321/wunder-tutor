@@ -1,17 +1,18 @@
 import type { Assessment, CourseId, HomeLanguage, PhonemeId, PhonemeStat, PronunciationProfile } from '../domain/types';
 import { LAB_SOUNDS, phonemeInfo } from '../content/phonemes';
 import { FR_LAB_SOUNDS } from '../content/fr/course';
+import { JA_LAB_SOUNDS } from '../content/ja/course';
 import { ZH_LAB_SOUNDS } from '../content/zh/course';
 
-const labSounds = (course: CourseId): PhonemeId[] => (course === 'zh' ? ZH_LAB_SOUNDS : course === 'fr' ? FR_LAB_SOUNDS : LAB_SOUNDS);
+const labSounds = (course: CourseId): PhonemeId[] => (course === 'zh' ? ZH_LAB_SOUNDS : course === 'fr' ? FR_LAB_SOUNDS : course === 'ja' ? JA_LAB_SOUNDS : LAB_SOUNDS);
 /**
  * Mandarin sounds announce themselves with a "zh:" prefix; French ones are plain IPA, like the English ones, so
  * they can only be told apart by the list they are on. None of the nine French sounds is taught in English (there
  * is a test), so a sound on the French list is French and everything else without the prefix is English.
  */
 const FR_SOUND_SET = new Set<PhonemeId>(FR_LAB_SOUNDS);
-const inCourse = (id: PhonemeId, course: CourseId): boolean =>
-  course === 'zh' ? id.startsWith('zh:') : course === 'fr' ? FR_SOUND_SET.has(id) : !id.startsWith('zh:') && !FR_SOUND_SET.has(id);
+export const inCourse = (id: PhonemeId, course: CourseId): boolean =>
+  course === 'zh' ? id.startsWith('zh:') : course === 'ja' ? id.startsWith('ja:') : course === 'fr' ? FR_SOUND_SET.has(id) : !id.startsWith('zh:') && !id.startsWith('ja:') && !FR_SOUND_SET.has(id);
 import { wordKey } from '../content/lexicon';
 
 // Pronunciation Intelligence: the persistent memory of how this child pronounces English.

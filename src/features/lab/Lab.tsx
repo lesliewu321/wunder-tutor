@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isGrownUp, type ChildProfile, type PhonemeId } from '../../domain/types';
 import { LADDERS, LAB_STAGES, stageLabel, type LabStage } from '../../content/lab';
-import { exampleSpeech, isLongLabel, phonemeInfo, tipFor } from '../../content/phonemes';
+import { exampleSpeech, isJaSound, isLongLabel, isZhSound, phonemeInfo, soundLocale, tipFor } from '../../content/phonemes';
 import { shownText } from '../../content/zh/script';
 import { XP, badgeName } from '../../engine/rewards';
 import type { Key } from '../../i18n';
@@ -69,7 +69,7 @@ export function LabHome() {
                 <span className="sound-card__glyph" data-long={isLongLabel(info.label) || undefined}>{info.label}</span>
                 <span className="sound-card__text">
                   <b>{info.name}</b>
-                  <small>{t('lab.home.asIn', { example: info.example })}{isGrownUp(p.band) && !id.startsWith('zh:') ? ` · /${id}/` : ''}</small>
+                  <small>{t('lab.home.asIn', { example: info.example })}{isGrownUp(p.band) && !isZhSound(id) && !isJaSound(id) ? ` · /${id}/` : ''}</small>
                   <ProgressBar value={done / total} tone="leaf" />
                 </span>
                 <span className="sound-card__side">
@@ -96,15 +96,16 @@ export function LabSound() {
 
   const st = status(p, sound);
   const nextStage = LAB_STAGES.find((s) => stageDone(p, sound, s) < ladder[s].length) ?? 'sentence';
-  const zh = sound.startsWith('zh:');
-  const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: zh ? 'zh-CN' : p.accent, slow }).catch((e) => void noSoundMessage(p.band, e).then((m) => toast(m, '🔇')));
+  // A Mandarin tone or a Japanese beat has no IPA symbol worth showing; each example is said in its own language.
+  const noSymbol = isZhSound(sound) || isJaSound(sound);
+  const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: soundLocale(sound, p.accent), slow }).catch((e) => void noSoundMessage(p.band, e).then((m) => toast(m, '🔇')));
 
   return (
     <div className="screen lab-sound">
       <TopBar title={info.name} onBack={() => nav('/lab')} />
       <section className="card guide">
         <div className="guide__top">
-          <div className="guide__glyph" data-long={isLongLabel(info.label) || undefined}><b>{info.label}</b>{p.band !== 'little' && !zh && <small>/{sound}/</small>}</div>
+          <div className="guide__glyph" data-long={isLongLabel(info.label) || undefined}><b>{info.label}</b>{p.band !== 'little' && !noSymbol && <small>/{sound}/</small>}</div>
           {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={190} /> : <Mouth pose={info.pose} size={190} />}
         </div>
         <p className="guide__tip">{tipFor(sound, p.band)}</p>

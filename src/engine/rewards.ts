@@ -42,6 +42,9 @@ const DEFS: Record<string, Omit<Achievement, 'earnedAt' | 'id'>> = {
   'lab-ladder': { title: 'Ladder climber', detail: 'You climbed a whole sound ladder in the Lab.', icon: '🪜' },
   'unit-food': { title: 'Food champion', detail: 'You finished every lesson in the English food unit.', icon: '🏆' },
   'unit-zh-food': { title: 'Putonghua food champion', detail: 'You finished every lesson in the Putonghua food unit.', icon: '🥢' },
+  // A unit badge's id is `unit-<unit id>` (store.ts); without its line here the French one showed as "unit-fr-cafe".
+  'unit-fr-cafe': { title: 'French café champion', detail: 'You finished every lesson in the French café unit.', icon: '🥐' },
+  'unit-ja-food': { title: 'Japanese food champion', detail: 'You finished every lesson in the Japanese food unit.', icon: '🍙' },
 };
 
 export const achievement = (id: string, now: number): Achievement => {

@@ -23,7 +23,9 @@ const CLAUDE_TIMEOUT_MS = 20_000;
 // fr-FR scores per phoneme but, like en-GB, names none of them; the app puts the names on from its own French
 // lexicon (src/content/fr/lexicon.ts). PhonemeAlphabet=IPA is deliberately NOT asked for outside en-US: it is
 // documented for a subset of locales only, and an unsupported value would fail the whole scoring.
-const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN', 'fr-FR']);
+// ja-JP scores per sound and per syllable, names neither, and splits words its own way: the app lines the scores up
+// with the beats of its own reading (src/speech/ja/assess.ts).
+const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN', 'fr-FR', 'ja-JP']);
 /** At most this many "likely mistake" re-scorings of one take (each is billed as a scoring). */
 const MAX_ALTS = 5;
 /**

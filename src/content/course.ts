@@ -1,6 +1,7 @@
 import { isGrownUp, type AgeBand, type ContentBand, type Course, type CourseId, type Exercise, type Lesson, type PhonemeId, type SpeakItem, type Unit } from '../domain/types';
 import { tc } from '../i18n';
 import { FR_COURSE, FR_ITEMS } from './fr/course';
+import { JA_COURSE, JA_ITEMS } from './ja/course';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
 import { inScript } from './zh/script';
 
@@ -146,7 +147,7 @@ export const COURSE: Course = {
   ],
 };
 
-export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE, fr: FR_COURSE };
+export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE, fr: FR_COURSE, ja: JA_COURSE };
 export const courseFor = (id: CourseId): Course => COURSES[id] ?? COURSE;
 
 /**
@@ -169,7 +170,7 @@ export const unitSubtitle = (u: Unit, band: AgeBand): string => {
 };
 export const lessonTitle = (l: Pick<Lesson, 'id' | 'title'>): string => tc(`lesson.${l.id}.title`, l.title);
 
-export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units, ...FR_COURSE.units].flatMap((u) => u.lessons);
+export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units, ...FR_COURSE.units, ...JA_COURSE.units].flatMap((u) => u.lessons);
 export const findLesson = (id: string): Lesson | undefined => ALL_LESSONS.find((l) => l.id === id);
 export const lessonsOf = (id: CourseId): Lesson[] => courseFor(id).units.flatMap((u) => u.lessons);
 
@@ -184,6 +185,7 @@ for (const l of ALL_LESSONS) {
 }
 for (const it of ZH_ITEMS) ITEM_INDEX[it.id] ??= it;
 for (const it of FR_ITEMS) ITEM_INDEX[it.id] ??= it;
+for (const it of JA_ITEMS) ITEM_INDEX[it.id] ??= it;
 
 /** Onboarding speaking check: short, covers the classic trouble sounds (w, r, θ, æ, v, ɪ). */
 export const ASSESSMENT_ITEMS: Record<ContentBand, SpeakItem[]> = {

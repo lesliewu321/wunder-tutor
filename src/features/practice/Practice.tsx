@@ -17,6 +17,8 @@ import { Icon } from '../../ui/Icon';
 import { Button, IconButton, Sheet, toast, TopBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
 import { MicButton } from '../../ui/MicButton';
+import { ItemText } from '../../ui/ItemText';
+import { beatScores, JaBeats } from '../../ui/JaText';
 import { ZhText } from '../../ui/ZhText';
 import { ErrorPanel } from '../speak/ErrorPanel';
 import { useSpeechTake } from '../speak/useSpeechTake';
@@ -61,7 +63,7 @@ type Line =
 function LineText({ it, band, script }: { it: SpeakItem; band: AgeBand; script: ZhScript }) {
   return (
     <span className="line-text">
-      {it.zh ? <ZhText item={it} script={script} /> : <span lang={it.lang === 'fr-FR' ? 'fr' : undefined}>{it.text}</span>}
+      <ItemText item={it} band={band} script={script} />
       {it.lang && it.meaning && band !== 'little' && <small className="bubble__meaning">{it.meaning}</small>}
     </span>
   );
@@ -175,6 +177,8 @@ export function Conversation() {
             <div className="bubble bubble--me">
               {l.it.zh ? (
                 <ZhText item={l.it} script={p.zhScript} marks={l.assessment.words.map((w) => ({ tier: w.errorType === 'omission' ? 'missing' : tier(w.score) }))} />
+              ) : l.it.ja && beatScores(l.it.ja, l.assessment) ? (
+                <JaBeats reading={l.it.ja} assessment={l.assessment} />
               ) : writtenWords(l.it.text, l.assessment.words).map((word, j) => {
                 const w = l.assessment.words[j];
                 return <span key={j} className={`w w--${w.errorType === 'omission' ? 'weak' : tier(w.score)}`}>{word} </span>;

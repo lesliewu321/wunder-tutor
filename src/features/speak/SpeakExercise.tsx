@@ -19,6 +19,7 @@ import { Button, ScoreRing, toast } from '../../ui/kit';
 import { Mascot, type Mood } from '../../ui/Mascot';
 import { MicButton } from '../../ui/MicButton';
 import { ToneContour } from '../../ui/ToneContour';
+import { beatScores, JaBeats, JaText } from '../../ui/JaText';
 import { ZhText } from '../../ui/ZhText';
 import { ErrorPanel } from './ErrorPanel';
 import { useSpeechTake } from './useSpeechTake';
@@ -186,6 +187,9 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                 <ZhText item={item} script={profile.zhScript}
                   marks={current && phase === 'result' ? current.assessment.words.map((w, i) => ({ tier: w.errorType === 'omission' ? 'missing' : tier(w.score), focus: i === focusIdx, label: t('speak.word.score', { score: w.score }) })) : undefined}
                   onTap={current && phase === 'result' ? setSheetWord : undefined} />
+              ) : current && phase === 'result' && item.ja && beatScores(item.ja, current.assessment) ? (
+                // Japanese is marked beat by beat: one weak ら should not paint the whole line red.
+                <JaBeats reading={item.ja} assessment={current.assessment} onTap={setSheetWord} />
               ) : current && phase === 'result'
                 ? current.assessment.words.map((w, i) => (
                   <button key={i} type="button" className={`word word--${w.errorType === 'omission' ? 'missing' : tier(w.score)} ${i === focusIdx ? 'word--focus' : ''}`}
@@ -193,7 +197,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                     {shown[i] ?? w.word}
                   </button>
                 ))
-                : item.text}
+                : item.ja ? <JaText item={{ text: item.text, ja: item.ja }} band={band} /> : item.text}
             </p>
           )}
           {revealed && item.meaning && band !== 'little' && phase !== 'result' && <p className="prompt__meaning">{item.meaning}</p>}
