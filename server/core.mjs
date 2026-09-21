@@ -19,7 +19,10 @@ import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, T
 const MAX_BODY_BYTES = 5 * 1024 * 1024;
 const AZURE_TIMEOUT_MS = 15_000;
 const CLAUDE_TIMEOUT_MS = 20_000;
-const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN']);
+// fr-FR scores per phoneme but, like en-GB, names none of them; the app puts the names on from its own French
+// lexicon (src/content/fr/lexicon.ts). PhonemeAlphabet=IPA is deliberately NOT asked for outside en-US: it is
+// documented for a subset of locales only, and an unsupported value would fail the whole scoring.
+const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN', 'fr-FR']);
 /** At most this many "likely mistake" re-scorings of one take (each is billed as a scoring). */
 const MAX_ALTS = 5;
 /** A Mandarin teacher take is only kept if it scores at least this well as its own text (calibrated in eval/). */

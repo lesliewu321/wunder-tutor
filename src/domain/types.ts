@@ -15,7 +15,7 @@ export const settingsName = (band: AgeBand): string => t(band === 'adult' ? 'com
 /** The English accent a child is taught. */
 export type Accent = 'en-US' | 'en-GB';
 /** What a piece of speech is scored and spoken as: English in the child's accent, or Mandarin (Putonghua). */
-export type Locale = Accent | 'zh-CN';
+export type Locale = Accent | 'zh-CN' | 'fr-FR';
 export type CourseId = 'en' | 'zh';
 /** Mandarin tone: 1–4, and 5 for the neutral (light) tone. */
 export type Tone = 1 | 2 | 3 | 4 | 5;

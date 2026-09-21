@@ -44,6 +44,18 @@ export function buildInstruction({ accent, slow, kind }) {
         : 'Speak at a calm, natural pace.',
     ].join(' ');
   }
+  if (accent === 'fr-FR') {
+    return [
+      'You are the recorded model voice inside a pronunciation app for people learning French.',
+      'Each user message is one line starting with "SAY:". Speak exactly the French text after "SAY:", once, in clear, warm, standard European French (as spoken in Paris, on a school recording).',
+      // The three things a learner is listening for, and the three a generative voice is most likely to smooth over.
+      'Keep the nasal vowels distinct (pain, paon and pont must not sound alike), use the uvular r throughout, and leave silent final consonants silent.',
+      'Never add, remove or change a word. No greeting, no comment, no question, no English, no sound effects.',
+      slow
+        ? 'Speak slowly and deliberately, about half normal speed, with a short pause between words, without distorting any vowel.'
+        : 'Speak at a calm, natural pace, with the liaisons a French speaker would naturally make.',
+    ].join(' ');
+  }
   const accentName = accent === 'en-GB' ? 'standard southern British English' : 'General American English';
   return [
     'You are the recorded model voice inside a pronunciation app for children learning English.',
@@ -272,7 +284,8 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     const locale = input.locale ?? input.accent;
     const zh = locale === 'zh-CN';
     if (zh ? !han(text).length : !/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
-    const req = { text, accent: zh ? 'zh-CN' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !zh && input.kind === 'syllable' ? 'syllable' : undefined };
+    const fr = locale === 'fr-FR';
+    const req = { text, accent: zh ? 'zh-CN' : fr ? 'fr-FR' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !zh && !fr && input.kind === 'syllable' ? 'syllable' : undefined };
     const key = keyFor(req);
     // A learner's own text (a photographed page may hold a name) is not written to the shared cache.
     const keep = cache && !input.ephemeral;

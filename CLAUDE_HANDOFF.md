@@ -261,6 +261,32 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 - The Claude tutor (no key). Supabase. Teacher-take quality thresholds for Mandarin
   (`TEACHER_MIN_ACCURACY` 85 / `TEACHER_MIN_SYLLABLE` 70 in `server/core.mjs`) are uncalibrated.
 
+## French (2026-09-21): the foundation, no lessons
+
+Leslie asked for French lessons; we agreed to build the part that is the same whoever learns first, and pick the
+audience when the first unit is written. **There is no French course yet** — no `CourseId` 'fr', nothing to tap in the
+app. What exists is everything a French lesson would stand on:
+
+- **`src/content/fr/sounds.ts`** — nine sounds, chosen because an English or Cantonese speaker gets them wrong:
+  y (tu), ʁ (rouge), the three nasals ɑ̃ ɛ̃ ɔ̃, ø (deux), œ (sœur), ʒ (je), ɲ (montagne). Same `PhonemeInfo` shape as
+  English and Mandarin, so the Lab, drills and progress would work unchanged. Ids are plain IPA and collide with
+  nothing (a test enforces that).
+- **`src/content/fr/lexicon.ts`** — ~115 words as `syl.la.bles|ph ph . ph ph`. **This file is why French feedback is
+  worth having.** Azure scores French per phoneme and names none of them, exactly as for en-GB, so the names come
+  from lining the scores up against this sequence. Conventions that matter: silent final consonants are not written,
+  liaison is not written, r is always ʁ, "un" is ɛ̃. A word the lexicon does not know returns NO candidates, so it is
+  practised but never coached per sound — a guess from French spelling would put a confident wrong name on a sound.
+- **Wiring**: `Locale` gained 'fr-FR' (nothing broke — it widened cleanly); `namePhonemes`/`mapWords`/`mapAzure` now
+  take the locale rather than the accent and pick the French lexicon for it; the server's `LOCALES` allow-list
+  accepts fr-FR; the teacher voice has a French instruction (nasals kept apart, uvular r, silent finals left silent).
+- `src/__tests__/fr.test.ts` — 12 tests on the lexicon's shape and the sounds' integrity.
+
+**Never run against live Azure fr-FR.** The whole design rests on French behaving like en-GB — scores in order, names
+empty, one score per phoneme in our sequence. If Azure's French phoneme count for a word differs from the lexicon's,
+the alignment finds no fit and the sounds stay **unnamed**, which is the safe failure: the learner gets a word-level
+score and no wrong diagnosis. First real step: score a French take and compare Azure's phoneme count per word with
+`frAlignmentCandidates`, the way en-GB was measured (93% direct match).
+
 ## Asked for on 2026-09-20/21, not built yet
 
 Leslie's own words, in the order they came. None of these exist yet.

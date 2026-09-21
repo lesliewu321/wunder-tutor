@@ -1,5 +1,6 @@
 import type { AgeBand, HomeLanguage, PhonemeId } from '../domain/types';
 import { tc } from '../i18n';
+import { FR_SOUNDS } from './fr/sounds';
 import { ZH_SOUNDS } from './zh/sounds';
 import { inScript } from './zh/script';
 
@@ -328,6 +329,8 @@ export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries([
   ...[...list, ...easyConsonants.map(fromEasy('consonant')), ...vowels.map(fromEasy('vowel'))]
     .map((p) => [p.id, CANTONESE[p.id] ? { ...p, l1: { ...p.l1, yue: CANTONESE[p.id] } } : p] as const),
   ...ZH_SOUNDS.map((p) => [p.id, p] as const),
+  // French ids are plain IPA and none of them is an English one, so no namespace is needed (see fr/sounds.ts).
+  ...FR_SOUNDS.map((p) => [p.id, p] as const),
 ]);
 
 /** Mandarin units are namespaced "zh:…", so the two catalogues never collide. */

@@ -1,5 +1,6 @@
-import type { Accent, Assessment, PhonemeId, PhonemeScore, WordErrorType, WordScore } from '../domain/types';
+import type { Accent, Assessment, Locale, PhonemeId, PhonemeScore, WordErrorType, WordScore } from '../domain/types';
 import { englishAlternatives, type EnAlternative } from '../content/alternatives-en';
+import { frAlignmentCandidates } from '../content/fr/lexicon';
 import { alignmentCandidates, tokenize } from '../content/lexicon';
 import { alternativeRequests } from '../content/zh/alternatives';
 import { apiFetch } from './health';
@@ -41,9 +42,12 @@ const errorType = (t?: string): WordErrorType => {
  * a British learner must never be coached on an R they are right not to say. No confident alignment → leave unnamed,
  * and the feedback layer falls back to word-level advice rather than naming the wrong sound.
  */
-const namePhonemes = (word: string, scored: PhonemeScore[], accent: Accent): PhonemeScore[] => {
+const namePhonemes = (word: string, scored: PhonemeScore[], locale: Locale): PhonemeScore[] => {
   if (!scored.length || scored.some((p) => p.phoneme)) return scored;
-  const fit = alignmentCandidates(word, accent).find((c) => c.phonemes.length === scored.length);
+  // French is the same gap as British English — scores arrive, names do not — so it is named the same way, from its
+  // own lexicon (src/content/fr/lexicon.ts). A word neither lexicon knows yields no candidates and stays unnamed.
+  const candidates = locale === 'fr-FR' ? frAlignmentCandidates(word) : alignmentCandidates(word, locale as Accent);
+  const fit = candidates.find((c) => c.phonemes.length === scored.length);
   if (!fit) return scored;
   return scored.map((p, i) => ({ ...p, phoneme: fit.phonemes[i] })).filter((_, i) => !fit.silent[i]);
 };
@@ -63,7 +67,7 @@ const heardFrom = (expected: string, score: number, nbest?: AzureCandidate[]): P
   return topScore - own >= HEARD.minLead ? cand : undefined;
 };
 
-const mapWords = (best: AzureNBest, accent: Accent): WordScore[] =>
+const mapWords = (best: AzureNBest, locale: Locale): WordScore[] =>
   (best.Words ?? []).map((w) => ({
     word: w.Word,
     score: Math.round(w.AccuracyScore ?? w.PronunciationAssessment?.AccuracyScore ?? 0),
@@ -74,7 +78,7 @@ const mapWords = (best: AzureNBest, accent: Accent): WordScore[] =>
       const score = Math.round(p.AccuracyScore ?? p.PronunciationAssessment?.AccuracyScore ?? 0);
       const heardAs = heardFrom(phoneme, score, p.PronunciationAssessment?.NBestPhonemes ?? p.NBestPhonemes);
       return heardAs ? { phoneme, score, heardAs } : { phoneme, score };
-    }), accent),
+    }), locale),
   }));
 
 /**
@@ -172,7 +176,9 @@ export const applyEnglishAlternatives = (words: WordScore[], main: AzureResponse
   });
 };
 
-export const mapAzure = (json: AzureResponse, referenceText: string, fallbackDurationMs: number, accent: Accent = 'en-US', usJson?: AzureResponse, alts: EnAltResult[] = []): Assessment => {
+// `locale` is the accent for an English take and 'fr-FR' for a French one; Mandarin never comes through here (it has
+// its own mapping in zh/assess.ts). It decides which lexicon puts names on the phoneme scores.
+export const mapAzure = (json: AzureResponse, referenceText: string, fallbackDurationMs: number, locale: Locale = 'en-US', usJson?: AzureResponse, alts: EnAltResult[] = []): Assessment => {
   if (json.RecognitionStatus && json.RecognitionStatus !== 'Success') {
     throw new SpeechError(/silence|nomatch/i.test(json.RecognitionStatus) ? 'no-speech' : 'service', json.RecognitionStatus);
   }
@@ -185,11 +191,11 @@ export const mapAzure = (json: AzureResponse, referenceText: string, fallbackDur
   // Nothing recognised at all (every word "omitted"): ask again rather than mark every word missing.
   if ((best.Words ?? []).every((w) => errorType(w.ErrorType ?? w.PronunciationAssessment?.ErrorType) === 'omission')) throw new SpeechError('no-speech');
   const s: AzureScores = { ...best.PronunciationAssessment, ...pick(best) };
-  let words: WordScore[] = mapWords(best, accent);
-  const usBest = accent === 'en-GB' && usJson?.RecognitionStatus === 'Success' ? usJson.NBest?.[0] : undefined;
+  let words: WordScore[] = mapWords(best, locale);
+  const usBest = locale === 'en-GB' && usJson?.RecognitionStatus === 'Success' ? usJson.NBest?.[0] : undefined;
   if (usBest) words = mergeUsConsonants(words, mapWords(usBest, 'en-US'));
   if (alts.length) words = applyEnglishAlternatives(words, json, alts);
-  if (accent === 'en-GB') {
+  if (locale === 'en-GB') {
     // Azure's en-GB word score marks correct single words down whatever the accent (a correct "they" scored 59–61
     // while its sounds scored 79–100, and the US scorer gave the same take 100). Its per-sound scores are sound, so
     // a British word's score is built from its sounds.
@@ -317,7 +323,9 @@ export class AzurePronunciationProvider implements PronunciationProvider {
         return c?.main ? [{ alt, json: c.alts?.[k], base: c.main }] : [];
       })
       : enAlts.map((alt, i) => ({ alt, json: body.alts?.[i] }));
-    return mapAzure(main, referenceText, rec.analysis.durationMs, ctx.accent, body.us ?? undefined, enResults);
+    // The locale, not the accent: for a French take they differ, and it is the locale that says which lexicon names
+    // the sounds. For an English take the two are the same thing (`localeOf` falls back to the accent).
+    return mapAzure(main, referenceText, rec.analysis.durationMs, ctx.locale, body.us ?? undefined, enResults);
   }
 }
 
