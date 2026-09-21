@@ -1,12 +1,13 @@
 # Wunder Tutor — handoff (2026-09-21)
 
-## Start here: 2026-09-21 afternoon — Japanese, and conversations in every course (local commits, NOT deployed)
+## Start here: 2026-09-21 afternoon — Japanese, and conversations in every course (DEPLOYED 14:32, not pushed)
 
 Built at Leslie's request ("add japanese lessons for 5-adult … conversation need to follow language selected — eng,
 chinese, french and japanese"). All in phone build `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk`.
-**Japanese needs `npm run deploy` before it works on the phone or the web**: the live server still refuses locale
-ja-JP for scoring and Japanese text for the voice (server/core.mjs `LOCALES`, server/tts.mjs). Everything else below
-works against the live server as it is. Ask Leslie before deploying.
+**Deployed at Leslie's OK, 2026-09-21 14:32** (Pages deployment 717e8c93): app.wundertutor.com serves index-CHaFx5l2.js
+(contains the Japanese course), /api/status ok ×3, phone preflight 204. Before it, the phone showed "The teacher can't
+say this one" on every Japanese line — the old server refused Japanese text (invalid_text) and locale ja-JP. Japanese
+spoken and scored on a real phone NOT yet seen: that is the first thing to check.
 
 - **French "would not proceed even at 88%"** (fromage 78 → 88): the retry fixed the r, the screen said "You fixed it!",
   and Continue opened a workout for that same r — the drill was picked from the FIRST take. Now `soundToDrill`
@@ -84,7 +85,7 @@ A pronunciation-first language tutor. Core loop:
 | Thing | Where |
 | --- | --- |
 | Code | `C:\_Cloud\Dropbox\Dev\Apps\wunder-tutor` · GitHub **private** `lesliewu321/wunder-tutor` (`main`) — last pushed 2026-09-20 at Leslie's request; **15 commits since are local only** at the end of 2026-09-21 (the last one, the Courses dropdown, is not live either) (push only when asked) |
-| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = commit 516e6d1 of 2026-09-21** (verified by bundle hash and `/api/status` ok ×3). Main is ahead: the Courses dropdown, the French drill fix, conversations per course, and Japanese (server change: ja-JP scoring and voice). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk` (= main with Japanese and course-aware conversations, built 13:38 — Japanese needs a deploy to work; `npm run app:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` there with the next letter) |
+| App (hosted) | https://app.wundertutor.com (= `wunder-tutor.pages.dev`) — Cloudflare Pages project `wunder-tutor`. **Live = main as of 2026-09-21 14:32** (commit 366cf24, deployment 717e8c93, verified by bundle hash, `/api/status` ok ×3 and the phone preflight). `npm run deploy`; a GitHub push does NOT deploy. Phone build: `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk` (= main with Japanese and course-aware conversations, built 13:38 — Japanese needs a deploy to work; `npm run app:apk`, then copy `android/app/build/outputs/apk/debug/app-debug.apk` there with the next letter) |
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
