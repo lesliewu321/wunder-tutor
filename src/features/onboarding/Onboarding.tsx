@@ -10,7 +10,7 @@ import { useT } from '../../i18n/useT';
 import { labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { micSupported } from '../../speech/recorder';
 import { voice } from '../../speech/voice';
-import { bandForAge, useProfile, useStore } from '../../state/store';
+import { useProfile, useStore } from '../../state/store';
 import { Button, IconButton, ProgressBar, toast } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
 import { SpeakExercise } from '../speak/SpeakExercise';
@@ -30,7 +30,6 @@ const LEARN: { id: CourseId | 'es' | 'fr' | 'de'; label: Key; ready: boolean; la
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
   { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'fr', label: 'onboarding.languages.learn.fr', ready: false }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
 ];
-const BAND_HINT: Partial<Record<AgeBand, Key>> = { little: 'onboarding.who.band.little', junior: 'onboarding.who.band.junior', teen: 'onboarding.who.band.teen' };
 /**
  * Who a sentence is about: the grown-up themself, the child by nickname, or "your child" before a nickname is typed.
  * Each is a whole sentence of its own, because the words around the name change with it (and differently in Chinese).
@@ -39,10 +38,21 @@ type About = 'adult' | 'named' | 'unnamed';
 const LEVEL_TITLE: Record<About, Key> = { adult: 'onboarding.level.title.adult', named: 'onboarding.level.title.named', unnamed: 'onboarding.level.title.unnamed' };
 const MIC_BODY: Record<About, Key> = { adult: 'onboarding.consent.mic.body.adult', named: 'onboarding.consent.mic.body.named', unnamed: 'onboarding.consent.mic.body.unnamed' };
 const RECORDINGS_BODY: Record<About, Key> = { adult: 'onboarding.consent.recordings.body.adult', named: 'onboarding.consent.recordings.body.named', unnamed: 'onboarding.consent.recordings.body.unnamed' };
-/** Grown-ups get the adult presentation; their exact age doesn't matter, so 18+ is one button, not a number. */
+/**
+ * Setup asks for an age RANGE, not a birthday. The app only ever sorts a learner into one of these four — they set
+ * the look, the vocabulary and how much reading there is — so asking for a number to the year collected a child's
+ * personal detail we never use, and made a fourteen-button grid of a four-way choice.
+ *
+ * `age` is the first year of the range, which is what `bandForAge` turns back into the band; nothing treats it as a
+ * real age. (The recordings export carries `band` beside it, which is what accuracy work actually reads.)
+ */
+const BANDS: { band: AgeBand; age: number; label: Key; hint: Key }[] = [
+  { band: 'little', age: 5, label: 'onboarding.who.band.little.label', hint: 'onboarding.who.band.little' },
+  { band: 'junior', age: 8, label: 'onboarding.who.band.junior.label', hint: 'onboarding.who.band.junior' },
+  { band: 'teen', age: 12, label: 'onboarding.who.band.teen.label', hint: 'onboarding.who.band.teen' },
+  { band: 'adult', age: 18, label: 'onboarding.who.band.adult.label', hint: 'onboarding.who.adultHint' },
+];
 const ADULT_AGE = 18;
-/** 5 to 17 one by one, then "18+" — fourteen buttons, which is two full rows of the age grid. */
-const AGES = [...Array.from({ length: 13 }, (_, i) => i + 5), ADULT_AGE];
 
 type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script' | 'consent' | 'handover' | 'check' | 'plan';
 
@@ -85,7 +95,6 @@ export function Onboarding() {
     'consent', ...(adult ? [] : ['handover' as const]), 'check', 'plan',
   ];
   const about: About = adult ? 'adult' : name.trim() ? 'named' : 'unnamed';
-  const bandHint = (n: number): string => { const key = BAND_HINT[bandForAge(n)]; return key ? t(key) : ''; };
   const go = (s: StepId) => setStep(s);
   const next = () => go(order[order.indexOf(step) + 1]);
   const back = () => {
@@ -177,15 +186,14 @@ export function Onboarding() {
     case 'learner':
       return shell(
         <>
-          {/* Age comes first because it answers everything else: the band, the look, the wording, and whether the
-              rest of setup is a parent's or the learner's own. 18+ is simply the last button. */}
+          {/* Age comes first because it answers everything else: the look, the wording, and whether the rest of
+              setup is a parent's or the learner's own. 18+ is simply the last of the four. */}
           <h2 className="field-label">{t('onboarding.who.age')}</h2>
-          <div className="ages">{AGES.map((n) => (
-            <button key={n} type="button" className={`age ${n === ADULT_AGE ? 'age--adult' : ''} ${age === n ? 'is-on' : ''}`} onClick={() => setAge(n)} aria-pressed={age === n} aria-label={n === ADULT_AGE ? t('onboarding.who.adult.aria') : undefined}>
-              {n === ADULT_AGE ? t('onboarding.who.adult') : n}
+          <div className="stack">{BANDS.map((b) => (
+            <button key={b.band} type="button" className={`tile tile--wide ${age === b.age ? 'is-on' : ''}`} onClick={() => setAge(b.age)} aria-pressed={age === b.age}>
+              <span><b>{t(b.label)}</b><small>{t(b.hint)}</small></span>
             </button>
           ))}</div>
-          {age !== null && <p className="hint">{adult ? t('onboarding.who.adultHint') : bandHint(age)}</p>}
           <h2 className="field-label">{t('onboarding.who.buddy')}</h2>
           <div className="avatars">{AVATARS.map((a) => <button key={a} type="button" className={`avatar-pick ${avatar === a ? 'is-on' : ''}`} onClick={() => setAvatar(a)} aria-pressed={avatar === a} aria-label={t('onboarding.who.avatar.aria', { avatar: a })}>{a}</button>)}</div>
           <label className="field-label" htmlFor="nick">{t(adult ? 'onboarding.who.name.adult.label' : 'onboarding.who.name.child.label')} <small>{t(adult ? 'onboarding.who.name.adult.note' : 'onboarding.who.name.child.note')}</small></label>

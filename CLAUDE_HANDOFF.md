@@ -261,6 +261,28 @@ A third review (reading, privacy, scoring changes) — all fixed, then re-measur
 - The Claude tutor (no key). Supabase. Teacher-take quality thresholds for Mandarin
   (`TEACHER_MIN_ACCURACY` 85 / `TEACHER_MIN_SYLLABLE` 70 in `server/core.mjs`) are uncalibrated.
 
+## Asked for on 2026-09-20/21, not built yet
+
+Leslie's own words, in the order they came. None of these exist yet.
+
+1. **Testing data should come back by itself.** Today a parent has to open Settings → Share recordings, export a
+   file and send it. Leslie: a **checkbox in beta mode, "data will be used to improve app", ticked by default**, "so
+   parents don't need to download and send data for testing". Needs somewhere to put the audio (R2 or Supabase
+   Storage — neither exists yet) and a consent wording that matches what actually leaves the device. Note what the
+   app promises today: recordings stay on the device and leave only to be scored. Whatever is built must not make
+   that sentence untrue, and a pre-ticked box for a child's voice is the kind of consent a regulator discounts —
+   worth Leslie deciding knowingly, not by default.
+2. **Invite codes, plural, each good for 10 referrals**, with **a sense of urgency** (read as: the code shows how
+   many of its 10 places are left, and expires). Today there is ONE shared passphrase, `BETA_ACCESS_CODE`, a
+   Cloudflare secret compared as a string (`server/core.mjs`). Real codes need a table (Supabase is already wired up
+   with RLS and migrations), a generator Leslie can run, a count per code, and the API checking the table instead of
+   one secret.
+3. **A bonus game: tongue twisters**, said aloud and scored, with **a central leaderboard** of the highest scorers.
+   The scoring pipeline already exists (`SpeakExercise`, `/api/assess`); what is new is the content, a game mode with
+   a score worth competing over, and a shared board. **A public board of children ranked by name is a child-safety
+   decision, not a technical one** — nicknames are already "no real names needed", which helps, but who can see whom
+   needs Leslie's explicit answer before it is built.
+
 ## Open items
 
 1. **Cost at scale:** halved on 2026-09-19 (trimming + word clips, see above); a take still costs up to ~2–4× its
