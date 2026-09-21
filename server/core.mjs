@@ -25,9 +25,12 @@ const CLAUDE_TIMEOUT_MS = 20_000;
 const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN', 'fr-FR']);
 /** At most this many "likely mistake" re-scorings of one take (each is billed as a scoring). */
 const MAX_ALTS = 5;
-/** A Mandarin teacher take is only kept if it scores at least this well as its own text (calibrated in eval/). */
+/**
+ * A Mandarin teacher take is only kept if it scores at least this well as its own text. Measured, not guessed:
+ * `eval/teacher-gate.mjs` — see verifyTake for what each number costs and buys.
+ */
 const TEACHER_MIN_ACCURACY = 85;
-const TEACHER_MIN_SYLLABLE = 70;
+const TEACHER_MIN_SYLLABLE = 55;
 export const ACCESS_HEADER = 'x-wunder-access';
 
 /** A "Success" response whose best result carries no pronunciation scores at all. */
@@ -188,16 +191,42 @@ export function createApi(rawEnv, deps = {}) {
     read: Boolean(GEMINI_API_KEY),
   };
 
-  /** Quality gate for new Mandarin teacher takes: the take must score as the text, syllable by syllable. */
+  /**
+   * Quality gate for new Mandarin teacher takes: the take must score as the text, syllable by syllable. A take that
+   * fails is never served, so the line stays silent — which is right when the voice said it wrongly, and a needless
+   * hole in the lesson when it did not.
+   *
+   * Calibrated 2026-09-21 against the eval set's own Kore recordings of every course line, and against 456 takes
+   * that say the right syllable with the WRONG TONE — the failure this gate exists to catch, since the transcript
+   * check before it has already thrown out a take that said different words. Two things were costing lines for
+   * nothing:
+   *
+   *   * Neutral-tone syllables. Azure scores them erratically (43 on a clean 喜欢), which is why the app already
+   *     ignores them when judging a LEARNER. They are ignored here now too.
+   *   * Azure's Mispronunciation and Insertion labels on synthetic speech: 鱼 in 吃鱼 came back scored 2 and marked
+   *     an insertion on a recording that says it perfectly well. Omission is kept fatal — a voice that skipped a
+   *     word must never be taught from — and costs nothing: it caught the same 341 wrong-tone takes either way.
+   *
+   * With the syllable floor at 55, 101 of 107 course lines get a voice (98 before) and 341 of 456 wrong-tone takes
+   * are still refused (342 before): three lessons' worth of silence bought for one take in 456. Lowering the
+   * ACCURACY floor was the tempting alternative and is a bad trade — 85 → 80 costs 35 wrong-tone catches.
+   * `eval/teacher-gate.mjs` re-runs the whole measurement.
+   */
   async function verifyTake(wav, text, locale) {
     const j = JSON.parse(await scoreOnce(wav, text, locale, 0));
     if (j.RecognitionStatus !== 'Success') return false;
     const best = j.NBest?.[0];
     const pa = best?.PronunciationAssessment ?? best ?? {};
     const words = best?.Words ?? [];
-    if (words.some((w) => ((w.PronunciationAssessment ?? w).ErrorType ?? 'None') !== 'None')) return false;
-    const syllables = words.flatMap((w) => (w.Phonemes?.length ? w.Phonemes : [w]).map((p) => (p.PronunciationAssessment ?? p).AccuracyScore ?? 0));
-    return (pa.AccuracyScore ?? 0) >= TEACHER_MIN_ACCURACY && syllables.every((s) => s >= TEACHER_MIN_SYLLABLE);
+    if (words.some((w) => ((w.PronunciationAssessment ?? w).ErrorType ?? 'None') === 'Omission')) return false;
+    const units = words.flatMap((w) => (w.Phonemes?.length ? w.Phonemes : [w]).map((p) => ({
+      // zh-CN names each unit as pinyin with its tone digit, "si 4"; 5 is the neutral tone.
+      tone: Number(/(\d)\s*$/.exec(String(p.Phoneme ?? ''))?.[1] ?? 0),
+      score: (p.PronunciationAssessment ?? p).AccuracyScore ?? 0,
+    })));
+    const counted = units.filter((u) => u.tone !== 5);
+    if (!counted.length) return false;
+    return (pa.AccuracyScore ?? 0) >= TEACHER_MIN_ACCURACY && counted.every((u) => u.score >= TEACHER_MIN_SYLLABLE);
   }
 
   const tts = status.gemini
