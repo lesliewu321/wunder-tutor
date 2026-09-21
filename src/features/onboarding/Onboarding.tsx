@@ -139,8 +139,10 @@ export function Onboarding() {
         </header>
       )}
       <div className="onboard__body">
-        {/* The App language comes before every other choice, so the family can read the rest of setup. */}
-        {step === 'welcome' && (
+        {/* The App language comes before every other choice, so the family can read the rest of setup — on whichever
+            screen is first. Adding a second learner starts at "languages", not at the welcome screen, and used to
+            offer no way to change the language at all. */}
+        {step === order[0] && (
           <div className="segmented segmented--lang" role="group" aria-label={t('onboarding.language.aria')}>
             {LANGUAGES.map((l) => (
               <button key={l.id} type="button" lang={l.htmlLang} className={language() === l.id ? 'is-on' : ''} aria-pressed={language() === l.id} onClick={() => setSettings({ language: l.id })}>{l.label}</button>
