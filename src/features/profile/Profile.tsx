@@ -284,6 +284,33 @@ export function ParentZone() {
 
       <AccountPanel />
 
+      {services && (services.needsCode || !!getAccessCode()) && (
+        <section id="zone-code">
+          <h2 className="section-title">{t('settings.beta.title')}</h2>
+          <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); void submitCode(); }}>
+            {invite
+              ? (() => { const line = inviteLine(invite); return <p className={line.good ? 'access access--ok' : 'access access--bad'} role="status">{line.text}</p>; })()
+              : <p className={services.authorized ? 'access access--ok' : 'access'}>{t(betaMessage)}</p>}
+            <label className="sr-only" htmlFor="access-code">{t('settings.beta.label')}</label>
+            <input id="access-code" className="input" value={code} onChange={(e) => { setCode(e.target.value); setInvite(null); }} autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder={t('settings.beta.placeholder')} />
+            <Button type="submit" block disabled={redeeming || !code.trim() || (services.authorized && code.trim() === getAccessCode())}>{t(redeeming ? 'settings.beta.checking' : 'settings.beta.save')}</Button>
+          </form>
+        </section>
+      )}
+
+      <section>
+        <h2 className="section-title">{t('settings.look.title')}</h2>
+        {/* The app's own wording — never what is being learned. For this device, whoever is learning. */}
+        <div className="form-card form-card--gap">
+          <label className="select-row"><span>{t('settings.look.language')}</span>
+            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as Language })}>{LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}</select>
+          </label>
+        </div>
+        <div className="segmented" role="group" aria-label={t('settings.look.theme')}>
+          {THEMES.map(([id, label]) => <button key={id} type="button" className={settings.theme === id ? 'is-on' : ''} aria-pressed={settings.theme === id} onClick={() => setSettings({ theme: id })}>{t(label)}</button>)}
+        </div>
+      </section>
+
       <section>
         <h2 className="section-title">{t('settings.learning.title', { name })}</h2>
         <div className="form-card">
@@ -324,33 +351,6 @@ export function ParentZone() {
           <button type="button" className="is-strong" onClick={() => setDanger('everything')}><Icon name="trash" size={20} />{t('settings.delete.everything')}</button>
         </div>
       </section>
-
-      <section>
-        <h2 className="section-title">{t('settings.look.title')}</h2>
-        {/* The app's own wording — never what is being learned. For this device, whoever is learning. */}
-        <div className="form-card form-card--gap">
-          <label className="select-row"><span>{t('settings.look.language')}</span>
-            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as Language })}>{LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}</select>
-          </label>
-        </div>
-        <div className="segmented" role="group" aria-label={t('settings.look.theme')}>
-          {THEMES.map(([id, label]) => <button key={id} type="button" className={settings.theme === id ? 'is-on' : ''} aria-pressed={settings.theme === id} onClick={() => setSettings({ theme: id })}>{t(label)}</button>)}
-        </div>
-      </section>
-
-      {services && (services.needsCode || !!getAccessCode()) && (
-        <section id="zone-code">
-          <h2 className="section-title">{t('settings.beta.title')}</h2>
-          <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); void submitCode(); }}>
-            {invite
-              ? (() => { const line = inviteLine(invite); return <p className={line.good ? 'access access--ok' : 'access access--bad'} role="status">{line.text}</p>; })()
-              : <p className={services.authorized ? 'access access--ok' : 'access'}>{t(betaMessage)}</p>}
-            <label className="sr-only" htmlFor="access-code">{t('settings.beta.label')}</label>
-            <input id="access-code" className="input" value={code} onChange={(e) => { setCode(e.target.value); setInvite(null); }} autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder={t('settings.beta.placeholder')} />
-            <Button type="submit" block disabled={redeeming || !code.trim() || (services.authorized && code.trim() === getAccessCode())}>{t(redeeming ? 'settings.beta.checking' : 'settings.beta.save')}</Button>
-          </form>
-        </section>
-      )}
 
       {services?.authorized && (services.azure || services.read) && (
         <section id="zone-connections">
