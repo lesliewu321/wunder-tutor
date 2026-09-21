@@ -19,6 +19,11 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   LOCKED" and chose: children keep the lessons in order ("Finish X first"); grown-ups (band `adult`) may open any lesson,
   "Up next" still marks the first unfinished one. The unwritten future units lost their padlock and say "Coming soon" /
   即將推出 (`.unit-soon` in Home.tsx). Checked in a separate preview: child vs grown-up, phone size, dark, 繁體中文.
+- **Settings order (17:40, commit 318b4a3, phone build 2026-09-21k, NOT deployed):** Leslie's order — Learners, Family
+  account, Invite code, Appearance, "{name}'s learning", Voice & privacy, then Connections and Demo as before.
+- **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
+  (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
+  Nothing renamed yet; ~40 text lines (en + zh-Hant) + site mention "Pip".
 - **French "would not proceed even at 88%"** (fromage 78 → 88): the retry fixed the r, the screen said "You fixed it!",
   and Continue opened a workout for that same r — the drill was picked from the FIRST take. Now `soundToDrill`
   (tutor/feedback.ts, tested) picks from the last take. The demo microphone also scored French with the English
