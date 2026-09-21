@@ -105,6 +105,14 @@ export const ZP = {
   xihuanYu: zi('我喜欢吃鱼。', '我喜歡吃魚。', 'wo3 xi3 huan5 chi1 yu2', 'I like eating fish.', '🐟', ['zh:ü', 'zh:sh']),
   henHaochi: zi('很好吃！', '很好吃！', 'hen3 hao3 chi1', 'Very tasty!', '😋', ['zh:t3', 'zh:sh']),
   yaoTang: zi('我要糖。', '我要糖。', 'wo3 yao4 tang2', 'I want sweets.', '🍬', ['zh:t2']),
+  /**
+   * NOT USED IN ANY LESSON, on purpose. The classic tongue twister, and the scorer cannot cope with it: said alone
+   * 四 scores 95 and 是 scores 90, but in this sequence 四 drops to 56 and the line to 81. All six Gemini voices
+   * score between 28 and 82 on it, so no teacher recording can be made — and if a perfect rendering is marked down
+   * like that, a learner saying it correctly would be told they were wrong, which is worse than not offering it.
+   * Kept here because the accuracy test set has takes of it, and it is the sharpest example we have of the scorer
+   * failing on a sequence rather than on a sound. Measure before bringing it back: `node eval/teacher-gate.mjs`.
+   */
   sishisi: zi('四是四，十是十。', '四是四，十是十。', 'si4 shi4 si4 shi2 shi4 shi2', 'Four is four, ten is ten.', '🔢', ['zh:sh', 'zh:t4', 'zh:t2']),
   nihao: zi('你好！', '你好！', 'ni3 hao3', 'Hello!', '👋', ['zh:t3', 'zh:n']),
   heGuozhi: zi('我想喝果汁。', '我想喝果汁。', 'wo3 xiang3 he1 guo3 zhi1', 'I’d like some juice.', '🧃', ['zh:sh', 'zh:t3']),
@@ -167,7 +175,9 @@ const foodLessons: Lesson[] = [
   lesson('zh-food-3', 'The four tones', '🎵', 'pronunciation', {
     little: [pair(W.ma1, W.ma3, 0, 'zh:t1'), speak(W.ma1), speak(W.ma3), speak(W.tang), pair(W.tang, W.tangSweet, 1, 'zh:t2')],
     junior: [pair(W.mai3, W.mai4, 0, 'zh:t3'), speak(W.mai3), speak(W.mai4), speak(W.tangSweet), speak(P.yaoTang)],
-    teen: [pair(W.shi2, W.si4, 0, 'zh:sh'), speak(W.shi4), speak(W.si4), speak(W.shi2), speak(P.sishisi)],
+    // 诗/丝 rather than 十/四, and 電視 rather than 十: see sishisi below — the scorer cannot handle a run of sì and
+    // shí, and 十 on its own sits just under the bar, so neither could be played to the learner at all.
+    teen: [pair(W.shi1, W.si1, 0, 'zh:sh'), speak(W.shi4), speak(W.si4), speak(W.dianshi), speak(P.qingGei)],
   }),
   lesson('zh-food-4', 'Listen closely', '👂', 'listening', {
     little: [heard(W.xiangjiao, W.pingguo, W.yu), pair(W.ma1, W.ma3, 1, 'zh:t3'), heard(W.shui, W.niunai, W.xiangjiao), speak(W.yu)],
@@ -187,7 +197,7 @@ const foodLessons: Lesson[] = [
   lesson('zh-food-7', 'Review', '🏆', 'review', {
     little: [speak(W.pingguo, 'image'), speak(W.ma1), speak(P.xiexie), speak(P.woYaoShui)],
     junior: [speak(P.xiangHeShui), speak(W.mai3), speak(W.tang), speak(P.yaoPingguo)],
-    teen: [speak(P.sishisi), speak(P.qingGei), speak(P.xihuanYu), speak(P.henHaochi)],
+    teen: [speak(W.shizi), speak(P.qingGei), speak(P.xihuanYu), speak(P.henHaochi)],
   }),
 ];
 
@@ -210,7 +220,9 @@ export const ZH_COURSE: Course = {
 export const ZH_CHECK_ITEMS: Record<'little' | 'junior' | 'teen', SpeakItem[]> = {
   little: [W.ma1, W.shui, P.xiexie],
   junior: [W.ma1, W.si4, P.xiangHeShui, W.yu],
-  teen: [W.shi2, P.xihuanYu, P.sishisi],
+  // The very first thing a teenager says in Mandarin. It held 十 and 四是四，十是十。 — the two items in the whole
+  // course the teacher's voice cannot say, so two of these three played nothing at all.
+  teen: [W.shi4, P.xihuanYu, P.qingGei],
 };
 
 // ---------- Pronunciation Lab: sound → syllables → words → phrases → sentence ----------
@@ -222,7 +234,7 @@ export const ZH_LADDERS: Record<PhonemeId, Ladder> = {
   'zh:t2': L([W.ma2, W.cha, W.yu], [W.xuexi, W.xiongmao, W.piqiu], [P.heCha2, P.chiYu], P.xiongmaoHeCha),
   'zh:t3': L([W.ma3, W.mi3, W.gou3], [W.shui, W.xiaogou, W.laohu], [P.heShui, P.henE], P.xiangHeShui),
   'zh:t4': L([W.da4, W.ba4, W.si4], [W.zaijian, W.dianshi, W.dangao], [P.chiFan, P.kanDianshi], P.babaKanDianshi),
-  'zh:sh': L([W.zhi1, W.chi1, W.shi1], [W.shu1, W.cha, W.shizi], [P.chiFan, P.kanShu], P.sishisi),
+  'zh:sh': L([W.zhi1, W.chi1, W.shi1], [W.shu1, W.cha, W.shizi], [P.chiFan, P.kanShu], P.qingGei),
   'zh:j': L([W.ji1, W.qi1, W.xi1], [W.jidan, W.xigua, W.qiaokeli], [P.chiJidan, P.qiZhiJi], P.xihuanXigua),
   'zh:ü': L([W.yu, W.nv3, W.lv4], [W.juzi, W.qu4, W.xue2], [P.chiYu, P.xiaYu], P.nvhaiQuXuexiao),
   'zh:n': L([W.ni3, W.li3, W.niu2], [W.niunai, W.lanse, W.nainai], [P.heNiunai, P.niLaiLe], P.nainaiHeNiunai),

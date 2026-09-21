@@ -75,6 +75,23 @@ console.log(`course lines ${lines.length} · wrong-tone takes ${wrongTone.length
 row('before (acc 85, syllable 70)', before);
 row('now (acc 85, syllable 55)', gate(85, 55));
 
+/**
+ * A single character is judged twice as hard as a sentence for no reason: its "accuracy" IS its one syllable's
+ * score, so the floor of 85 applies where a sentence only needs 55. And a single character is exactly what the
+ * BROWSER re-checks by tone contour before playing it (src/speech/zh/teacherCheck.ts — measured: keeps 70/70
+ * correct takes, catches 27 of 37 wrong-tone ones), so the server can afford the same floor there.
+ */
+const oneRule = (minAccuracy, minSyllable) => (m) => {
+  if (m === null) return false;
+  if (m.units.some((u) => u.error === 'Omission')) return false;
+  const counted = m.units.filter((u) => toneOf(u.unit) !== 5);
+  if (!counted.length) return false;
+  if (!counted.every((u) => u.score >= minSyllable)) return false;
+  return counted.length === 1 ? true : m.accuracy >= minAccuracy;
+};
+console.log('');
+row('single characters by syllable', oneRule(85, 55));
+
 if (process.argv.includes('--sweep')) {
   console.log('');
   for (const accuracy of [85, 80, 78, 75]) {
