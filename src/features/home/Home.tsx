@@ -44,6 +44,8 @@ export function Home() {
   const practiceMode = api !== null && !api.azure;
   // The Putonghua course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
   const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', fr: 'Français', ja: '日本語 Japanese' };
+  // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
+  const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
 
   return (
     <div className="screen home">
@@ -71,12 +73,16 @@ export function Home() {
       </div>
 
       {mode === 'book' ? <BookHome p={p} /> : <>
-      {/* A dropdown, like the settings rows (Leslie, 2026-09-21): side-by-side buttons ran out of room at three courses. */}
-      <label className="course-pick"><span>{t('home.course.aria')}</span>
-        <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
-          {(Object.entries(courseLabel) as [CourseId, string][]).map(([id, label]) => <option key={id} value={id}>{inScript(label, p.zhScript)}</option>)}
-        </select>
-      </label>
+      {/* Switching between the learner's own courses — the ones a grown-up chose in Settings (Leslie, 2026-09-21: "even if
+          I select only 2 languages in settings, all 4 appear in front page"). One course needs no switch: the card below
+          already names it. A dropdown, like the settings rows: side-by-side buttons ran out of room at three. */}
+      {myCourses.length > 1 && (
+        <label className="course-pick"><span>{t('home.course.aria')}</span>
+          <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
+            {myCourses.map((id) => <option key={id} value={id}>{inScript(courseLabel[id], p.zhScript)}</option>)}
+          </select>
+        </label>
+      )}
 
       {p.course === 'zh' && !p.zhChecked && (
         <button type="button" className="practice-note practice-note--check" onClick={() => nav('/check/zh')}>
