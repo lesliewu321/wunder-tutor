@@ -57,7 +57,7 @@ camera, reading messages), `lesson` (lesson player, choice exercises), `lab`, `p
 Written Chinese as used in Hong Kong (書面語, not colloquial Cantonese), Traditional characters, Hong Kong vocabulary.
 Warm and simple for children (你, short sentences, no 您); clear and plain for the grown-up screens. Full-width
 punctuation ，。！？：；（）「」. **No long dash (——)**: in the app's headline font it shows as two strokes and reads as 一一
-— use a comma, or a colon before a quotation or an example; a long-held sound is 「嗶～～」. Keep product names in Latin letters: Wunder Tutor, Pip. Keep `{placeholders}` exactly as they are. Don't translate the
+— use a comma, or a colon before a quotation or an example; a long-held sound is 「嗶～～」. Keep product names in Latin letters: Wunder Tutor, Tutu. Keep `{placeholders}` exactly as they are. Don't translate the
 example words being practised.
 
 | English | 繁體中文 (HK) |
@@ -84,7 +84,7 @@ example words being practised.
 | Invite code (the code that switches on the real services during the beta; was "Beta access code") | 邀請碼 |
 | Practice mode — scores are simulated | 練習模式——分數為模擬 |
 | Camera / Photos / Take a photo / Torch / Lens | 相機 / 相片 / 拍照 / 電筒 / 鏡頭 |
-| Conversation / Talk with Pip | 對話 / 和 Pip 聊天 |
+| Conversation / Talk with Tutu | 對話 / 和 Tutu 聊天 |
 | Email / Sign in / Settings | 電郵 / 登入 / 設定 |
 | Connections / Working / Key refused / Not set up | 連線狀態 / 正常 / 金鑰被拒 / 未設定 |
 | Microphone / speaker | 麥克風 / 喇叭 |

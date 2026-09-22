@@ -35,7 +35,7 @@
   "lesson.complete.mastered.title": "{total} 項中已掌握 {n} 項",
   "lesson.complete.mastered.all": "這一課的每一項都說得很清楚。",
   "lesson.complete.mastered.again.adult": "「{text}」很快會再出現，讓你多練習。",
-  "lesson.complete.mastered.again.kid": "Pip 很快會再帶「{text}」回來，讓你多練習。",
+  "lesson.complete.mastered.again.kid": "Tutu 很快會再帶「{text}」回來，讓你多練習。",
   "lesson.complete.progress.little": "看看我的星星",
   "lesson.complete.progress.older": "看看我的進度"
 }

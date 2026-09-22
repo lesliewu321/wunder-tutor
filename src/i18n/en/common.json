@@ -35,7 +35,7 @@
   "common.service.unchecked": "Not checked",
   "common.service.error": "Problem",
   "common.score.aria": "Pronunciation score {score} out of 100",
-  "common.pip.aria": "Pip the tutor",
+  "common.pip.aria": "Tutu the tutor",
   "common.zhChar.aria": "{char} {pinyin}. Tap for help",
   "common.zhChar.aria.scored": "{char} {pinyin}, {label}. Tap for help",
   "common.score.outOf": "out of 100",

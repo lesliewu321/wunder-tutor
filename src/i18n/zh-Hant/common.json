@@ -35,7 +35,7 @@
   "common.service.unchecked": "未檢查",
   "common.service.error": "有問題",
   "common.score.aria": "發音分數：100 分中得 {score} 分",
-  "common.pip.aria": "導師 Pip",
+  "common.pip.aria": "導師 Tutu",
   "common.zhChar.aria": "{char} {pinyin}。按一下查看提示",
   "common.zhChar.aria.scored": "{char} {pinyin}，{label}。按一下查看提示",
   "common.score.outOf": "滿分 100",

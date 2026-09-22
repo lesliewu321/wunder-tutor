@@ -3,7 +3,7 @@
 
   "progress.empty.title": "Nothing to show yet",
   "progress.empty.body.adult": "Say your first words and every sound will be tracked here.",
-  "progress.empty.body.kid": "Say your first words and Pip will start tracking every sound.",
+  "progress.empty.body.kid": "Say your first words and Tutu will start tracking every sound.",
   "progress.empty.start": "Start a lesson",
 
   "progress.trend.label": "Pronunciation",
@@ -24,7 +24,7 @@
   "progress.weak.heardAs": "Often sounds like “{label}” · heard {n}×",
   "progress.weak.example": "as in “{example}” · heard {n}×",
   "progress.weak.none.adult": "No weak sounds right now.",
-  "progress.weak.none.kid": "No weak sounds right now. Pip will keep listening.",
+  "progress.weak.none.kid": "No weak sounds right now. Tutu will keep listening.",
 
   "progress.improving.title": "Strongest improvements",
 

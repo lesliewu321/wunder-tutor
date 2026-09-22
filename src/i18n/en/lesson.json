@@ -41,7 +41,7 @@
   "lesson.complete.mastered.title": "{n} of {total} mastered",
   "lesson.complete.mastered.all": "Everything in this lesson sounded clear.",
   "lesson.complete.mastered.again.adult": "“{text}” will come back soon for more practice.",
-  "lesson.complete.mastered.again.kid": "Pip will bring back “{text}” soon for more practice.",
+  "lesson.complete.mastered.again.kid": "Tutu will bring back “{text}” soon for more practice.",
   "lesson.complete.progress.little": "See my stars",
   "lesson.complete.progress.older": "See my progress"
 }

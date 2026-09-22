@@ -5,7 +5,7 @@ const BANDS = [
     id: 'little', label: 'Little', ages: '5–7', emoji: '🍎',
     sample: 'apple', sampleNote: 'Single words with big pictures',
     tip: '“Peek your tongue out between your teeth and blow softly — like a quiet snake!”',
-    points: ['Picture-led — almost no reading needed', 'Pip says every tip out loud', 'Stars alongside the score', 'Tiny phrases like “Milk, please.”'],
+    points: ['Picture-led — almost no reading needed', 'Tutu says every tip out loud', 'Stars alongside the score', 'Tiny phrases like “Milk, please.”'],
   },
   {
     id: 'junior', label: 'Junior', ages: '8–11', emoji: '💧',
@@ -39,7 +39,7 @@ export default function AgeTabs() {
               <div className="text-6xl" aria-hidden>{b.emoji}</div>
               <p className="mt-3 font-display text-3xl font-extrabold leading-tight md:text-4xl">{b.sample}</p>
               <p className="mt-2 text-sm text-muted-foreground">{b.sampleNote}</p>
-              <p className="mt-6 rounded-2xl bg-sun-soft px-4 py-3 text-left text-[0.95rem] text-foreground"><span className="font-extrabold text-primary">Pip’s tip for “th”: </span>{b.tip}</p>
+              <p className="mt-6 rounded-2xl bg-sun-soft px-4 py-3 text-left text-[0.95rem] text-foreground"><span className="font-extrabold text-primary">Tutu’s tip for “th”: </span>{b.tip}</p>
             </div>
             <ul className="space-y-3">
               {b.points.map((pt) => (

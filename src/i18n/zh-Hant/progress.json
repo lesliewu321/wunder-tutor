@@ -3,7 +3,7 @@
 
   "progress.empty.title": "暫時未有記錄",
   "progress.empty.body.adult": "說出你的第一個字詞，這裏就會開始記錄每一個音。",
-  "progress.empty.body.kid": "說出你的第一個字詞，Pip 就會開始記錄每一個音。",
+  "progress.empty.body.kid": "說出你的第一個字詞，Tutu 就會開始記錄每一個音。",
   "progress.empty.start": "開始上課",
 
   "progress.trend.label": "發音",
@@ -24,7 +24,7 @@
   "progress.weak.heardAs": "聽起來常像「{label}」 · 聽過 {n} 次",
   "progress.weak.example": "例如「{example}」 · 聽過 {n} 次",
   "progress.weak.none.adult": "目前沒有較弱的音。",
-  "progress.weak.none.kid": "目前沒有較弱的音。Pip 會繼續留心聽。",
+  "progress.weak.none.kid": "目前沒有較弱的音。Tutu 會繼續留心聽。",
 
   "progress.improving.title": "進步最大的音",
 

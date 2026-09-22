@@ -117,7 +117,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item.id]);
 
-  // Young children can't read a correction — Pip says it out loud. Older learners can tap to hear it.
+  // Young children can't read a correction — Tutu says it out loud. Older learners can tap to hear it.
   const sayTip = useCallback((text: string) => {
     stopPlayback();
     void voice.speak(text, { accent: profile.accent }).catch(() => undefined);

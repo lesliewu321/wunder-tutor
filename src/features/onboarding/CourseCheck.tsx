@@ -13,7 +13,7 @@ import { Button, IconButton, ProgressBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
 import { SpeakExercise } from '../speak/SpeakExercise';
 
-/** A one-minute speaking check the first time a learner opens a course, so the plan starts from what Pip heard. */
+/** A one-minute speaking check the first time a learner opens a course, so the plan starts from what Tutu heard. */
 export function CourseCheck() {
   const { t, tc } = useT();
   const nav = useNavigate();

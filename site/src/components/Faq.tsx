@@ -19,7 +19,7 @@ export const FAQ = [
   },
   {
     q: 'My child speaks Spanish / Chinese / Hindi at home. Does that matter?',
-    a: 'Yes — in a good way. You tell Pip your home language during setup, and Pip uses it to predict which English sounds will be trickiest, so the very first session is already personal. After that, Pip learns from what your child actually says.',
+    a: 'Yes — in a good way. You tell Tutu your home language during setup, and Tutu uses it to predict which English sounds will be trickiest, so the very first session is already personal. After that, Tutu learns from what your child actually says.',
   },
   {
     q: 'How long is a lesson?',

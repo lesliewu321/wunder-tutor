@@ -1,7 +1,7 @@
 import { t } from '../i18n';
 export type Mood = 'idle' | 'listening' | 'thinking' | 'happy' | 'cheer' | 'encourage' | 'talking';
 
-/** Pip — Wunder Tutor's guide. Big ears because Pip is, above all, a very good listener. */
+/** Tutu — Wunder Tutor's guide. Big ears because Tutu is, above all, a very good listener. */
 export function Mascot({ mood = 'idle', size = 120, className = '' }: { mood?: Mood; size?: number; className?: string }) {
   const joyful = mood === 'happy' || mood === 'cheer';
   const pupil = mood === 'thinking' ? { dx: -2.5, dy: -3 } : mood === 'listening' ? { dx: 0, dy: -1 } : { dx: 0, dy: 0 };
