@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { contentBand, type Accent, type AgeBand, type CourseId, type Goal, type HomeLanguage, type Level } from '../../domain/types';
 import { ASSESSMENT_ITEMS } from '../../content/course';
@@ -11,11 +11,15 @@ import { LANGUAGES, language, type Key } from '../../i18n';
 import { useBack } from '../../back';
 import { useT } from '../../i18n/useT';
 import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
+import { useAccount } from '../../account/account';
+import { apiHealth, type ApiHealth } from '../../speech';
 import { micSupported } from '../../speech/recorder';
 import { voice } from '../../speech/voice';
 import { useProfile, useStore } from '../../state/store';
 import { Button, IconButton, ProgressBar, toast } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
+import { SignInForm } from '../profile/AccountPanel';
+import { InviteCodeForm } from '../profile/InviteCodeForm';
 import { SpeakExercise } from '../speak/SpeakExercise';
 
 const AVATARS = ['🦊', '🐼', '🦁', '🐸', '🦄', '🐙', '🐯', '🐨', '🚀', '⚽', '🎸', '🎨'];
@@ -65,7 +69,9 @@ const BANDS: { band: AgeBand; age: number; label: Key; hint: Key }[] = [
 ];
 const ADULT_AGE = 18;
 
-type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script' | 'consent' | 'handover' | 'check' | 'plan';
+type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script' | 'consent' | 'account' | 'code' | 'handover' | 'check' | 'plan';
+/** Steps after the consent step has made the learner: going back would make a second one, so they have no ←. */
+const MADE: StepId[] = ['account', 'code', 'handover', 'check', 'plan'];
 
 export function Onboarding() {
   const { t, tc } = useT();
@@ -94,6 +100,14 @@ export function Onboarding() {
   const [contribute, setContribute] = useState(true);
   const [agreed, setAgreed] = useState(false);
   const [checkIndex, setCheckIndex] = useState(0);
+  // The speaking check was done (not skipped): the plan says it is based on what Tutu heard.
+  const [checked, setChecked] = useState(false);
+  const account = useAccount();
+  // What the server needs from this device. Whether to ask for an invite code is decided once, when it first answers:
+  // a code accepted on that step must not make the step vanish from under the learner.
+  const [services, setServices] = useState<ApiHealth | null>(null);
+  const askCode = useRef<boolean | null>(null);
+  useEffect(() => { void apiHealth().then((h) => { askCode.current ??= h.needsCode && !h.authorized; setServices(h); }); }, []);
 
   // The phone’s Back is the ← at the top: one step back. On the first screen it leaves the app; the child’s
   // handover and the finished plan have no ← and stay put. (Set below, once the steps are known.)
@@ -109,7 +123,8 @@ export function Onboarding() {
   const order: StepId[] = [
     'welcome', 'languages', 'learner', 'level',
     ...(learning.includes('en') ? ['accent' as const] : []), ...(learning.includes('zh') ? ['script' as const] : []),
-    'consent', ...(adult ? [] : ['handover' as const]), 'check', 'plan',
+    // The email and the invite code before the check (Leslie, 2026-09-22): without a code the teacher was silent there.
+    'consent', 'account', ...(askCode.current ? ['code' as const] : []), ...(adult ? [] : ['handover' as const]), 'check', 'plan',
   ];
   const about: About = adult ? 'adult' : name.trim() ? 'named' : 'unnamed';
   // Crossing the line between a child and a grown-up changes which reasons for learning are offered, so a reason
@@ -123,7 +138,7 @@ export function Onboarding() {
   };
   onBack.current = () => {
     if (step === 'welcome') return false;
-    if (step !== 'plan' && step !== 'handover') back();
+    if (!MADE.includes(step)) back();
     return true;
   };
   const progress = Math.max(0, order.indexOf(step)) / (order.length - 1);
@@ -149,7 +164,7 @@ export function Onboarding() {
     <div className="screen onboard">
       {step !== 'welcome' && step !== 'plan' && (
         <header className="lesson__bar">
-          {step !== 'handover' ? <IconButton icon="back" label={t('common.back')} onClick={back} /> : <span className="topbar__spacer" />}
+          {!MADE.includes(step) ? <IconButton icon="back" label={t('common.back')} onClick={back} /> : <span className="topbar__spacer" />}
           <ProgressBar value={progress} />
           <span className="topbar__spacer" />
         </header>
@@ -296,6 +311,22 @@ export function Onboarding() {
         { grownUp: true, title: t('onboarding.consent.title'), sub: t(adult ? 'onboarding.consent.sub.adult' : 'onboarding.consent.sub.child') },
       );
 
+    case 'account':
+      return shell(
+        account.status === 'signed-in'
+          ? <div className="form-card form-card--pad"><p className="access access--ok" role="status">{t('settings.account.signedIn', { email: account.email ?? '', name: existing?.name ?? name.trim() })}</p></div>
+          : existing ? <SignInForm learner={existing} /> : null,
+        <Button size="lg" block disabled={account.status !== 'signed-in'} onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t(adult ? 'onboarding.account.title.adult' : 'onboarding.account.title.child') }, // the form says why
+      );
+
+    case 'code':
+      return shell(
+        services ? <InviteCodeForm services={services} onServices={setServices} /> : null,
+        <Button size="lg" block disabled={!services?.authorized} onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, title: t('onboarding.code.title'), sub: t('onboarding.code.sub') },
+      );
+
     case 'handover':
       return shell(
         <div className="handover"><div className="handover__avatar">{avatar}</div></div>,
@@ -310,11 +341,13 @@ export function Onboarding() {
       const item = items[checkIndex];
       return (
         <div className="screen lesson">
-          <header className="lesson__bar"><span className="topbar__spacer" /><ProgressBar value={checkIndex / items.length} tone="leaf" /><span className="lesson__count">{checkIndex + 1}/{items.length}</span></header>
+          {/* A way out (Leslie: "there is not navigation on this screen"): skipping goes to the plan, from the home language. */}
+          <header className="lesson__bar"><IconButton icon="close" label={t('onboarding.check.skip')} onClick={() => go('plan')} /><ProgressBar value={checkIndex / items.length} tone="leaf" /><span className="lesson__count">{checkIndex + 1}/{items.length}</span></header>
           <div className="lesson__body" key={item.id}>
             <SpeakExercise item={item} context="onboarding" mode="check" onDone={() => {
               if (checkIndex + 1 < items.length) return setCheckIndex(checkIndex + 1);
               if (firstCourse === 'zh' && profile) patchProfile(profile.id, { zhChecked: true });
+              setChecked(true);
               go('plan');
             }} />
           </div>
@@ -345,7 +378,7 @@ export function Onboarding() {
           <p className="hint">{t(adult ? 'onboarding.plan.hint.adult' : 'onboarding.plan.hint.child')}</p>
         </>,
         <Button size="lg" block onClick={() => nav('/', { replace: true })}>{t('onboarding.plan.start')}</Button>,
-        { mascot: 'happy', title: adult ? t('onboarding.plan.title.adult') : t('onboarding.plan.title.child', { name: profile.name }), sub: t(adult ? 'onboarding.plan.sub.adult' : 'onboarding.plan.sub.child') },
+        { mascot: 'happy', title: adult ? t('onboarding.plan.title.adult') : t('onboarding.plan.title.child', { name: profile.name }), sub: t(!checked ? 'onboarding.plan.sub.predicted' : adult ? 'onboarding.plan.sub.adult' : 'onboarding.plan.sub.child') },
       );
     }
   }

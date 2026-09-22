@@ -9,12 +9,13 @@ import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, goalDetail, goalLabel, liveStreak } from '../../engine/rewards';
 import { LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
-import { apiHealth, getAccessCode, redeemInvite, refreshHealth, serviceStatus, serviceWords, type ApiHealth, type InviteAnswer, type ServiceStatus } from '../../speech';
+import { apiHealth, getAccessCode, serviceStatus, serviceWords, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
 import { deleteAccount, useAccount } from '../../account/account';
 import { AccountPanel } from './AccountPanel';
+import { InviteCodeForm } from './InviteCodeForm';
 
 const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
 const COURSES: CourseId[] = ['en', 'zh', 'fr', 'ja'];
@@ -133,10 +134,6 @@ export function ParentZone() {
   const [danger, setDanger] = useState<Danger>(null);
   const [recordings, setRecordings] = useState<number | null>(null);
   const [services, setServices] = useState<ApiHealth | null>(null);
-  const [code, setCode] = useState(getAccessCode);
-  // What the server said about the last code entered: its places and end date if accepted, or why not.
-  const [invite, setInvite] = useState<InviteAnswer | 'offline' | null>(null);
-  const [redeeming, setRedeeming] = useState(false);
   // Sent here to fix something (the camera's "Enter the code" / "Check connections"): show that part, not the top.
   const show = (useLocation().state as { show?: 'code' | 'connections' } | null)?.show;
   // A live check of the services behind the app: a key can be present and still be refused.
@@ -195,39 +192,6 @@ export function ParentZone() {
     </label>
   );
 
-  const betaMessage: Key = services?.authorized ? 'settings.beta.accepted' : !services?.codeSet ? 'settings.beta.noCodeSet' : !services.needsCode ? 'settings.beta.unreachable' : getAccessCode() ? 'settings.beta.refused' : 'settings.beta.prompt';
-
-  /**
-   * A code is only kept once the server has given this device a place on it, so the answer is shown as it came:
-   * the places taken and the closing date (the urgency Leslie wanted), or exactly why it was turned away.
-   */
-  const submitCode = async () => {
-    setRedeeming(true);
-    setInvite(null);
-    try {
-      const answer = await redeemInvite(code);
-      setInvite(answer);
-      if (answer.ok) setServices(await refreshHealth());
-    } catch {
-      setInvite('offline');
-    } finally {
-      setRedeeming(false);
-    }
-  };
-  const inviteDate = (iso?: string) => (iso ? new Date(iso).toLocaleDateString(language() === 'zh-Hant' ? 'zh-HK' : 'en-GB', { day: 'numeric', month: 'short' }) : '');
-  const inviteLine = (a: InviteAnswer | 'offline'): { text: string; good: boolean } => {
-    if (a === 'offline') return { text: t('settings.beta.unreachable'), good: false };
-    const vars = { used: a.used ?? 0, places: a.places ?? 0, date: inviteDate(a.expiresAt) };
-    switch (a.reason) {
-      case 'new': return { text: t('settings.beta.invite.joined', vars), good: true };
-      case 'again': return { text: t('settings.beta.invite.again'), good: true };
-      case 'master': return { text: t('settings.beta.accepted'), good: true };
-      case 'full': return { text: t('settings.beta.invite.full', vars), good: false };
-      case 'expired': return { text: t('settings.beta.invite.expired', vars), good: false };
-      case 'disabled': return { text: t('settings.beta.invite.disabled'), good: false };
-      default: return { text: t('settings.beta.refused'), good: false };
-    }
-  };
   const CONNECTIONS = [['scoring', 'settings.conn.scoring'], ['reading', 'settings.conn.reading'], ['voice', 'settings.conn.voice']] as const;
   const THEMES = [['auto', 'settings.look.theme.auto'], ['light', 'settings.look.theme.light'], ['dark', 'settings.look.theme.dark']] as const;
 
@@ -240,14 +204,7 @@ export function ParentZone() {
       {services && (services.needsCode || !!getAccessCode()) && (
         <section id="zone-code">
           <h2 className="section-title">{t('settings.beta.title')}</h2>
-          <form className="form-card form-card--pad" onSubmit={(e) => { e.preventDefault(); void submitCode(); }}>
-            {invite
-              ? (() => { const line = inviteLine(invite); return <p className={line.good ? 'access access--ok' : 'access access--bad'} role="status">{line.text}</p>; })()
-              : <p className={services.authorized ? 'access access--ok' : 'access'}>{t(betaMessage)}</p>}
-            <label className="sr-only" htmlFor="access-code">{t('settings.beta.label')}</label>
-            <input id="access-code" className="input" value={code} onChange={(e) => { setCode(e.target.value); setInvite(null); }} autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder={t('settings.beta.placeholder')} />
-            <Button type="submit" block disabled={redeeming || !code.trim() || (services.authorized && code.trim() === getAccessCode())}>{t(redeeming ? 'settings.beta.checking' : 'settings.beta.save')}</Button>
-          </form>
+          <InviteCodeForm services={services} onServices={setServices} />
         </section>
       )}
 
