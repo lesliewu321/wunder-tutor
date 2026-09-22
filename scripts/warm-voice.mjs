@@ -9,11 +9,17 @@
 //   node scripts/warm-voice.mjs --server=https://app.wundertutor.com     through a running server instead (the
 //                                   invite code from WUNDER_CODE, sent only in the header the app uses; paced under
 //                                   the server's own limits, so slow: ~120 new takes per 10 minutes)
+//   node scripts/warm-voice.mjs --push                    copy the takes made here into the live server's cache (the
+//                                   KV namespace wunder-tutor-tts-cache, through wrangler): the same keys, since the
+//                                   model and voice are the same, so learners everywhere get them at once. Only
+//                                   with Leslie's go-ahead: it writes to production.
 //
 // Prints one line per take (voice, cache, time) and, at the end, the lines that stayed silent — those are the bugs.
 // Never prints a key.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,6 +29,34 @@ const flag = (name) => args.find((a) => a.startsWith(`--${name}=`))?.slice(name.
 const slow = args.includes('--slow');
 const only = flag('only')?.split(',');
 const server = flag('server');
+const cacheDir = join(root, 'server', '.cache', 'tts');
+
+if (args.includes('--push')) {
+  // Every take on disk, in batches (a bulk write is capped at 100 MB; a take is 50–300 KB), as the hosted API keys them.
+  const KV = '138ec3dd03034f40ab92a58125cd6b07'; // wunder-tutor-tts-cache (npx wrangler kv namespace list)
+  const files = readdirSync(cacheDir).filter((f) => f.endsWith('.wav'));
+  const tmp = mkdtempSync(join(tmpdir(), 'wunder-kv-'));
+  let batch = [], size = 0, pushed = 0;
+  const flush = () => {
+    if (!batch.length) return;
+    const file = join(tmp, `batch-${pushed}.json`);
+    writeFileSync(file, JSON.stringify(batch));
+    execFileSync('npx', ['wrangler', 'kv', 'bulk', 'put', file, '--namespace-id', KV], { stdio: 'inherit', shell: process.platform === 'win32' });
+    pushed += batch.length;
+    console.log(`  ${pushed}/${files.length} takes in the live cache`);
+    batch = []; size = 0;
+  };
+  for (const f of files) {
+    const wav = readFileSync(join(cacheDir, f));
+    batch.push({ key: `tts:${f.slice(0, -4)}`, value: wav.toString('base64'), base64: true });
+    size += wav.length;
+    if (batch.length >= 200 || size > 60e6) flush();
+  }
+  flush();
+  rmSync(tmp, { recursive: true, force: true });
+  console.log(`${pushed} takes copied to the live cache.`);
+  process.exit(0);
+}
 
 const lines = JSON.parse(readFileSync(join(root, 'eval', '.cache', 'voice-lines.json'), 'utf8'))
   .filter((l) => !only || only.includes(l.accent));
@@ -42,7 +76,6 @@ async function speaker() {
   }
   const { env } = await import('../eval/lib.mjs');
   const { createApi } = await import('../server/core.mjs');
-  const cacheDir = join(root, 'server', '.cache', 'tts');
   const ttsCache = {
     get: (key) => readFile(join(cacheDir, `${key}.wav`)).catch(() => null),
     put: async (key, wav) => { await mkdir(cacheDir, { recursive: true }); await writeFile(join(cacheDir, `${key}.wav`), wav); },
