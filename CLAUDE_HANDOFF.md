@@ -28,6 +28,15 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
 - **Setup languages (2026-09-22, commit 00f9eaf, phone build 2026-09-22b, NOT deployed):** "Which languages?" lists the
   four courses first, then Spanish, German and Korean (한국어 Korean / 韓文, new) as coming soon. Hint "one or both" →
   "one or more". The Android build sometimes fails with EBUSY (Dropbox lock on android/…/build): just run it again.
+- **Tester report (WhatsApp, 2026-09-21 22:55–23:00), fixed 2026-09-22 in phone build 2026-09-22c, NOT deployed:**
+  "System back doesn't go back" → `@capacitor/app` + `src/back.ts` (sheet → the page's own choice → history; another
+  tab → Learn; Learn → leave; lessons and started conversations ask first, setup steps back like its ←; tested with
+  `pressBack` in the page, the native event itself only on a phone). "Back button missing" → the Putonghua level check
+  had none (close added); tabs have none by design. "Centre the buddy icons" → `.avatar-pick` grid. "Always getting
+  sound isn't working on this device" + "can't hear different accents" → the voice, scoring and tutor were chosen once
+  at app start, so a code entered in Settings changed nothing until the app was closed; now `fromHealth()`
+  (src/speech/health.ts, tests in health.test.ts). Accents: the server keeps en-US/en-GB takes apart — ask the tester
+  to try again on 22c. Maths check (22a) and soon-languages-last (22b) were already done.
 - **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
   (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
   Nothing renamed yet; ~40 text lines (en + zh-Hant) + site mention "Pip".
