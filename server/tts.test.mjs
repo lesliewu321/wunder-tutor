@@ -1,5 +1,6 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { buildInstruction, createTts, pcmToWav, transcriptMatches, trimSilence } from './tts.mjs';
+import { buildInstruction, createTts, pcmToWav, PREVIEW_LINES, transcriptMatches, trimSilence } from './tts.mjs';
 
 /** A stand-in for the Live API socket: replies to setup, then "speaks" whatever the script says. */
 function fakeLive(script) {
@@ -71,7 +72,7 @@ describe('Gemini Live teacher voice', () => {
     await createTts({ apiKey: 'k', connect: glitchTwice.connect }).speak({ text: 'Tu veux du lait ?', accent: 'fr-FR' });
     expect(glitchTwice.log.sessions).toBe(3);
     const glitchAlways = fakeLive(() => ({ said: 'Bon', seconds: 30 }));
-    await expect(createTts({ apiKey: 'k', connect: glitchAlways.connect }).speak({ text: 'Tu veux du lait ?', accent: 'fr-FR' })).rejects.toMatchObject({ code: 'tts_mismatch' });
+    await expect(createTts({ apiKey: 'k', connect: glitchAlways.connect }).speak({ text: 'Tu veux du lait ?', accent: 'fr-FR' })).rejects.toMatchObject({ code: 'gemini_unstable' });
     expect(glitchAlways.log.sessions).toBe(3);
   });
 
@@ -215,16 +216,82 @@ describe('the backup voice (Azure), when the teacher cannot say a line', () => {
     expect(backup.calls).toHaveLength(0);
   });
 
-  it('Mandarin: the tone gate guards the backup\'s take too', async () => {
+  it('Mandarin: the backup\'s take is served even when the scorer disagrees, and the disagreement is logged', async () => {
+    // The teacher's takes get the full gate; the backup's the reader's — but a reading voice says exactly the text, and on
+    // a tongue twister it is the scorer that fails (妈妈骑马，马慢，妈妈骂马。 came back "妈妈，妈妈"), so its take plays.
     const wrong = fakeLive(() => '十');
-    const refuse = async () => false;
-    await expect(createTts({ apiKey: 'k', connect: wrong.connect, verify: refuse, backup: fakeBackup().fn }).speak({ text: '十', accent: 'zh-CN' })).rejects.toMatchObject({ code: 'tts_mismatch' });
-    // The backup's take gets the lighter gate for a reading voice (reader: true); the teacher's takes the full one.
     const gates = [];
-    const onlyReaderPasses = async (_wav, _text, _locale, opts) => { gates.push(!!opts?.reader); return !!opts?.reader; };
-    const out = await createTts({ apiKey: 'k', connect: wrong.connect, verify: onlyReaderPasses, backup: fakeBackup().fn }).speak({ text: '十', accent: 'zh-CN' });
+    const refuseAll = async (_wav, _text, _locale, opts) => { gates.push(!!opts?.reader); return false; };
+    const warnings = [];
+    const tts = createTts({ apiKey: 'k', connect: wrong.connect, verify: refuseAll, backup: fakeBackup().fn, cache: memoryCache(), log: { warn: (m) => warnings.push(m) } });
+    const out = await tts.speak({ text: '十', accent: 'zh-CN' });
     expect(out.voice).toBe('backup');
     expect(gates).toEqual([false, false, false, true]);
+    expect(warnings).toEqual(['[tts] backup take served although the scorer disagrees: 十']);
+    // A learner's own line is never written to a log.
+    await tts.speak({ text: '四', accent: 'zh-CN', ephemeral: true });
+    expect(warnings[1]).toBe('[tts] backup take served although the scorer disagrees: a learner’s own line');
+  });
+
+  it('gives the teacher a time budget, then lets the backup read the line (nothing kept for good)', async () => {
+    const cache = memoryCache();
+    const hung = { connect: () => ({ addEventListener: () => {}, close: () => {}, send: () => {} }) }; // a socket that never answers
+    const backup = fakeBackup();
+    const started = Date.now();
+    const out = await createTts({ apiKey: 'k', connect: hung.connect, cache, backup: backup.fn, teacherBudgetMs: 300 }).speak({ text: 'water', accent: 'en-US' });
+    expect(out.voice).toBe('backup');
+    expect(Date.now() - started).toBeLessThan(2000);
+    expect(backup.calls).toHaveLength(1);
+    expect(cache.m.size).toBe(0); // the teacher is asked again next time
+  });
+
+  it('keeps the backup\'s take only for a line the teacher was heard to get wrong three times — not after glitches', async () => {
+    const backup = fakeBackup();
+    const glitchAlways = fakeLive(() => ({ said: 'Bon', seconds: 30 }));
+    const cache = memoryCache();
+    const out = await createTts({ apiKey: 'k', connect: glitchAlways.connect, cache, backup: backup.fn }).speak({ text: 'Tu veux du lait ?', accent: 'fr-FR' });
+    expect(out.voice).toBe('backup');
+    expect(glitchAlways.log.sessions).toBe(3);
+    expect(cache.m.size).toBe(0);
+    // Without a backup, the reason says what happened: the teacher glitched, it did not refuse the line.
+    await expect(createTts({ apiKey: 'k', connect: fakeLive(() => ({ said: 'Bon', seconds: 30 })).connect }).speak({ text: 'Tu veux du lait ?', accent: 'fr-FR' })).rejects.toMatchObject({ code: 'gemini_unstable', status: 504 });
+  });
+
+  it('reads a line in the backup voice when the app asks for it by name, beside the teacher\'s take', async () => {
+    // The app's own Mandarin tone check turned the teacher's take away: that take stays the line's for everyone else.
+    const cache = memoryCache();
+    const live = fakeLive((prompt) => prompt.replace('SAY: ', ''));
+    const backup = fakeBackup();
+    const tts = createTts({ apiKey: 'k', connect: live.connect, cache, backup: backup.fn });
+    const teacher = await tts.speak({ text: '你好', accent: 'zh-CN' });
+    expect(teacher.voice).toBe('teacher');
+    const reading = await tts.speak({ text: '你好', accent: 'zh-CN', backup: true });
+    expect(reading).toMatchObject({ cached: false, voice: 'backup' });
+    expect(backup.calls).toHaveLength(1);
+    expect(live.log.sessions).toBe(1);
+    // Kept: the next such request is the same take; the teacher's own take is still served to everyone else.
+    expect(await tts.speak({ text: '你好', accent: 'zh-CN', backup: true })).toMatchObject({ cached: true, voice: 'backup' });
+    expect(await tts.speak({ text: '你好', accent: 'zh-CN' })).toMatchObject({ cached: true, voice: 'teacher' });
+    expect(backup.calls).toHaveLength(1);
+    // A learner's own line: read, not kept.
+    await tts.speak({ text: '再见', accent: 'zh-CN', backup: true, ephemeral: true });
+    expect(cache.m.size).toBe(2);
+    await expect(createTts({ apiKey: 'k', connect: live.connect }).speak({ text: '你好', accent: 'zh-CN', backup: true })).rejects.toMatchObject({ code: 'backup_not_configured' });
+  });
+
+  it('gives the voice service one more try after a passing hiccup, then reports the failure', async () => {
+    let calls = 0;
+    const flaky = async (req) => { calls += 1; if (calls === 1) throw new Error('azure tts 503'); return fakeBackup().fn(req); };
+    const live = fakeLive((prompt) => prompt.replace('SAY: ', ''));
+    expect((await createTts({ apiKey: 'k', connect: live.connect, backup: flaky }).speak({ text: 'milk', accent: 'en-US', backup: true })).voice).toBe('backup');
+    expect(calls).toBe(2);
+    await expect(createTts({ apiKey: 'k', connect: live.connect, backup: fakeBackup(true).fn }).speak({ text: 'milk', accent: 'en-US', backup: true })).rejects.toMatchObject({ code: 'backup_failed', status: 502 });
+  });
+
+  it('names the preview lines exactly as the app plays them', () => {
+    // src/features/onboarding/Onboarding.tsx plays the accent preview through the voice's constant.
+    const app = readFileSync(new URL('../src/speech/voice.ts', import.meta.url), 'utf8');
+    for (const line of PREVIEW_LINES) expect(app).toContain(JSON.stringify(line).replace(/^"|"$/g, ''));
   });
 });
 

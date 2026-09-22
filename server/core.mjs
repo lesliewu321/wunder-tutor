@@ -13,7 +13,7 @@
 import { HttpError } from './http-error.mjs';
 import { createFamilies } from './family.mjs';
 import { createInvites } from './invites.mjs';
-import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, TtsError } from './tts.mjs';
+import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, PREVIEW_LINES, TtsError } from './tts.mjs';
 import { createBackupVoice } from './azure-tts.mjs';
 import { DEFAULT_READ_MODEL, readText } from './read.mjs';
 import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, TUTOR_SCHEMA, validateTutorInput } from './tutor.mjs';
@@ -244,7 +244,9 @@ export function createApi(rawEnv, deps = {}) {
   const tts = status.gemini
     ? createTts({
       apiKey: GEMINI_API_KEY, model: GEMINI_LIVE_MODEL, voiceName: GEMINI_TTS_VOICE, endpoint: env('GEMINI_LIVE_ENDPOINT') || undefined,
-      cache: deps.ttsCache, connect: deps.connectWebSocket, verify: status.azure ? verifyTake : undefined,
+      cache: deps.ttsCache, connect: deps.connectWebSocket, verify: status.azure ? verifyTake : undefined, log,
+      // Warming the cache (scripts/warm-voice.mjs) makes every line once, on purpose: it may lift the spending guard.
+      maxGenerationsPerWindow: deps.ttsGenerationsPerWindow,
       // A line the teacher cannot give a clean take of is read by Azure's voice instead of staying silent (azure-tts.mjs).
       backup: status.azure && AZURE_SPEECH_REGION ? (deps.backupVoice ?? createBackupVoice({ key: AZURE_SPEECH_KEY, region: AZURE_SPEECH_REGION })) : undefined,
     })
@@ -252,7 +254,9 @@ export function createApi(rawEnv, deps = {}) {
 
   // Counted in billed scorings (a take with likely-mistake checks is several): ~100 typical takes per 5 minutes.
   const allowAssess = createLimiter(400, 5 * 60_000);
-  const allowTts = createLimiter(120, 5 * 60_000);
+  // Per address, and a school or a block of flats shares one: 30 learners each fetching a take ahead of every exercise
+  // is ~360 in five minutes. Cached takes cost nothing; new ones are held by the generation budget in tts.mjs.
+  const allowTts = createLimiter(400, 5 * 60_000);
   const allowTutor = createLimiter(40, 5 * 60_000);
   const allowRead = createLimiter(30, 10 * 60_000);
   // New teacher takes for a learner's own sentences are generated per request: a per-client cap keeps one busy
@@ -439,6 +443,14 @@ export function createApi(rawEnv, deps = {}) {
     if (!answer.ok && answer.reason === 'unknown') codeGuesses.fail(client);
     return json(200, answer);
   }
+
+  /** A request for one of the preview lines, which a device without a code may hear (the body is read again later). */
+  const isPreview = async (request) => {
+    try {
+      const { text, ephemeral, backup } = await request.clone().json();
+      return !ephemeral && !backup && PREVIEW_LINES.has(String(text ?? '').replace(/\s+/g, ' ').trim());
+    } catch { return false; }
+  };
 
   async function handleTts(request, client) {
     if (!tts) throw new HttpError(503, 'gemini_not_configured');
@@ -650,7 +662,8 @@ export function createApi(rawEnv, deps = {}) {
       if (!ROUTES.has(path)) return json(404, { error: 'not_found' });
       if (request.method !== 'POST') return json(405, { error: 'method_not_allowed' });
       if (path === '/api/redeem') return await handleRedeem(request, client);
-      if (!authorized) throw new HttpError(401, 'access_code_required');
+      // Setup's accent preview plays before the device has a code: those few fixed lines are open to anyone (tts.mjs).
+      if (!authorized && !(path === '/api/tts' && await isPreview(request))) throw new HttpError(401, 'access_code_required');
 
       if (path === '/api/assess') {
         await spend('scorings');

@@ -47,10 +47,15 @@ export function LessonPlayer() {
 
   useEffect(() => () => stopPlayback(), []);
 
-  // Fetch the next teacher take while the child is busy with this one, so Listen is instant.
+  // Fetch the next teacher take while the child is busy with this one, so Listen is instant — whatever the next
+  // exercise is. Listening exercises and the tutor's line play by themselves the moment they appear, so a wait there
+  // (a hard line can take the server ten seconds) looked like no sound at all.
   useEffect(() => {
     const next = queue[index + 1];
-    if (next?.type === 'speak') voice.prefetch(next.item.say ?? next.item.text, { accent: localeOf(next.item, profile.accent), kind: next.item.kind });
+    if (!next) return;
+    const line = next.type === 'speak' ? next.item : next.type === 'choose-heard' ? next.answer : next.type === 'minimal-pair' ? next.pair[next.answerIndex] : null;
+    if (line) voice.prefetch(line.say ?? line.text, { accent: localeOf(line, profile.accent), kind: line.kind });
+    else if (next.type === 'dialogue') voice.prefetch(next.tutorLine, { accent: localeOf(next.tutor, profile.accent) });
   }, [queue, index, profile.accent]);
 
   if (!lesson) {

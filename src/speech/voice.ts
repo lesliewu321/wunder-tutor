@@ -15,7 +15,14 @@ export interface SpeakOptions {
   kind?: SpeakItem['kind'];
   /** A learner's own text (Say it right): spoken, but not kept in the server's shared cache. */
   ephemeral?: boolean;
+  /** One of the lines the server plays to a device that has no invite code yet (setup's accent preview). */
+  preview?: boolean;
+  /** The backup voice by name: the teacher's take of this line was turned away by this device's tone check. */
+  backup?: boolean;
 }
+
+/** Setup's accent preview, heard before the device has a code: the server knows this line (server/tts.mjs PREVIEW_LINES). */
+export const ACCENT_PREVIEW_LINE = 'Hello! I would like some water, please.';
 
 /** Reference ("teacher") audio. Implementations: Gemini Live native audio, device speech synthesis. */
 export interface ReferenceVoice {
@@ -78,23 +85,65 @@ class WebSpeechVoice implements ReferenceVoice {
 }
 
 // ---------------------------------------------------------------- shared <audio> playback
+//
+// One <audio> element for every take, the teacher's and the learner's own. Safari on an iPhone or iPad lets a page
+// make sound only in answer to a tap, and a take the server needed ten seconds to make arrives long after the tap that
+// asked for it; an element that has once played during a tap may play again whenever it likes. So the element is
+// unlocked with a moment of silence on the first tap or key press anywhere in the app (the usual way), and reused. The
+// phone apps and Chrome need none of this, and are not bothered by it.
 
-let current: HTMLAudioElement | null = null;
+/** 0.05 s of silence as a WAV data URL: the 44-byte header, then 800 zero samples at 16 kHz. */
+const SILENCE = (() => {
+  const samples = 800;
+  const bytes = new Uint8Array(44 + samples * 2);
+  const view = new DataView(bytes.buffer);
+  const ascii = (at: number, s: string) => { for (let i = 0; i < s.length; i++) bytes[at + i] = s.charCodeAt(i); };
+  ascii(0, 'RIFF'); view.setUint32(4, 36 + samples * 2, true); ascii(8, 'WAVEfmt ');
+  view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+  view.setUint32(24, 16000, true); view.setUint32(28, 32000, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+  ascii(36, 'data'); view.setUint32(40, samples * 2, true);
+  let bin = '';
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return `data:audio/wav;base64,${btoa(bin)}`;
+})();
 
-const pauseCurrent = () => { if (current) { current.pause(); current = null; } };
+let player: HTMLAudioElement | null = null;
+const element = (): HTMLAudioElement => (player ??= new Audio());
+
+/** What is playing now: the object URL to let go of, and how to settle its promise. */
+let playing: { url: string; end: (err?: Error) => void } | null = null;
+const pauseCurrent = () => { if (playing) { const was = playing; playing = null; player?.pause(); URL.revokeObjectURL(was.url); was.end(); } };
+
+let unlocked = false;
+export const unlockPlayback = (): void => {
+  if (unlocked || playing) return;
+  unlocked = true;
+  const el = element();
+  el.src = SILENCE;
+  // Refused (not a real tap after all): try again on the next one. Done: leave the element idle — unless a take has
+  // started on it meanwhile, which is exactly what the silence was for.
+  el.play().then(() => { if (el.src === SILENCE) el.pause(); }, () => { unlocked = false; });
+};
+if (typeof document !== 'undefined') {
+  for (const type of ['pointerdown', 'touchend', 'keydown']) document.addEventListener(type, unlockPlayback, { capture: true, passive: true });
+}
 
 /** Play a blob (a learner's own take, or a generated teacher take). Resolves when playback ends or is stopped. */
 export const playBlob = (blob: Blob): Promise<void> =>
   new Promise((resolve, reject) => {
     pauseCurrent();
+    const el = element();
     const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    current = audio;
-    const end = () => { URL.revokeObjectURL(url); if (current === audio) current = null; };
-    audio.onended = () => { end(); resolve(); };
-    audio.onpause = () => { end(); resolve(); };
-    audio.onerror = () => { end(); reject(new Error('playback-unavailable')); };
-    audio.play().catch((e) => { end(); reject(e); });
+    const mine = { url, end: (err?: Error) => (err ? reject(err) : resolve()) };
+    playing = mine;
+    const end = (err?: Error) => { if (playing !== mine) return; playing = null; URL.revokeObjectURL(url); mine.end(err); };
+    el.onended = () => end();
+    // A pause the app did not ask for (a phone call, the system): over. The 'pause' event of the take before this one
+    // arrives late, while this one is already playing (el.paused false) — not this take's business.
+    el.onpause = () => { if (el.paused) end(); };
+    el.onerror = () => end(new Error('playback-unavailable'));
+    el.src = url;
+    el.play().catch((e) => end(e instanceof Error ? e : new Error('playback-unavailable')));
   });
 
 // ---------------------------------------------------------------- Gemini Live native audio (via /api/tts)
@@ -149,20 +198,43 @@ class GeminiTakes {
       if (stored && (await this.toneOk(stored, text, opts))) { this.memory.set(key, stored); return stored; }
     } catch { /* storage unavailable — fetch instead */ }
 
+    const got = await this.ask(text, opts);
+    const blob = got.voice === 'backup' ? new Blob([got.blob], { type: BACKUP_TYPE }) : got.blob;
+    if (!(await this.toneOk(blob, text, opts))) {
+      // The teacher's take, turned away by this device's tone check, is not the last word: the backup voice reads the
+      // line (the server keeps that take beside the teacher's). Before, the line went silent for the session (2026-09-22).
+      if (!opts.backup) return this.load(key, text, { ...opts, backup: true });
+      this.rejected.add(key);
+      throw new VoiceError('take');
+    }
+    this.memory.set(key, blob);
+    try { if (this.store) await set(key, blob, this.store); } catch { /* memory cache only */ }
+    return blob;
+  }
+
+  /**
+   * One request to the server. It may take a while: the teacher gets up to 24 s of tries, then the backup voice reads
+   * the line (server/tts.mjs), so the wait here is longer than that. A network blip (a phone changing networks) gets one
+   * more go; an answer that is not audio carries the server's reason, so the learner can be told the right thing.
+   */
+  private async ask(text: string, opts: SpeakOptions, retried = false): Promise<{ blob: Blob; voice: string | null }> {
     const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), 30000);
+    const timer = setTimeout(() => ctl.abort(), 40000);
     try {
       const res = await apiFetch('/api/tts', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
-        body: JSON.stringify({ text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined, ephemeral: opts.ephemeral || undefined }),
+        body: JSON.stringify({ text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined, ephemeral: opts.ephemeral || undefined, backup: opts.backup || undefined }),
       });
-      if (!res.ok || !res.headers.get('content-type')?.startsWith('audio/')) throw new Error(`tts ${res.status}`);
-      const got = await res.blob();
-      const blob = res.headers.get('x-tts-voice') === 'backup' ? new Blob([got], { type: BACKUP_TYPE }) : got;
-      if (!(await this.toneOk(blob, text, opts))) { this.rejected.add(key); throw new Error('tts tone mismatch'); }
-      this.memory.set(key, blob);
-      try { if (this.store) await set(key, blob, this.store); } catch { /* memory cache only */ }
-      return blob;
+      if (!res.ok || !res.headers.get('content-type')?.startsWith('audio/')) {
+        let code = `http_${res.status}`;
+        try { code = String(((await res.json()) as { error?: string }).error ?? code); } catch { /* not the API's JSON: Cloudflare's own error page */ }
+        throw new VoiceError('take', code);
+      }
+      return { blob: await res.blob(), voice: res.headers.get('x-tts-voice') };
+    } catch (e) {
+      if (e instanceof VoiceError || retried || ctl.signal.aborted) throw e;
+      await new Promise((r) => setTimeout(r, 700));
+      return this.ask(text, opts, true);
     } finally {
       clearTimeout(timer);
     }
@@ -194,10 +266,11 @@ class TeacherVoice implements ReferenceVoice {
   /**
    * Answered at once, so from the newest answer the server gave rather than the one this voice last read: after
    * "You're in!" in setup, the speaking check asked before any word had played and got the answer from before the
-   * code, "no", which on a phone (no device voice) became "Sound isn't working on this device" (2026-09-22).
+   * code, "no", which on a phone (no device voice) became "Sound isn't working on this device" (2026-09-22). Before
+   * the server has answered at all, the answer is yes: speak() finds out, and says why if it cannot.
    */
   available(): boolean {
-    return this.web.available() || knownHealth()?.gemini === true;
+    return this.web.available() || knownHealth()?.gemini !== false;
   }
 
   /** Which engine is in use — shown in the Parent Zone. */
@@ -222,13 +295,14 @@ class TeacherVoice implements ReferenceVoice {
     // went wrong is what they are told — and "your device has no sound" is a lie when the truth is that the teacher
     // could not say this particular line. 四是四，十是十。 is exactly that case: the server scores its own take and
     // will not serve one that is not clean enough, and for the hardest tongue twister it never gets one.
-    let refused = false;
-    if (this.gemini) {
+    let refused: VoiceError | null = null;
+    // Setup's accent preview plays before the device has a code: the server serves those few lines to anyone.
+    if (this.gemini || opts.preview) {
       let blob: Blob | undefined;
       try {
         blob = await this.takes.fetch(text, opts);
-      } catch {
-        refused = true;                                   // the take was never made, or was judged not good enough
+      } catch (e) {                                       // the take was never made, or was judged not good enough
+        refused = e instanceof VoiceError ? e : new VoiceError('take');
       }
       if (mine !== this.seq) return;
       if (blob) {
@@ -240,7 +314,7 @@ class TeacherVoice implements ReferenceVoice {
       }
     }
     if (this.web.available()) return this.web.speak(text, opts);
-    throw new VoiceError(refused ? 'take' : 'playback');
+    throw refused ?? new VoiceError('playback');
   }
 
   stop(): void {

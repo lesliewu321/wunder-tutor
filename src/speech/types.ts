@@ -28,8 +28,9 @@ export class SpeechError extends Error {
  * and the voice module reads the health module, so the other direction would be a circle.
  */
 export class VoiceError extends Error {
-  constructor(readonly reason: 'take' | 'playback') {
-    super(`voice: ${reason}`);
+  /** @param code the server's own word for what went wrong, when it answered ('daily_limit', 'rate_limited', …). */
+  constructor(readonly reason: 'take' | 'playback', readonly code?: string) {
+    super(`voice: ${reason}${code ? ` (${code})` : ''}`);
     this.name = 'VoiceError';
   }
 }

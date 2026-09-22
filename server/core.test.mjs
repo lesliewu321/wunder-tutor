@@ -56,6 +56,30 @@ describe('API access control', () => {
     expect((await post(api, '/api/tts', '{"text":"milk"}', { 'x-wunder-access': 'anything' })).status).toBe(401);
   });
 
+  it('lets a device without a code hear setup’s accent preview, and nothing else', async () => {
+    // A teacher that says every line: the preview is generated like any other, and cached.
+    const wav = Buffer.alloc(24000 * 2 * 0.2);
+    const cache = new Map();
+    const api = createApi({ ...KEYS, BETA_ACCESS_CODE: 'open-sesame' }, {
+      canDialWebSocket: true,
+      ttsCache: { get: async (k) => cache.get(k), put: async (k, v) => { cache.set(k, v); } },
+      // No teacher on this box: a connection that fails at once, so the backup voice reads the preview.
+      connectWebSocket: () => { throw new Error('no teacher here'); },
+      backupVoice: async () => ({ pcm: wav, rate: 24000 }),
+    });
+    const line = 'Hello! I would like some water, please.';
+    const heard = await post(api, '/api/tts', JSON.stringify({ text: line, accent: 'en-GB' }));
+    expect(heard.status).toBe(200);
+    expect(heard.headers.get('content-type')).toBe('audio/wav');
+    // The same words with extra spaces are the same line; a different line, the learner's own text, or a request for the
+    // backup voice by name still need the code.
+    expect((await post(api, '/api/tts', JSON.stringify({ text: ' Hello!  I would like some water,  please. ', accent: 'en-US' }))).status).toBe(200);
+    expect((await post(api, '/api/tts', JSON.stringify({ text: 'Hello! I would like some milk, please.', accent: 'en-US' }))).status).toBe(401);
+    expect((await post(api, '/api/tts', JSON.stringify({ text: line, accent: 'en-US', ephemeral: true }))).status).toBe(401);
+    expect((await post(api, '/api/tts', JSON.stringify({ text: line, accent: 'en-US', backup: true }))).status).toBe(401);
+    expect((await post(api, '/api/tts', 'not json')).status).toBe(401);
+  });
+
   it('slows down code guessing', async () => {
     const api = createApi({ ...KEYS, BETA_ACCESS_CODE: 'open-sesame' });
     let last;

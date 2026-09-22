@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useT } from '../../i18n/useT';
+import { localeOf, voice } from '../../speech/voice';
 import { useActiveProfile } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { SpeakExercise } from '../speak/SpeakExercise';
@@ -21,9 +23,16 @@ export function SayIt() {
   const current = page && Number.isInteger(active) ? items[active] : null;
   // Back to the page: undo the step that opened the sentence (so the back button can't land on it again).
   const close = () => ((window.history.state as { idx?: number } | null)?.idx ? nav(-1) : nav('/', { replace: true }));
+  const next = items.findIndex((it, i) => i > active && it);
+  // The next sentence's take is made while this one is being said: a learner's own lines are never in the shared
+  // cache, so each is generated on request, and a hard one can take the server ten seconds.
+  useEffect(() => {
+    const it = next > 0 ? items[next] : null;
+    if (it) voice.prefetch(it.say ?? it.text, { accent: localeOf(it, p.accent), kind: it.kind, ephemeral: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page?.id, next]);
 
   if (!page || !current) return <Navigate to="/" replace />;
-  const next = items.findIndex((it, i) => i > active && it);
   return (
     <div className="screen lesson">
       <header className="lesson__bar">

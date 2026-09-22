@@ -46,5 +46,7 @@
   "common.noSound.noCodeSet": "這個 Wunder Tutor 伺服器尚未設定邀請碼，因此無法開啟導師的聲音。",
   "common.noSound.unavailable": "目前無法連接導師的聲音。",
   "common.noSound.line": "這一句導師未能讀得夠清楚，所以不作示範。其他部分仍可照常練習，試試下一句。",
+  "common.noSound.dayUsed": "這個帳戶今天的聆聽次數已用完，導師的聲音明天會回來。",
+  "common.noSound.busy": "導師的聲音現在非常繁忙，請一分鐘後再試。",
   "common.noSound.device": "這部裝置目前無法播放聲音"
 }

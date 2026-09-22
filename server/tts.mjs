@@ -284,6 +284,21 @@ export function toWav16k(pcm, rate) {
 const GLITCHES = new Set(['gemini_runaway', 'gemini_timeout', 'gemini_no_audio']);
 
 /**
+ * How long the teacher gets, in all, before the backup voice reads the line. Three quick takes fit easily (a take is
+ * 2–5 s, 13 s at the slowest seen live), but one hung try could take the 25 s a single take is allowed, and two of them
+ * outlasted the app's patience: the learner was told the teacher could not say the line while the server was still
+ * trying. The app waits 40 s (src/speech/voice.ts): this, then the backup, fit inside that.
+ */
+export const TEACHER_BUDGET_MS = 24_000;
+
+/**
+ * Lines the app plays before a device has an invite code: setup's accent preview (src/features/onboarding/Onboarding.tsx),
+ * heard when choosing between American and British English — on a phone there is no other voice to hear it with. Fixed
+ * text, made once and cached, so a device without a code can fetch nothing but these (server/core.mjs).
+ */
+export const PREVIEW_LINES = new Set(['Hello! I would like some water, please.']);
+
+/**
  * Kept under a line's own key when the teacher could not say it: its take is the backup voice's, under backupKey. The
  * next request goes straight there, without three more tries, and knows whose voice it is (the app checks Mandarin
  * tones against the teacher's voice only).
@@ -297,7 +312,7 @@ const isMark = (hit) => hit.length === BACKUP_MARK.length && Buffer.from(hit).eq
  *   The reading voice for a line the teacher cannot give a clean take of (server/azure-tts.mjs). Without it, the line
  *   stays silent, as before.
  */
-export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, verify, backup, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
+export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, verify, backup, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000, teacherBudgetMs = TEACHER_BUDGET_MS, log = console }) {
   const inflight = new Map();
   let windowStart = Date.now();
   let generated = 0;
@@ -310,41 +325,61 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     if (generated >= maxGenerationsPerWindow) throw new TtsError('tts_budget_exceeded', 429);
     // Longer than any clean take of this line could be (a line of n characters takes well under 0.35 s each).
     const maxAudioSeconds = (req.slow ? 2 : 1) * (4 + [...req.text].length * 0.35);
+    const deadline = Date.now() + teacherBudgetMs;
+    let refused = 0; // takes that were heard and turned away: ad-libbed, or failed the Mandarin gate
     // Three tries: a take that ad-libs, fails the Mandarin gate or glitches is followed by a firmer one. A glitch used to
     // end the request outright (a timeout was thrown, not retried), and two in a row silenced a line that the voice
     // says perfectly well the next time — Bonjour ! Tu as faim ? on the live app, 2026-09-21.
     for (const firm of [false, true, true]) {
+      const left = deadline - Date.now();
+      if (left < 2_000) break; // no time for another take: the backup's turn
       generated += 1;
       let out;
       try {
-        out = await synthesizeOnce({ apiKey, model, voiceName, endpoint, connect, firm, maxAudioSeconds, ...req });
+        out = await synthesizeOnce({ apiKey, model, voiceName, endpoint, connect, firm, maxAudioSeconds, timeoutMs: Math.min(25_000, left), ...req });
       } catch (e) {
         if (e instanceof TtsError && GLITCHES.has(e.code)) continue;
         throw e;
       }
-      if (!transcriptMatches(req.text, out.transcript)) continue;
+      if (!transcriptMatches(req.text, out.transcript)) { refused += 1; continue; }
       const pcm = trimSilence(out.pcm, out.sampleRate);
       if (verify && req.accent === 'zh-CN') {
         let ok = true;
         try { ok = await verify(toWav16k(pcm, out.sampleRate), req.text, req.accent); } catch { ok = true; } // a scorer outage must not silence the teacher
-        if (!ok) continue;
+        if (!ok) { refused += 1; continue; }
       }
       return pcmToWav(pcm, out.sampleRate);
     }
-    throw new TtsError('tts_mismatch');
+    // Every take heard and turned away: a line the teacher cannot say (the backup's take is kept as the line's). Glitches,
+    // or the clock: the teacher may well say it next time, so the backup reads it now and nothing is kept for good.
+    if (refused === 3) throw new TtsError('tts_mismatch');
+    throw new TtsError('gemini_unstable', 504);
   }
 
-  /** The backup voice's take of a line. It reads exactly the text; for Mandarin a lighter tone gate still applies (reader). */
-  async function fromBackup(req) {
-    const out = await backup(req);
+  /**
+   * The backup voice's take of a line. A reading voice says exactly the text, so its take is served even when the
+   * Mandarin gate disagrees: on a tongue twister it is the scorer that fails — 妈妈骑马，马慢，妈妈骂马。 came back as
+   * "妈妈，妈妈" with the last two characters marked missing, from a voice that skips nothing (2026-09-22) — and the
+   * alternative is silence. The gate's view is logged (course lines only, never a learner's own text), so a line the
+   * voice reads wrongly can be found. A passing hiccup of the voice service gets one more try.
+   */
+  async function fromBackup(req, keep) {
+    let out;
+    try { out = await backup(req); } catch { out = await backup(req); }
     const pcm = trimSilence(out.pcm, out.rate);
     if (verify && req.accent === 'zh-CN') {
       let ok = true;
       try { ok = await verify(toWav16k(pcm, out.rate), req.text, req.accent, { reader: true }); } catch { ok = true; }
-      if (!ok) throw new TtsError('tts_mismatch');
+      if (!ok) log.warn?.(`[tts] backup take served although the scorer disagrees: ${keep ? req.text : 'a learner’s own line'}`);
     }
     return pcmToWav(pcm, out.rate);
   }
+
+  /** One generation per key at a time: a second request for the same line waits for the first. */
+  const once = (key, make) => {
+    if (!inflight.has(key)) inflight.set(key, make().finally(() => inflight.delete(key)));
+    return inflight.get(key);
+  };
 
   /** @returns {Promise<{ wav: Buffer, cached: boolean, voice: 'teacher' | 'backup' }>} */
   async function speak(input) {
@@ -360,41 +395,49 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     const key = keyFor(req);
     // A learner's own text (a photographed page may hold a name) is not written to the shared cache.
     const keep = cache && !input.ephemeral;
+    const kept = async (k) => { try { const hit = await cache.get(k); return hit?.length ? Buffer.from(hit) : null; } catch { return null; } }; // cache unavailable — generate
+
+    // The app asks for the backup by name when its own Mandarin tone check turned the teacher's take away
+    // (src/speech/voice.ts). The teacher's take stays the line's for everyone else; the reading is kept beside it.
+    if (input.backup === true) {
+      if (!backup) throw new TtsError('backup_not_configured', 503);
+      const hit = keep && await kept(backupKey(key));
+      if (hit) return { wav: hit, cached: true, voice: 'backup' };
+      const wav = await once(backupKey(key), async () => {
+        let take;
+        try { take = await fromBackup(req, keep); } catch (e) { throw new TtsError('backup_failed', 502, { message: String(e?.message ?? e).slice(0, 80) }); }
+        if (keep) await cache.put(backupKey(key), take).catch(() => undefined);
+        return take;
+      });
+      return { wav, cached: false, voice: 'backup' };
+    }
+
     if (keep) {
+      const hit = await kept(key);
+      if (hit && !isMark(hit)) return { wav: hit, cached: true, voice: 'teacher' };
+      if (hit) {
+        const reading = await kept(backupKey(key));
+        if (reading) return { wav: reading, cached: true, voice: 'backup' };
+      }
+    }
+    const { wav, voice } = await once(key, async () => {
       try {
-        const hit = await cache.get(key);
-        if (hit?.length && !isMark(hit)) return { wav: Buffer.from(hit), cached: true, voice: 'teacher' };
-        if (hit?.length) {
-          const kept = await cache.get(backupKey(key));
-          if (kept?.length) return { wav: Buffer.from(kept), cached: true, voice: 'backup' };
+        const wav = await generate(req);
+        if (keep) await cache.put(key, wav).catch(() => undefined); // a failed write must not lose the take
+        return { wav, voice: 'teacher' };
+      } catch (e) {
+        // Our own limits (a bad request, the spending guard) are not the teacher failing: no backup for those.
+        if (!backup || (e instanceof TtsError && e.status < 500)) throw e;
+        let wav;
+        try { wav = await fromBackup(req, keep); } catch { throw e; } // both failed: the teacher's reason is the one to report
+        // A line the teacher could not say cleanly is kept as the backup's. After an outage (no connection, a
+        // timeout) the teacher gets the next request again, so nothing is kept for good.
+        if (keep && e instanceof TtsError && e.code === 'tts_mismatch') {
+          await cache.put(backupKey(key), wav).then(() => cache.put(key, BACKUP_MARK)).catch(() => undefined);
         }
-      } catch { /* cache unavailable — generate */ }
-    }
-    if (!inflight.has(key)) {
-      inflight.set(key, (async () => {
-        try {
-          try {
-            const wav = await generate(req);
-            if (keep) await cache.put(key, wav).catch(() => undefined); // a failed write must not lose the take
-            return { wav, voice: 'teacher' };
-          } catch (e) {
-            // Our own limits (a bad request, the spending guard) are not the teacher failing: no backup for those.
-            if (!backup || (e instanceof TtsError && e.status < 500)) throw e;
-            let wav;
-            try { wav = await fromBackup(req); } catch { throw e; } // both failed: the teacher's reason is the one to report
-            // A line the teacher could not say cleanly is kept as the backup's. After an outage (no connection, a
-            // timeout) the teacher gets the next request again, so nothing is kept for good.
-            if (keep && e instanceof TtsError && e.code === 'tts_mismatch') {
-              await cache.put(backupKey(key), wav).then(() => cache.put(key, BACKUP_MARK)).catch(() => undefined);
-            }
-            return { wav, voice: 'backup' };
-          }
-        } finally {
-          inflight.delete(key);
-        }
-      })());
-    }
-    const { wav, voice } = await inflight.get(key);
+        return { wav, voice: 'backup' };
+      }
+    });
     return { wav, cached: false, voice };
   }
 

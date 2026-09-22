@@ -160,7 +160,10 @@ export const fromHealth = <T>(choose: (h: ApiHealth) => T): (() => Promise<T>) =
  * back on — Android's WebView has no `speechSynthesis` at all, so the teacher's voice is the only voice there is,
  * and a learner who is told their phone is broken has nothing left to try.
  */
-export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand, reason?: 'take' | 'playback'): string => {
+export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand, reason?: 'take' | 'playback', code?: string): string => {
+  // The server's own word for it, when it gave one: a day's listening used up, or a busy moment, is not about the line.
+  if (code === 'daily_limit') return t('common.noSound.dayUsed');
+  if (code === 'rate_limited' || code === 'tts_budget_exceeded') return t('common.noSound.busy');
   // The teacher refusing one line says nothing about the code, the connection or the phone: it is about the line.
   if (reason === 'take' && now.gemini) return t('common.noSound.line');
   if (now.needsCode && !now.authorized) {
@@ -178,7 +181,7 @@ export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand, re
 
 /** What the screens call when a word would not play: asks the API (the answer is cached) and picks the sentence. */
 export const noSoundMessage = async (band: AgeBand, error?: unknown): Promise<string> =>
-  soundProblem(await apiHealth(), getAccessCode() !== '', band, error instanceof VoiceError ? error.reason : undefined);
+  soundProblem(await apiHealth(), getAccessCode() !== '', band, error instanceof VoiceError ? error.reason : undefined, error instanceof VoiceError ? error.code : undefined);
 
 // ---------------------------------------------------------------- do the services actually work?
 

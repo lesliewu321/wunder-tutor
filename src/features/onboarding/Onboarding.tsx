@@ -14,7 +14,7 @@ import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { useAccount } from '../../account/account';
 import { apiHealth, type ApiHealth } from '../../speech';
 import { micSupported } from '../../speech/recorder';
-import { voice } from '../../speech/voice';
+import { ACCENT_PREVIEW_LINE, localeOf, voice } from '../../speech/voice';
 import { useProfile, useStore } from '../../state/store';
 import { Button, IconButton, ProgressBar, toast } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
@@ -114,6 +114,20 @@ export function Onboarding() {
   const onBack = useRef<() => boolean>(() => false);
   useBack(() => onBack.current());
 
+  const firstCourse: CourseId = learning[0] ?? 'en';
+  const checkItems = () => {
+    const band = contentBand(useStore.getState().profiles[useStore.getState().activeId ?? '']?.band ?? 'junior');
+    return (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : firstCourse === 'ja' ? JA_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
+  };
+  // The check's first takes are fetched while the grown-up signs in and hands over (a hard line can take the server ten
+  // seconds), and the next one while the child says this one: Listen is instant, instead of a wait that looks like no sound.
+  useEffect(() => {
+    if (!['account', 'code', 'handover', 'check'].includes(step)) return;
+    for (const item of checkItems().slice(checkIndex, checkIndex + 2)) voice.prefetch(item.say ?? item.text, { accent: localeOf(item, accent), kind: item.kind });
+    // services: fetched again once the invite code is accepted, which is when the teacher's voice becomes available.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, checkIndex, services]);
+
   // One learner per device and account (Leslie, 2026-09-22): a device that has one is set up already.
   if (hadProfileOnMount.current) return <Navigate to="/" replace />;
 
@@ -142,7 +156,6 @@ export function Onboarding() {
     return true;
   };
   const progress = Math.max(0, order.indexOf(step)) / (order.length - 1);
-  const firstCourse: CourseId = learning[0] ?? 'en';
 
   const create = async () => {
     setSettings({ storeRecordings: keepRecordings, contributeRecordings: contribute, consentedAt: Date.now() });
@@ -268,7 +281,7 @@ export function Onboarding() {
         <div className="stack">
           {([['en-US', 'onboarding.accent.us.badge', 'onboarding.accent.us.title', 'onboarding.accent.us.detail'], ['en-GB', 'onboarding.accent.uk.badge', 'onboarding.accent.uk.title', 'onboarding.accent.uk.detail']] as const).map(([id, flag, title, detail]) => (
             <button key={id} type="button" className={`tile tile--wide ${accent === id ? 'is-on' : ''}`} aria-pressed={accent === id}
-              onClick={() => { setAccent(id); void voice.speak('Hello! I would like some water, please.', { accent: id }).catch(() => undefined); }}>
+              onClick={() => { setAccent(id); void voice.speak(ACCENT_PREVIEW_LINE, { accent: id, preview: true }).catch(() => undefined); }}>
               <span className="code-badge">{t(flag)}</span><span><b>{t(title)}</b><small>{t(detail)}</small></span><span className="tile__aside" aria-hidden>🔈</span>
             </button>
           ))}
@@ -336,8 +349,7 @@ export function Onboarding() {
 
     case 'check': {
       const profile = useStore.getState().profiles[useStore.getState().activeId ?? ''];
-      const band = contentBand(profile?.band ?? 'junior');
-      const items = (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : firstCourse === 'ja' ? JA_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
+      const items = checkItems();
       const item = items[checkIndex];
       return (
         <div className="screen lesson">
