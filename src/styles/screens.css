@@ -9,7 +9,7 @@
 .promise li { display: flex; align-items: center; gap: 14px; background: var(--surface); border-radius: var(--r-md); padding: 14px 16px; font-weight: 800; font-size: 1.05rem; box-shadow: var(--shadow-card); }
 .promise span { font-size: 1.7rem; }
 .avatars { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-.avatar-pick { aspect-ratio: 1; border-radius: 50%; font-size: 1.7rem; background: var(--surface); border: 3px solid var(--line); transition: all 0.15s var(--ease-spring); }
+.avatar-pick { aspect-ratio: 1; border-radius: 50%; font-size: 1.7rem; line-height: 1; display: grid; place-items: center; background: var(--surface); border: 3px solid var(--line); transition: all 0.15s var(--ease-spring); }
 .avatar-pick.is-on { border-color: var(--primary); background: var(--primary-soft); transform: scale(1.1); }
 .privacy { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
 .privacy li { display: flex; gap: 12px; background: var(--surface); border-radius: var(--r-md); padding: 14px; box-shadow: var(--shadow-card); }
