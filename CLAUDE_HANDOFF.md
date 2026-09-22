@@ -77,6 +77,15 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   - First bundle: 1.0 (code 1) in the same folder, signed and verified.
   - Next: Internal testing (a tester list, Google-generated app signing key, upload, rollout). Every upload needs a
     higher versionCode (android/app/build.gradle).
+- **Setup asks for the email and the invite code (2026-09-22, commit 6d47048, Play 1.0.1 code 2, unsigned in the
+  Dropbox folder):**
+  - Leslie hit the speaking check on the Play build with a silent teacher (no code) and no way out.
+  - Now: consent → "Your account" (SignInForm, Next only once signed in; no skip, since Leslie connected Resend) →
+    "Invite code" (InviteCodeForm, shared with Settings, shown when the server needs a code and the device has none).
+    There's no back arrow once the learner is made. The check has Skip, and the plan then says "based on the home
+    language".
+  - Resend: DNS for wundertutor.com has `resend._domainkey` and the `send.` SPF and MX records. Supabase's SMTP
+    setting can't be read from here: the proof is the sender of the next code email.
 - **Mascot:** Tutu since 2026-09-22 (was Pip).
 - **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
   (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
