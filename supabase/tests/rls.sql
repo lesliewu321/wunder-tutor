@@ -33,8 +33,8 @@ begin
     ('a stale write finds no row',                        format('update public.learners set state = %L, rev = 2 where id = %L and rev = 1', doc, 'learner-a-1'), 'authenticated', a, 'rows:0'),
     ('rev cannot jump',                                   format('update public.learners set state = %L, rev = 9 where id = %L', doc, 'learner-a-1'), 'authenticated', a, '40001'),
     ('a parent cannot set deleted_at themselves',         format('update public.learners set deleted_at = now() where id = %L', 'learner-a-1'), 'authenticated', a, '42501'),
-    ('a nickname is short',                               format('insert into public.learners (id, state) values (%L, %L)', 'learner-a-2', doc || '{"name": "A very long legal name, with address"}'), 'authenticated', a, '23514'),
-    ('an age is whole years from 4',                      format('insert into public.learners (id, state) values (%L, %L)', 'learner-a-3', doc || '{"age": 3}'), 'authenticated', a, '23514'),
+    ('a nickname is short',                               format('update public.learners set state = %L, rev = 3 where id = %L', doc || '{"name": "A very long legal name, with address"}', 'learner-a-1'), 'authenticated', a, '23514'),
+    ('an age is whole years from 4',                      format('update public.learners set state = %L, rev = 3 where id = %L', doc || '{"age": 3}', 'learner-a-1'), 'authenticated', a, '23514'),
     ('A adds a page',                                     format('insert into public.learner_pages (learner_id, id, data, changed) values (%L, %L, %L, 1000)', 'learner-a-1', 'page-0001', '{"reading": {"language": "en", "lines": [{"text": "The brown dog sleeps."}]}, "best": {}, "at": 1000}'), 'authenticated', a, 'ok'),
     ('A upserts the page in one step',                    format('insert into public.learner_pages (learner_id, id, data, changed) values (%L, %L, %L, 2000) on conflict (parent_id, learner_id, id) do update set data = excluded.data, changed = excluded.changed', 'learner-a-1', 'page-0001', '{"reading": {"language": "en", "lines": []}, "best": {"0": 88}, "at": 1000}'), 'authenticated', a, 'ok'),
     ('B cannot see A''s page',                            'select 1 from public.learner_pages', 'authenticated', b, 'rows:0'),
@@ -54,6 +54,7 @@ begin
     ('its pages are emptied too',                         'select 1 from public.learner_pages where data = ''{}''::jsonb and deleted_at is not null', 'authenticated', a, 'rows:1'),
     ('a deleted learner cannot be written to',            format('update public.learners set state = %L, rev = 4 where id = %L', doc, 'learner-a-1'), 'authenticated', a, '55000'),
     ('B''s learner of the same id is untouched',          'select 1 from public.learners where deleted_at is null', 'authenticated', b, 'rows:1'),
+    ('after deleting, A can have a new learner',          format('insert into public.learners (id, state) values (%L, %L)', 'learner-a-4', doc), 'authenticated', a, 'ok'),
     ('A deletes the account',                             'select public.delete_my_account()', 'authenticated', a, 'ok'),
     ('nothing of A is left',                              format('select 1 from auth.users where id = %L union all select 1 from public.parents where id = %L union all select 1 from public.learners where parent_id = %L union all select 1 from public.usage_daily where parent_id = %L union all select 1 from public.plans where parent_id = %L union all select 1 from public.consents where parent_id = %L', a, a, a, a, a, a), 'postgres', null, 'rows:0'),
     ('B is still there',                                  format('select 1 from public.parents where id = %L', b), 'postgres', null, 'rows:1');
@@ -76,17 +77,15 @@ begin
     end;
   end loop;
 
-  -- A family has at most 8 learners.
+  -- An account has one learner (since 2026-09-22). B has one already (learner-a-1, above).
   execute 'set local role authenticated';
   perform set_config('request.jwt.claims', json_build_object('sub', b, 'role', 'authenticated')::text, true);
   begin
-    for n in 2..9 loop
-      insert into public.learners (id, state) values ('learner-b-' || n, doc);
-    end loop;
+    insert into public.learners (id, state) values ('learner-b-2', doc);
     failed := failed + 1;
-    out_text := out_text || E'\nFAILED  a ninth learner is refused (it was accepted)';
+    out_text := out_text || E'\nFAILED  a second learner in one account is refused (it was accepted)';
   exception when sqlstate '54000' then
-    out_text := out_text || E'\nok      a ninth learner is refused';
+    out_text := out_text || E'\nok      a second learner in one account is refused';
   end;
   reset role;
 

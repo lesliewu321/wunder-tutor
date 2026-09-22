@@ -1,4 +1,13 @@
-# Family accounts — Supabase
+# Accounts — Supabase
+
+**Since 2026-09-22: one learner per account** (Leslie: "family account too complex. one user per account"). The
+account is the learner's own and is signed in to with the learner's email. Under 18, a parent or guardian agrees
+first: for now, a switch the parent turns on in Settings, recorded word for word in `consents`. Once payments exist,
+the parent's payment confirms it. Migration `20260922090000_one_learner_per_account.sql` sets the database limit from
+8 to 1. The app syncs only the device's learner, and a device signing in to an account that already has one takes that
+learner (`syncAccount` in `src/account/sync.ts`). Older accounts keep the learners they have; the most recently used
+one is synced. Table and column names are from the family design (`parents`, `parent_id` = the account's owner).
+The design paragraph below still describes the rest.
 
 Project **Wunder Tutor** (`xzghsihffoliduqkjvck`, Singapore, org `lesliewu321`). It holds children's data: read the
 header of `migrations/20260920090000_accounts_and_sync.sql` before changing anything.
@@ -13,7 +22,7 @@ header of `migrations/20260920090000_accounts_and_sync.sql` before changing anyt
 | `src/account/` (app) | `merge.ts` (two devices → one learner), `sync.ts` (the engine, tested with pretend devices), `supabase.ts` (the real server; loaded only with an account), `account.ts` (sign-in, triggers), `pending.ts`. |
 | `server/family.mjs` (API) | Checks the sign-in token (public keys, no secret), reads the family's plan, counts the day's use. |
 
-**Design in one paragraph.** Only the grown-up signs in (a code by email). A learner is ONE document (`learners.state`,
+**Design in one paragraph** (written for family accounts; see the top for what changed). Only the grown-up signs in (a code by email). A learner is ONE document (`learners.state`,
 the app's `ChildProfile`) with a revision: a device sends the revision it last saw; if another device was first the
 write finds no row, and the device merges and retries. My book's pages are small rows of their own (newer wins, best
 scores from both). Deleted learners and pages stay as empty tombstones so other devices delete them too. Recordings,
