@@ -113,7 +113,7 @@ A pronunciation-first language tutor. Core loop:
 | Marketing site | https://wundertutor.com + www — Pages project `wundertutor-website`, source in `site/` |
 | API | Pages Function `functions/api/[[path]].js` → `server/core.mjs` (same core runs locally via `server/index.mjs`) |
 | Teacher-voice cache | KV namespace `wunder-tutor-tts-cache` (binding `TTS_CACHE`); locally `server/.cache/tts`; plus IndexedDB on each device |
-| Learner data | On the device: localStorage (state) + IndexedDB (recordings). A recording goes to the server to be scored and, **only with the learner's consent**, is kept there with no name (see Invite codes and recordings below). Learners and My book pages also sync through a family account — Supabase project `xzghsihffoliduqkjvck`, built but not yet used by a real sign-in (see Family accounts below, and `supabase/README.md`) |
+| Learner data | On the device: localStorage (state) + IndexedDB (recordings). A recording goes to the server to be scored and, **only with the learner's consent**, is kept there with no name (see Invite codes and recordings below). Learners and My book pages also sync through a family account — Supabase project `xzghsihffoliduqkjvck`, live (first real sign-ins 2026-09-21; see Family accounts below, and `supabase/README.md`) |
 | Accuracy test set | `eval/.cache` (gitignored, ~160 MB of cached Gemini takes + Azure responses) — reruns are free |
 | Domain | `wundertutor.com`, registrar Namecheap, DNS on Cloudflare (`annabel`/`porter.ns.cloudflare.com`) |
 | Azure | Speech resource `wunder-tutor-speech`, resource group `wunder-tutor`, region **eastasia**, tier S0 |
@@ -193,7 +193,12 @@ Pronunciation Lab (8 English + 9 Mandarin sounds, ladders) → scripted AI conve
   for Leslie: a Chinese name for "Say it right" (kept in English), 字 vs 字詞 for an English word, 家長 vs 成人,
   badge/goal names, tone descriptions (低低轉彎…), "Buzzy/Quiet" sounds (震動的/無聲的). Bundle grew 428 → 536 kB
   (both languages ship to everyone): load the Chinese catalogs on demand when it matters.
-- **Family accounts (2026-09-20, built; NOT yet tried with a real sign-in, NOT deployed).** Everything is in
+- **Family accounts (2026-09-20, built). LIVE: Supabase's auth logs show real code sign-ins from app.wundertutor.com
+  on 2026-09-21 (leslie@… at 02:49 UTC, a second test address dev1@… at 00:39), and sessions refreshing since.** On
+  2026-09-22 "Email me a code" showed "That didn't work" in the dev preview only because I had stopped the dev server
+  (the sign-in code is lazy-loaded). Weak spot, not fixed: `load()` in account.ts caches a failed import, and the live
+  site answers a missing old chunk with index.html (200), so a tab left open across a deploy fails the same way until
+  it's reloaded. Everything is in
   `supabase/README.md`: the database is applied to project `xzghsihffoliduqkjvck` (2 migrations; `supabase/tests/rls.sql`
   = 39 access checks, ALL OK; advisors clean except the two erasure functions parents are meant to call), the app has
   Parent Zone → Family account (email → a code, 8 digits as the project is set, any of 6-10 accepted; `src/account/`, libraries lazy-loaded, 31 kB gz), learners and
