@@ -67,6 +67,17 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
     that's harmless, but don't be fooled when debugging: `wrangler pages deployment tail <id>` shows the real
     `[tts] tts_mismatch`.
   - Scoring works live: fromage 95, croissant 97.
+- **Google Play (2026-09-22):** the app was created in Play Console (org account Wunder AI Limited, package
+  `com.wundertutor.app`, default listing en-GB, Free).
+  - Release bundle: `npm run app:aab` gives an UNSIGNED `.aab`. Leslie signs it with jarsigner, typing the password
+    themselves (never in a file or a script).
+  - Upload key: `C:\_Cloud\Dropbox\AI\WunderTutor\wunder-upload-key.jks`, alias `upload`, CN=Wunder AI Limited,
+    SHA-256 `0D:70:DD:49:F9:F1:67:E0:31:83:90:B2:74:76:61:3D:AD:2E:6C:BE:8B:F1:44:5A:CB:9A:F4:2B:2C:E0:C2:29`. The
+    first key was deleted because its password was typed into the chat; this one replaced it before any upload.
+  - First bundle: 1.0 (code 1) in the same folder, signed and verified.
+  - Next: Internal testing (a tester list, Google-generated app signing key, upload, rollout). Every upload needs a
+    higher versionCode (android/app/build.gradle).
+- **Mascot:** Tutu since 2026-09-22 (was Pip).
 - **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
   (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
   Nothing renamed yet; ~40 text lines (en + zh-Hant) + site mention "Pip".
