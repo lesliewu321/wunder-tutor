@@ -1,6 +1,6 @@
 import { createStore, get, set } from 'idb-keyval';
 import type { Accent, Locale, SpeakItem } from '../domain/types';
-import { apiFetch, apiHealth } from './health';
+import { apiFetch, apiHealth, knownHealth } from './health';
 import { VoiceError } from './types';
 import { teacherToneOk } from './zh/teacherCheck';
 
@@ -191,8 +191,13 @@ class TeacherVoice implements ReferenceVoice {
     this.takes.version = h.ttsVersion;
   }
 
+  /**
+   * Answered at once, so from the newest answer the server gave rather than the one this voice last read: after
+   * "You're in!" in setup, the speaking check asked before any word had played and got the answer from before the
+   * code, "no", which on a phone (no device voice) became "Sound isn't working on this device" (2026-09-22).
+   */
   available(): boolean {
-    return this.web.available() || this.gemini === true;
+    return this.web.available() || knownHealth()?.gemini === true;
   }
 
   /** Which engine is in use — shown in the Parent Zone. */

@@ -95,7 +95,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
     setPlaying(kind);
     try {
       if (kind === 'normal' || kind === 'slow') {
-        if (!voice.available()) throw new Error('playback-unavailable');
+        // No available() check first: speak() reads the server's answer afresh, and says why when nothing can play.
         await voice.speak(item.say ?? item.text, { accent: localeOf(item, profile.accent), slow: kind === 'slow', kind: item.kind, ephemeral: mode === 'free' || undefined });
       } else {
         const blob = (kind === 'now' ? current : previous)?.audio;

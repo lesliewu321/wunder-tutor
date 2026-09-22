@@ -55,6 +55,19 @@ describe('choices that follow the server', () => {
     expect((await getTutor(cafe)).constructor.name).toBe('ClaudeTutor');
   });
 
+  // Setup on the phone (2026-09-22): the code was accepted, then the speaking check said "Sound isn't working on this
+  // device". The screens ask voice.available() before playing, and it still held the answer from before the code.
+  it('says the teacher can speak as soon as the code is saved, before a word was played', async () => {
+    const s = server();
+    const { voice } = await import('../speech/voice');
+    const { apiHealth, refreshHealth } = await import('../speech');
+    await apiHealth();
+    expect(voice.available()).toBe(false); // no device voice here, as in the phone app's WebView
+    s.authorized = true;
+    await refreshHealth(); // what the invite-code step (and Settings) does on "You're in!"
+    expect(voice.available()).toBe(true);
+  });
+
   it('keeps one choice while the answer stands', async () => {
     const s = server();
     s.authorized = true;

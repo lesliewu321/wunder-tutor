@@ -103,6 +103,9 @@ export const apiFetch = (path: string, init: RequestInit = {}): Promise<Response
 };
 
 let health: Promise<ApiHealth> | null = null;
+/** The newest answer the API gave (a failed check doesn't replace it): for questions a screen must answer at once. */
+let latest: ApiHealth | null = null;
+export const knownHealth = (): ApiHealth | null => latest;
 
 /** Asks the API which server-side services are available to this device. Absent API → none. */
 export const apiHealth = (): Promise<ApiHealth> => {
@@ -114,12 +117,12 @@ export const apiHealth = (): Promise<ApiHealth> => {
       const res = await apiFetch('/api/health', { signal: ctl.signal });
       clearTimeout(t);
       if (res.status >= 500) throw new Error(`health ${res.status}`);
-      if (!res.ok || !res.headers.get('content-type')?.includes('json')) return NONE;
+      if (!res.ok || !res.headers.get('content-type')?.includes('json')) return (latest = NONE);
       const j = await res.json();
-      return {
+      return (latest = {
         azure: !!j.azure, claude: !!j.claude, gemini: !!j.gemini, ttsVersion: typeof j.ttsVersion === 'string' ? j.ttsVersion : '',
         needsCode: !!j.needsCode, authorized: !!j.authorized, codeSet: j.codeSet !== false, read: !!j.read,
-      };
+      });
     } catch {
       // Offline, too slow, or a passing server fault: not remembered, so the next screen asks again.
       health = null;
