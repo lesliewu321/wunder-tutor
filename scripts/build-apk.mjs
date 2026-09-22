@@ -4,6 +4,10 @@
 //   npm run app:apk        build the web files, then the app   (this script does the second half)
 //   node scripts/build-apk.mjs
 //
+// With --play (npm run app:aab): the release bundle (.aab) for Google Play instead, UNSIGNED. The upload key's owner
+// signs it with jarsigner, typing the password themselves — the password never sits in a file or passes through a
+// script (Leslie's key, 2026-09-22). The command to run is printed at the end.
+//
 // Android Studio is not needed. What IS needed, once per machine: a Java 21 runtime, and Google's Android SDK with
 // the platform and build tools for the API level in android/variables.gradle. This script finds both, says plainly
 // which one is missing if it cannot, and writes android/local.properties (the SDK's whereabouts, one machine's own
@@ -17,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const android = join(root, 'android');
 const windows = process.platform === 'win32';
+const play = process.argv.includes('--play');
 
 /** Somewhere that looks like an Android SDK: it has the tools a build actually reaches for. */
 const looksLikeSdk = (dir) => Boolean(dir) && existsSync(join(dir, 'platforms')) && existsSync(join(dir, 'build-tools'));
@@ -85,14 +90,39 @@ console.log('Building the app. The first time on a machine this fetches Gradle a
 // Gradle's own launcher. On Windows it is a .bat, which Node will only start through cmd — named here rather than
 // with `shell: true`, so nothing in a path has to be escaped.
 const gradlew = join(android, windows ? 'gradlew.bat' : 'gradlew');
+const task = play ? 'bundleRelease' : 'assembleDebug';
 const [command, args] = windows
-  ? ['cmd.exe', ['/c', gradlew, '-p', android, 'assembleDebug']]
-  : [gradlew, ['-p', android, 'assembleDebug']];
+  ? ['cmd.exe', ['/c', gradlew, '-p', android, task]]
+  : [gradlew, ['-p', android, task]];
 const build = spawnSync(command, args, {
   stdio: 'inherit',
   env: { ...process.env, ANDROID_HOME: sdk, ANDROID_SDK_ROOT: sdk },
 });
 if (build.status !== 0) process.exit(build.status ?? 1);
+
+if (play) {
+  const aab = join(android, 'app', 'build', 'outputs', 'bundle', 'release', 'app-release.aab');
+  if (!existsSync(aab)) {
+    console.error(`\nGradle finished but there is no file at ${aab}.`);
+    process.exit(1);
+  }
+  const gradle = readFileSync(join(android, 'app', 'build.gradle'), 'utf8');
+  const version = `${/versionName\s+"([^"]+)"/.exec(gradle)?.[1] ?? '?'} (code ${/versionCode\s+(\d+)/.exec(gradle)?.[1] ?? '?'})`;
+  console.log(
+    [
+      '',
+      `Built for Google Play: ${aab}`,
+      `       version ${version}, ${(statSync(aab).size / 1e6).toFixed(1)} MB, not signed yet`,
+      '',
+      'Sign it with your upload key (it asks for the key\'s password — type it yourself):',
+      `  jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore "<your upload key .jks>" "${aab}" upload`,
+      '',
+      'Then upload that file in Play Console → Test and release → Testing → Internal testing → Create new release.',
+      'Every upload needs a higher versionCode than the last (android/app/build.gradle).',
+    ].join('\n'),
+  );
+  process.exit(0);
+}
 
 const apk = join(android, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
 if (!existsSync(apk)) {

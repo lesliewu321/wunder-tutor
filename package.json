@@ -20,6 +20,7 @@
     "build:app": "node scripts/build-app.mjs",
     "app:android": "npm run build:app && npx cap open android",
     "app:apk": "npm run build:app && node scripts/build-apk.mjs",
+    "app:aab": "npm run build:app && node scripts/build-apk.mjs --play",
     "app:ios": "npm run build:app && npx cap open ios",
     "codes:new": "node scripts/invite-codes.mjs new",
     "codes:list": "node scripts/invite-codes.mjs list",
