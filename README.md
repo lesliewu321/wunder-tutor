@@ -182,4 +182,5 @@ path), and in landscape the speaking screen sits side by side (what to say and t
 - One fully authored unit per course (7 lessons × 3 bands each), 8 English + 9 Mandarin Lab sounds, 3 English
   conversation scenarios.
 - PWA icons are SVG only; add PNG icons (180/192/512) before shipping to iOS home screens.
-- The parental gate is a simple arithmetic check, not identity verification.
+- Settings (Parent Zone) open without a grown-up check: the multiplication question was removed on 2026-09-22, so
+  anyone holding the device can change settings, consent to sharing recordings, or delete data.

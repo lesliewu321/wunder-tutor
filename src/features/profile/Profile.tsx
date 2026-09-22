@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useId, useMemo, useState } from 'react';
+import { Fragment, useEffect, useId, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { settingsName, type Accent, type AgeBand, type ChildProfile, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
@@ -122,42 +122,18 @@ export function Me() {
       <button type="button" className="row-link" onClick={() => nav('/parents')}>
         <span className="row-link__icon"><Icon name="shield" /></span>
         <span><b>{settingsName(p.band)}</b><small>{t('settings.me.zone.detail')}</small></span>
-        <Icon name="lock" size={20} />
+        <Icon name="chevron" size={20} />
       </button>
-    </div>
-  );
-}
-
-function Gate({ onPass, onCancel, band }: { onPass: () => void; onCancel: () => void; band: AgeBand }) {
-  const { t } = useT();
-  const [a, b] = useMemo(() => [6 + Math.floor(Math.random() * 4), 6 + Math.floor(Math.random() * 4)], []);
-  const [value, setValue] = useState('');
-  const [wrong, setWrong] = useState(false);
-  const submit = () => (Number(value) === a * b ? onPass() : (setWrong(true), setValue('')));
-  const adult = band === 'adult';
-  return (
-    <div className="screen screen--center gate">
-      <span className="gate__icon"><Icon name="shield" size={36} /></span>
-      <h1>{t(adult ? 'settings.gate.title.adult' : 'settings.gate.title.parent')}</h1>
-      <p>{t(adult ? 'settings.gate.prompt.adult' : 'settings.gate.prompt.parent')}</p>
-      <form onSubmit={(e) => { e.preventDefault(); submit(); }}>
-        {/* Spelled out: the × glyph in the display font is easy to misread as +. */}
-        <label className="gate__q" htmlFor="gate">{a} <span className="gate__op">{t('settings.gate.times')}</span> {b} = ?</label>
-        <input id="gate" className={`input input--center ${wrong ? 'input--wrong' : ''}`} inputMode="numeric" pattern="[0-9]*" autoFocus value={value} onChange={(e) => { setValue(e.target.value.replace(/\D/g, '')); setWrong(false); }} aria-describedby="gate-msg" />
-        <p id="gate-msg" className="gate__msg" role="status">{wrong ? t('settings.gate.wrong', { a, b }) : ' '}</p>
-        <Button size="lg" block disabled={!value} onClick={submit}>{t('common.open')}</Button>
-        <Button variant="ghost" block onClick={onCancel}>{t('common.back')}</Button>
-      </form>
     </div>
   );
 }
 
 type Danger = null | 'recordings' | 'history' | 'profile' | 'everything';
 
+/** Settings open straight away: the multiplication question in front of them was removed (Leslie, 2026-09-22). */
 export function ParentZone() {
   const nav = useNavigate();
   const { t, tn } = useT();
-  const [open, setOpen] = useState(false);
   const p = useActiveProfile();
   const profiles = useStore((s) => s.profiles);
   const settings = useStore((s) => s.settings);
@@ -183,16 +159,14 @@ export function ParentZone() {
   const [making, setMaking] = useState(false);
 
   const refresh = () => void audioRepo.count(`${p.id}/`).then(setRecordings);
-  useEffect(() => { if (open) { refresh(); void apiHealth().then((h) => { setServices(h); if (h.authorized && (h.azure || h.read)) checkConnections(); }); } }, [open, p.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { refresh(); void apiHealth().then((h) => { setServices(h); if (h.authorized && (h.azure || h.read)) checkConnections(); }); }, [p.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!open || !show || !services) return;
+    if (!show || !services) return;
     // A refused code has no Connections section yet: the code comes first.
     const el = document.getElementById(show === 'connections' ? 'zone-connections' : 'zone-code') ?? document.getElementById('zone-code');
     el?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-  }, [open, show, services]);
-
-  if (!open) return <Gate band={p.band} onPass={() => setOpen(true)} onCancel={() => nav('/me')} />;
+  }, [show, services]);
 
   const name = p.name;
   const DANGER: Record<Exclude<Danger, null>, { title: string; body: string; cta: string; run: () => Promise<void> }> = {

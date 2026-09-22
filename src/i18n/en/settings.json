@@ -18,12 +18,6 @@
   "settings.me.switch.hi": "Hi, {name}!",
   "settings.me.zone.detail": "Privacy, recordings, learners and settings",
 
-  "settings.gate.title.adult": "Quick check",
-  "settings.gate.title.parent": "Grown-ups only",
-  "settings.gate.prompt.adult": "To open Settings & privacy, answer this multiplication:",
-  "settings.gate.prompt.parent": "To open the Parent Zone, answer this multiplication:",
-  "settings.gate.times": "times",
-  "settings.gate.wrong": "Not quite — multiply: {a} times {b}.",
 
   "settings.learners.title": "Learners",
   "settings.learners.adult": "Grown-up",

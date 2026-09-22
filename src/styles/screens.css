@@ -222,12 +222,8 @@
 .confirm--left .confirm__icon { background: var(--primary-soft); color: var(--primary); }
 .confirm--left .switch-row small { font-size: 0.85rem; line-height: 1.4; color: var(--ink); }
 
-.gate form { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 8px; }
-.gate p { color: var(--ink-soft); }
-.gate__icon { width: 76px; height: 76px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; }
-.gate__q { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin: 6px 0; }
-.gate__op { font-size: 0.6em; color: var(--primary); vertical-align: middle; padding: 0 4px; }
-.gate__msg { min-height: 1.4em; color: var(--weak) !important; font-weight: 800; font-size: 0.9rem; }
+.error-screen p { color: var(--ink-soft); }
+.error-screen__icon { width: 76px; height: 76px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; }
 
 .learners { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: none; }
 .learner { flex: none; width: 92px; padding: 12px 6px; border-radius: var(--r-md); background: var(--surface); border: 2px solid transparent; box-shadow: var(--shadow-card); text-align: center; }

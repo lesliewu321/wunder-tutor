@@ -12,8 +12,8 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
   render() {
     if (!this.state.failed) return this.props.children;
     return (
-      <div className="screen screen--center gate" role="alert">
-        <span className="gate__icon" aria-hidden>🛠️</span>
+      <div className="screen screen--center error-screen" role="alert">
+        <span className="error-screen__icon" aria-hidden>🛠️</span>
         <h1>{t('common.error.title')}</h1>
         <p>{t('common.error.body')}</p>
         <button type="button" className="btn btn--primary btn--lg btn--block" onClick={() => { window.location.href = '/'; }}>{t('common.error.reload')}</button>
