@@ -1,6 +1,68 @@
-# Wunder Tutor — handoff (2026-09-21)
+# Wunder Tutor — handoff (2026-09-22)
 
-## Start here: 2026-09-21 afternoon — Japanese, and conversations in every course (DEPLOYED 14:32, not pushed)
+## Start here: 2026-09-22 evening — the voice gauntlet (commits 614239b, 79fb505; phone build 22i; Play 1.0.3 code 4)
+
+Leslie: "review code. the main problem is no teacher sound. we added azure backup sound. make sure tongue twisters and
+other difficult words always has teacher sound when invite code is active. from onboarding till lessons, snap to say,
+all have teacher sound on phones, tablets and webapp. use gauntlet". Done as build → run → inspect → critique → fix →
+retest, on a phone's terms (no device voice to fall back on). **NOT deployed: everything below waits for Leslie's
+"deploy" (with the DB migration, see the one-learner section).** The live server (b61fdc81, 2026-09-21) still has no
+backup voice at all: 7 of 170 French lines and several Mandarin ones are silent there.
+
+- **Found and fixed (server, `server/tts.mjs` + `core.mjs`):**
+  - The backup's Mandarin take was refused by the same scorer gate as the teacher's: 妈妈骑马，马慢，妈妈骂马。 was
+    still silent with the backup. The scorer can't align a tongue twister (it heard "妈妈，妈妈" and marked 骂马 missing
+    — from Azure's own reading voice; alone, 骂马 scores 79). Now the backup's take is always served; the disagreement is
+    logged `[tts] backup take served although the scorer disagrees: <line>` (course lines only, never a learner's text).
+  - A teacher time budget (`TEACHER_BUDGET_MS` 24 s) before the backup: one hung try (25 s) used to outlast the app.
+  - Glitches/timeouts no longer count as "the teacher can't say it": `gemini_unstable` (504) → backup served, NOT
+    cached; only three heard-and-refused takes (`tts_mismatch`) keep the backup's take + the KV marker.
+  - `{ backup: true }` in the request = the backup voice by name (kept under `<key>:backup`, teacher's take untouched).
+  - The backup gets one retry. `PREVIEW_LINES` (the setup accent line) are served WITHOUT a code (isPreview in
+    core.mjs). `allowTts` 120 → 400 per 5 min per address. `deps.ttsGenerationsPerWindow` for the warm script.
+- **Found and fixed (app, `src/speech/voice.ts`, `health.ts`, `types.ts`):**
+  - One shared `<audio>` element, unlocked with 0.05 s of silence on the first pointerdown/touchend/keydown (iOS
+    Safari plays only in answer to a tap; a take arrives seconds later). Verified in Chrome: full-length plays,
+    rapid-fire not cut short (the stale 'pause' event is ignored via `el.paused`), stop() immediate. NOT verified on a
+    real iPhone (none here).
+  - Client tone rejection (Kore-trained model) → re-request with `backup: true` instead of silence for the session.
+  - Fetch: 40 s wait (was 30), one retry on a network TypeError (700 ms), the server's error code travels in
+    `VoiceError.code` → `soundProblem` says `common.noSound.dayUsed` (daily_limit) / `common.noSound.busy`
+    (rate_limited, tts_budget_exceeded) instead of "can't say this one".
+  - `voice.available()` = true until the server has said no (`knownHealth()?.gemini !== false`); SpeakExercise no
+    longer asks it before speak().
+  - Prefetch everywhere: setup's check items from the 'account' step on (deps [step, checkIndex, services], so the code
+    being accepted re-fetches), the check's next item; LessonPlayer prefetches whatever the next exercise is (speak,
+    choose-heard answer, minimal-pair answer, dialogue tutor line); SayIt prefetches the next sentence (ephemeral).
+  - Setup's accent 🔈 uses `ACCENT_PREVIEW_LINE` with `preview: true` (was silent on phones: no code yet).
+- **Tests:** server/tts.test.mjs (+5), core.test.mjs (+1: preview without a code; other lines/ephemeral/backup → 401),
+  src/__tests__/voice.test.ts (new, 5). Suite: 261 pass. `PREVIEW_LINES` must match the app's constant (a test reads
+  voice.ts).
+- **Live, local server (`wunder-api` on 8787, real Gemini + Azure from this machine — Gemini works from here):**
+  - 16 hard lines in 4 languages: 15/16 before the fix (妈妈骑马 silent), 16/16 after; first-time cost 7–14 s for a
+    line that needs the backup (3 teacher tries first), cached after. Slow Mandarin lines mostly go to the backup.
+  - `scripts/warm-voice.mjs` (in-process API, keys from .env, takes into `server/.cache/tts`): **zh-CN 194/194 with a
+    voice (185 teacher, 9 backup, 0 silent, 87 s)**; en-US/en-GB/fr-FR/ja-JP: see the end of this section.
+  - Browser (5199 test copy → local API, Supabase stubbed, no device voice): setup accent preview plays (unlock silence
+    first, then the take); the check's first two takes fetched during the account step; check auto-play + Slow +
+    Listen; lesson food-1: 'cheese' prefetched during 'water', 'chicken' prefetched during the choose-heard, which
+    auto-played, no "skip this one" line; Say it right with three typed tongue twisters: auto-play and Slow generated
+    (ephemeral, 2–4 s), next sentence prefetched.
+- **Tooling:** `npx vite-node eval/voice-lines.ts` → `eval/.cache/voice-lines.json`: every line the app can ask for
+  (991: en-US 212, en-GB 212, zh-CN 194, fr-FR 164, ja-JP 209; ×2 with slow). `node scripts/warm-voice.mjs
+  [--slow] [--only=zh-CN,fr-FR] [--server=URL]` makes each once and lists SILENT lines. `--push` copies
+  `server/.cache/tts/*.wav` into the live KV `wunder-tutor-tts-cache` (id 138ec3dd…, via `wrangler kv bulk put`) —
+  same keys (sha1 of model|voice|accent|speed|kind|text; live ttsVersion = local). **Run --push only with Leslie's
+  OK, after the deploy** (the marker+backup pairs need the new server to be read right; the old server reads a marker
+  as a WAV — so push only after deploy).
+- **Still open:** slow takes not warmed (991 more); no iPhone check of the unlock; the global generation guard (120
+  new takes per 10 min) has no backup — `busy` message; the daily voice limit counts requests, cache hits included;
+  tongue twisters are also mis-scored for LEARNERS (same scorer weakness) — nothing done about that; Mandarin backup
+  could pass the item's pinyin as `<phoneme alphabet="sapi">` to pin polyphones (not done).
+- **Builds:** phone `wunder-tutor-2026-09-22i.apk` (Dropbox folder) and Play `wunder-tutor-1.0.3-code4.aab` (UNSIGNED)
+  carry all of this; but they talk to the live server, which lacks the server half until deployed.
+
+## Earlier: 2026-09-21 afternoon — Japanese, and conversations in every course (DEPLOYED 14:32, not pushed)
 
 Built at Leslie's request ("add japanese lessons for 5-adult … conversation need to follow language selected — eng,
 chinese, french and japanese"). All in phone build `C:/_Cloud/Dropbox/AI/WunderTutor/wunder-tutor-2026-09-21h.apk`.
