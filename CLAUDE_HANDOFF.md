@@ -42,7 +42,7 @@ backup voice at all: 7 of 170 French lines and several Mandarin ones are silent 
   - 16 hard lines in 4 languages: 15/16 before the fix (妈妈骑马 silent), 16/16 after; first-time cost 7–14 s for a
     line that needs the backup (3 teacher tries first), cached after. Slow Mandarin lines mostly go to the backup.
   - `scripts/warm-voice.mjs` (in-process API, keys from .env, takes into `server/.cache/tts`): **zh-CN 194/194 with a
-    voice (185 teacher, 9 backup, 0 silent, 87 s)**; en-US/en-GB/fr-FR/ja-JP: see the end of this section.
+    voice (185 teacher, 9 backup, 0 silent, 87 s)**; **en-US/en-GB/fr-FR/ja-JP 797/797 (773 teacher, 24 backup, 0 silent, 561 s)**. So all 991 lines have a voice, 33 by the backup (which ones: eval/.cache/warm-voice-result.json is the last run only; the logs are in the session scratchpad). Slowest first-time take 24.8 s (a Japanese line: the teacher used its whole budget, then the backup) — inside the app's 40 s. The takes (1,021 files) sit in server/.cache/tts, ready for --push after the deploy.
   - Browser (5199 test copy → local API, Supabase stubbed, no device voice): setup accent preview plays (unlock silence
     first, then the take); the check's first two takes fetched during the account step; check auto-play + Slow +
     Listen; lesson food-1: 'cheese' prefetched during 'water', 'chicken' prefetched during the choose-heard, which
