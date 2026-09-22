@@ -37,6 +37,23 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   at app start, so a code entered in Settings changed nothing until the app was closed; now `fromHealth()`
   (src/speech/health.ts, tests in health.test.ts). Accents: the server keeps en-US/en-GB takes apart — ask the tester
   to try again on 22c. Maths check (22a) and soon-languages-last (22b) were already done.
+- **One learner per account (2026-09-22, commits 8015940 + 875c4a7, phone build 2026-09-22d, NOT deployed, migration
+  NOT applied):** Leslie: "Lose the family account. only one user per account. account should belong to the child but
+  require parent consent. rename grown-up to adult"; answers: the child's own email is preferred, consent is needed
+  under 18, accounts will be gated by payment.
+  - App: no learner list or switcher. Settings shows "Account" (the learner's email). Under 18, a parent-consent switch
+    must be on before a code is sent, and its words are recorded (`CONSENT_VERSION` 2026-09-22).
+  - Sign-in: "I already have an account" on the first screen leads to `/signin`, which only signs in to existing
+    accounts (`shouldCreateUser: false`, error `unknown`).
+  - Sync: `syncAccount` in sync.ts (deletions first, then the device's learner or the account's).
+  - Adult: "Grown-up" becomes "Adult" in the adult labels. Kid-facing "ask a grown-up" copy stays.
+  - **At the next deploy:** `apply_migration` with `supabase/migrations/20260922090000_one_learner_per_account.sql` (limit
+    8 → 1), then run `supabase/tests/rls.sql` and expect ALL OK. Today it gives 39 ok and 1 expected FAILED. The live
+    app and builds up to 22c still offer family learners.
+  - Leslie's own account has 4–5 learners from the family days. The app now syncs only the one used last.
+  - **Next:** payments. The parent's payment is the consent for under-18s. Suggested but unconfirmed: $9.99/mo,
+    $79.99/yr, a 7-day trial, 60 scored recordings a day and 10 free. The server still says "family" (plan
+    names, `server/family.mjs`), and the daily limit still counts requests, not recordings.
 - **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
   (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
   Nothing renamed yet; ~40 text lines (en + zh-Hant) + site mention "Pip".
