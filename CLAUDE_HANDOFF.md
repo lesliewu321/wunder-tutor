@@ -75,11 +75,21 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
     the name doesn't matter to Google), alias `upload`, CN=Wunder AI Limited,
     SHA-256 `0D:70:DD:49:F9:F1:67:E0:31:83:90:B2:74:76:61:3D:AD:2E:6C:BE:8B:F1:44:5A:CB:9A:F4:2B:2C:E0:C2:29`. The
     first key was deleted because its password was typed into the chat; this one replaced it before any upload.
-  - Leslie keeps the builds in `C:\_Cloud\Dropbox\AI\WunderTutor\APK\` (bundles and phone APKs; the key stays one
-    level up). 1.0 (code 1) and 1.0.1 (code 2) are there, both signed (META-INF/UPLOAD.*).
+  - Builds (bundles and phone APKs) sit in `C:\_Cloud\Dropbox\AI\WunderTutor\` beside the key (Leslie tried an
+    `APK\` subfolder and moved everything back, 16:38). 1.0 (code 1) and 1.0.1 (code 2) are signed (META-INF/UPLOAD.*).
   - Internal testing: 1.0 went out first; 1.0.1 was uploaded (added from the library after the draft lost it) and
-    Leslie was at "Save and publish". Phone build `wunder-tutor-2026-09-22g.apk` (same folder) = 1.0.1 + the Settings
-    text fix 88dae74. A manual (debug-key) APK can't replace the Play install or be updated by Play: uninstall first.
+    Leslie was at "Save and publish". A manual (debug-key) APK can't replace the Play install or be updated by Play:
+    uninstall first.
+  - **1.0.2 (code 3), UNSIGNED, in the Dropbox folder:** the voice fix fcb0a26 (below) + the Settings text fix 88dae74.
+    Phone build `wunder-tutor-2026-09-22h.apk` = the same code. Next: Leslie signs it and uploads a new internal
+    testing release.
+  - After building, copy the file only if the build succeeded: a failed `app:aab` (Dropbox lock, "Cannot snapshot …
+    not a regular file") leaves the previous bundle in the output folder. Retrying the build works.
+- **Setup's speaking check was silent on phones after the invite code (2026-09-22, fcb0a26):** "Sound isn't working
+  on this device right now". `voice.available()` read the server answer the voice had last fetched (from before the
+  code); a phone has no device voice. It now reads `knownHealth()` (newest answer) and SpeakExercise no longer checks
+  it before `speak()`. Test in `health.test.ts`; acted out in the 5199 copy with no device voice and stubbed
+  API/Supabase (account → code → handover → check: `/api/tts` fetched and played, no message).
   - Next: Internal testing (a tester list, Google-generated app signing key, upload, rollout). Every upload needs a
     higher versionCode (android/app/build.gradle).
 - **Setup asks for the email and the invite code (2026-09-22, commit 6d47048, Play 1.0.1 code 2):**
