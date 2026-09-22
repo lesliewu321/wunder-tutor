@@ -25,6 +25,9 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   math challenge". Settings / Parent Zone now open straight from Me (chevron, no padlock). Children can reach the delete
   buttons, the "Help improve" recordings switch and account sign-in; if Apple's Kids category is ever the plan, it needs a
   grown-up check before links out of the app or purchases — the old Gate is in git (Profile.tsx before 68cbe8e).
+- **Setup languages (2026-09-22, commit 00f9eaf, phone build 2026-09-22b, NOT deployed):** "Which languages?" lists the
+  four courses first, then Spanish, German and Korean (한국어 Korean / 韓文, new) as coming soon. Hint "one or both" →
+  "one or more". The Android build sometimes fails with EBUSY (Dropbox lock on android/…/build): just run it again.
 - **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
   (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
   Nothing renamed yet; ~40 text lines (en + zh-Hant) + site mention "Pip".
