@@ -8,6 +8,7 @@ import { FR_CHECK_ITEMS } from '../../content/fr/course';
 import { JA_CHECK_ITEMS } from '../../content/ja/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { LANGUAGES, language, type Key } from '../../i18n';
+import { useBack } from '../../back';
 import { useT } from '../../i18n/useT';
 import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { micSupported } from '../../speech/recorder';
@@ -96,6 +97,11 @@ export function Onboarding() {
   const [agreed, setAgreed] = useState(false);
   const [checkIndex, setCheckIndex] = useState(0);
 
+  // The phone’s Back is the ← at the top: one step back. On the first screen it leaves the app; the child’s
+  // handover and the finished plan have no ← and stay put. (Set below, once the steps are known.)
+  const onBack = useRef<() => boolean>(() => false);
+  useBack(() => onBack.current());
+
   if (hadProfileOnMount.current && !adding) return <Navigate to="/" replace />;
 
   // There is no "is this for you or for a child?" question: the age answers it. A grown-up setting the app up for
@@ -116,6 +122,11 @@ export function Onboarding() {
     const i = order.indexOf(step);
     if (adding && i <= 0) return nav('/parents');
     if (i > 0) go(order[i - 1]);
+  };
+  onBack.current = () => {
+    if (step === 'welcome') return false;
+    if (step !== 'plan' && step !== 'handover') back();
+    return true;
   };
   const progress = Math.max(0, order.indexOf(step)) / (order.length - 1);
   const firstCourse: CourseId = learning[0] ?? 'en';

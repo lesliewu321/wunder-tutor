@@ -6,6 +6,7 @@ import { isZhSound, phonemeInfo, tipFor } from '../../content/phonemes';
 import { findScenario, scenarioBlurb, scenariosFor, scenarioTitle } from '../../content/scenarios';
 import type { ZhScript } from '../../content/zh/script';
 import { badgeName } from '../../engine/rewards';
+import { useBack } from '../../back';
 import { language } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import type { SpeechErrorCode } from '../../speech';
@@ -91,6 +92,9 @@ export function Conversation() {
   const micRef = useRef<HTMLButtonElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const alive = useRef(true);
+
+  // The phone’s Back asks first once the learner has spoken, like the ✕; before that it just goes back.
+  useBack(() => { if (done || !lines.some((l) => l.role === 'child')) return false; setConfirmExit(true); return true; });
 
   // Each line in its own voice: the Mandarin teacher for Putonghua, the French one for French, the learner's accent
   // for English.

@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Home } from './features/home/Home';
 import { LabHome, LabSound, LabStagePlayer } from './features/lab/Lab';
 import { LessonPlayer } from './features/lesson/LessonPlayer';
@@ -16,6 +16,8 @@ import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
 import { SayIt } from './features/say/SayIt';
 import { CameraHost } from './features/say/CameraHost';
+import { pressBack } from './back';
+import { isApp } from './platform';
 
 // Four places to go. What a screen DOES lives on the screen: the camera is My book's own button (Home, second mode),
 // the microphone belongs to lessons and conversations. A camera in the bar was out of place beside the course and a
@@ -49,6 +51,25 @@ function Tabs() {
   );
 }
 
+/** Android’s own Back, in the phone app (src/back.ts). The plugin is loaded only there. */
+function PhoneBack() {
+  const nav = useNavigate();
+  const path = useLocation().pathname;
+  const here = useRef(path);
+  here.current = path;
+  useEffect(() => {
+    if (!isApp) return;
+    let gone = false;
+    let remove = () => {};
+    void import('@capacitor/app').then(async ({ App: Phone }) => {
+      const handle = await Phone.addListener('backButton', () => { pressBack(here.current, { back: () => nav(-1), learn: () => nav('/', { replace: true }), exit: () => void Phone.exitApp() }); });
+      if (gone) void handle.remove(); else remove = () => void handle.remove();
+    });
+    return () => { gone = true; remove(); };
+  }, [nav]);
+  return null;
+}
+
 function ScrollReset() {
   const { pathname } = useLocation();
   useEffect(() => { document.getElementById('app-frame')?.scrollTo(0, 0); }, [pathname]);
@@ -77,6 +98,7 @@ export function App() {
     <BrowserRouter>
       <div id="app-frame" className="frame">
         <ScrollReset />
+        <PhoneBack />
         <Routes>
           <Route path="/welcome" element={<Onboarding />} />
           <Route element={<RequireProfile />}>

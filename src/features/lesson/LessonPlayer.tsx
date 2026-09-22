@@ -7,6 +7,7 @@ import { exampleSpeech, phonemeInfo, soundLocale, tipFor } from '../../content/p
 import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
+import { useBack } from '../../back';
 import { useT } from '../../i18n/useT';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile, useStore, type LessonOutcome } from '../../state/store';
@@ -40,6 +41,9 @@ export function LessonPlayer() {
   const strong = useRef(0);
   const drilled = useRef(new Set<PhonemeId>());
   const startXp = useRef(profile.xp);
+
+  // The phone's Back asks first, like the ✕: leaving throws the lesson away. A finished lesson just goes back.
+  useBack(() => { if (!lesson || outcome) return false; setConfirmExit(true); return true; });
 
   useEffect(() => () => stopPlayback(), []);
 

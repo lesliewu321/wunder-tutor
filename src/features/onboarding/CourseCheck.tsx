@@ -9,7 +9,7 @@ import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { useT } from '../../i18n/useT';
 import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { useActiveProfile, useStore } from '../../state/store';
-import { Button, ProgressBar } from '../../ui/kit';
+import { Button, IconButton, ProgressBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
 import { SpeakExercise } from '../speak/SpeakExercise';
 
@@ -47,9 +47,11 @@ export function CourseCheck() {
   }
 
   const item = items[index];
+  // A way out that was missing (a tester: "Back button missing in pages"): back to where the check was opened from.
+  const leave = () => ((window.history.state as { idx?: number } | null)?.idx ? nav(-1) : nav('/', { replace: true }));
   return (
     <div className="screen lesson">
-      <header className="lesson__bar"><span className="topbar__spacer" /><ProgressBar value={index / items.length} tone="leaf" /><span className="lesson__count">{index + 1}/{items.length}</span></header>
+      <header className="lesson__bar"><IconButton icon="close" label={t('common.close')} onClick={leave} /><ProgressBar value={index / items.length} tone="leaf" /><span className="lesson__count">{index + 1}/{items.length}</span></header>
       <div className="lesson__body" key={item.id}>
         <SpeakExercise item={item} context="onboarding" mode="check" onDone={() => {
           if (index + 1 < items.length) return setIndex(index + 1);
