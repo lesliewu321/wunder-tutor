@@ -165,9 +165,21 @@ class TeacherVoice implements ReferenceVoice {
   private web = new WebSpeechVoice();
   private takes = new GeminiTakes();
   private gemini: boolean | null = null;
-  private ready = apiHealth().then((h) => { this.gemini = h.gemini; this.takes.version = h.ttsVersion; });
   /** Bumped by stop() and by every new speak(), so a slow download can't start talking over something newer. */
   private seq = 0;
+
+  constructor() { void this.ready(); }
+
+  /**
+   * What the server offers this device, read again before each use: apiHealth keeps the answer until it may have
+   * changed (a new invite code, a failed check). Read once at start, the teacher stayed silent after a code was entered
+   * in Settings, until the app was closed (see fromHealth).
+   */
+  private async ready(): Promise<void> {
+    const h = await apiHealth();
+    this.gemini = h.gemini;
+    this.takes.version = h.ttsVersion;
+  }
 
   available(): boolean {
     return this.web.available() || this.gemini === true;
@@ -175,20 +187,20 @@ class TeacherVoice implements ReferenceVoice {
 
   /** Which engine is in use — shown in the Parent Zone. */
   async engine(): Promise<'gemini' | 'device' | 'none'> {
-    await this.ready;
+    await this.ready();
     return this.gemini ? 'gemini' : this.web.available() ? 'device' : 'none';
   }
 
   /** Warm the cache for something the learner is about to hear. */
   prefetch(text: string, opts: SpeakOptions): void {
-    void this.ready.then(() => { if (this.gemini) void this.takes.fetch(text, opts).catch(() => undefined); });
+    void this.ready().then(() => { if (this.gemini) void this.takes.fetch(text, opts).catch(() => undefined); });
   }
 
   async speak(text: string, opts: SpeakOptions): Promise<void> {
     const mine = ++this.seq;
     this.web.stop();
     pauseCurrent();
-    await this.ready;
+    await this.ready();
     if (mine !== this.seq) return;
     // Which half failed matters to the learner. On the web a failure quietly became the device voice and nobody had
     // to know; in the phone app there is no device voice (Android's WebView has no speechSynthesis), so whatever

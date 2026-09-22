@@ -133,6 +133,22 @@ export const apiHealth = (): Promise<ApiHealth> => {
 export const refreshHealth = (): Promise<ApiHealth> => { health = null; return apiHealth(); };
 
 /**
+ * Something chosen from the server's answer (real or practice scoring, the live or scripted tutor), chosen again
+ * whenever that answer may have changed: after a new invite code (refreshHealth) or after a failed check. Chosen once
+ * for good, the answer at start stuck for the whole session — a tester entered the code in Settings and then got
+ * "Sound isn't working on this device" on every word, and simulated scores, until the app was closed (2026-09-21).
+ */
+export const fromHealth = <T>(choose: (h: ApiHealth) => T): (() => Promise<T>) => {
+  let asked: Promise<ApiHealth> | null = null;
+  let chosen: Promise<T> | null = null;
+  return () => {
+    const now = apiHealth();
+    if (now !== asked || !chosen) { asked = now; chosen = now.then(choose); }
+    return chosen;
+  };
+};
+
+/**
  * Why the teacher's voice stayed silent — the sentence to show the learner.
  *
  * The app used to give one answer, "Sound isn't working on this device right now", and in the phone app that is

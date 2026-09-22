@@ -1,6 +1,6 @@
 import { contentBand, type AgeBand, type SpeakItem } from '../domain/types';
 import { sayLine, type Scenario } from '../content/scenarios';
-import { apiFetch, apiHealth } from '../speech';
+import { apiFetch, fromHealth } from '../speech';
 
 export interface TutorTurn { role: 'tutor' | 'child'; text: string }
 
@@ -66,11 +66,7 @@ export class ClaudeTutor implements ConversationTutor {
 }
 
 const scripted = new ScriptedTutor();
-let live: Promise<ConversationTutor> | null = null;
+const live = fromHealth((h): ConversationTutor => (h.claude ? new ClaudeTutor() : scripted));
 
 /** The partner for this scenario: the live tutor for English when the server has one, otherwise the script. */
-export const getTutor = (scenario: Scenario): Promise<ConversationTutor> => {
-  if (scenario.course !== 'en') return Promise.resolve(scripted);
-  live ??= apiHealth().then((h) => (h.claude ? new ClaudeTutor() : scripted));
-  return live;
-};
+export const getTutor = (scenario: Scenario): Promise<ConversationTutor> => (scenario.course === 'en' ? live() : Promise.resolve(scripted));
