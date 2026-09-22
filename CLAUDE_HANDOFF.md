@@ -71,14 +71,18 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   `com.wundertutor.app`, default listing en-GB, Free).
   - Release bundle: `npm run app:aab` gives an UNSIGNED `.aab`. Leslie signs it with jarsigner, typing the password
     themselves (never in a file or a script).
-  - Upload key: `C:\_Cloud\Dropbox\AI\WunderTutor\wunder-upload-key.jks`, alias `upload`, CN=Wunder AI Limited,
+  - Upload key: `C:\_Cloud\Dropbox\AI\WunderTutor\_wunder-upload-key.jks` (renamed with the `_` at Leslie's request;
+    the name doesn't matter to Google), alias `upload`, CN=Wunder AI Limited,
     SHA-256 `0D:70:DD:49:F9:F1:67:E0:31:83:90:B2:74:76:61:3D:AD:2E:6C:BE:8B:F1:44:5A:CB:9A:F4:2B:2C:E0:C2:29`. The
     first key was deleted because its password was typed into the chat; this one replaced it before any upload.
-  - First bundle: 1.0 (code 1) in the same folder, signed and verified.
+  - Leslie keeps the builds in `C:\_Cloud\Dropbox\AI\WunderTutor\APK\` (bundles and phone APKs; the key stays one
+    level up). 1.0 (code 1) and 1.0.1 (code 2) are there, both signed (META-INF/UPLOAD.*).
+  - Internal testing: 1.0 went out first; 1.0.1 was uploaded (added from the library after the draft lost it) and
+    Leslie was at "Save and publish". Phone build `wunder-tutor-2026-09-22g.apk` (same folder) = 1.0.1 + the Settings
+    text fix 88dae74. A manual (debug-key) APK can't replace the Play install or be updated by Play: uninstall first.
   - Next: Internal testing (a tester list, Google-generated app signing key, upload, rollout). Every upload needs a
     higher versionCode (android/app/build.gradle).
-- **Setup asks for the email and the invite code (2026-09-22, commit 6d47048, Play 1.0.1 code 2, unsigned in the
-  Dropbox folder):**
+- **Setup asks for the email and the invite code (2026-09-22, commit 6d47048, Play 1.0.1 code 2):**
   - Leslie hit the speaking check on the Play build with a silent teacher (no code) and no way out.
   - Now: consent → "Your account" (SignInForm, Next only once signed in; no skip, since Leslie connected Resend) →
     "Invite code" (InviteCodeForm, shared with Settings, shown when the server needs a code and the device has none).
