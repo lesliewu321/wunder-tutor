@@ -33,9 +33,12 @@ const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
   { id: 'work', icon: '💼', title: 'onboarding.level.goal.work' }, { id: 'travel', icon: '✈️', title: 'onboarding.level.goal.travel' },
   { id: 'everyday', icon: '🛒', title: 'onboarding.level.goal.everyday' }, { id: 'fun', icon: '🎮', title: 'onboarding.level.goal.fun' },
 ];
-const LEARN: { id: CourseId | 'es' | 'de'; label: Key; ready: boolean; lang?: string }[] = [
+/** The courses on offer first, then the ones coming soon (Leslie, 2026-09-22: "list coming soon languages last"). */
+const LEARN: { id: CourseId | 'es' | 'de' | 'ko'; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
-  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
+  { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' },
+  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
+  { id: 'ko', label: 'onboarding.languages.learn.ko', ready: false, lang: 'ko' },
 ];
 /**
  * Who a sentence is about: the grown-up themself, the child by nickname, or "your child" before a nickname is typed.
