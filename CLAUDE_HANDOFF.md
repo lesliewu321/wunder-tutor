@@ -54,6 +54,19 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   - **Next:** payments. The parent's payment is the consent for under-18s. Suggested but unconfirmed: $9.99/mo,
     $79.99/yr, a 7-day trial, 60 scored recordings a day and 10 free. The server still says "family" (plan
     names, `server/family.mjs`), and the daily limit still counts requests, not recordings.
+- **Backup voice (2026-09-22, commit e6ea2f4, phone build 2026-09-22e, NOT deployed):** Leslie: "add azure backup voice".
+  - After the Gemini teacher's three tries fail, `server/azure-tts.mjs` (Azure neural voices, same key and region as
+    scoring) reads the line. A refused line is kept as the backup's, via a marker under its KV key.
+  - The response carries `X-Tts-Voice: backup`, exposed for CORS. The app skips its Kore-trained tone model for those
+    takes.
+  - Mandarin backup takes pass a lighter gate (`reader`: syllable floor only).
+  - Live test with the real Azure voice and the teacher switched off: 14/14 hard lines, scored 83–100.
+  - **French live check (170 lines):** 163 played at first; 5 more played on retry. "Voilà ! Bon appétit !" is refused
+    every time (`tts_mismatch`), which the backup fixes once deployed.
+  - Cloudflare replaces the API's JSON 502 with its own HTML "502: Bad gateway" page. The app only checks `res.ok`, so
+    that's harmless, but don't be fooled when debugging: `wrangler pages deployment tail <id>` shows the real
+    `[tts] tts_mismatch`.
+  - Scoring works live: fromage 95, croissant 97.
 - **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
   (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
   Nothing renamed yet; ~40 text lines (en + zh-Hant) + site mention "Pip".
