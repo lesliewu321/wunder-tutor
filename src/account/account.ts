@@ -3,11 +3,11 @@ import { loadShelf, onBookChange, replacePages } from '../features/say/page';
 import { useStore } from '../state/store';
 import { emailReturnUrl } from '../platform';
 import { forgetSync, hasAccountHere, loadMeta, saveMeta } from './pending';
-import { syncOnce, type Local } from './sync';
+import { syncAccount, type Local } from './sync';
 
-// The family's account, as the rest of the app sees it: who is signed in, whether everything is saved, and the few
-// things a grown-up can do (send a code, sign in with it, sign out, delete the account). The libraries behind it are
-// loaded only on a device that has an account or is getting one — a family that never signs in never downloads them.
+// The learner's own account, as the rest of the app sees it: who is signed in, whether everything is saved, and the
+// few things that can be done (send a code, sign in with it, sign out, delete the account). One learner per account
+// (Leslie, 2026-09-22). The libraries behind it are loaded only on a device that has an account or is getting one.
 
 export type SyncState = 'idle' | 'saving' | 'saved' | 'offline' | 'failed';
 export interface Account {
@@ -16,7 +16,7 @@ export interface Account {
   email: string | null;
   sync: SyncState;
   savedAt: number | null;
-  /** The account holds eight learners; this device has more. */
+  /** The account would not take this device’s learner (it holds one, and it already has another). */
   full: boolean;
 }
 
@@ -67,8 +67,11 @@ export function syncNow(): Promise<void> {
       if (!data.session) return;
       if (typeof navigator !== 'undefined' && navigator.onLine === false) return set({ sync: 'offline' });
       set({ sync: 'saving' });
-      const result = await syncOnce(data.session.user.id, local, b.remoteFor(data.session.user.id));
-      set({ sync: 'saved', savedAt: Date.now(), full: result.full });
+      const user = data.session.user.id;
+      // The account's learner: this device's own, or, if the account already has one, that one (it takes over here).
+      const { result } = await syncAccount(user, local, b.remoteFor(user), useStore.getState().activeId,
+        (theirs) => useStore.setState((st) => ({ profiles: { ...st.profiles, [theirs.id]: theirs }, activeId: theirs.id })));
+      set({ sync: 'saved', savedAt: Date.now(), full: !!result?.full });
     } catch (e) {
       console.warn('[account] sync', e);
       set({ sync: typeof navigator !== 'undefined' && navigator.onLine === false ? 'offline' : 'failed' });
@@ -95,37 +98,43 @@ export function startAccount(): void {
   if (hasAccountHere() || arriving) void load().then((b) => b.auth.getSession()).then(({ data }) => { if (!data.session) set({ status: 'signed-out' }); });
 }
 
-// ---------- What a grown-up can do ----------
-export type AccountError = 'email' | 'code' | 'wait' | 'offline' | 'failed';
+// ---------- What can be done ----------
+/** unknown: signing in (not making an account), and there is no account with that email. */
+export type AccountError = 'email' | 'code' | 'wait' | 'offline' | 'unknown' | 'failed';
 const problem = (e: unknown): AccountError => {
   const err = e as { code?: string; status?: number; message?: string } | null;
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return 'offline';
   if (err?.status === 429 || err?.code === 'over_email_send_rate_limit' || err?.code === 'over_request_rate_limit') return 'wait';
   if (err?.code === 'otp_expired' || err?.code === 'invalid_credentials' || /token/i.test(err?.message ?? '')) return 'code';
   if (err?.code === 'email_address_invalid' || err?.code === 'validation_failed') return 'email';
+  if (err?.code === 'otp_disabled' || err?.code === 'signup_disabled' || err?.code === 'user_not_found' || /signups? not allowed/i.test(err?.message ?? '')) return 'unknown';
   return 'failed';
 };
 
-/** Sends the email with the code (and a link that does the same). An account is made the first time. */
-export async function sendCode(email: string): Promise<AccountError | null> {
+/**
+ * Sends the email with the code (and a link that does the same). `create`: the learner on this device gets an account
+ * (Settings, with consent). Without it, only an account that already exists (the sign-in screen).
+ */
+export async function sendCode(email: string, create = true): Promise<AccountError | null> {
   try {
     const b = await load();
-    const { error } = await b.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true, emailRedirectTo: emailReturnUrl() } });
+    const { error } = await b.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: create, emailRedirectTo: emailReturnUrl() } });
     return error ? problem(error) : null;
   } catch (e) { return problem(e); }
 }
 
-export async function signInWithCode(email: string, code: string, consent: { version: string; language: 'en' | 'zh-Hant'; wording: string }): Promise<AccountError | null> {
+/** `consent`: what was agreed to when the account is made. Signing in to an account that exists agrees to nothing new. */
+export async function signInWithCode(email: string, code: string, consent: { version: string; language: 'en' | 'zh-Hant'; wording: string } | null): Promise<AccountError | null> {
   try {
     const b = await load();
     const { data, error } = await b.auth.verifyOtp({ email: email.trim(), token: code.replace(/\D/g, ''), type: 'email' });
     if (error || !data.session) return problem(error ?? { code: 'otp_expired' });
-    await b.recordConsent(consent.version, consent.language, consent.wording).catch((e) => console.warn('[account] consent', e));
+    if (consent) await b.recordConsent(consent.version, consent.language, consent.wording).catch((e) => console.warn('[account] consent', e));
     return null;
   } catch (e) { return problem(e); }
 }
 
-/** The learners stay on this device; they are no longer saved to the account until someone signs in again. */
+/** The learner stays on this device; nothing more is saved to the account until someone signs in again. */
 export async function signOut(): Promise<void> {
   const b = await load();
   await syncNow().catch(() => undefined);

@@ -32,10 +32,10 @@ describe('App language: reading a line', () => {
   afterEach(() => setLanguage('en'));
 
   it('follows the chosen language and fills in the values', () => {
-    expect(t('settings.me.switch.hi', { name: 'Tiger' })).toBe('Hi, Tiger!');
+    expect(t('settings.account.email.child', { name: 'Tiger' })).toBe('Tiger’s email address');
     setLanguage('zh-Hant');
     expect(language()).toBe('zh-Hant');
-    expect(t('settings.me.switch.hi', { name: 'Tiger' })).toBe('Tiger，你好！');
+    expect(t('settings.account.email.child', { name: 'Tiger' })).toBe('Tiger 的電郵地址');
   });
 
   it('counts: English has one/other, Chinese one form for both', () => {

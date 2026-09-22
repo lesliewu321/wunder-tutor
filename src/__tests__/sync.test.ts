@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mergePages, mergeProfiles } from '../account/merge';
-import { emptyMeta, syncOnce, type Local, type PageRow, type Remote, type SyncMeta } from '../account/sync';
+import { emptyMeta, syncAccount, syncOnce, type Local, type PageRow, type Remote, type SyncMeta } from '../account/sync';
 import type { ChildProfile } from '../domain/types';
 import type { BookPage } from '../features/say/page';
 import { emptyProfile } from '../intelligence/profile';
@@ -176,11 +176,72 @@ describe('a family on two devices', () => {
     expect(Object.keys(phone.profiles())).toHaveLength(9);
   });
 
-  it('signing in to another account: this device\'s learners are new to it', async () => {
+  it('signing in to another account: this device\'s learners are new to it (the engine itself, any number)', async () => {
     const server = new Server(), other = new Server(), phone = new Device();
     phone.putProfile(learner('learner-1', { xp: 7 }));
     await syncOnce('mum', phone, server);
     expect(await syncOnce('dad', phone, other)).toMatchObject({ pushed: 1 });
     expect((await other.learnerState('learner-1'))?.state.xp).toBe(7);
+  });
+});
+
+// One learner per account (Leslie, 2026-09-22): the account is the learner's own. What the app does around the engine
+// (src/account/account.ts): choose the account's learner, then sync that one only.
+describe('one learner per account', () => {
+  /** A device as the app runs it: one active learner; the account's learner takes over if it has one. */
+  const signIn = async (user: string, device: Device, server: Server, active: string | null) => {
+    const { id, result } = await syncAccount(user, device, server, active, (p) => device.putProfile(p));
+    return { active: id, result };
+  };
+
+  it('an empty account takes the learner of the device that signs in first', async () => {
+    const server = new Server(), phone = new Device();
+    phone.putProfile(learner('learner-1', { xp: 12 }));
+    expect((await signIn('tiger', phone, server, 'learner-1')).result).toMatchObject({ pushed: 1 });
+    expect((await server.learnerState('learner-1'))?.state.xp).toBe(12);
+  });
+
+  it('a new device signing in takes the account\'s learner, and never sends its own', async () => {
+    const server = new Server(), phone = new Device(), tablet = new Device();
+    phone.putProfile(learner('learner-1', { name: 'Tiger', xp: 40 }));
+    await signIn('tiger', phone, server, 'learner-1');
+    // The tablet was set up first, with a learner of its own, then signs in to Tiger's account.
+    tablet.putProfile(learner('learner-9', { name: 'New', xp: 3 }));
+    const { active } = await signIn('tiger', tablet, server, 'learner-9');
+    expect(active).toBe('learner-1');
+    expect(tablet.profiles()['learner-1']).toMatchObject({ name: 'Tiger', xp: 40 });
+    expect((await server.learnerHeads()).map((h) => h.id)).toEqual(['learner-1']);
+    // From now on the two devices keep Tiger the same.
+    tablet.putProfile({ ...tablet.profiles()['learner-1'], xp: 55 });
+    await signIn('tiger', tablet, server, 'learner-1');
+    await signIn('tiger', phone, server, 'learner-1');
+    expect(phone.profiles()['learner-1'].xp).toBe(55);
+  });
+
+  it('an account left over with several learners: the one used last, and only that one', async () => {
+    const server = new Server(), phone = new Device(), tablet = new Device();
+    phone.putProfile(learner('learner-1', { name: 'River', editedAt: 100 }));
+    phone.putProfile(learner('learner-2', { name: 'Tiger', editedAt: 900 }));
+    phone.putProfile(learner('learner-3', { name: 'Bro', editedAt: 500 }));
+    await syncOnce('family', phone, server); // the family accounts before 2026-09-22
+    const { active } = await signIn('family', tablet, server, null);
+    expect(active).toBe('learner-2');
+    expect(Object.keys(tablet.profiles())).toEqual(['learner-2']);
+  });
+
+  it('nothing on either side: nothing to do', async () => {
+    expect((await signIn('tiger', new Device(), new Server(), null)).active).toBeNull();
+  });
+
+  it('the learner deleted: the account is empty again, and takes the next learner set up', async () => {
+    const server = new Server(), phone = new Device();
+    phone.putProfile(learner('learner-1'));
+    await signIn('tiger', phone, server, 'learner-1');
+    phone.deleteLearner('learner-1');
+    // No learner here now: the deletion goes up, and the learner does not come back from the account.
+    expect((await signIn('tiger', phone, server, null)).active).toBeNull();
+    expect(phone.profiles()).toEqual({});
+    phone.putProfile(learner('learner-2'));
+    expect((await signIn('tiger', phone, server, 'learner-2')).result).toMatchObject({ pushed: 1 });
   });
 });

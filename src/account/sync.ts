@@ -2,8 +2,8 @@ import type { ChildProfile } from '../domain/types';
 import type { BookPage } from '../features/say/page';
 import { fingerprint, mergePages, mergeProfiles } from './merge';
 
-// Keeping a family's learners the same on all their devices. The device stays the place where learning happens (it
-// works offline, and nothing waits for the network); signing in adds a copy in the family's account:
+// Keeping a learner the same on all their devices. The device stays the place where learning happens (it
+// works offline, and nothing waits for the network); signing in adds a copy in the learner's account:
 //   * a learner is one document with a revision number. A device sends the revision it last saw; if another device
 //     was first, the write finds no row — the device then takes that version, merges its own changes in (merge.ts:
 //     nothing earned is lost) and sends the result.
@@ -21,7 +21,7 @@ export interface PageRow { learner: string; id: string; changed: number; page: B
 export interface Remote {
   learnerHeads(): Promise<LearnerHead[]>;
   learnerState(id: string): Promise<{ state: ChildProfile; rev: number } | null>;
-  /** 'full': the family already has as many learners as an account holds. */
+  /** 'full': the account already holds as many learners as it may (one, since 2026-09-22). */
   insertLearner(id: string, state: ChildProfile): Promise<'ok' | 'exists' | 'full'>;
   /** false: another device wrote first (the revision has moved on). */
   updateLearner(id: string, state: ChildProfile, fromRev: number): Promise<boolean>;
@@ -45,7 +45,7 @@ export const emptyMeta = (): SyncMeta => ({ user: null, learners: {}, deleted: [
 export interface Local {
   profiles(): Record<string, ChildProfile>;
   putProfile(p: ChildProfile): void;
-  /** A learner the family deleted on another device: everything about them goes from this one too. */
+  /** A learner deleted on another device: everything about them goes from this one too. */
   removeLearner(id: string): Promise<void>;
   shelf(learner: string): { pages: BookPage[]; gone: Record<string, number> };
   putShelf(learner: string, pages: BookPage[], gone: Record<string, number>): void;
@@ -57,6 +57,60 @@ export interface SyncResult { pulled: number; pushed: number; removed: number; f
 
 /** What goes into the account: the learner as the app knows them. (Attempts and recordings live elsewhere, on the device.) */
 const documentOf = (p: ChildProfile): ChildProfile => p;
+
+// ---------- One learner per account (Leslie, 2026-09-22: the account is the learner's own) ----------
+// The engine below still handles any number of learners; the app shows it one. An empty account takes the device's
+// learner. An account that already has a learner is that learner's, so a device signing in to it takes that learner
+// (the device's own stays in its storage, unused, and is never sent).
+
+/** The learner this device keeps in step with the account: its own, or the one the account already has. */
+export async function accountLearner(remote: Remote, localId: string | null): Promise<{ id: string; state?: ChildProfile } | null> {
+  const heads = (await remote.learnerHeads()).filter((h) => !h.deleted);
+  if (localId && (!heads.length || heads.some((h) => h.id === localId))) return { id: localId };
+  if (!heads.length) return null;
+  // Several are left over from the family accounts before 2026-09-22: the one used most recently.
+  const states = (await Promise.all(heads.map((h) => remote.learnerState(h.id)))).filter((s): s is { state: ChildProfile; rev: number } => !!s);
+  const when = (p: ChildProfile) => p.editedAt ?? p.createdAt;
+  const newest = states.sort((a, b) => when(b.state) - when(a.state))[0];
+  return newest ? { id: newest.state.id, state: newest.state } : null;
+}
+
+/** The engine's view of one learner, on both sides. (Delegates by hand: the sides may be class instances.) */
+export const onlyLearner = (id: string, local: Local, remote: Remote): { local: Local; remote: Remote } => ({
+  local: {
+    profiles: () => { const p = local.profiles()[id]; return p ? { [id]: p } : {}; },
+    putProfile: (p) => local.putProfile(p),
+    removeLearner: (x) => local.removeLearner(x),
+    shelf: (l) => local.shelf(l),
+    putShelf: (l, pages, gone) => local.putShelf(l, pages, gone),
+    meta: () => local.meta(),
+    putMeta: (m) => local.putMeta(m),
+  },
+  remote: {
+    learnerHeads: async () => (await remote.learnerHeads()).filter((h) => h.id === id),
+    learnerState: (x) => remote.learnerState(x),
+    insertLearner: (x, s) => remote.insertLearner(x, s),
+    updateLearner: (x, s, r) => remote.updateLearner(x, s, r),
+    deleteLearner: (x) => remote.deleteLearner(x),
+    pageHeads: async () => (await remote.pageHeads()).filter((h) => h.learner === id),
+    pages: (l, ids) => remote.pages(l, ids),
+    upsertPages: (rows) => remote.upsertPages(rows),
+  },
+});
+
+/**
+ * One sync as the app runs it: deletions made here first (a learner deleted on this device must not come back from
+ * the account), then the account's learner — `adopt` puts it on this device when it is not this device's own — and
+ * the engine for that learner only.
+ */
+export async function syncAccount(user: string, local: Local, remote: Remote, activeId: string | null, adopt: (p: ChildProfile) => void): Promise<{ id: string | null; result: SyncResult | null }> {
+  if (local.meta().deleted.length) { const none = onlyLearner('', local, remote); await syncOnce(user, none.local, none.remote); }
+  const chosen = await accountLearner(remote, activeId && local.profiles()[activeId] ? activeId : null);
+  if (!chosen) return { id: null, result: null };
+  if (chosen.state && chosen.id !== activeId) adopt(chosen.state);
+  const one = onlyLearner(chosen.id, local, remote);
+  return { id: chosen.id, result: await syncOnce(user, one.local, one.remote) };
+}
 
 export async function syncOnce(user: string, local: Local, remote: Remote): Promise<SyncResult> {
   const result: SyncResult = { pulled: 0, pushed: 0, removed: 0, full: false };

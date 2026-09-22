@@ -7,6 +7,7 @@ import { CourseCheck } from './features/onboarding/CourseCheck';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { Conversation, PracticeHome } from './features/practice/Practice';
 import { Me, ParentZone } from './features/profile/Profile';
+import { SignIn } from './features/profile/SignIn';
 import { Progress } from './features/progress/Progress';
 import { useProfile, useStore } from './state/store';
 import { isGrownUp } from './domain/types';
@@ -101,6 +102,7 @@ export function App() {
         <PhoneBack />
         <Routes>
           <Route path="/welcome" element={<Onboarding />} />
+          <Route path="/signin" element={<SignIn />} />
           <Route element={<RequireProfile />}>
             <Route element={<Tabs />}>
               <Route index element={<Home />} />

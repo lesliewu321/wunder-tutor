@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { contentBand, type Accent, type AgeBand, type CourseId, type Goal, type HomeLanguage, type Level } from '../../domain/types';
 import { ASSESSMENT_ITEMS } from '../../content/course';
 import { phonemeInfo } from '../../content/phonemes';
@@ -70,8 +70,6 @@ type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script
 export function Onboarding() {
   const { t, tc } = useT();
   const nav = useNavigate();
-  const [params] = useSearchParams();
-  const adding = params.get('add') === '1';
   const existing = useProfile();
   const hadProfileOnMount = useRef(!!existing);
   const createProfile = useStore((s) => s.createProfile);
@@ -79,9 +77,9 @@ export function Onboarding() {
   const patchProfile = useStore((s) => s.patchProfile);
   const settings = useStore((s) => s.settings);
 
-  const [step, setStep] = useState<StepId>(adding ? 'languages' : 'welcome');
+  const [step, setStep] = useState<StepId>('welcome');
   const [learning, setLearning] = useState<CourseId[]>(['en']);
-  const [home, setHome] = useState<HomeLanguage | null>(existing?.homeLanguage ?? null);
+  const [home, setHome] = useState<HomeLanguage | null>(null);
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState(AVATARS[0]);
   const [age, setAge] = useState<number | null>(null);
@@ -102,13 +100,14 @@ export function Onboarding() {
   const onBack = useRef<() => boolean>(() => false);
   useBack(() => onBack.current());
 
-  if (hadProfileOnMount.current && !adding) return <Navigate to="/" replace />;
+  // One learner per device and account (Leslie, 2026-09-22): a device that has one is set up already.
+  if (hadProfileOnMount.current) return <Navigate to="/" replace />;
 
   // There is no "is this for you or for a child?" question: the age answers it. A grown-up setting the app up for
   // themselves is not a special case of a parent, and asking made the app look as though it were only for children.
   const adult = age === ADULT_AGE;
   const order: StepId[] = [
-    ...(adding ? [] : ['welcome' as const]), 'languages', 'learner', 'level',
+    'welcome', 'languages', 'learner', 'level',
     ...(learning.includes('en') ? ['accent' as const] : []), ...(learning.includes('zh') ? ['script' as const] : []),
     'consent', ...(adult ? [] : ['handover' as const]), 'check', 'plan',
   ];
@@ -120,7 +119,6 @@ export function Onboarding() {
   const next = () => go(order[order.indexOf(step) + 1]);
   const back = () => {
     const i = order.indexOf(step);
-    if (adding && i <= 0) return nav('/parents');
     if (i > 0) go(order[i - 1]);
   };
   onBack.current = () => {
@@ -186,7 +184,7 @@ export function Onboarding() {
         <ul className="promise">
           <li><span>🎤</span>{t('onboarding.welcome.promise.say')}</li><li><span>🎯</span>{t('onboarding.welcome.promise.see')}</li><li><span>📈</span>{t('onboarding.welcome.promise.hear')}</li>
         </ul>,
-        <><Button size="lg" block onClick={next}>{t('onboarding.welcome.start')}</Button><p className="fineprint">{t('onboarding.welcome.fineprint')}</p></>,
+        <><Button size="lg" block onClick={next}>{t('onboarding.welcome.start')}</Button><Button variant="ghost" block onClick={() => nav('/signin')}>{t('onboarding.welcome.haveAccount')}</Button><p className="fineprint">{t('onboarding.welcome.fineprint')}</p></>,
         { mascot: 'happy', title: t('onboarding.welcome.title'), sub: t('onboarding.welcome.sub') },
       );
 

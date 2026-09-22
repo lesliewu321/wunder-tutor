@@ -81,10 +81,7 @@ export function Me() {
   const nav = useNavigate();
   const { t } = useT();
   const p = useActiveProfile();
-  const profiles = useStore((s) => s.profiles);
-  const setActive = useStore((s) => s.setActive);
   const patch = useStore((s) => s.patchProfile);
-  const others = Object.values(profiles).filter((x) => x.id !== p.id);
   const level = Math.floor(p.xp / 100) + 1;
 
   return (
@@ -112,13 +109,6 @@ export function Me() {
         </div>
       </section>
 
-      {others.length > 0 && (
-        <section>
-          <h2 className="section-title">{t('settings.me.switch.title')}</h2>
-          <div className="switcher">{others.map((o) => <button key={o.id} type="button" className="switcher__item" onClick={() => { setActive(o.id); toast(t('settings.me.switch.hi', { name: o.name }), o.avatar); nav('/'); }}><span>{o.avatar}</span>{o.name}</button>)}</div>
-        </section>
-      )}
-
       <button type="button" className="row-link" onClick={() => nav('/parents')}>
         <span className="row-link__icon"><Icon name="shield" /></span>
         <span><b>{settingsName(p.band)}</b><small>{t('settings.me.zone.detail')}</small></span>
@@ -135,7 +125,6 @@ export function ParentZone() {
   const nav = useNavigate();
   const { t, tn } = useT();
   const p = useActiveProfile();
-  const profiles = useStore((s) => s.profiles);
   const settings = useStore((s) => s.settings);
   const setSettings = useStore((s) => s.setSettings);
   const patch = useStore((s) => s.patchProfile);
@@ -245,16 +234,6 @@ export function ParentZone() {
   return (
     <div className="screen parents">
       <TopBar title={settingsName(p.band)} onBack={() => nav('/me')} />
-
-      <section>
-        <h2 className="section-title">{t('settings.learners.title')}</h2>
-        <div className="learners">
-          {Object.values(profiles).map((c) => (
-            <button key={c.id} type="button" className={`learner ${c.id === p.id ? 'is-on' : ''}`} onClick={() => store.setActive(c.id)} aria-pressed={c.id === p.id}><span>{c.avatar}</span><b>{c.name}</b><small>{c.band === 'adult' ? t('settings.learners.adult') : t('settings.learners.age', { n: c.age })}</small></button>
-          ))}
-          <button type="button" className="learner learner--add" onClick={() => nav('/welcome?add=1')}><span><Icon name="plus" /></span><b>{t('settings.learners.add.title')}</b><small>{t('settings.learners.add.sub')}</small></button>
-        </div>
-      </section>
 
       <AccountPanel />
 
