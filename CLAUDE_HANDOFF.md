@@ -21,6 +21,10 @@ glitch gets another take, up to three (server/tts.mjs, tested with a fake voice)
   即將推出 (`.unit-soon` in Home.tsx). Checked in a separate preview: child vs grown-up, phone size, dark, 繁體中文.
 - **Settings order (17:40, commit 318b4a3, phone build 2026-09-21k, NOT deployed):** Leslie's order — Learners, Family
   account, Invite code, Appearance, "{name}'s learning", Voice & privacy, then Connections and Demo as before.
+- **Math question removed (2026-09-22 08:07, commit 68cbe8e, phone build 2026-09-22a, NOT deployed):** Leslie: "remove
+  math challenge". Settings / Parent Zone now open straight from Me (chevron, no padlock). Children can reach the delete
+  buttons, the "Help improve" recordings switch and account sign-in; if Apple's Kids category is ever the plan, it needs a
+  grown-up check before links out of the app or purchases — the old Gate is in git (Profile.tsx before 68cbe8e).
 - **Mascot name:** Leslie asked for alternatives to "Pip" (Pip is already a TV bunny: Pip and Posy). Suggested Hoku / Koa
   (no language app found with either); Tomo, Oto, Kiku, Maru, Mimi, Tiko are taken by language apps, Tutu = 大耳朵图图.
   Nothing renamed yet; ~40 text lines (en + zh-Hant) + site mention "Pip".
