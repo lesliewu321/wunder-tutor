@@ -2,9 +2,9 @@
 //
 // A Live model is a conversational model, not a TTS engine, so three things keep it honest:
 //   1. the system instruction allows nothing but the requested words,
-//   2. the model's own output transcription is checked against the request (up to three takes, then fail —
-//      a reference pronunciation that ad-libs is worse than none; the app falls back to device TTS), and a take
-//      that runs on far longer than the line could (the model glitching) is cut off and tried again,
+//   2. the model's own output transcription is checked against the request (up to three takes — a reference
+//      pronunciation that ad-libs is worse than none — then the backup voice reads the line: azure-tts.mjs), and a
+//      take that runs on far longer than the line could (the model glitching) is cut off and tried again,
 //   3. accepted audio is cached on disk, so every learner hears the same take and each phrase is
 //      generated (and paid for) once.
 //
@@ -276,14 +276,28 @@ export function toWav16k(pcm, rate) {
 }
 
 /**
- * @param {(wav16k: Buffer, text: string, locale: string) => Promise<boolean>} [opts.verify]
+ * @param {(wav16k: Buffer, text: string, locale: string, opts?: { reader?: boolean }) => Promise<boolean>} [opts.verify]
  *   Optional quality gate for a new take (the server wires Azure scoring in for Mandarin): a take whose tones or
  *   sounds don't score as the text is rejected, exactly like one that ad-libbed.
  */
 /** Failures of one take that the next take may not repeat (the model, not the key or the network). */
 const GLITCHES = new Set(['gemini_runaway', 'gemini_timeout', 'gemini_no_audio']);
 
-export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, verify, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
+/**
+ * Kept under a line's own key when the teacher could not say it: its take is the backup voice's, under backupKey. The
+ * next request goes straight there, without three more tries, and knows whose voice it is (the app checks Mandarin
+ * tones against the teacher's voice only).
+ */
+const BACKUP_MARK = Buffer.from('wunder:backup-voice');
+const backupKey = (key) => `${key}:backup`;
+const isMark = (hit) => hit.length === BACKUP_MARK.length && Buffer.from(hit).equals(BACKUP_MARK);
+
+/**
+ * @param {(req: { text: string, accent: string, slow?: boolean }) => Promise<{ pcm: Buffer, rate: number }>} [opts.backup]
+ *   The reading voice for a line the teacher cannot give a clean take of (server/azure-tts.mjs). Without it, the line
+ *   stays silent, as before.
+ */
+export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFAULT_VOICE, cache, endpoint, connect, verify, backup, maxGenerationsPerWindow = 120, windowMs = 10 * 60_000 }) {
   const inflight = new Map();
   let windowStart = Date.now();
   let generated = 0;
@@ -320,7 +334,19 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     throw new TtsError('tts_mismatch');
   }
 
-  /** @returns {Promise<{ wav: Buffer, cached: boolean }>} */
+  /** The backup voice's take of a line. It reads exactly the text; for Mandarin a lighter tone gate still applies (reader). */
+  async function fromBackup(req) {
+    const out = await backup(req);
+    const pcm = trimSilence(out.pcm, out.rate);
+    if (verify && req.accent === 'zh-CN') {
+      let ok = true;
+      try { ok = await verify(toWav16k(pcm, out.rate), req.text, req.accent, { reader: true }); } catch { ok = true; }
+      if (!ok) throw new TtsError('tts_mismatch');
+    }
+    return pcmToWav(pcm, out.rate);
+  }
+
+  /** @returns {Promise<{ wav: Buffer, cached: boolean, voice: 'teacher' | 'backup' }>} */
   async function speak(input) {
     const text = String(input?.text ?? '').replace(/\s+/g, ' ').trim();
     if (!text) throw new TtsError('missing_text', 400);
@@ -337,21 +363,39 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     if (keep) {
       try {
         const hit = await cache.get(key);
-        if (hit?.length) return { wav: Buffer.from(hit), cached: true };
+        if (hit?.length && !isMark(hit)) return { wav: Buffer.from(hit), cached: true, voice: 'teacher' };
+        if (hit?.length) {
+          const kept = await cache.get(backupKey(key));
+          if (kept?.length) return { wav: Buffer.from(kept), cached: true, voice: 'backup' };
+        }
       } catch { /* cache unavailable — generate */ }
     }
     if (!inflight.has(key)) {
       inflight.set(key, (async () => {
         try {
-          const wav = await generate(req);
-          if (keep) await cache.put(key, wav).catch(() => undefined); // a failed write must not lose the take
-          return wav;
+          try {
+            const wav = await generate(req);
+            if (keep) await cache.put(key, wav).catch(() => undefined); // a failed write must not lose the take
+            return { wav, voice: 'teacher' };
+          } catch (e) {
+            // Our own limits (a bad request, the spending guard) are not the teacher failing: no backup for those.
+            if (!backup || (e instanceof TtsError && e.status < 500)) throw e;
+            let wav;
+            try { wav = await fromBackup(req); } catch { throw e; } // both failed: the teacher's reason is the one to report
+            // A line the teacher could not say cleanly is kept as the backup's. After an outage (no connection, a
+            // timeout) the teacher gets the next request again, so nothing is kept for good.
+            if (keep && e instanceof TtsError && e.code === 'tts_mismatch') {
+              await cache.put(backupKey(key), wav).then(() => cache.put(key, BACKUP_MARK)).catch(() => undefined);
+            }
+            return { wav, voice: 'backup' };
+          }
         } finally {
           inflight.delete(key);
         }
       })());
     }
-    return { wav: await inflight.get(key), cached: false };
+    const { wav, voice } = await inflight.get(key);
+    return { wav, cached: false, voice };
   }
 
   return { speak, model, voiceName };

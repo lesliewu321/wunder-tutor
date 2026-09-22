@@ -14,6 +14,7 @@ import { HttpError } from './http-error.mjs';
 import { createFamilies } from './family.mjs';
 import { createInvites } from './invites.mjs';
 import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, TtsError } from './tts.mjs';
+import { createBackupVoice } from './azure-tts.mjs';
 import { DEFAULT_READ_MODEL, readText } from './read.mjs';
 import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, TUTOR_SCHEMA, validateTutorInput } from './tutor.mjs';
 
@@ -159,7 +160,7 @@ function createFailureCounter(max, windowMs) {
  * @param {Record<string, string|undefined>} rawEnv  AZURE_SPEECH_KEY, AZURE_SPEECH_REGION, AZURE_SPEECH_ENDPOINT,
  *   GEMINI_API_KEY, GEMINI_LIVE_MODEL, GEMINI_TTS_VOICE, GEMINI_LIVE_ENDPOINT, ANTHROPIC_API_KEY, CLAUDE_MODEL,
  *   BETA_ACCESS_CODE (when set, every endpoint except /api/health requires it in the x-wunder-access header)
- * @param {{ ttsCache?: object, connectWebSocket?: Function, canDialWebSocket?: boolean, requireAccessCode?: boolean, log?: Console,
+ * @param {{ ttsCache?: object, connectWebSocket?: Function, backupVoice?: Function, canDialWebSocket?: boolean, requireAccessCode?: boolean, log?: Console,
  *   googleFetch?: typeof fetch, egressInfo?: () => Promise<string> }} [deps]
  *   googleFetch: how requests reach Google. Google refuses requests that leave from Hong Kong, where the hosted API
  *   runs for Hong Kong learners — there it is a relay elsewhere (functions/api/[[path]].js); locally, plain fetch.
@@ -217,7 +218,13 @@ export function createApi(rawEnv, deps = {}) {
    * ACCURACY floor was the tempting alternative and is a bad trade — 85 → 80 costs 35 wrong-tone catches.
    * `eval/teacher-gate.mjs` re-runs the whole measurement.
    */
-  async function verifyTake(wav, text, locale) {
+  /**
+   * `reader`: a take by the backup voice (azure-tts.mjs), which reads exactly the text. It keeps the syllable floor, which
+   * catches a clearly wrong syllable (a misread character, a wrong tone), but not the overall floor. Measured on
+   * 2026-09-22: its 四是四，十是十。 scored 83 overall with every syllable 56 or more, and its 我喜欢！ scored 84 because of
+   * the neutral 欢 (35), the erratic score the syllable check already ignores. Both are said correctly.
+   */
+  async function verifyTake(wav, text, locale, { reader = false } = {}) {
     const j = JSON.parse(await scoreOnce(wav, text, locale, 0));
     if (j.RecognitionStatus !== 'Success') return false;
     const best = j.NBest?.[0];
@@ -231,13 +238,15 @@ export function createApi(rawEnv, deps = {}) {
     })));
     const counted = units.filter((u) => u.tone !== 5);
     if (!counted.length) return false;
-    return (pa.AccuracyScore ?? 0) >= TEACHER_MIN_ACCURACY && counted.every((u) => u.score >= TEACHER_MIN_SYLLABLE);
+    return (reader || (pa.AccuracyScore ?? 0) >= TEACHER_MIN_ACCURACY) && counted.every((u) => u.score >= TEACHER_MIN_SYLLABLE);
   }
 
   const tts = status.gemini
     ? createTts({
       apiKey: GEMINI_API_KEY, model: GEMINI_LIVE_MODEL, voiceName: GEMINI_TTS_VOICE, endpoint: env('GEMINI_LIVE_ENDPOINT') || undefined,
       cache: deps.ttsCache, connect: deps.connectWebSocket, verify: status.azure ? verifyTake : undefined,
+      // A line the teacher cannot give a clean take of is read by Azure's voice instead of staying silent (azure-tts.mjs).
+      backup: status.azure && AZURE_SPEECH_REGION ? (deps.backupVoice ?? createBackupVoice({ key: AZURE_SPEECH_KEY, region: AZURE_SPEECH_REGION })) : undefined,
     })
     : null;
 
@@ -436,7 +445,7 @@ export function createApi(rawEnv, deps = {}) {
     const input = await readJson(request);
     if (input?.ephemeral && !allowOwnTextTts(client)) throw new HttpError(429, 'rate_limited');
     try {
-      const { wav, cached } = await tts.speak(input);
+      const { wav, cached, voice } = await tts.speak(input);
       return new Response(wav, {
         status: 200,
         headers: {
@@ -445,6 +454,8 @@ export function createApi(rawEnv, deps = {}) {
           'Cache-Control': 'private, max-age=31536000, immutable',
           'X-Content-Type-Options': 'nosniff',
           'X-Tts-Cache': cached ? 'hit' : 'miss',
+          // 'backup': Azure's voice read it (the app checks Mandarin tones against the teacher's voice only).
+          'X-Tts-Voice': voice,
         },
       });
     } catch (err) {
@@ -570,6 +581,8 @@ export function createApi(rawEnv, deps = {}) {
     'Access-Control-Allow-Headers': `Content-Type, ${ACCESS_HEADER}, Authorization`,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Max-Age': '86400',
+    // The app reads which voice made a take (X-Tts-Voice): a header the browser hides cross-origin unless exposed.
+    'Access-Control-Expose-Headers': 'X-Tts-Cache, X-Tts-Voice',
     Vary: 'Origin',
   } : null);
 

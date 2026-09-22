@@ -153,3 +153,100 @@ describe('Gemini Live teacher voice', () => {
     expect(wav.length).toBe(44 + trimmed.length);
   });
 });
+
+describe('the backup voice (Azure), when the teacher cannot say a line', () => {
+  /** A pretend Azure voice: 0.3 s of sound, counting how often it was asked. */
+  const fakeBackup = (fail = false) => {
+    const calls = [];
+    const fn = async (req) => {
+      calls.push(req);
+      if (fail) throw new Error('azure tts 503');
+      const pcm = Buffer.alloc(24000 * 2 * 0.3);
+      for (let i = 1000; i < 6000; i++) pcm.writeInt16LE(7000, i * 2);
+      return { pcm, rate: 24000 };
+    };
+    return { fn, calls };
+  };
+
+  it('reads a line the teacher refuses three times, and keeps it as that line\'s take', async () => {
+    const cache = memoryCache();
+    const chatty = fakeLive(() => 'Sure! Here you go: four is four');
+    const backup = fakeBackup();
+    const first = await createTts({ apiKey: 'k', connect: chatty.connect, cache, backup: backup.fn }).speak({ text: 'four is four', accent: 'en-US' });
+    expect(first).toMatchObject({ cached: false, voice: 'backup' });
+    expect(first.wav.subarray(0, 4).toString()).toBe('RIFF');
+    expect(chatty.log.sessions).toBe(3);
+    // The next request goes straight to the kept take: no teacher, no second backup call.
+    const again = await createTts({ apiKey: 'k', connect: chatty.connect, cache, backup: backup.fn }).speak({ text: 'four is four', accent: 'en-US' });
+    expect(again).toMatchObject({ cached: true, voice: 'backup' });
+    expect(again.wav.equals(first.wav)).toBe(true);
+    expect(chatty.log.sessions).toBe(3);
+    expect(backup.calls).toHaveLength(1);
+  });
+
+  it('a line the teacher says well is still the teacher\'s', async () => {
+    const live = fakeLive((prompt) => prompt.replace('SAY: ', ''));
+    const backup = fakeBackup();
+    const out = await createTts({ apiKey: 'k', connect: live.connect, backup: backup.fn }).speak({ text: 'milk', accent: 'en-US' });
+    expect(out.voice).toBe('teacher');
+    expect(backup.calls).toHaveLength(0);
+  });
+
+  it('an outage: the backup reads it, but it is not kept for good (the teacher is asked again next time)', async () => {
+    const cache = memoryCache();
+    const down = { connect: () => { throw new Error('no network'); } };
+    const backup = fakeBackup();
+    const out = await createTts({ apiKey: 'k', connect: down.connect, cache, backup: backup.fn }).speak({ text: 'water', accent: 'en-US' });
+    expect(out.voice).toBe('backup');
+    expect(cache.m.size).toBe(0);
+  });
+
+  it('both failing: the teacher\'s reason is reported, as before', async () => {
+    const chatty = fakeLive(() => 'Sure! thank you');
+    await expect(createTts({ apiKey: 'k', connect: chatty.connect, backup: fakeBackup(true).fn }).speak({ text: 'thank you', accent: 'en-US' })).rejects.toMatchObject({ code: 'tts_mismatch' });
+  });
+
+  it('no backup for our own limits: a bad request, or the spending guard', async () => {
+    const backup = fakeBackup();
+    const live = fakeLive((prompt) => prompt.replace('SAY: ', ''));
+    const tts = createTts({ apiKey: 'k', connect: live.connect, backup: backup.fn, maxGenerationsPerWindow: 0 });
+    await expect(tts.speak({ text: '12345' })).rejects.toMatchObject({ code: 'invalid_text' });
+    await expect(tts.speak({ text: 'bread', accent: 'en-US' })).rejects.toMatchObject({ code: 'tts_budget_exceeded' });
+    expect(backup.calls).toHaveLength(0);
+  });
+
+  it('Mandarin: the tone gate guards the backup\'s take too', async () => {
+    const wrong = fakeLive(() => '十');
+    const refuse = async () => false;
+    await expect(createTts({ apiKey: 'k', connect: wrong.connect, verify: refuse, backup: fakeBackup().fn }).speak({ text: '十', accent: 'zh-CN' })).rejects.toMatchObject({ code: 'tts_mismatch' });
+    // The backup's take gets the lighter gate for a reading voice (reader: true); the teacher's takes the full one.
+    const gates = [];
+    const onlyReaderPasses = async (_wav, _text, _locale, opts) => { gates.push(!!opts?.reader); return !!opts?.reader; };
+    const out = await createTts({ apiKey: 'k', connect: wrong.connect, verify: onlyReaderPasses, backup: fakeBackup().fn }).speak({ text: '十', accent: 'zh-CN' });
+    expect(out.voice).toBe('backup');
+    expect(gates).toEqual([false, false, false, true]);
+  });
+});
+
+describe('Azure\'s voice: the request', () => {
+  it('speaks the line in the language\'s voice, slower when asked, with the text escaped', async () => {
+    const { backupSsml, BACKUP_VOICES } = await import('./azure-tts.mjs');
+    expect(backupSsml({ text: 'Fish & chips <please>', accent: 'en-GB' })).toContain('<voice name="en-GB-SoniaNeural"><prosody rate="-10%">Fish &amp; chips &lt;please&gt;</prosody>');
+    expect(backupSsml({ text: '四是四，十是十。', accent: 'zh-CN', slow: true })).toMatch(/xml:lang="zh-CN".*zh-CN-XiaoxiaoNeural.*rate="-40%">四是四，十是十。/);
+    expect(Object.keys(BACKUP_VOICES).sort()).toEqual(['en-GB', 'en-US', 'fr-FR', 'ja-JP', 'zh-CN']);
+  });
+
+  it('asks the region\'s voice service for the teacher\'s own format, and reads the WAV that comes back', async () => {
+    const { createBackupVoice } = await import('./azure-tts.mjs');
+    const seen = [];
+    const wav = pcmToWav(Buffer.alloc(4800), 24000);
+    const fetchImpl = async (url, init) => { seen.push({ url, init }); return new Response(wav, { status: 200 }); };
+    const out = await createBackupVoice({ key: 'secret', region: 'eastasia', fetchImpl })({ text: 'bonjour', accent: 'fr-FR' });
+    expect(out).toMatchObject({ rate: 24000 });
+    expect(out.pcm.length).toBe(4800);
+    expect(seen[0].url).toBe('https://eastasia.tts.speech.microsoft.com/cognitiveservices/v1');
+    expect(seen[0].init.headers).toMatchObject({ 'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm', 'Content-Type': 'application/ssml+xml' });
+    expect(seen[0].init.body).toContain('fr-FR-DeniseNeural');
+    await expect(createBackupVoice({ key: 'k', region: 'eastasia', fetchImpl: async () => new Response('no', { status: 401 }) })({ text: 'x', accent: 'en-US' })).rejects.toThrow('azure tts 401');
+  });
+});

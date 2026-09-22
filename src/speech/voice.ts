@@ -99,6 +99,12 @@ export const playBlob = (blob: Blob): Promise<void> =>
 
 // ---------------------------------------------------------------- Gemini Live native audio (via /api/tts)
 
+/**
+ * A take read by the backup voice (Azure's, when the teacher could not say the line: server/azure-tts.mjs). Marked in
+ * its type, which is stored with it, so a kept take is still known for one.
+ */
+const BACKUP_TYPE = 'audio/wav; voice=backup';
+
 const ttsKey = (version: string, text: string, o: SpeakOptions) => `${version}|${o.accent}|${o.slow ? 'slow' : 'normal'}|${o.kind === 'syllable' ? 'syl' : ''}|${text}`;
 
 /**
@@ -128,9 +134,12 @@ class GeminiTakes {
     return job;
   }
 
-  /** Mandarin: a take whose tone is confidently wrong is never played (the device voice speaks instead). */
+  /**
+   * Mandarin: a take whose tone is confidently wrong is never played (the device voice speaks instead). The tone model
+   * knows the teacher's voice; the backup voice reads exactly the text (and passed the server's tone gate).
+   */
   private async toneOk(blob: Blob, text: string, opts: SpeakOptions): Promise<boolean> {
-    if (opts.accent !== 'zh-CN') return true;
+    if (opts.accent !== 'zh-CN' || blob.type === BACKUP_TYPE) return true;
     try { return teacherToneOk(await blob.arrayBuffer(), text, this.version.split('/')[1] ?? ''); } catch { return true; }
   }
 
@@ -148,7 +157,8 @@ class GeminiTakes {
         body: JSON.stringify({ text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined, ephemeral: opts.ephemeral || undefined }),
       });
       if (!res.ok || !res.headers.get('content-type')?.startsWith('audio/')) throw new Error(`tts ${res.status}`);
-      const blob = await res.blob();
+      const got = await res.blob();
+      const blob = res.headers.get('x-tts-voice') === 'backup' ? new Blob([got], { type: BACKUP_TYPE }) : got;
       if (!(await this.toneOk(blob, text, opts))) { this.rejected.add(key); throw new Error('tts tone mismatch'); }
       this.memory.set(key, blob);
       try { if (this.store) await set(key, blob, this.store); } catch { /* memory cache only */ }
