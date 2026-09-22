@@ -14,7 +14,7 @@
   "settings.me.streak": "Day streak",
   "settings.me.goal.title": "Daily goal",
   "settings.me.goal.line": "{xp} XP · {detail}",
-  "settings.me.zone.detail": "Privacy, recordings, learners and settings",
+  "settings.me.zone.detail": "Account, privacy, recordings and settings",
 
   "settings.learning.title": "{name}’s learning",
   "settings.learning.age": "Age",
@@ -81,7 +81,7 @@
   "settings.delete.profile.body": "Everything about this learner is erased from this device. This can’t be undone.",
   "settings.delete.profile.cta": "Delete profile",
   "settings.delete.everything.title": "Delete the whole account?",
-  "settings.delete.everything.body": "All learners, recordings, scores and settings are erased from this device. If you are signed in, your family account and everything saved in it is erased too. This can’t be undone.",
+  "settings.delete.everything.body": "The learner, recordings, scores and settings are erased from this device. If you are signed in, the account and everything saved in it is erased too. This can’t be undone.",
   "settings.delete.everything.cta": "Delete everything",
 
   "settings.account.title": "Account",
