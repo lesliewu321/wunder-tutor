@@ -59,8 +59,18 @@ backup voice at all: 7 of 170 French lines and several Mandarin ones are silent 
   new takes per 10 min) has no backup — `busy` message; the daily voice limit counts requests, cache hits included;
   tongue twisters are also mis-scored for LEARNERS (same scorer weakness) — nothing done about that; Mandarin backup
   could pass the item's pinyin as `<phoneme alphabet="sapi">` to pin polyphones (not done).
-- **Builds:** phone `wunder-tutor-2026-09-22i.apk` (Dropbox folder) and Play `wunder-tutor-1.0.3-code4.aab` (UNSIGNED)
-  carry all of this; but they talk to the live server, which lacks the server half until deployed.
+- **Tester, 2026-09-23: "there is not invite code page with chinese onboarding" (commit a85c962).** Two ways: the
+  device already had the code from an earlier setup (the step was skipped as needless — reads as missing), or the
+  phone could not reach the server at the start of setup, got "no code needed" (NONE) and never asked again. Now
+  `ApiHealth.reached` says whether the server answered; setup shows the invite-code step whenever `needsCode`,
+  pre-filled and "accepted" when the device has one (Next enabled); the decision waits for a real answer (re-asked at
+  the consent and account steps) and is refreshed after sign-in (an account may unlock the services). Both cases acted
+  out in Chinese in the 5199 copy. **Testing trap:** after an HMR edit, `import('/src/speech/health.ts')` from the
+  browser console is NOT the app's module instance (Vite serves the app `…?t=<stamp>`) — stubbing it changes nothing
+  the app sees. Restart the dev server first, then the instances are the same.
+- **Builds:** phone `wunder-tutor-2026-09-23a.apk` (Dropbox folder) and Play `wunder-tutor-1.0.4-code5.aab` (UNSIGNED,
+  code 5) carry all of this, the 22i / 1.0.3 pair is superseded; they talk to the live server, which lacks the server
+  half until deployed.
 
 ## Earlier: 2026-09-21 afternoon — Japanese, and conversations in every course (DEPLOYED 14:32, not pushed)
 
