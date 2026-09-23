@@ -1,6 +1,30 @@
 # Wunder Tutor — handoff (2026-09-22)
 
-## Start here: 2026-09-22 evening — the voice gauntlet (commits 614239b, 79fb505; phone build 22i; Play 1.0.3 code 4)
+## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
+
+- Live checks after: `/api/status` ok ×3 (egress google-apac-a NRT); phone preflight 204; the setup preview line plays
+  WITHOUT a code (200, teacher) and any other line without a code is 401; with the invite code (header only), all 9 hard
+  zh/fr lines have a voice — 四是四, 我喜欢, 妈妈骑马 and Voilà ! Bon appétit ! by the backup (8–14 s the first time).
+- Database: `20260922090000_one_learner_per_account` applied; rls.sql then showed 1 FAILED — "B cannot add a learner
+  to A's family" got 54000 (the limit trigger fired before the row policy, telling a stranger whether an account has a
+  learner). Fixed with `20260923031500_learner_limit_own_account.sql` (the limit judges only `new.parent_id =
+  auth.uid()` inserts; the policy refuses the rest as before), applied; **rls.sql: 40 checks, ALL OK**.
+- **The voice-cache copy did NOT reach the live server.** `warm-voice.mjs --push` wrote 998 teacher takes (+2 test keys)
+  into KV namespace `wunder-tutor-tts-cache` 138ec3dd…, the one wrangler.toml AND `wrangler pages download config`
+  (production) bind as TTS_CACHE — yet the live Function neither reads it (a key put there via the API is a `miss` live,
+  even 90 s later; 吃葡萄 live serves its own morning take, not the pushed one, on app.wundertutor.com and pages.dev
+  alike) nor writes to it (lines the live server made today never appear in its listing; it had 0 keys before the push
+  although the live app has had cache hits for days). The other namespace (wunder-driver…) has no tts keys either.
+  One account only (whoami). So the deployed Function's TTS_CACHE is some store the API doesn't show under that id.
+  Unresolved. **Next:** open the Pages project in the dashboard → Settings → Bindings (Functions) and see which KV
+  namespace production really uses; if it is another id, `--push` there (change `KV` in the script). Or warm through
+  the live server instead: `WUNDER_CODE=… node scripts/warm-voice.mjs --server=https://app.wundertutor.com` (paced,
+  ~120 new takes per 10 min → 1.5 h; costs the Gemini takes again). The 1,000 keys in 138ec3dd… are harmless.
+  Also learned: on Windows the local server's `<key>:backup.wav` is an NTFS alternate data stream (readdir does not
+  list it; readFile by name works) — the push script now reads it by name and never pushes a marker without its take.
+- Not pushed to GitHub (Leslie did not ask). Phone builds unchanged: 2026-09-23a.apk / 1.0.4 (code 5).
+
+## Earlier that evening: 2026-09-22 — the voice gauntlet (commits 614239b, 79fb505; phone build 22i; Play 1.0.3 code 4)
 
 Leslie: "review code. the main problem is no teacher sound. we added azure backup sound. make sure tongue twisters and
 other difficult words always has teacher sound when invite code is active. from onboarding till lessons, snap to say,

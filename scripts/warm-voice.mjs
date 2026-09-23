@@ -32,29 +32,49 @@ const server = flag('server');
 const cacheDir = join(root, 'server', '.cache', 'tts');
 
 if (args.includes('--push')) {
-  // Every take on disk, in batches (a bulk write is capped at 100 MB; a take is 50–300 KB), as the hosted API keys them.
+  // Every take on disk that the live cache does not have yet, in batches (a bulk write is capped at 100 MB; a take is
+  // 50–300 KB), as the hosted API keys them. What is live already stays as it is: the phones have those takes cached,
+  // and a line the live teacher managed must not become the backup's because it did not manage here.
   const KV = '138ec3dd03034f40ab92a58125cd6b07'; // wunder-tutor-tts-cache (npx wrangler kv namespace list)
-  const files = readdirSync(cacheDir).filter((f) => f.endsWith('.wav'));
+  const wrangler = (...a) => execFileSync('npx', ['wrangler', ...a], { encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 64e6, stdio: ['ignore', 'pipe', 'inherit'] });
+  const live = new Set(JSON.parse(wrangler('kv', 'key', 'list', '--namespace-id', KV, '--prefix', 'tts:')).map((k) => k.name));
+  // A line the teacher could not say is two entries: the marker under its key and the reading under `<key>:backup`.
+  // On Windows the local server wrote that second file as an alternate data stream of a file named `<key>` — readable
+  // by that name, invisible to readdir — so it is read by name here. A marker without its reading is not pushed: live,
+  // it would only force the line to be made all over again.
+  const MARK = 'wunder:backup-voice';
+  const entries = [];
+  for (const f of readdirSync(cacheDir).filter((f) => f.endsWith('.wav'))) {
+    const key = f.slice(0, -4);
+    if (live.has(`tts:${key}`)) continue;
+    const wav = readFileSync(join(cacheDir, f));
+    if (wav.length === MARK.length && wav.toString() === MARK) {
+      let reading;
+      try { reading = readFileSync(join(cacheDir, `${key}:backup.wav`)); } catch { continue; }
+      if (!live.has(`tts:${key}:backup`)) entries.push({ key: `tts:${key}:backup`, value: reading });
+    }
+    entries.push({ key: `tts:${key}`, value: wav });
+  }
+  console.log(`${live.size} takes live already; ${entries.length} to add`);
   const tmp = mkdtempSync(join(tmpdir(), 'wunder-kv-'));
   let batch = [], size = 0, pushed = 0;
   const flush = () => {
     if (!batch.length) return;
     const file = join(tmp, `batch-${pushed}.json`);
     writeFileSync(file, JSON.stringify(batch));
-    execFileSync('npx', ['wrangler', 'kv', 'bulk', 'put', file, '--namespace-id', KV], { stdio: 'inherit', shell: process.platform === 'win32' });
+    wrangler('kv', 'bulk', 'put', file, '--namespace-id', KV);
     pushed += batch.length;
-    console.log(`  ${pushed}/${files.length} takes in the live cache`);
+    console.log(`  ${pushed}/${entries.length} added to the live cache`);
     batch = []; size = 0;
   };
-  for (const f of files) {
-    const wav = readFileSync(join(cacheDir, f));
-    batch.push({ key: `tts:${f.slice(0, -4)}`, value: wav.toString('base64'), base64: true });
-    size += wav.length;
+  for (const { key, value } of entries) {
+    batch.push({ key, value: value.toString('base64'), base64: true });
+    size += value.length;
     if (batch.length >= 200 || size > 60e6) flush();
   }
   flush();
   rmSync(tmp, { recursive: true, force: true });
-  console.log(`${pushed} takes copied to the live cache.`);
+  console.log(`${pushed} takes added to the live cache.`);
   process.exit(0);
 }
 
