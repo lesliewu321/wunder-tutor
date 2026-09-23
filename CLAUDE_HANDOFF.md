@@ -22,7 +22,24 @@
   ~120 new takes per 10 min → 1.5 h; costs the Gemini takes again). The 1,000 keys in 138ec3dd… are harmless.
   Also learned: on Windows the local server's `<key>:backup.wav` is an NTFS alternate data stream (readdir does not
   list it; readFile by name works) — the push script now reads it by name and never pushes a marker without its take.
-- Not pushed to GitHub (Leslie did not ask). Phone builds unchanged: 2026-09-23a.apk / 1.0.4 (code 5).
+- Not pushed to GitHub (Leslie did not ask).
+- **Reinstall with the same email (2026-09-23, commit b24e29b, NOT deployed to the web; phone build 2026-09-23b.apk,
+  Play 1.0.5 code 6 UNSIGNED):** Leslie: "everytime I reinstall, I use the same email … how is already registered user
+  handled now and how it should be handled". Was: after sign-in in setup the account's learner quietly took the device
+  (sync adopts it) while setup carried on under the just-typed name — the check's results went to the old learner and
+  the plan showed the old name. Now: Next waits for the first sync after sign-in (`settled`: `savedAt` ≥ the moment of
+  sign-in, or sync failed/offline); if the active learner is not the one setup made (`madeId`), the step becomes
+  "Welcome back! This account already has a learner: Tiger, age 7" with **Continue as Tiger** (the typed learner is
+  dropped from `profiles`, `returning` makes `next()` go Home after the code step — no second check) or **Start over
+  with Mia** (confirmation sheet → `eraseAccountLearners()` in account.ts calls `delete_learner` for every live head →
+  the adopted learner is removed locally with `heardFromAccount: true` → activeId = the new one → setup goes on; the
+  queued sync inserts the new learner within seconds). Both acted out in the 5199 copy with a pretend Supabase (the
+  account's learner state cloned from the fresh profile). "I already have an account" on the welcome screen is the
+  other reinstall path and is unchanged (restores the learner, straight to Home). Leslie's own account still holds 4–5
+  learners from the family days: "continue" takes the most recently edited, "start over" erases them all. A reinstall
+  also loses the device's invite code and device id: the code page shows "accepted" through the account's token if
+  the account has the beta plan (granted the first time a request carried both the code and the token); otherwise
+  re-entering the code takes one more of the invite's 20 places.
 
 ## Earlier that evening: 2026-09-22 — the voice gauntlet (commits 614239b, 79fb505; phone build 22i; Play 1.0.3 code 4)
 
