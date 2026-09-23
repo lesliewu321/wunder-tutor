@@ -70,9 +70,9 @@ const BANDS: { band: AgeBand; age: number; label: Key; hint: Key }[] = [
 ];
 const ADULT_AGE = 18;
 
-type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script' | 'consent' | 'account' | 'code' | 'handover' | 'check' | 'plan';
+type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script' | 'consent' | 'account' | 'code' | 'handover' | 'ready' | 'check' | 'plan';
 /** Steps after the consent step has made the learner: going back would make a second one, so they have no ←. */
-const MADE: StepId[] = ['account', 'code', 'handover', 'check', 'plan'];
+const MADE: StepId[] = ['account', 'code', 'handover', 'ready', 'check', 'plan'];
 
 export function Onboarding() {
   const { t, tc } = useT();
@@ -141,7 +141,7 @@ export function Onboarding() {
   // The check's first takes are fetched while the grown-up signs in and hands over (a hard line can take the server ten
   // seconds), and the next one while the child says this one: Listen is instant, instead of a wait that looks like no sound.
   useEffect(() => {
-    if (!['account', 'code', 'handover', 'check'].includes(step)) return;
+    if (!['account', 'code', 'handover', 'ready', 'check'].includes(step)) return;
     for (const item of checkItems().slice(checkIndex, checkIndex + 2)) voice.prefetch(item.say ?? item.text, { accent: localeOf(item, accent), kind: item.kind });
     // services: fetched again once the invite code is accepted, which is when the teacher's voice becomes available.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,7 +157,9 @@ export function Onboarding() {
     'welcome', 'languages', 'learner', 'level',
     ...(learning.includes('en') ? ['accent' as const] : []), ...(learning.includes('zh') ? ['script' as const] : []),
     // The email and the invite code before the check (Leslie, 2026-09-22): without a code the teacher was silent there.
-    'consent', 'account', ...(askCode.current ? ['code' as const] : []), ...(adult ? [] : ['handover' as const]), 'check', 'plan',
+    // Before the check, a page that says what it is for: the child's handover, or the adult's own (Leslie, 2026-09-23:
+    // the check appeared right after the invite code with nothing to say why).
+    'consent', 'account', ...(askCode.current ? ['code' as const] : []), adult ? 'ready' as const : 'handover' as const, 'check', 'plan',
   ];
   const about: About = adult ? 'adult' : name.trim() ? 'named' : 'unnamed';
   // Crossing the line between a child and a grown-up changes which reasons for learning are offered, so a reason
@@ -408,6 +410,16 @@ export function Onboarding() {
         services ? <InviteCodeForm services={services} onServices={setServices} /> : null,
         <Button size="lg" block disabled={!services?.authorized} onClick={next}>{t('onboarding.next')}</Button>,
         { grownUp: true, title: t('onboarding.code.title'), sub: t('onboarding.code.sub') },
+      );
+
+    case 'ready':
+      return shell(
+        null,
+        <>
+          <Button size="lg" variant="coral" block onClick={next}>{t('onboarding.ready.go')}</Button>
+          <Button variant="ghost" block onClick={() => go('plan')}>{t('onboarding.ready.skip')}</Button>
+        </>,
+        { mascot: 'talking', title: t('onboarding.ready.title'), sub: t('onboarding.ready.sub') },
       );
 
     case 'handover':
