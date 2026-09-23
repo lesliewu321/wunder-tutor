@@ -39,7 +39,18 @@
   learners from the family days: "continue" takes the most recently edited, "start over" erases them all. A reinstall
   also loses the device's invite code and device id: the code page shows "accepted" through the account's token if
   the account has the beta plan (granted the first time a request carried both the code and the token); otherwise
-  re-entering the code takes one more of the invite's 20 places.
+  re-entering the code takes one more of the invite's places (Leslie's screenshot: 7 of 10 used on WUNDER-HD2X8,
+  most of them reinstalls; `npm run codes:new` makes another).
+- **Setup pages, and where the paywall goes (2026-09-23, Leslie's question; adult intro page added, commit after
+  b24e29b; phone build 2026-09-23c.apk, Play 1.0.6 code 7 UNSIGNED, NOT deployed to the web):** the check ("thirsty",
+  1/3) came right after the invite code for adults with nothing to say why; children had the handover page. Adults now
+  get 'ready' ("Say three words for Tutu" — what it listens for, not a test, skippable: I'm ready / Skip for now).
+  The full order is Welcome → Which languages? → Who's learning? → About {name} → [English accent] → [繁/简 script] →
+  Voice & privacy → Your (child's) account → Invite code (when the server needs one) → handover (child) / ready (adult)
+  → Speaking check (✕ skips) → Plan → Home. Recommended to Leslie: the paywall takes the invite code's slot (after
+  the account, before the handover — everything needing a grown-up before the child takes over; the payment is the
+  parent's consent; a free trial keeps it light; "Have an invite code?" stays on it for beta/school pilots). Not built.
+  Seen on the way: an adult's default name is "Me", so the account step says "Me's progress is saved" — awkward.
 
 ## Earlier that evening: 2026-09-22 — the voice gauntlet (commits 614239b, 79fb505; phone build 22i; Play 1.0.3 code 4)
 
