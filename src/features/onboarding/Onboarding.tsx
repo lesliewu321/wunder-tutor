@@ -11,12 +11,13 @@ import { LANGUAGES, language, type Key } from '../../i18n';
 import { useBack } from '../../back';
 import { useT } from '../../i18n/useT';
 import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
-import { useAccount } from '../../account/account';
+import { eraseAccountLearners, useAccount } from '../../account/account';
 import { apiHealth, refreshHealth, type ApiHealth } from '../../speech';
 import { micSupported } from '../../speech/recorder';
 import { ACCENT_PREVIEW_LINE, localeOf, voice } from '../../speech/voice';
 import { useProfile, useStore } from '../../state/store';
-import { Button, IconButton, ProgressBar, toast } from '../../ui/kit';
+import { Button, IconButton, ProgressBar, Sheet, toast } from '../../ui/kit';
+import { Icon } from '../../ui/Icon';
 import { Mascot } from '../../ui/Mascot';
 import { SignInForm } from '../profile/AccountPanel';
 import { InviteCodeForm } from '../profile/InviteCodeForm';
@@ -111,6 +112,17 @@ export function Onboarding() {
   // since an account of its own may unlock the services.
   const [services, setServices] = useState<ApiHealth | null>(null);
   const askCode = useRef<boolean | null>(null);
+  // The learner made at the consent step. After sign-in the account may already hold another one, which then takes
+  // this device (src/account/account.ts adopts it): setup notices by comparing ids, and asks which one it is to be.
+  const madeId = useRef<string | null>(null);
+  // Signed in, and the first sync since has run: only then is it known whose learner this device has.
+  const signedInAt = useRef<number | null>(null);
+  useEffect(() => { if (account.status === 'signed-in') signedInAt.current ??= Date.now(); }, [account.status]);
+  const settled = account.status === 'signed-in' && ((account.savedAt ?? 0) >= (signedInAt.current ?? Infinity) || account.sync === 'failed' || account.sync === 'offline');
+  // A returning learner: setup ends after the account (and the code, if needed) — the check is for new learners.
+  const [returning, setReturning] = useState(false);
+  const [askErase, setAskErase] = useState(false);
+  const [erasing, setErasing] = useState(false);
   const learn = (h: ApiHealth) => { if (h.reached) askCode.current ??= h.needsCode; setServices(h); };
   useEffect(() => { void apiHealth().then(learn); }, []);
   useEffect(() => { if (askCode.current === null && (step === 'consent' || step === 'account')) void apiHealth().then(learn); }, [step]);
@@ -152,7 +164,11 @@ export function Onboarding() {
   // chosen from the other list cannot stay selected behind the scenes.
   const pickAge = (years: number) => { if ((years === ADULT_AGE) !== adult) setGoal(null); setAge(years); };
   const go = (s: StepId) => setStep(s);
-  const next = () => go(order[order.indexOf(step) + 1]);
+  const next = () => {
+    const after = order[order.indexOf(step) + 1];
+    if (returning && after !== 'code') return nav('/', { replace: true });
+    go(after);
+  };
   const back = () => {
     const i = order.indexOf(step);
     if (i > 0) go(order[i - 1]);
@@ -171,10 +187,31 @@ export function Onboarding() {
       try { (await navigator.mediaDevices.getUserMedia({ audio: true })).getTracks().forEach((track) => track.stop()); }
       catch { toast(t('onboarding.consent.micBlocked'), '🎙️'); }
     }
-    createProfile({
+    madeId.current = createProfile({
       name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: age!, homeLanguage: home ?? 'other',
       level: level!, goal: goal!, accent, learning, zhScript: script,
     });
+    next();
+  };
+
+  // The account already had a learner, and it is the one continuing: the learner typed a minute ago is let go (it was
+  // never uploaded — the account has its one). Home follows the code step, if there is one; the check is not repeated.
+  const continueAs = () => {
+    const orphan = madeId.current;
+    if (orphan && orphan !== useStore.getState().activeId) useStore.setState((s) => ({ profiles: Object.fromEntries(Object.entries(s.profiles).filter(([id]) => id !== orphan)) }));
+    setReturning(true);
+    if (order[order.indexOf('account') + 1] === 'code') go('code'); else nav('/', { replace: true });
+  };
+  // Erase the account's learner(s) and go on with the one just made: it is uploaded by the next sync.
+  const startOver = async () => {
+    setErasing(true);
+    const failed = await eraseAccountLearners();
+    if (failed) { setErasing(false); toast(t('settings.account.delete.failed'), '⚠️'); return; }
+    const mine = madeId.current;
+    for (const p of Object.values(useStore.getState().profiles)) if (p.id !== mine) await useStore.getState().deleteProfile(p.id, { heardFromAccount: true });
+    if (mine) useStore.setState({ activeId: mine });
+    setErasing(false);
+    setAskErase(false);
     next();
   };
 
@@ -331,14 +368,40 @@ export function Onboarding() {
         { grownUp: true, title: t('onboarding.consent.title'), sub: t(adult ? 'onboarding.consent.sub.adult' : 'onboarding.consent.sub.child') },
       );
 
-    case 'account':
+    case 'account': {
+      // Signed in to an account that already had a learner (a reinstall, or one email for the whole family): that
+      // learner has taken this device. Continue as them — the usual wish after a reinstall — or erase them and go on
+      // with the learner just typed. Before this, setup carried on with the account's learner under the new name.
+      const returned = settled && !!existing && existing.id !== madeId.current;
+      const newName = name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child');
       return shell(
-        account.status === 'signed-in'
-          ? <div className="form-card form-card--pad"><p className="access access--ok" role="status">{t('settings.account.signedIn', { email: account.email ?? '', name: existing?.name ?? name.trim() })}</p></div>
-          : existing ? <SignInForm learner={existing} /> : null,
-        <Button size="lg" block disabled={account.status !== 'signed-in'} onClick={next}>{t('onboarding.next')}</Button>,
-        { grownUp: true, title: t(adult ? 'onboarding.account.title.adult' : 'onboarding.account.title.child') }, // the form says why
+        <>
+          {account.status !== 'signed-in'
+            ? (existing ? <SignInForm learner={existing} /> : null)
+            : !settled
+              ? <div className="form-card form-card--pad"><p className="access" role="status">{t('signin.loading', { email: account.email ?? '' })}</p></div>
+              : returned
+                ? (
+                  <div className="form-card form-card--pad">
+                    <p className="access access--ok" role="status">{t('onboarding.account.back.body', { name: existing.name, age: String(existing.age), newName })}</p>
+                    <Button variant="ghost" block onClick={() => setAskErase(true)}>{t('onboarding.account.back.startOver', { newName })}</Button>
+                  </div>
+                )
+                : <div className="form-card form-card--pad"><p className="access access--ok" role="status">{t('settings.account.signedIn', { email: account.email ?? '', name: existing?.name ?? newName })}</p></div>}
+          <Sheet open={askErase} onClose={() => { if (!erasing) setAskErase(false); }} label={t('onboarding.account.back.eraseTitle', { name: existing?.name ?? '' })}>
+            <div className="confirm">
+              <span className="confirm__icon"><Icon name="trash" size={30} /></span>
+              <h2>{t('onboarding.account.back.eraseTitle', { name: existing?.name ?? '' })}</h2>
+              <p>{t('onboarding.account.back.eraseBody', { name: existing?.name ?? '' })}</p>
+              <Button variant="danger" size="lg" block disabled={erasing} onClick={() => void startOver()}>{t('onboarding.account.back.eraseCta')}</Button>
+              <Button variant="ghost" block disabled={erasing} onClick={() => setAskErase(false)}>{t('common.cancel')}</Button>
+            </div>
+          </Sheet>
+        </>,
+        <Button size="lg" block disabled={!settled} onClick={returned ? continueAs : next}>{returned ? t('onboarding.account.back.continue', { name: existing.name }) : t('onboarding.next')}</Button>,
+        { grownUp: true, title: returned ? t('onboarding.account.back.title') : t(adult ? 'onboarding.account.title.adult' : 'onboarding.account.title.child') }, // the form says why
       );
+    }
 
     case 'code':
       return shell(

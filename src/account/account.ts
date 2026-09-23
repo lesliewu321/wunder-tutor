@@ -141,6 +141,21 @@ export async function signOut(): Promise<void> {
   await b.auth.signOut({ scope: 'local' });
 }
 
+/**
+ * Setup with an email whose account already has a learner, and the grown-up chose to start over: the account's
+ * learner(s) are erased (tombstoned, as the app's own delete does), so the one just made takes the place.
+ */
+export async function eraseAccountLearners(): Promise<AccountError | null> {
+  try {
+    const b = await load();
+    const { data } = await b.auth.getSession();
+    if (!data.session) return 'failed';
+    const remote = b.remoteFor(data.session.user.id);
+    for (const h of await remote.learnerHeads()) if (!h.deleted) await remote.deleteLearner(h.id);
+    return null;
+  } catch (e) { return problem(e); }
+}
+
 /** Erases the account with everything in it. Needs the network: it must not be left half done. */
 export async function deleteAccount(): Promise<AccountError | null> {
   try {
