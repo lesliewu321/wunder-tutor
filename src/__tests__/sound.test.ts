@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { soundProblem, type ApiHealth } from '../speech/health';
 
-const health = (h: Partial<ApiHealth>): ApiHealth => ({ azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false, ...h });
+const health = (h: Partial<ApiHealth>): ApiHealth => ({ azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false, reached: true, ...h });
 const WORKING = health({ needsCode: true, authorized: true, azure: true, gemini: true, read: true });
 
 /**

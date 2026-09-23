@@ -12,7 +12,7 @@ import { useBack } from '../../back';
 import { useT } from '../../i18n/useT';
 import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
 import { useAccount } from '../../account/account';
-import { apiHealth, type ApiHealth } from '../../speech';
+import { apiHealth, refreshHealth, type ApiHealth } from '../../speech';
 import { micSupported } from '../../speech/recorder';
 import { ACCENT_PREVIEW_LINE, localeOf, voice } from '../../speech/voice';
 import { useProfile, useStore } from '../../state/store';
@@ -103,11 +103,18 @@ export function Onboarding() {
   // The speaking check was done (not skipped): the plan says it is based on what Tutu heard.
   const [checked, setChecked] = useState(false);
   const account = useAccount();
-  // What the server needs from this device. Whether to ask for an invite code is decided once, when it first answers:
-  // a code accepted on that step must not make the step vanish from under the learner.
+  // What the server needs from this device. The invite-code step is shown whenever the server asks for a code, even
+  // when this device already has one (then it shows as accepted): a tester who set up again — in Chinese this time —
+  // looked for the page and could not find it (2026-09-22). Decided once, and only once the server has actually
+  // answered: a code accepted on that step must not make the step vanish from under the learner, and a phone that
+  // could not reach the server at start (offline, slow) is asked again on the way. Asked once more after sign-in,
+  // since an account of its own may unlock the services.
   const [services, setServices] = useState<ApiHealth | null>(null);
   const askCode = useRef<boolean | null>(null);
-  useEffect(() => { void apiHealth().then((h) => { askCode.current ??= h.needsCode && !h.authorized; setServices(h); }); }, []);
+  const learn = (h: ApiHealth) => { if (h.reached) askCode.current ??= h.needsCode; setServices(h); };
+  useEffect(() => { void apiHealth().then(learn); }, []);
+  useEffect(() => { if (askCode.current === null && (step === 'consent' || step === 'account')) void apiHealth().then(learn); }, [step]);
+  useEffect(() => { if (account.status === 'signed-in') void refreshHealth().then(learn); }, [account.status]);
 
   // The phone’s Back is the ← at the top: one step back. On the first screen it leaves the app; the child’s
   // handover and the finished plan have no ← and stay put. (Set below, once the steps are known.)

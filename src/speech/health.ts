@@ -19,12 +19,14 @@ export interface ApiHealth {
   codeSet: boolean;
   /** "Say it right" can read photos and prepare typed text (Gemini). */
   read: boolean;
+  /** The server answered. False when it could not be reached (offline, too slow): then nothing above is known. */
+  reached: boolean;
   /** The API recognised the signed-in family, and what their account may use ('beta', 'family', 'free', 'unknown'). */
   family?: boolean;
   plan?: string | null;
 }
 
-const NONE: ApiHealth = { azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false };
+const NONE: ApiHealth = { azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false, reached: false };
 const CODE_KEY = 'wunder-tutor/access-code';
 const ACCESS_HEADER = 'x-wunder-access';
 
@@ -121,7 +123,7 @@ export const apiHealth = (): Promise<ApiHealth> => {
       const j = await res.json();
       return (latest = {
         azure: !!j.azure, claude: !!j.claude, gemini: !!j.gemini, ttsVersion: typeof j.ttsVersion === 'string' ? j.ttsVersion : '',
-        needsCode: !!j.needsCode, authorized: !!j.authorized, codeSet: j.codeSet !== false, read: !!j.read,
+        needsCode: !!j.needsCode, authorized: !!j.authorized, codeSet: j.codeSet !== false, read: !!j.read, reached: true,
       });
     } catch {
       // Offline, too slow, or a passing server fault: not remembered, so the next screen asks again.

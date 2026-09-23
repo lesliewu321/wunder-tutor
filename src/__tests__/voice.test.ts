@@ -85,7 +85,7 @@ describe('the teacher’s voice on a phone', () => {
   it('tells the learner the server’s reason when it gave one', async () => {
     server();
     const { soundProblem } = await import('../speech/health');
-    const now = { azure: true, claude: true, gemini: true, ttsVersion: 'v1', needsCode: true, authorized: true, codeSet: true, read: true };
+    const now = { azure: true, claude: true, gemini: true, ttsVersion: 'v1', needsCode: true, authorized: true, codeSet: true, read: true, reached: true };
     expect(soundProblem(now, true, 'junior', 'take', 'daily_limit')).toMatch(/used up/);
     expect(soundProblem(now, true, 'junior', 'take', 'rate_limited')).toMatch(/busy/);
     expect(soundProblem(now, true, 'junior', 'take')).toMatch(/can’t say this one/);

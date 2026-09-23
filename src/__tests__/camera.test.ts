@@ -4,7 +4,7 @@ import { bookNotice, readProblem, setupProblem } from '../features/say/messages'
 import { readFailure } from '../speech/read';
 import { normalCode, type ApiHealth, type ServiceStatus } from '../speech/health';
 
-const health = (h: Partial<ApiHealth>): ApiHealth => ({ azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false, ...h });
+const health = (h: Partial<ApiHealth>): ApiHealth => ({ azure: false, claude: false, gemini: false, ttsVersion: '', needsCode: false, authorized: false, codeSet: true, read: false, reached: true, ...h });
 const status = (reading: ServiceStatus['reading']): ServiceStatus => ({ checkedAt: '', scoring: 'ok', reading, voice: 'ok' });
 const READY = health({ needsCode: true, authorized: true, azure: true, gemini: true, read: true });
 
