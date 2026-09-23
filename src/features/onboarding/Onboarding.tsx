@@ -70,9 +70,9 @@ const BANDS: { band: AgeBand; age: number; label: Key; hint: Key }[] = [
 ];
 const ADULT_AGE = 18;
 
-type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'accent' | 'script' | 'consent' | 'account' | 'code' | 'handover' | 'ready' | 'check' | 'plan';
+type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'course' | 'consent' | 'account' | 'code' | 'ready' | 'check' | 'plan';
 /** Steps after the consent step has made the learner: going back would make a second one, so they have no ←. */
-const MADE: StepId[] = ['account', 'code', 'handover', 'ready', 'check', 'plan'];
+const MADE: StepId[] = ['account', 'code', 'ready', 'check', 'plan'];
 
 export function Onboarding() {
   const { t, tc } = useT();
@@ -141,7 +141,7 @@ export function Onboarding() {
   // The check's first takes are fetched while the grown-up signs in and hands over (a hard line can take the server ten
   // seconds), and the next one while the child says this one: Listen is instant, instead of a wait that looks like no sound.
   useEffect(() => {
-    if (!['account', 'code', 'handover', 'ready', 'check'].includes(step)) return;
+    if (!['account', 'code', 'ready', 'check'].includes(step)) return;
     for (const item of checkItems().slice(checkIndex, checkIndex + 2)) voice.prefetch(item.say ?? item.text, { accent: localeOf(item, accent), kind: item.kind });
     // services: fetched again once the invite code is accepted, which is when the teacher's voice becomes available.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,11 +155,12 @@ export function Onboarding() {
   const adult = age === ADULT_AGE;
   const order: StepId[] = [
     'welcome', 'languages', 'learner', 'level',
-    ...(learning.includes('en') ? ['accent' as const] : []), ...(learning.includes('zh') ? ['script' as const] : []),
+    // One page about the language itself, when it has something to choose: English its accent, Putonghua its script.
+    ...(firstCourse === 'en' || firstCourse === 'zh' ? ['course' as const] : []),
     // The email and the invite code before the check (Leslie, 2026-09-22): without a code the teacher was silent there.
-    // Before the check, a page that says what it is for: the child's handover, or the adult's own (Leslie, 2026-09-23:
-    // the check appeared right after the invite code with nothing to say why).
-    'consent', 'account', ...(askCode.current ? ['code' as const] : []), adult ? 'ready' as const : 'handover' as const, 'check', 'plan',
+    // Before the check, one page for every age that says what it is for (Leslie, 2026-09-23: the check appeared right
+    // after the invite code with nothing to say why).
+    'consent', 'account', ...(askCode.current ? ['code' as const] : []), 'ready', 'check', 'plan',
   ];
   const about: About = adult ? 'adult' : name.trim() ? 'named' : 'unnamed';
   // Crossing the line between a child and a grown-up changes which reasons for learning are offered, so a reason
@@ -217,7 +218,8 @@ export function Onboarding() {
     next();
   };
 
-  const toggleCourse = (id: CourseId) => setLearning((l) => (l.includes(id) ? (l.length > 1 ? l.filter((x) => x !== id) : l) : [...l, id]));
+  // One language to start with (Leslie, 2026-09-23: simpler); more are added in Settings.
+  const pickCourse = (id: CourseId) => setLearning([id]);
 
   const shell = (body: React.ReactNode, footer: React.ReactNode, opts: { mascot?: 'idle' | 'happy' | 'cheer' | 'talking'; title?: string; sub?: string; grownUp?: boolean } = {}) => (
     <div className="screen onboard">
@@ -269,7 +271,7 @@ export function Onboarding() {
           <div className="chips">{LEARN.map((l) => {
             const on = l.ready && learning.includes(l.id as CourseId);
             return (
-              <button key={l.id} type="button" className={`chip ${on ? 'is-on' : ''}`} disabled={!l.ready} aria-pressed={on} onClick={() => l.ready && toggleCourse(l.id as CourseId)}>
+              <button key={l.id} type="button" className={`chip ${on ? 'is-on' : ''}`} disabled={!l.ready} aria-pressed={on} onClick={() => l.ready && pickCourse(l.id as CourseId)}>
                 <span lang={l.lang}>{t(l.label)}</span>{!l.ready && <small> · {t('onboarding.languages.soon')}</small>}
               </button>
             );
@@ -322,8 +324,10 @@ export function Onboarding() {
         { grownUp: true, title: t(LEVEL_TITLE[about], { name: name.trim() }) },
       );
 
-    case 'accent':
-      return shell(
+    case 'course':
+      // English: which accent (heard, before any code). Putonghua: which characters. French and Japanese have nothing
+      // to choose yet and skip this page (see order).
+      if (firstCourse !== 'zh') return shell(
         <div className="stack">
           {([['en-US', 'onboarding.accent.us.badge', 'onboarding.accent.us.title', 'onboarding.accent.us.detail'], ['en-GB', 'onboarding.accent.uk.badge', 'onboarding.accent.uk.title', 'onboarding.accent.uk.detail']] as const).map(([id, flag, title, detail]) => (
             <button key={id} type="button" className={`tile tile--wide ${accent === id ? 'is-on' : ''}`} aria-pressed={accent === id}
@@ -337,7 +341,6 @@ export function Onboarding() {
         { grownUp: true, title: t('onboarding.accent.title'), sub: t('onboarding.accent.sub') },
       );
 
-    case 'script':
       return shell(
         <div className="stack">
           {([['hant', '繁', 'onboarding.script.hant.title', 'onboarding.script.hant.detail'], ['hans', '简', 'onboarding.script.hans.title', 'onboarding.script.hans.detail']] as const).map(([id, badge, title, detail]) => (
@@ -413,20 +416,15 @@ export function Onboarding() {
       );
 
     case 'ready':
+      // The same page for every age: what the check is for, and that it may be skipped. A child is handed the device
+      // here, so the first words are for the grown-up and the buddy is on the page.
       return shell(
-        null,
+        <div className="handover"><div className="handover__avatar">{avatar}</div></div>,
         <>
           <Button size="lg" variant="coral" block onClick={next}>{t('onboarding.ready.go')}</Button>
           <Button variant="ghost" block onClick={() => go('plan')}>{t('onboarding.ready.skip')}</Button>
         </>,
-        { mascot: 'talking', title: t('onboarding.ready.title'), sub: t('onboarding.ready.sub') },
-      );
-
-    case 'handover':
-      return shell(
-        <div className="handover"><div className="handover__avatar">{avatar}</div></div>,
-        <Button size="lg" variant="coral" block onClick={next}>{name.trim() ? t('onboarding.handover.go.named', { name: name.trim() }) : t('onboarding.handover.go.unnamed')}</Button>,
-        { mascot: 'cheer', title: name.trim() ? t('onboarding.handover.title.named', { name: name.trim() }) : t('onboarding.handover.title.unnamed'), sub: t('onboarding.handover.sub') },
+        { mascot: 'cheer', title: t('onboarding.ready.title'), sub: adult ? t('onboarding.ready.sub') : t('onboarding.ready.sub.child', { name: name.trim() || t('onboarding.defaultName.child') }) },
       );
 
     case 'check': {
