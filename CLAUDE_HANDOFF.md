@@ -51,6 +51,15 @@
   the account, before the handover — everything needing a grown-up before the child takes over; the payment is the
   parent's consent; a free trial keeps it light; "Have an invite code?" stays on it for beta/school pilots). Not built.
   Seen on the way: an adult's default name is "Me", so the account step says "Me's progress is saved" — awkward.
+- **Setup simplified (2026-09-23, Leslie: "5 and 6 should be one step … relevant to the language chosen", "10 should
+  be generic for all age groups", "onboarding should allow only 1 language to learn"):** "Which language?" takes ONE
+  course (`pickCourse`), hint "More can be added later in Settings"; one `course` page about it (English → accent,
+  Putonghua → script; French/Japanese skip it); one `ready` page for every age before the check ("Say three words for
+  Tutu", buddy on it, I'm ready / Skip for now; a child's text starts "Pass the device to {name}"). The `handover`
+  step and `onboarding.handover.*` texts are gone. Order now: Welcome → Which language? → Who's learning? → About
+  {name} → [accent | script] → Voice & privacy → Account → [Invite code] → Ready → Check → Plan → Home. Acted out in
+  the 5199 copy (English → accent page, Putonghua → characters page, French → none; a child's ready page). Phone
+  build 2026-09-23d.apk, Play 1.0.7 code 8 (UNSIGNED), NOT deployed to the web.
 
 ## Earlier that evening: 2026-09-22 — the voice gauntlet (commits 614239b, 79fb505; phone build 22i; Play 1.0.3 code 4)
 
