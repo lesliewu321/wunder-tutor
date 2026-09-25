@@ -1,0 +1,52 @@
+[
+  {
+    "file": "spanish/beginning-spanish.pdf",
+    "url": "https://pdxscholar.library.pdx.edu/cgi/viewcontent.cgi?article=1046&context=pdxopen",
+    "title": "Beginning Spanish ¡Empecemos por aquí!",
+    "publisher": "Portland State University Library",
+    "level": "Beginning Spanish",
+    "status": "failed",
+    "error": "HTTP 403",
+    "resolution": "Downloaded from the publisher public reader; see downloads.json."
+  },
+  {
+    "file": "korean/eps-topik-02-basic-life.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-2.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: basic life",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "failed",
+    "error": "terminated",
+    "resolution": "Official complete-book archives selected instead of interrupted split PDFs."
+  },
+  {
+    "file": "korean/eps-topik-03-daily-life.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-3.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: daily life",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "failed",
+    "error": "terminated",
+    "resolution": "Official complete-book archives selected instead of interrupted split PDFs."
+  },
+  {
+    "file": "korean/eps-topik-07-workplace-language.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-7.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: workplace language",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "failed",
+    "error": "terminated",
+    "resolution": "Official complete-book archives selected instead of interrupted split PDFs."
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-5-escuchamos.docx",
+    "title": "Capitulo 5 escuchamos",
+    "file": "spanish/intermediate/Capitulo-5-escuchamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity",
+    "status": "failed",
+    "error": "UNKNOWN: unknown error, open 'C:\\_Cloud\\Dropbox\\Dev\\Apps\\wunder-tutor\\astra-lessons\\library\\downloads.json'",
+    "resolution": "Official complete-book archives selected instead of interrupted split PDFs."
+  }
+]

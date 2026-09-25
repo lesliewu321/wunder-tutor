@@ -35,80 +35,564 @@
     "level": "First-year university French"
   },
   {
-    "file": "spanish/beginning-spanish.pdf",
-    "url": "https://pdxscholar.library.pdx.edu/cgi/viewcontent.cgi?article=1046&context=pdxopen",
-    "title": "Beginning Spanish ¡Empecemos por aquí!",
-    "publisher": "Portland State University Library",
-    "level": "Beginning Spanish"
-  },
-  {
     "file": "korean/korean-through-folktales.pdf",
-    "url": "https://pdxscholar.library.pdx.edu/cgi/viewcontent.cgi?article=1013&context=pdxopen",
+    "url": "https://openlibrary-repo.ecampusontario.ca/jspui/bitstream/123456789/801/2/Korean%20Through%20Folktales.pdf",
     "title": "Korean Through Folktales",
     "publisher": "Portland State University Library",
     "level": "Elementary, intermediate and advanced versions"
   },
   {
-    "file": "korean/eps-topik-01-hangeul-preparation.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-1.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: hangeul preparation",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "file": "spanish/introduccion-al-espanol.pdf",
+    "url": "https://openlibrary-repo.ecampusontario.ca/jspui/bitstream/123456789/1603/5/Introduccion-al-Espanol-1646065549.pdf",
+    "title": "Introducción al Español",
+    "publisher": "Conestoga College; archived by eCampusOntario",
+    "level": "Beginning college Spanish"
   },
   {
-    "file": "korean/eps-topik-02-basic-life.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-2.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: basic life",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Chapter-1-Vocabulary.pdf",
+    "title": "Chapter 1 Vocabulary",
+    "file": "spanish/intermediate/Chapter-1-Vocabulary.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
   },
   {
-    "file": "korean/eps-topik-03-daily-life.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-3.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: daily life",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Escuchamos-Cap-1-2001.pdf",
+    "title": "Escuchamos Cap 1 2001",
+    "file": "spanish/intermediate/Escuchamos-Cap-1-2001.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
   },
   {
-    "file": "korean/eps-topik-04-public-services.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-4.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: public services",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Hablamos-Cap-1-2001.pdf",
+    "title": "Hablamos Cap 1 2001",
+    "file": "spanish/intermediate/Hablamos-Cap-1-2001.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
   },
   {
-    "file": "korean/eps-topik-05-korean-culture.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-5.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: korean culture",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Capitulo-1-Tarea-1-.pdf",
+    "title": "Capítulo 1 Tarea 1",
+    "file": "spanish/intermediate/Capitulo-1-Tarea-1-.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
   },
   {
-    "file": "korean/eps-topik-06-workplace-culture.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-6.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: workplace culture",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Tarea-2.2001.pdf",
+    "title": "Capitulo 1 Tarea 2",
+    "file": "spanish/intermediate/Tarea-2.2001.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
   },
   {
-    "file": "korean/eps-topik-07-workplace-language.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-7.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: workplace language",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Review-of-1001-Verbs.pdf",
+    "title": "Review of 1001 Verbs",
+    "file": "spanish/intermediate/Review-of-1001-Verbs.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
   },
   {
-    "file": "korean/eps-topik-08-workplace-safety.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-8.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: workplace safety",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Present-progressive.pdf",
+    "title": "Present progressive",
+    "file": "spanish/intermediate/Present-progressive.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
   },
   {
-    "file": "korean/eps-topik-09-laws-and-systems.pdf",
-    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-9.pdf",
-    "title": "EPS-TOPIK NEW Standard Textbook: laws and systems",
-    "publisher": "Human Resources Development Service of Korea",
-    "level": "2024 revised edition; adult daily-life and employment Korean"
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Rubric-Carta-de-Amor.pdf",
+    "title": "Rubric - Carta de Amor",
+    "file": "spanish/intermediate/Rubric-Carta-de-Amor.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/ser-y-estar.nuevo_.pdf",
+    "title": "ser y estar.nuevo",
+    "file": "spanish/intermediate/ser-y-estar.nuevo_.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/flash-cultura.pdf",
+    "title": "flash cultura",
+    "file": "spanish/intermediate/flash-cultura.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Di-algo.pdf",
+    "title": "Di algo",
+    "file": "spanish/intermediate/Di-algo.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/01/Citas-Rapidas.pdf",
+    "title": "Citas Rápidas",
+    "file": "spanish/intermediate/Citas-Rapidas.pdf",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-2-Vocabulary.docx",
+    "title": "Chapter 2 Vocabulary",
+    "file": "spanish/intermediate/Chapter-2-Vocabulary.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-2-Escuchamos.docx",
+    "title": "Chapter 2 Escuchamos",
+    "file": "spanish/intermediate/Chapter-2-Escuchamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-2-Hablamos.docx",
+    "title": "Capitulo 2 Hablamos",
+    "file": "spanish/intermediate/Capitulo-2-Hablamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-2-tarea-1-2001.docx",
+    "title": "Capitulo 2 tarea 1",
+    "file": "spanish/intermediate/Capitulo-2-tarea-1-2001.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Una-cancion-Juan-Luis-Guerra.docx",
+    "title": "Una canción - Juan Luis Guerra",
+    "file": "spanish/intermediate/Una-cancion-Juan-Luis-Guerra.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/el-cine-mexicano.docx",
+    "title": "el cine mexicano",
+    "file": "spanish/intermediate/el-cine-mexicano.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/El-anillo.docx",
+    "title": "El anillo",
+    "file": "spanish/intermediate/El-anillo.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Rubric.resena-de-pelicula.docx",
+    "title": "Rubric.reseña de película",
+    "file": "spanish/intermediate/Rubric.resena-de-pelicula.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Idilio.docx",
+    "title": "Idilio",
+    "file": "spanish/intermediate/Idilio.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-3-Vocabulary.docx",
+    "title": "Chapter 3 Vocabulary",
+    "file": "spanish/intermediate/Chapter-3-Vocabulary.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-3-Escuchamos.docx",
+    "title": "Capitulo 3 Escuchamos",
+    "file": "spanish/intermediate/Capitulo-3-Escuchamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-3-Hablamos.docx",
+    "title": "Capitulo 3 Hablamos",
+    "file": "spanish/intermediate/Capitulo-3-Hablamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-3-tarea-1.docx",
+    "title": "Capitulo 3 tarea 1",
+    "file": "spanish/intermediate/Capitulo-3-tarea-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/TAREA-3.2.docx",
+    "title": "Capitulo 3 tarea 2",
+    "file": "spanish/intermediate/TAREA-3.2.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Adios-Mama.docx",
+    "title": "Adiós Mamá",
+    "file": "spanish/intermediate/Adios-Mama.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Los-perros-magicos-de-los-volcanes.docx",
+    "title": "Los perros mágicos de los volcanes",
+    "file": "spanish/intermediate/Los-perros-magicos-de-los-volcanes.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Rubric.anecdota.docx",
+    "title": "Rubric.anecdota",
+    "file": "spanish/intermediate/Rubric.anecdota.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-4-vocabulary.docx",
+    "title": "Chapter 4 vocabulary",
+    "file": "spanish/intermediate/Chapter-4-vocabulary.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-4-Hablamos.docx",
+    "title": "Capitulo 4 Hablamos",
+    "file": "spanish/intermediate/Capitulo-4-Hablamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-4-Escuchamos.docx",
+    "title": "Capitulo 4 Escuchamos",
+    "file": "spanish/intermediate/Capitulo-4-Escuchamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-4-tarea-1.docx",
+    "title": "Capitulo 4 tarea 1",
+    "file": "spanish/intermediate/Capitulo-4-tarea-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/TAREA-4.2.docx",
+    "title": "Capitulo 4 tarea 2",
+    "file": "spanish/intermediate/TAREA-4.2.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Eramos-pocos.docx",
+    "title": "Éramos pocos",
+    "file": "spanish/intermediate/Eramos-pocos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Rubric.Querida-Ana.docx",
+    "title": "Rubric.Querida Ana",
+    "file": "spanish/intermediate/Rubric.Querida-Ana.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/El-loco-de-sevilla.docx",
+    "title": "El loco de sevilla",
+    "file": "spanish/intermediate/El-loco-de-sevilla.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-5-vocabulary.docx",
+    "title": "Chapter 5 vocabulary",
+    "file": "spanish/intermediate/Chapter-5-vocabulary.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-5-hablamos.docx",
+    "title": "Capitulo 5 hablamos",
+    "file": "spanish/intermediate/Capitulo-5-hablamos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-5-tarea.docx",
+    "title": "Capitulo 5 tarea 1",
+    "file": "spanish/intermediate/Capitulo-5-tarea.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Tarea-10.2001.docx",
+    "title": "Capitulo 5 tarea 2",
+    "file": "spanish/intermediate/Tarea-10.2001.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/El-eclipse.docx",
+    "title": "El eclipse",
+    "file": "spanish/intermediate/El-eclipse.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Rubric.Tarjeta-postal.docx",
+    "title": "Rubric.Tarjeta postal",
+    "file": "spanish/intermediate/Rubric.Tarjeta-postal.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Volamos-hacia-Miami.docx",
+    "title": "Volamos hacia Miami",
+    "file": "spanish/intermediate/Volamos-hacia-Miami.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Capitulo-6.docx",
+    "title": "Capítulo 6",
+    "file": "spanish/intermediate/Capitulo-6.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Escuchar-Cap-6-2002.docx",
+    "title": "Escuchar Cap 6 2002",
+    "file": "spanish/intermediate/Escuchar-Cap-6-2002.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Hablar-Cap-6-2002.docx",
+    "title": "Hablar Cap 6 2002",
+    "file": "spanish/intermediate/Hablar-Cap-6-2002.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Tarea-1-Cap-6.docx",
+    "title": "Tarea 1 Cap 6",
+    "file": "spanish/intermediate/Tarea-1-Cap-6.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Tarea-6.2.2002.docx",
+    "title": "Tarea 2 Cap 6",
+    "file": "spanish/intermediate/Tarea-6.2.2002.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/DQ.docx",
+    "title": "DQ",
+    "file": "spanish/intermediate/DQ.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Rubric.article.docx",
+    "title": "Rubric.article",
+    "file": "spanish/intermediate/Rubric.article.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-7-vocab.-1.docx",
+    "title": "Chapter 7 vocab",
+    "file": "spanish/intermediate/Chapter-7-vocab.-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Escuchamos-Cap-7-1.docx",
+    "title": "Escuchamos Cap 7",
+    "file": "spanish/intermediate/Escuchamos-Cap-7-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Hablamos-Cap-7.docx",
+    "title": "Hablamos Cap 7",
+    "file": "spanish/intermediate/Hablamos-Cap-7.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Tarea-1-Cap-7.docx",
+    "title": "Tarea 1 Cap 7",
+    "file": "spanish/intermediate/Tarea-1-Cap-7.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Rubric.entrevista.docx",
+    "title": "Rubric.entrevista",
+    "file": "spanish/intermediate/Rubric.entrevista.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Un-dia-de-estos.docx",
+    "title": "Un día de estos",
+    "file": "spanish/intermediate/Un-dia-de-estos.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-8-vocab-1.docx",
+    "title": "Chapter 8 vocab",
+    "file": "spanish/intermediate/Chapter-8-vocab-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Escuchamos-Cap-8-1.docx",
+    "title": "Escuchamos Cap 8",
+    "file": "spanish/intermediate/Escuchamos-Cap-8-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Hablamos-cap-8.docx",
+    "title": "Hablamos cap 8",
+    "file": "spanish/intermediate/Hablamos-cap-8.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Tarea-1-Cap-8-2.docx",
+    "title": "Tarea 1 Cap 8",
+    "file": "spanish/intermediate/Tarea-1-Cap-8-2.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/TAREA-8.2.2002.docx",
+    "title": "Tarea 2 Cap 8",
+    "file": "spanish/intermediate/TAREA-8.2.2002.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-9.vocab-1.docx",
+    "title": "Chapter 9.vocab",
+    "file": "spanish/intermediate/Chapter-9.vocab-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Escuchamos-Cap-9.docx",
+    "title": "Escuchamos Cap 9",
+    "file": "spanish/intermediate/Escuchamos-Cap-9.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Hablamos-Cap-9.docx",
+    "title": "Hablamos Cap 9",
+    "file": "spanish/intermediate/Hablamos-Cap-9.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Tarea-1-Cap-9.docx",
+    "title": "Tarea 1 Cap 9",
+    "file": "spanish/intermediate/Tarea-1-Cap-9.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/TAREA-9.2.docx",
+    "title": "Tarea 2 Cap 9",
+    "file": "spanish/intermediate/TAREA-9.2.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Continuidad-de-los-parques.docx",
+    "title": "Continuidad de los parques",
+    "file": "spanish/intermediate/Continuidad-de-los-parques.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Chapter-10.vocab_.docx",
+    "title": "Chapter 10.vocab",
+    "file": "spanish/intermediate/Chapter-10.vocab_.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Hablar.Chapter-10-1.docx",
+    "title": "Hablar.Chapter 10",
+    "file": "spanish/intermediate/Hablar.Chapter-10-1.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/End-of-semester-verb-project.docx",
+    "title": "End of semester verb project",
+    "file": "spanish/intermediate/End-of-semester-verb-project.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Dragun.docx",
+    "title": "Dragun",
+    "file": "spanish/intermediate/Dragun.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "url": "https://sites.highlands.edu/intermediate-spanish/wp-content/uploads/sites/126/2021/05/Cancion-del-pirata.2.docx",
+    "title": "Canción del pirata",
+    "file": "spanish/intermediate/Cancion-del-pirata.2.docx",
+    "publisher": "Georgia Highlands College / Affordable Learning Georgia",
+    "level": "Intermediate university Spanish supplementary activity"
+  },
+  {
+    "file": "french/verb-reference.pdf",
+    "url": "https://www.laits.utexas.edu/fi/sites/default/files/verbs_all_0.pdf",
+    "title": "Français interactif: 251-verb reference",
+    "publisher": "University of Texas at Austin",
+    "level": "French grammar reference"
+  },
+  {
+    "file": "french/review-chapters-0-7.pdf",
+    "url": "https://www.laits.utexas.edu/fi/sites/default/files/Interlude-Review-exercises-Ch0-7.pdf",
+    "title": "Français interactif: review exercises, chapters 0–7",
+    "publisher": "University of Texas at Austin",
+    "level": "First-year French review"
+  },
+  {
+    "file": "spanish/beginning-spanish.pdf",
+    "url": "https://content.library.pdx.edu/files/PDXScholar/spanish/files/assets/common/downloads/pdx-ceciliano.pdf",
+    "title": "Beginning Spanish ¡Empecemos por aquí!",
+    "publisher": "Portland State University Library",
+    "level": "Beginning university Spanish",
+    "sourcePage": "https://pdxscholar.library.pdx.edu/pdxopen/41/"
+  },
+  {
+    "file": "korean/eps-topik-complete-book-1.zip",
+    "url": "https://epstopik.hrdkorea.or.kr/epstopik/eps_klt/EPS-TOPIK_textbook1.zip",
+    "title": "EPS-TOPIK NEW Standard Textbook 1",
+    "publisher": "HRD Korea",
+    "level": "Daily-life Korean"
+  },
+  {
+    "file": "korean/eps-topik-complete-book-2.zip",
+    "url": "https://epstopik.hrdkorea.or.kr/epstopik/eps_klt/EPS-TOPIK_textbook2.zip",
+    "title": "EPS-TOPIK NEW Standard Textbook 2",
+    "publisher": "HRD Korea",
+    "level": "Workplace Korean"
   }
 ]

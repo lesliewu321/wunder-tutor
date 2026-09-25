@@ -16,10 +16,10 @@ async function worker(){while(cursor<plans.length){
  if(prior?.status==='downloaded' && fs.existsSync(target) && sha(fs.readFileSync(target))===prior.sha256){console.log('Verified existing '+p.file);continue;}
  try{
  console.log('Downloading '+p.file);
- const r=await fetch(p.url,{signal:AbortSignal.timeout(240000)});
+ const r=await fetch(p.url,{signal:AbortSignal.timeout(720000)});
  if(!r.ok)throw Error('HTTP '+r.status);
  const b=Buffer.from(await r.arrayBuffer());
- if(b.subarray(0,5).toString()!=='%PDF-')throw Error('Response is not a PDF');
+ if(p.file.endsWith('.pdf') ? b.subarray(0,5).toString()!=='%PDF-' : b.subarray(0,2).toString()!=='PK')throw Error('Response does not match expected document format');
  if(b.length<1000)throw Error('Unexpectedly short PDF');
  fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,b);
  const rec={...p,status:'downloaded',resolvedUrl:r.url,retrieved:new Date().toISOString().slice(0,10),bytes:b.length,sha256:sha(b)};
@@ -28,4 +28,4 @@ async function worker(){while(cursor<plans.length){
  }catch(e){const rec={...p,status:'failed',error:e.message};const i=records.findIndex(x=>x.file===p.file);if(i<0)records.push(rec);else records[i]=rec;save();console.log('FAILED '+p.file+': '+e.message);}
 }}
 await Promise.all([worker(),worker(),worker()]);
-if(records.some(r=>r.status!=='downloaded'))process.exitCode=1;
+if(records.some(r=>plans.some(p=>p.file===r.file) && r.status!=='downloaded'))process.exitCode=1;

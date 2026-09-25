@@ -1,0 +1,159 @@
+{
+  "checked": "2026-09-25",
+  "approvalMeaning": "Published by recognised educational or public institutions; no claim that Wunder Tutor is endorsed or accredited.",
+  "sources": [
+    {
+      "id": "irodori",
+      "language": "ja",
+      "name": "Irodori: Japanese for Life in Japan",
+      "publisher": "The Japan Foundation",
+      "sourceUrl": "https://www.irodori.jpf.go.jp/en/about.html",
+      "rightsUrl": "https://www.irodori.jpf.go.jp/en/privacy.html",
+      "license": "Copyright; permitted private and educational use",
+      "commercialAdaptation": "permission-required",
+      "evidence": "Publisher terms permit private/school use and prohibit commercial use. No open licence or Wunder Tutor endorsement is claimed.",
+      "level": "JF Standard A1, A2 and A2/B1 (publisher labels)",
+      "audience": "Primarily adult life in Japan; select and adapt contexts for younger learners only after rights and editorial review.",
+      "audioUrl": "https://www.irodori.jpf.go.jp/en/starter/pdf.html",
+      "localScope": "Four complete books, 18 lessons each. Original PDFs unchanged."
+    },
+    {
+      "id": "hrdk",
+      "language": "ko",
+      "name": "EPS-TOPIK NEW Standard Korean Textbook",
+      "publisher": "Human Resources Development Service of Korea (HRD Korea)",
+      "sourceUrl": "https://epstopik.hrdkorea.or.kr/epstopik/book/std/standardBookList.do?lang=en",
+      "rightsUrl": "https://epstopik.hrdkorea.or.kr/epstopik/book/std/standarTextDesc.do?lang=en",
+      "license": "Copyright HRD Korea; free official study download",
+      "commercialAdaptation": "permission-required",
+      "evidence": "The copyright statement is on PDF page 2. Free download does not establish a commercial redistribution/adaptation licence.",
+      "level": "Official EPS-TOPIK study materials; 30 daily-life units and 30 workplace units",
+      "audience": "Adults preparing for employment in Korea. EPS-TOPIK is distinct from the general TOPIK exam. Workplace, safety and legal-system chapters are adult reference material.",
+      "audioUrl": "https://epstopik.hrdkorea.or.kr/epstopik/book/std/standardBookList.do?lang=en",
+      "localScope": "Two complete books with the corrections present in the official archives on retrieval. Archive member names record June 2025 and June 2026 corrections."
+    },
+    {
+      "id": "psu-ko",
+      "language": "ko",
+      "name": "Korean Through Folktales",
+      "publisher": "Portland State University Library",
+      "authors": "KyungAh Yoon",
+      "sourceUrl": "https://pdxscholar.library.pdx.edu/pdxopen/11/",
+      "rightsUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "license": "CC BY-NC 4.0",
+      "commercialAdaptation": "permission-required",
+      "evidence": "The downloaded PDF states CC BY-NC 4.0 on page 4. University OER; four stories with three proficiency versions each.",
+      "level": "Elementary, intermediate and advanced reading versions; supplementary reader",
+      "audience": "University language learners. A teacher should select culturally and developmentally appropriate passages for children.",
+      "audioUrl": "https://content.library.pdx.edu/files/PDXScholar/Korean/",
+      "localScope": "Complete revised reader from the eCampusOntario repository mirror."
+    },
+    {
+      "id": "ut-fr",
+      "language": "fr",
+      "name": "Français interactif",
+      "publisher": "COERLL, Department of French and Italian, University of Texas at Austin",
+      "sourceUrl": "https://www.laits.utexas.edu/fi/",
+      "rightsUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "license": "CC BY 4.0 for the fourth-edition textbook; inspect separately credited material",
+      "commercialAdaptation": "allowed-with-attribution-subject-to-third-party-rights",
+      "evidence": "Textbook PDF page 4 explicitly states CC BY 4.0. Attribute COERLL/UT Austin, link the licence, identify changes and preserve individual third-party credits. Companion references have their own source notices.",
+      "level": "Complete first-year university French curriculum; no verified CEFR certificate equivalence",
+      "audience": "University learners; younger learners need edited contexts and tasks.",
+      "audioUrl": "https://www.laits.utexas.edu/fi/map/",
+      "localScope": "345-page fourth-edition textbook, early-chapter review exercises and 251-verb reference. Publisher also links a newer Pressbooks edition; this is the available complete 2019 PDF edition."
+    },
+    {
+      "id": "psu-es",
+      "language": "es",
+      "name": "Beginning Spanish ¡Empecemos por aquí!",
+      "publisher": "Portland State University Library",
+      "authors": "Jenny Ceciliano and Lisa Notman",
+      "sourceUrl": "https://pdxscholar.library.pdx.edu/pdxopen/41/",
+      "rightsUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "license": "CC BY-NC 4.0, with individual incorporated-OER credits",
+      "commercialAdaptation": "permission-required",
+      "evidence": "Downloaded PDF page 2 identifies CC BY-NC 4.0. The university reader provides the PDF. Its PDF has 596 pages; the online viewer displays a different 608-page layout.",
+      "level": "Beginning university Spanish; six chapters containing 24 modules",
+      "audience": "Adult/college learners; communicative and cultural tasks.",
+      "audioUrl": "https://content.library.pdx.edu/files/PDXScholar/spanish/",
+      "localScope": "Complete PDF from the publisher's public reader, unchanged."
+    },
+    {
+      "id": "conestoga-es",
+      "language": "es",
+      "name": "Introducción al Español",
+      "publisher": "Conestoga College",
+      "authors": "Rita Palacios",
+      "sourceUrl": "https://openlibrary-repo.ecampusontario.ca/jspui/handle/123456789/1603",
+      "rightsUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "license": "CC BY-NC-SA 4.0, except where otherwise noted",
+      "commercialAdaptation": "permission-required",
+      "evidence": "PDF page 4 states the licence and exceptions. Preserve attribution, noncommercial restriction and ShareAlike obligations on adaptations.",
+      "level": "Basic college Spanish; 12 chapters",
+      "audience": "College learners; useful structured beginner reference.",
+      "audioUrl": "https://openlibrary-repo.ecampusontario.ca/jspui/handle/123456789/1603",
+      "localScope": "Complete 241-page PDF with links to audio and online interactive exercises; those interactives are not an offline app."
+    },
+    {
+      "id": "ghc-es",
+      "language": "es",
+      "name": "Intermediate Spanish instructional resources",
+      "publisher": "Georgia Highlands College / Affordable Learning Georgia, University System of Georgia",
+      "authors": "Amanda Nichols and Kathryn Garcia",
+      "sourceUrl": "https://sites.highlands.edu/intermediate-spanish/",
+      "rightsUrl": "https://oer.galileo.usg.edu/languages-textbooks/6/",
+      "license": "Site-level CC BY 4.0; mixed third-party material inside activity files",
+      "commercialAdaptation": "item-review-required",
+      "evidence": "The institutional record and course page show CC BY 4.0. Some activities reference or reproduce songs, films, stories and other third-party works. Do not treat every embedded item as CC BY or bulk-import them.",
+      "level": "Intermediate Spanish SPAN 2001/2002; supporting activities across ten chapters",
+      "audience": "College learners; includes cultural, literary and mature themes.",
+      "audioUrl": "https://sites.highlands.edu/intermediate-spanish/",
+      "localScope": "Publicly linked PDF/DOCX vocabulary, listening, speaking, grammar, assignment and rubric files. This supplement set is not a newly accredited Wunder Tutor course."
+    }
+  ],
+  "externalLinks": [
+    {
+      "language": "ko",
+      "title": "King Sejong Institute textbook catalogue",
+      "url": "https://nuri.iksi.or.kr/front/cms/contents/layout2/learningsejong2022/contentsList.do",
+      "status": "online; account required for PDF downloads",
+      "note": "Download login requirement verified on the official site. No account was created and no login restriction bypassed."
+    },
+    {
+      "language": "ko",
+      "title": "King Sejong online Korean curriculum",
+      "url": "https://www.iksi.or.kr/lms/main/main.do",
+      "status": "online",
+      "note": "General Korean pathway alongside the adult employment-focused HRD books."
+    },
+    {
+      "language": "ja",
+      "title": "Japan Foundation Irodori online course",
+      "url": "https://www.irodori-online.jpf.go.jp/",
+      "status": "online",
+      "note": "Publisher self-study platform; external audio/video exercises."
+    },
+    {
+      "language": "fr",
+      "title": "France Éducation international: DELF/DALF qualifications",
+      "url": "https://www.france-education-international.fr/hub/diplomes-tests?langue=fr",
+      "status": "standards/exam reference",
+      "note": "DELF Prim for children; junior/scolaire for teens; tout public for older teens/adults. No certification claim for the downloaded university textbook."
+    },
+    {
+      "language": "es",
+      "title": "Instituto Cervantes curriculum reference",
+      "url": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/",
+      "status": "standards reference",
+      "note": "Reference for future CEFR mapping, not an open licence or approval for app content."
+    },
+    {
+      "language": "all",
+      "title": "Council of Europe CEFR",
+      "url": "https://www.coe.int/en/web/language-policy/cefr",
+      "status": "standards reference",
+      "note": "Framework for curriculum and assessment design; it does not automatically accredit an app or textbook."
+    }
+  ]
+}

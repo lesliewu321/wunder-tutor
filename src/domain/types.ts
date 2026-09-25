@@ -297,6 +297,8 @@ export interface ChildProfile {
   conversations: ConversationRecord[];
   /** Test mode (the same lesson without the teacher), by lesson id: the last score, the best, how many times. */
   tests?: Record<string, TestRecord>;
+  /** The random name shown on leaderboards ("Brave Otter 42"), made once (engine/handles.ts). */
+  handle?: string;
 }
 
 export interface TestRecord { at: number; score: number; best: number; taken: number }

@@ -20,6 +20,8 @@ export const bandForAge = (age: number): AgeBand => (age <= 7 ? 'little' : age <
 export interface NewProfileInput {
   name: string; avatar: string; age: number; homeLanguage: HomeLanguage; level: Level; goal: Goal; accent: Accent;
   learning?: CourseId[]; zhScript?: 'hant' | 'hans';
+  /** From setup's "how long each day?" page; 60 (one lesson) when not asked. */
+  dailyGoalXp?: number;
 }
 
 export interface AttemptOutcome {
@@ -88,7 +90,7 @@ export const useStore = create<AppState>()(
         const learning: CourseId[] = input.learning?.length ? input.learning : ['en'];
         const profile: ChildProfile = {
           id, ...input, learning, course: learning[0], zhScript: input.zhScript ?? 'hant',
-          band: bandForAge(input.age), createdAt: Date.now(), xp: 0, dailyGoalXp: 60,
+          band: bandForAge(input.age), createdAt: Date.now(), xp: 0, dailyGoalXp: input.dailyGoalXp ?? 60,
           streak: { count: 0, lastDay: null, best: 0 }, lessonsCompleted: {}, items: {}, pronunciation: emptyProfile(), achievements: [], conversations: [],
         };
         set((s) => ({ profiles: { ...s.profiles, [id]: profile }, activeId: id }));

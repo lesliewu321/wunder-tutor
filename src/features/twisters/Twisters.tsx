@@ -8,6 +8,7 @@ import { apiFetch, deviceId } from '../../speech/health';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import type { SpeechErrorCode } from '../../speech';
 import { useActiveProfile, useStore } from '../../state/store';
+import { handleFor } from '../../engine/handles';
 import { tier } from '../../tutor/feedback';
 import { Icon } from '../../ui/Icon';
 import { ItemText } from '../../ui/ItemText';
@@ -68,6 +69,7 @@ export function TwisterPlay() {
   const { twister = '' } = useParams();
   const p = useActiveProfile();
   const settings = useStore((s) => s.settings);
+  const patchProfile = useStore((s) => s.patchProfile);
   const tw = findTwister(twister);
   const item = tw ? twisterItem(tw) : null;
   const micRef = useRef<HTMLButtonElement>(null);
@@ -104,7 +106,7 @@ export function TwisterPlay() {
       // Only a grown-up's say-so puts a nickname on a board; the game works the same without it.
       if (settings.shareScores === false) return;
       try {
-        const res = await apiFetch('/api/twisters/score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ twister: tw.id, ms: r.ms, score: r.score, nickname: p.name, avatar: p.avatar, device: deviceId() }) });
+        const res = await apiFetch('/api/twisters/score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ twister: tw.id, ms: r.ms, score: r.score, nickname: handleFor(p, patchProfile), avatar: p.avatar, device: deviceId() }) });
         if (res.ok) void loadBoard();
       } catch { /* offline: the best stays on the device */ }
     },

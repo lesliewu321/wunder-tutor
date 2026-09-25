@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useId, useState } from 'react';
+import { handleFor, makeHandle } from '../../engine/handles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { settingsName, type Accent, type AgeBand, type ChildProfile, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
@@ -12,7 +13,7 @@ import { rich, useT } from '../../i18n/useT';
 import { apiHealth, getAccessCode, serviceStatus, serviceWords, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
-import { Button, Sheet, toast, TopBar } from '../../ui/kit';
+import { Button, Sheet, toast, TopBar, IconButton } from '../../ui/kit';
 import { deleteAccount, useAccount } from '../../account/account';
 import { forgetContributions } from '../../speech/health';
 import { AccountPanel } from './AccountPanel';
@@ -85,19 +86,22 @@ export function Me() {
   const p = useActiveProfile();
   const patch = useStore((s) => s.patchProfile);
   const level = Math.floor(p.xp / 100) + 1;
+  // Minutes spent speaking out loud, over every day on record.
+  const studyMinutes = Math.round(Object.values(p.pronunciation.days).reduce((n, d) => n + (d.speakingMs ?? 0), 0) / 60000);
 
   return (
     <div className="screen me">
-      <TopBar title={t('settings.me.title')} />
+      <TopBar title={t('settings.me.title')} right={<IconButton icon="cog" label={settingsName(p.band)} onClick={() => nav('/parents')} />} />
       <section className="me__card">
         <div className="me__avatar">{p.avatar}</div>
         <h2>{p.name}</h2>
         <p>{t(BAND_LABEL[p.band])} · {p.learning.map((c) => t(c === 'en' ? (p.accent === 'en-US' ? 'settings.me.course.enUS' : 'settings.me.course.enGB') : COURSE_LABEL[c])).join(' + ')}</p>
         <div className="stat-row">
-          <div className="stat"><b>{level}</b><span>{t('settings.me.level')}</span></div>
-          <div className="stat stat--sun"><b>{p.xp}</b><span>{t('settings.me.totalXp')}</span></div>
+          <div className="stat"><b>{studyMinutes}<small> min</small></b><span>{t('settings.me.studyTime')}</span></div>
+          <div className="stat stat--sun"><b>{p.streak.best}</b><span>{t('settings.me.longest')}</span></div>
           <div className="stat stat--coral"><b>{liveStreak(p.streak)}</b><span>{t('settings.me.streak')}</span></div>
         </div>
+        <p className="fineprint">{t('settings.me.level')} {level} · {p.xp} XP</p>
       </section>
 
       <section>
@@ -111,9 +115,14 @@ export function Me() {
         </div>
       </section>
 
-      <button type="button" className="row-link" onClick={() => nav('/parents')}>
-        <span className="row-link__icon"><Icon name="shield" /></span>
-        <span><b>{settingsName(p.band)}</b><small>{t('settings.me.zone.detail')}</small></span>
+      <button type="button" className="row-link" onClick={() => nav('/progress')}>
+        <span className="row-link__icon"><Icon name="chart" /></span>
+        <span><b>{t('settings.me.progress')}</b><small>{t('settings.me.progress.detail')}</small></span>
+        <Icon name="chevron" size={20} />
+      </button>
+      <button type="button" className="row-link" onClick={() => nav('/twisters')}>
+        <span className="row-link__icon" aria-hidden>🌀</span>
+        <span><b>{t('settings.me.twisters')}</b><small>{t('settings.me.twisters.detail', { handle: handleFor(p, patch) })}</small></span>
         <Icon name="chevron" size={20} />
       </button>
     </div>
@@ -247,6 +256,7 @@ export function ParentZone() {
         {toggle('storeRecordings', t('settings.voice.keep.label'), t('settings.voice.keep.detail'))}
         {services?.azure && toggle('contributeRecordings', t('settings.voice.contribute.label'), t('settings.voice.contribute.detail'))}
         {toggle('shareScores', t('settings.voice.share.label', { name: p.name }), t('settings.voice.share.detail'))}
+        <div className="course-pick"><span>{rich(t('settings.voice.share.as', { handle: handleFor(p, patch) }))}</span><Button variant="ghost" size="sm" icon="retry" onClick={() => patch(p.id, { handle: makeHandle() })}>{t('settings.voice.share.reroll')}</Button></div>
         {/* Where recordings go, told truthfully for each case: the privacy line changes with the switch above. */}
         <p className="fineprint fineprint--left">{recordings == null ? t('settings.voice.counting') : sentences(
           tn('settings.voice.stored', recordings, { name }),

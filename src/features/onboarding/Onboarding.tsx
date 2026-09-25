@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { DAILY_GOALS, goalDetail } from '../../engine/rewards';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { contentBand, type Accent, type AgeBand, type CourseId, type Goal, type HomeLanguage, type Level } from '../../domain/types';
 import { ASSESSMENT_ITEMS } from '../../content/course';
@@ -55,6 +56,7 @@ const LEARN: { id: CourseId | 'de'; label: Key; ready: boolean; lang?: string }[
 type About = 'adult' | 'named' | 'unnamed';
 const LEVEL_TITLE: Record<About, Key> = { adult: 'onboarding.level.title.adult', named: 'onboarding.level.title.named', unnamed: 'onboarding.level.title.unnamed' };
 const MIC_BODY: Record<About, Key> = { adult: 'onboarding.consent.mic.body.adult', named: 'onboarding.consent.mic.body.named', unnamed: 'onboarding.consent.mic.body.unnamed' };
+const TIME_TITLE: Record<About, Key> = { adult: 'onboarding.time.title.adult', named: 'onboarding.time.title.named', unnamed: 'onboarding.time.title.unnamed' };
 const RECORDINGS_BODY: Record<About, Key> = { adult: 'onboarding.consent.recordings.body.adult', named: 'onboarding.consent.recordings.body.named', unnamed: 'onboarding.consent.recordings.body.unnamed' };
 /**
  * Setup asks for an age RANGE, not a birthday. The app only ever sorts a learner into one of these four — they set
@@ -72,7 +74,7 @@ const BANDS: { band: AgeBand; age: number; label: Key; hint: Key }[] = [
 ];
 const ADULT_AGE = 18;
 
-type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'course' | 'consent' | 'account' | 'code' | 'ready' | 'check' | 'plan';
+type StepId = 'welcome' | 'languages' | 'learner' | 'level' | 'time' | 'course' | 'consent' | 'account' | 'code' | 'ready' | 'check' | 'plan';
 /** Steps after the consent step has made the learner: going back would make a second one, so they have no ←. */
 const MADE: StepId[] = ['account', 'code', 'ready', 'check', 'plan'];
 
@@ -93,6 +95,7 @@ export function Onboarding() {
   const [avatar, setAvatar] = useState(AVATARS[0]);
   const [age, setAge] = useState<number | null>(null);
   const [level, setLevel] = useState<Level | null>(null);
+  const [minutes, setMinutes] = useState<number | null>(null);
   const [goal, setGoal] = useState<Goal | null>(null);
   // US English gives the most detailed pronunciation feedback (every sound named, "what came out instead"), so it
   // leads; British stays one tap away.
@@ -157,6 +160,8 @@ export function Onboarding() {
   const adult = age === ADULT_AGE;
   const order: StepId[] = [
     'welcome', 'languages', 'learner', 'level',
+    // How long each day (Leslie, 2026-09-25, from SuperChinese's "How long are you planning to study daily?").
+    'time',
     // One page about the language itself, when it has something to choose: English its accent, Putonghua its script.
     ...(firstCourse === 'en' || firstCourse === 'zh' ? ['course' as const] : []),
     // The email and the invite code before the check (Leslie, 2026-09-22): without a code the teacher was silent there.
@@ -195,6 +200,7 @@ export function Onboarding() {
     madeId.current = createProfile({
       name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: age!, homeLanguage: home ?? 'other',
       level: level!, goal: goal!, accent, learning, zhScript: script,
+      dailyGoalXp: DAILY_GOALS.find((g) => g.minutes === minutes)?.xp,
     });
     next();
   };
@@ -237,11 +243,13 @@ export function Onboarding() {
             screen is first. Adding a second learner starts at "languages", not at the welcome screen, and used to
             offer no way to change the language at all. */}
         {step === order[0] && (
-          <div className="segmented segmented--lang" role="group" aria-label={t('onboarding.language.aria')}>
-            {LANGUAGES.map((l) => (
-              <button key={l.id} type="button" lang={l.htmlLang} className={language() === l.id ? 'is-on' : ''} aria-pressed={language() === l.id} onClick={() => setSettings({ language: l.id })}>{l.label}</button>
-            ))}
-          </div>
+          // A dropdown at the top right (Leslie, 2026-09-25: "I like the interface language at top right" — SuperChinese's).
+          <label className="lang-pick" aria-label={t('onboarding.language.aria')}>
+            <Icon name="globe" size={18} />
+            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as typeof LANGUAGES[number]['id'] })}>
+              {LANGUAGES.map((l) => <option key={l.id} value={l.id} lang={l.htmlLang}>{l.label}</option>)}
+            </select>
+          </label>
         )}
         {/* Before the age is known the one setting up may be a parent or a grown-up learner: "For grown-ups" is true
             of both. Once a child's age is chosen, everything after speaks to a parent ("I'm the parent or guardian",
@@ -325,6 +333,20 @@ export function Onboarding() {
         <Button size="lg" block disabled={!level || !goal} onClick={next}>{t('onboarding.next')}</Button>,
         { grownUp: true, title: t(LEVEL_TITLE[about], { name: name.trim() }) },
       );
+
+    case 'time': {
+      const recommended = adult ? 15 : 10;
+      return shell(
+        <div className="stack">{DAILY_GOALS.map((g) => (
+          <button key={g.xp} type="button" className={`tile tile--wide ${minutes === g.minutes ? 'is-on' : ''}`} onClick={() => setMinutes(g.minutes)} aria-pressed={minutes === g.minutes}>
+            {g.minutes === recommended && <span className="tile__flag">{t('onboarding.time.recommend')}</span>}
+            <span><b>{t('onboarding.time.option', { n: String(g.minutes) })}</b><small>{goalDetail(g)}</small></span>
+          </button>
+        ))}</div>,
+        <Button size="lg" block disabled={minutes === null} onClick={next}>{t('onboarding.next')}</Button>,
+        { grownUp: true, mascot: 'happy', title: t(TIME_TITLE[about], { name: name.trim() }), sub: t('onboarding.time.sub') },
+      );
+    }
 
     case 'course':
       // English: which accent (heard, before any code). Putonghua: which characters. French and Japanese have nothing

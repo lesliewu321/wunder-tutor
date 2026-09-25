@@ -632,5 +632,7 @@
   "sound.ko:batchim.step.2": "在最後一個音合上",
   "sound.ko:batchim.step.3": "按住——不要放開",
   "sound.ko:batchim.problem": "字尾的音放開了，或者丟掉了。",
-  "sound.ko:batchim.detail": "廣東話也有同樣不除阻的入聲韻尾（-p -t -k），這是優勢；說英文和普通話的人則會把它放開或加上元音。"
+  "sound.ko:batchim.detail": "廣東話也有同樣不除阻的入聲韻尾（-p -t -k），這是優勢；說英文和普通話的人則會把它放開或加上元音。",
+  "goal.150.label": "冠軍",
+  "goal.150.detail": "兩課"
 }

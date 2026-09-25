@@ -7,10 +7,12 @@ import { dayKey } from '../intelligence/profile';
 
 export const XP = { attempt: 1, mastered: 5, firstTry: 2, lesson: 10, conversation: 15, labStage: 5 } as const;
 
+/** `minutes` is what setup asks in ("How long each day?"); the XP is what the app counts. */
 export const DAILY_GOALS = [
-  { xp: 30, label: 'Easy', detail: 'a few minutes' },
-  { xp: 60, label: 'Steady', detail: 'one lesson' },
-  { xp: 100, label: 'Super', detail: 'a lesson + extra' },
+  { xp: 30, minutes: 5, label: 'Easy', detail: 'a few minutes' },
+  { xp: 60, minutes: 10, label: 'Steady', detail: 'one lesson' },
+  { xp: 100, minutes: 15, label: 'Super', detail: 'a lesson + extra' },
+  { xp: 150, minutes: 20, label: 'Champion', detail: 'two lessons' },
 ];
 
 /** A daily goal's name and size in the app's language (the list above keeps the English): `goal.<xp>.label`. */

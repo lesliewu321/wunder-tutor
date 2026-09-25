@@ -1,0 +1,18 @@
+[
+  {
+    "file": "korean/eps-topik-book-1.pdf",
+    "archive": "korean/eps-topik-complete-book-1.zip",
+    "archiveMember": "EPS-TOPIK ╟╤▒╣╛ε ╟Ñ┴╪▒│└τ_1▒╟(└╧╗≤╗²╚░ ╟╤▒╣╛ε)(25.06.╝÷┴ñ).pdf",
+    "pages": 388,
+    "bytes": 303466752,
+    "sha256": "e2368e136e917e1e78649887250bd9ca9bc33a343aca8e8051a59cbd21322813"
+  },
+  {
+    "file": "korean/eps-topik-book-2.pdf",
+    "archive": "korean/eps-topik-complete-book-2.zip",
+    "archiveMember": "EPS-TOPIK_textbook2('26.06수정)/EPS-TOPIK 한국어 표준교재_2권(직장생활 한국어)(26.06.수정).pdf",
+    "pages": 356,
+    "bytes": 71008263,
+    "sha256": "c1e7cab831c12602ddaf67a114a99f4e9343eed692fc47bb1468037c6509a4d8"
+  }
+]
