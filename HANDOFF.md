@@ -19,8 +19,8 @@ speaks; Azure scores it (per sound / tone / syllable); Gemini voices the teacher
 ## State right now
 
 - **Live = commit `1bf66fb`** (Pages deployment `0fcf2047`), plus handoff-only commits after it (`d9f4e98`).
-- **Not on GitHub:** local `main` is **112 commits ahead of `origin/main`** (last push 2026-09-20). Everything since
-  lives only in this Dropbox folder. Push only when Leslie says so.
+- **GitHub** (private `lesliewu321/wunder-tutor`): `main` pushed 2026-09-25 at Leslie's request, up to `a2cbb8a`
+  (113 commits since 2026-09-20). Push again only when Leslie asks. The uncommitted work below is NOT on GitHub.
 - **Phone apps:** Android 1.0.7 (code 8) from 2026-09-23. **No APK / AAB / iOS build until Leslie says so** — web only.
 - **Your own uncommitted work is in the checkout:** the "communication" lesson packs (`astra-lessons/*communication*`,
   `astra-lessons/courses/*-communication.json`, `astra-lessons/i18n/communication.json`) and edits to
