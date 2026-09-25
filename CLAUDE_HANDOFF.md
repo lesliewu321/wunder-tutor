@@ -166,8 +166,7 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   scored 66 and the card named the 받침 sound with its tip and "Show me how"). 302 tests, typecheck clean,
   `content:check` ok (ko 92 items / es 118). **Committed** (2f88589 Korean and Spanish courses; 23c33ca test mode +
   the course agent's UI work as found) and **DEPLOYED ~04:50 UTC (Pages 13c85bce)** — Leslie's "upload to webapp for
-  testing" standing for the day. Voices: `warm-voice --only=ko-KR,es-ES` was running (407 lines); push with
-  `--push` after it finishes (the script now passes `--remote`).
+  testing" standing for the day. Voices: `warm-voice --only=ko-KR,es-ES` made all 407 lines (teacher 396, backup 11, silent 0, 285 s) and `--push` put them in the LIVE cache (--remote); a pushed Korean sentence and a Spanish question come back as cache hits on app.wundertutor.com.
   - From the authoring agents, for Leslie's or a native speaker's eye: Korean pronounced forms chosen where the
     standard allows two (맛있게 [마싣께], 김밥 [김빱], 계란 kept as 계, 갈 시간 [갈 씨간], 초콜릿 [초콜릳]; ㅎ kept after
     ㄴ/ㅁ); the tutor line "맛있어요?" became "음식 맛있어요?" so it does not share an id with the learner's "맛있어요.";
