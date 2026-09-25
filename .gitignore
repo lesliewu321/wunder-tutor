@@ -26,3 +26,6 @@ eval/contributions/
 *.jks
 *.keystore
 *.aab
+
+# Downloaded reference PDFs (VOA, FSI): tens of MB, public sources, not ours to version.
+astra-lessons/resources/*.pdf

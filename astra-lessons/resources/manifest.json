@@ -1,0 +1,34 @@
+{
+  "resources": [
+    {
+      "file": "voa-lets-learn-english-level-1.pdf",
+      "title": "VOA Learning English: Level 1 lesson plans",
+      "url": "https://docs.voanews.eu/en-us-learn/2021/09/09/fccd8340-337b-4d24-a750-f90c6d2d5843.pdf",
+      "rightsReference": "https://learningenglish.voanews.com/p/6021.html",
+      "retrieved": "2026-09-25",
+      "bytes": 21264031,
+      "sha256": "8daba536470d0fac24548e4edb128d906782b8c5395fe7ce146c58d804d7a95c",
+      "usage": "Local reference download only; no source assets embedded in runtime lessons."
+    },
+    {
+      "file": "fsi-chinese-orientation.pdf",
+      "title": "FSI Standard Chinese: Orientation",
+      "url": "https://fsi-languages.yojik.eu/languages/oldfsi/languages/Chinese/Standard%20Chinese/Module%2001%20ORN/FSI-StandardChinese-Module01ORN-StudentText.pdf",
+      "rightsReference": "https://fsi-languages.yojik.eu/languages/oldfsi/languages/chinese.html",
+      "retrieved": "2026-09-25",
+      "bytes": 2264935,
+      "sha256": "344781532e4dbf44c4f58101c289a098d4dbcc9daa7c10fa844952bf550fbd7d",
+      "usage": "Local reference download only; no source assets embedded in runtime lessons."
+    },
+    {
+      "file": "fsi-chinese-pronunciation-numbers-classroom.pdf",
+      "title": "FSI Standard Chinese: Resource Modules",
+      "url": "https://fsi-languages.yojik.eu/languages/oldfsi/languages/Chinese/Standard%20Chinese/0002-FSI-StandardChinese-ResourceModule-StudentText.pdf",
+      "rightsReference": "https://fsi-languages.yojik.eu/languages/oldfsi/languages/chinese.html",
+      "retrieved": "2026-09-25",
+      "bytes": 9506819,
+      "sha256": "c04864b94c84e532bbb09d1fcb64bbee95f028d17b92d0377f90b70244f763f0",
+      "usage": "Local reference download only; no source assets embedded in runtime lessons."
+    }
+  ]
+}

@@ -1,0 +1,1127 @@
+[
+  {
+    "id": "greetings",
+    "title": "Hello & introductions",
+    "hant": "打招呼與自我介紹",
+    "icon": "👋",
+    "goal": [
+      "Introduce yourself and greet someone politely.",
+      "介紹自己，並有禮貌地打招呼。"
+    ],
+    "grammar": {
+      "en": [
+        "Use I am for yourself and you are for the other person. Say my name to introduce yourself.",
+        "介紹自己用 I am，說對方用 you are；my name 表示「我的名字」。"
+      ],
+      "zh": [
+        "Use 我是 + role and 我叫 + name. Put 吗 at the end to make a yes/no question.",
+        "用「我是＋身分」和「我叫＋名字」介紹自己。在句末加「嗎」可以提問。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Keep the final d in friend. Let your voice fall gently at the end of a statement.",
+        "friend 結尾的 d 要清楚。陳述句結尾語調自然下降。"
+      ],
+      "zh": [
+        "你好 has two third tones: the first becomes a rising tone in speech. The pinyin keeps the original tones.",
+        "「你好」有兩個第三聲，連讀時第一個變成上升的聲調；拼音仍標原調。"
+      ]
+    },
+    "practice": [
+      "Make a name card. Write a greeting and two sentences about yourself; younger learners can draw and say them.",
+      "做一張名字卡，寫一句問候和兩句自我介紹；年幼學習者可以畫畫，再說出來。"
+    ],
+    "words": [
+      "friend|朋友|朋友|peng2 you5|🤝",
+      "teacher|老师|老師|lao3 shi1|🧑‍🏫",
+      "name|名字|名字|ming2 zi5|🏷️",
+      "hello|你好|你好|ni3 hao3|👋",
+      "goodbye|再见|再見|zai4 jian4|👋",
+      "student|学生|學生|xue2 sheng5|🎒"
+    ],
+    "little": [
+      "You are my friend.|你/是/我的/朋友。|你/是/我的/朋友。|ni3 shi4 wo3 de5 peng2 you5",
+      "I am a teacher.|我/是/老师。|我/是/老師。|wo3 shi4 lao3 shi1",
+      "My name is An.|我/叫/安安。|我/叫/安安。|wo3 jiao4 an1 an1",
+      "Hello, everyone!|大家/好！|大家/好！|da4 jia1 hao3"
+    ],
+    "junior": [
+      "This is my new friend.|这/是/我的/新朋友。|這/是/我的/新朋友。|zhe4 shi4 wo3 de5 xin1 peng2 you5",
+      "My teacher is very kind.|我的/老师/很/友好。|我的/老師/很/友好。|wo3 de5 lao3 shi1 hen3 you3 hao3",
+      "My name is An, and I am a student.|我/叫/安安，/是/学生。|我/叫/安安，/是/學生。|wo3 jiao4 an1 an1 shi4 xue2 sheng5",
+      "I am happy to meet you.|认识/你/很/高兴。|認識/你/很/高興。|ren4 shi5 ni3 hen3 gao1 xing4"
+    ],
+    "teen": [
+      "I would like you to meet my new friend.|我/想/介绍/我的/新朋友/给你/认识。|我/想/介紹/我的/新朋友/給你/認識。|wo3 xiang3 jie4 shao4 wo3 de5 xin1 peng2 you5 gei3 ni3 ren4 shi5",
+      "Our teacher helps everyone feel welcome.|我们的/老师/让/大家/觉得/很/亲切。|我們的/老師/讓/大家/覺得/很/親切。|wo3 men5 de5 lao3 shi1 rang4 da4 jia1 jue2 de5 hen3 qin1 qie4",
+      "My name is An, and I enjoy learning languages.|我/叫/安安，/喜欢/学习/语言。|我/叫/安安，/喜歡/學習/語言。|wo3 jiao4 an1 an1 xi3 huan5 xue2 xi2 yu3 yan2",
+      "Please tell me your name again.|请/再/告诉/我/你的/名字。|請/再/告訴/我/你的/名字。|qing3 zai4 gao4 su5 wo3 ni3 de5 ming2 zi5"
+    ],
+    "questions": [
+      [
+        "Which word describes the person introduced in the first sentence?",
+        "第一句介紹的人是甚麼身分？"
+      ],
+      [
+        "Which role is mentioned in the second sentence?",
+        "第二句提到甚麼身分？"
+      ]
+    ],
+    "tutors": [
+      "Tell me about a friend.|说说/你的/朋友/吧。|說說/你的/朋友/吧。|shuo1 shuo5 ni3 de5 peng2 you5 ba5",
+      "Tell me about a teacher.|说说/老师/吧。|說說/老師/吧。|shuo1 shuo5 lao3 shi1 ba5",
+      "What is your name?|你/叫/什么/名字？|你/叫/甚麼/名字？|ni3 jiao4 shen2 me5 ming2 zi5"
+    ]
+  },
+  {
+    "id": "numbers",
+    "title": "Numbers & age",
+    "hant": "數字與年齡",
+    "icon": "🔢",
+    "goal": [
+      "Count things and say an age or quantity.",
+      "數物件，說出年齡和數量。"
+    ],
+    "grammar": {
+      "en": [
+        "Use one book but two books. Ask How many? for a number of things.",
+        "一本用 one book，兩本用 two books。問數量用 How many？"
+      ],
+      "zh": [
+        "Put a measure word between the number and the noun: 三本书. Use 两 before many measure words, as in 两本书.",
+        "數字和名詞之間加量詞，例如「三本書」。量詞前的二常說「兩」，例如「兩本書」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "For three, let air pass over your tongue between your teeth. Do not turn it into free or tree.",
+        "說 three 時舌尖輕放在上下牙齒之間，讓氣流通過，別說成 free 或 tree。"
+      ],
+      "zh": [
+        "Keep 四 sì and 十 shí distinct. 四 starts with s; 十 starts with the curled-tongue sh.",
+        "分清「四 sì」和「十 shí」；四是平舌 s，十是翹舌 sh。"
+      ]
+    },
+    "practice": [
+      "Count six objects at home. Write their quantities with nouns; younger learners can point and count aloud.",
+      "數家中六種物件，把數量和名稱寫下來；年幼學習者可以指着物件數。"
+    ],
+    "words": [
+      "three|三|三|san1|3️⃣",
+      "five|五|五|wu3|5️⃣",
+      "one|一|一|yi1|1️⃣",
+      "two|二|二|er4|2️⃣",
+      "four|四|四|si4|4️⃣",
+      "ten|十|十|shi2|🔟"
+    ],
+    "little": [
+      "I have three books.|我/有/三本/书。|我/有/三本/書。|wo3 you3 san1 ben3 shu1",
+      "I am five.|我/五岁。|我/五歲。|wo3 wu3 sui4",
+      "One, two, three!|一，/二，/三！|一，/二，/三！|yi1 er4 san1",
+      "I have two pencils.|我/有/两支/铅笔。|我/有/兩支/鉛筆。|wo3 you3 liang3 zhi1 qian1 bi3"
+    ],
+    "junior": [
+      "There are three books on my desk.|我的/桌上/有/三本/书。|我的/桌上/有/三本/書。|wo3 de5 zhuo1 shang4 you3 san1 ben3 shu1",
+      "My sister is five years old.|我的/妹妹/五岁。|我的/妹妹/五歲。|wo3 de5 mei4 mei5 wu3 sui4",
+      "How many pencils do you have?|你/有/几支/铅笔？|你/有/幾支/鉛筆？|ni3 you3 ji3 zhi1 qian1 bi3",
+      "I have ten fingers.|我/有/十根/手指。|我/有/十根/手指。|wo3 you3 shi2 gen1 shou3 zhi3"
+    ],
+    "teen": [
+      "I need three tickets for our group.|我/需要/三张/票。|我/需要/三張/票。|wo3 xu1 yao4 san1 zhang1 piao4",
+      "The younger child in our group is five years old.|我们/这里的/小朋友/五岁。|我們/這裏的/小朋友/五歲。|wo3 men5 zhe4 li3 de5 xiao3 peng2 you5 wu3 sui4",
+      "Could you count the tickets again, please?|请/再/数/一次/票，/好吗？|請/再/數/一次/票，/好嗎？|qing3 zai4 shu3 yi1 ci4 piao4 hao3 ma5",
+      "There are ten people in our group altogether.|我们/一共/有/十个/人。|我們/一共/有/十個/人。|wo3 men5 yi1 gong4 you3 shi2 ge5 ren2"
+    ],
+    "questions": [
+      [
+        "What number is needed in the first sentence?",
+        "第一句的數量是多少？"
+      ],
+      [
+        "What age is mentioned in the second sentence?",
+        "第二句提到幾歲？"
+      ]
+    ],
+    "tutors": [
+      "How many do you need or have?|你/要/几个，/或者/有/几个？|你/要/幾個，/或者/有/幾個？|ni3 yao4 ji3 ge5 huo4 zhe3 you3 ji3 ge5",
+      "Tell me an age.|说/一个/年龄/吧。|說/一個/年齡/吧。|shuo1 yi1 ge4 nian2 ling2 ba5",
+      "Can you say a sentence about counting?|你/能/说/一句/关于/数数的/话/吗？|你/能/說/一句/關於/數數的/話/嗎？|ni3 neng2 shuo1 yi1 ju4 guan1 yu2 shu3 shu4 de5 hua4 ma5"
+    ]
+  },
+  {
+    "id": "family",
+    "title": "Family & people",
+    "hant": "家人與朋友",
+    "icon": "👨‍👩‍👧",
+    "goal": [
+      "Introduce family members and describe who they are.",
+      "介紹家人，說出他們的身分。"
+    ],
+    "grammar": {
+      "en": [
+        "Use my, your, his and her before a noun. Say This is for one person and These are for more than one.",
+        "名詞前用 my、your、his、her 表示所屬；一個人用 This is，多個人用 These are。"
+      ],
+      "zh": [
+        "Use 的 for possession: 我的家人. With close family, 我的妈妈 and 我妈妈 are both natural.",
+        "用「的」表示所屬，例如「我的家人」。親屬稱謂前可以說「我的媽媽」或「我媽媽」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "In mother and father, the th is voiced: feel a gentle buzz at your throat.",
+        "mother 和 father 的 th 是濁音，喉嚨會輕輕震動。"
+      ],
+      "zh": [
+        "The second syllable in 妈妈 and 爸爸 is light and short. Do not give both syllables equal stress.",
+        "「媽媽、爸爸」的第二個字讀輕聲，要短而輕。"
+      ]
+    },
+    "practice": [
+      "Draw a family or an imaginary family. Label four people and write two introductions.",
+      "畫自己的家人或虛構家庭，為四個人物寫名稱，再寫兩句介紹。"
+    ],
+    "words": [
+      "mother|妈妈|媽媽|ma1 ma5|👩",
+      "father|爸爸|爸爸|ba4 ba5|👨",
+      "older sister|姐姐|姐姐|jie3 jie5|👧",
+      "older brother|哥哥|哥哥|ge1 ge5|👦",
+      "grandmother|奶奶|奶奶|nai3 nai5|👵",
+      "family|家人|家人|jia1 ren2|🏠"
+    ],
+    "little": [
+      "This is my mother.|这/是/我的/妈妈。|這/是/我的/媽媽。|zhe4 shi4 wo3 de5 ma1 ma5",
+      "My father is at home.|爸爸/在/家。|爸爸/在/家。|ba4 ba5 zai4 jia1",
+      "I have an older sister.|我/有/姐姐。|我/有/姐姐。|wo3 you3 jie3 jie5",
+      "I love my family.|我/爱/我的/家人。|我/愛/我的/家人。|wo3 ai4 wo3 de5 jia1 ren2"
+    ],
+    "junior": [
+      "My mother likes reading books.|我的/妈妈/喜欢/看书。|我的/媽媽/喜歡/看書。|wo3 de5 ma1 ma5 xi3 huan5 kan4 shu1",
+      "My father is at home today.|我的/爸爸/今天/在家。|我的/爸爸/今天/在家。|wo3 de5 ba4 ba5 jin1 tian1 zai4 jia1",
+      "My older sister helps me study.|姐姐/帮/我/学习。|姐姐/幫/我/學習。|jie3 jie5 bang1 wo3 xue2 xi2",
+      "There are four people in my family.|我家/有/四口/人。|我家/有/四口/人。|wo3 jia1 you3 si4 kou3 ren2"
+    ],
+    "teen": [
+      "My mother enjoys reading when she has free time.|我的/妈妈/有空的/时候/喜欢/看书。|我的/媽媽/有空的/時候/喜歡/看書。|wo3 de5 ma1 ma5 you3 kong4 de5 shi2 hou5 xi3 huan5 kan4 shu1",
+      "My father is working at home today.|我的/爸爸/今天/在家/工作。|我的/爸爸/今天/在家/工作。|wo3 de5 ba4 ba5 jin1 tian1 zai4 jia1 gong1 zuo4",
+      "My older sister and I often help each other.|我/和/姐姐/经常/互相/帮助。|我/和/姐姐/經常/互相/幫助。|wo3 he2 jie3 jie5 jing1 chang2 hu4 xiang1 bang1 zhu4",
+      "We try to have dinner together every evening.|我们/尽量/每天/晚上/一起/吃饭。|我們/盡量/每天/晚上/一起/吃飯。|wo3 men5 jin3 liang4 mei3 tian1 wan3 shang5 yi1 qi3 chi1 fan4"
+    ],
+    "questions": [
+      [
+        "Who is described in the first sentence?",
+        "第一句介紹的是誰？"
+      ],
+      [
+        "Who is at home?",
+        "誰在家？"
+      ]
+    ],
+    "tutors": [
+      "Tell me about your mother.|说说/你的/妈妈/吧。|說說/你的/媽媽/吧。|shuo1 shuo5 ni3 de5 ma1 ma5 ba5",
+      "Where is your father?|你的/爸爸/在/哪里？|你的/爸爸/在/哪裏？|ni3 de5 ba4 ba5 zai4 na3 li3",
+      "Tell me about an older sister.|说说/姐姐/吧。|說說/姐姐/吧。|shuo1 shuo5 jie3 jie5 ba5"
+    ]
+  },
+  {
+    "id": "school",
+    "title": "School & learning",
+    "hant": "學校與學習",
+    "icon": "🎒",
+    "goal": [
+      "Name learning materials and ask for help politely.",
+      "說出學習用品，並有禮貌地求助。"
+    ],
+    "grammar": {
+      "en": [
+        "Use Can I ...? to ask permission and Could you ...? to ask for help. Add please.",
+        "用 Can I ...？徵求許可，用 Could you ...？請人幫忙，並加上 please。"
+      ],
+      "zh": [
+        "Use 请 + action for a polite request. Use 可以吗 to ask permission: 我可以看这本书吗？",
+        "用「請＋動作」提出請求，用「可以嗎」徵求許可，例如「我可以看這本書嗎？」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Keep the s and k together at the start of school. Do not add an extra vowel.",
+        "school 開頭的 s 和 k 要連在一起，不要加多一個元音。"
+      ],
+      "zh": [
+        "In 书 shū, curl the tongue slightly for sh. Keep it different from s in 三 sān.",
+        "「書 shū」的 sh 要稍微翹舌，與「三 sān」的 s 分清。"
+      ]
+    },
+    "practice": [
+      "Label six learning materials. Write one polite request and act it out with someone.",
+      "為六件學習用品寫名稱，再寫一個有禮貌的請求，和別人演練。"
+    ],
+    "words": [
+      "book|书|書|shu1|📖",
+      "pencil|铅笔|鉛筆|qian1 bi3|✏️",
+      "desk|桌子|桌子|zhuo1 zi5|🪑",
+      "school|学校|學校|xue2 xiao4|🏫",
+      "listen|听|聽|ting1|👂",
+      "read|读|讀|du2|📚"
+    ],
+    "little": [
+      "Open the book.|打开/书。|打開/書。|da3 kai1 shu1",
+      "This is my pencil.|这/是/我的/铅笔。|這/是/我的/鉛筆。|zhe4 shi4 wo3 de5 qian1 bi3",
+      "Please help me.|请/帮帮/我。|請/幫幫/我。|qing3 bang1 bang5 wo3",
+      "I can read.|我/会/读。|我/會/讀。|wo3 hui4 du2"
+    ],
+    "junior": [
+      "Please open your book.|请/打开/你的/书。|請/打開/你的/書。|qing3 da3 kai1 ni3 de5 shu1",
+      "May I borrow your pencil?|我/可以/借/你的/铅笔/吗？|我/可以/借/你的/鉛筆/嗎？|wo3 ke3 yi3 jie4 ni3 de5 qian1 bi3 ma5",
+      "Could you say that again, please?|请/再/说/一次，/好吗？|請/再/說/一次，/好嗎？|qing3 zai4 shuo1 yi1 ci4 hao3 ma5",
+      "I do not understand this word.|我/不/明白/这个/词。|我/不/明白/這個/詞。|wo3 bu4 ming2 bai5 zhe4 ge5 ci2"
+    ],
+    "teen": [
+      "Please open the book and read the first sentence.|请/打开/书，/读/第一句。|請/打開/書，/讀/第一句。|qing3 da3 kai1 shu1 du2 di4 yi1 ju4",
+      "Could I borrow your pencil for a moment?|我/可以/借用/一下/你的/铅笔/吗？|我/可以/借用/一下/你的/鉛筆/嗎？|wo3 ke3 yi3 jie4 yong4 yi1 xia4 ni3 de5 qian1 bi3 ma5",
+      "Could you explain that in a different way?|你/可以/换/一种/说法/吗？|你/可以/換/一種/說法/嗎？|ni3 ke3 yi3 huan4 yi1 zhong3 shuo1 fa3 ma5",
+      "I understand the words, but I need more practice.|我/明白/这些/词，/但是/需要/多/练习。|我/明白/這些/詞，/但是/需要/多/練習。|wo3 ming2 bai5 zhe4 xie1 ci2 dan4 shi4 xu1 yao4 duo1 lian4 xi2"
+    ],
+    "questions": [
+      [
+        "What should be opened?",
+        "要打開甚麼？"
+      ],
+      [
+        "Which object is mentioned in the second sentence?",
+        "第二句提到哪件物件？"
+      ]
+    ],
+    "tutors": [
+      "Give an instruction about a book.|请/说/一个/关于/书的/指令。|請/說/一個/關於/書的/指令。|qing3 shuo1 yi1 ge4 guan1 yu2 shu1 de5 zhi3 ling4",
+      "Say something about a pencil.|说说/铅笔/吧。|說說/鉛筆/吧。|shuo1 shuo5 qian1 bi3 ba5",
+      "Ask for help.|请/向/我/求助。|請/向/我/求助。|qing3 xiang4 wo3 qiu2 zhu4"
+    ]
+  },
+  {
+    "id": "home",
+    "title": "Rooms & belongings",
+    "hant": "家居與物品",
+    "icon": "🏠",
+    "goal": [
+      "Describe rooms and say where things are.",
+      "介紹房間，說出物件的位置。"
+    ],
+    "grammar": {
+      "en": [
+        "Use in for inside, on for a surface and under for below: The bag is under the table.",
+        "in 表示在裏面，on 表示在表面，under 表示在下面，例如 The bag is under the table。"
+      ],
+      "zh": [
+        "Put the place after 在: 书在桌子上. Add 上、下、里 after the place word.",
+        "「在」後面接地點，例如「書在桌子上」；地點後面可加「上、下、裏」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Finish room with your lips together for m. Finish in with your tongue for n.",
+        "room 的 m 結尾要合唇，in 的 n 結尾要用舌尖。"
+      ],
+      "zh": [
+        "Distinguish n and l in 哪里. Move the tongue for each syllable rather than blending them.",
+        "說「哪裏」時留意 n 和 l，每個音節都要清楚。"
+      ]
+    },
+    "practice": [
+      "Draw a room. Write where three objects are; younger learners can point and say on, under or in.",
+      "畫一個房間，寫出三件物件的位置；年幼學習者可以指着物件說「上、下、裏」。"
+    ],
+    "words": [
+      "bedroom|卧室|臥室|wo4 shi4|🛏️",
+      "kitchen|厨房|廚房|chu2 fang2|🍳",
+      "table|桌子|桌子|zhuo1 zi5|🪑",
+      "chair|椅子|椅子|yi3 zi5|🪑",
+      "door|门|門|men2|🚪",
+      "window|窗户|窗戶|chuang1 hu5|🪟"
+    ],
+    "little": [
+      "This is my bedroom.|这/是/我的/卧室。|這/是/我的/臥室。|zhe4 shi4 wo3 de5 wo4 shi4",
+      "I am in the kitchen.|我/在/厨房。|我/在/廚房。|wo3 zai4 chu2 fang2",
+      "The book is on the table.|书/在/桌子/上。|書/在/桌子/上。|shu1 zai4 zhuo1 zi5 shang4",
+      "Close the door.|关/上/门。|關/上/門。|guan1 shang4 men2"
+    ],
+    "junior": [
+      "My bedroom has a big window.|我的/卧室/有/一扇/大窗户。|我的/臥室/有/一扇/大窗戶。|wo3 de5 wo4 shi4 you3 yi1 shan4 da4 chuang1 hu5",
+      "We cook in the kitchen.|我们/在/厨房/做饭。|我們/在/廚房/做飯。|wo3 men5 zai4 chu2 fang2 zuo4 fan4",
+      "My bag is under the table.|我的/书包/在/桌子/下面。|我的/書包/在/桌子/下面。|wo3 de5 shu1 bao1 zai4 zhuo1 zi5 xia4 mian4",
+      "There is a chair beside the door.|门/旁边/有/一把/椅子。|門/旁邊/有/一把/椅子。|men2 pang2 bian1 you3 yi1 ba3 yi3 zi5"
+    ],
+    "teen": [
+      "My bedroom is small, but it has plenty of light.|我的/卧室/很小，/但是/光线/很好。|我的/臥室/很小，/但是/光線/很好。|wo3 de5 wo4 shi4 hen3 xiao3 dan4 shi4 guang1 xian4 hen3 hao3",
+      "We usually prepare our meals in the kitchen together.|我们/通常/一起/在/厨房/做饭。|我們/通常/一起/在/廚房/做飯。|wo3 men5 tong1 chang2 yi1 qi3 zai4 chu2 fang2 zuo4 fan4",
+      "I put my bag under the table.|我/把/书包/放在/桌子/下面。|我/把/書包/放在/桌子/下面。|wo3 ba3 shu1 bao1 fang4 zai4 zhuo1 zi5 xia4 mian4",
+      "Please close the window before you leave.|离开/以前，/请/关上/窗户。|離開/以前，/請/關上/窗戶。|li2 kai1 yi3 qian2 qing3 guan1 shang4 chuang1 hu5"
+    ],
+    "questions": [
+      [
+        "Which room is described first?",
+        "首先介紹哪個房間？"
+      ],
+      [
+        "Which room is mentioned in the second sentence?",
+        "第二句提到哪個房間？"
+      ]
+    ],
+    "tutors": [
+      "Tell me about your bedroom.|说说/你的/卧室/吧。|說說/你的/臥室/吧。|shuo1 shuo5 ni3 de5 wo4 shi4 ba5",
+      "Say something about the kitchen.|说说/厨房/吧。|說說/廚房/吧。|shuo1 shuo5 chu2 fang2 ba5",
+      "Where is the book or bag?|书/或者/书包/在/哪里？|書/或者/書包/在/哪裏？|shu1 huo4 zhe3 shu1 bao1 zai4 na3 li3"
+    ]
+  },
+  {
+    "id": "routines",
+    "title": "Time & daily routines",
+    "hant": "時間與日常生活",
+    "icon": "⏰",
+    "goal": [
+      "Describe a day and ask when something happens.",
+      "介紹一天的生活，詢問活動時間。"
+    ],
+    "grammar": {
+      "en": [
+        "Use the present simple for routines: I eat, she eats. Use at for a time and every for a repeated day.",
+        "日常習慣用一般現在式：I eat、she eats；時間前用 at，重複的日子可用 every。"
+      ],
+      "zh": [
+        "Time usually comes before the action: 我早上吃饭. 今天 and 每天 can also start the sentence.",
+        "時間通常放在動作前，例如「我早上吃飯」；「今天、每天」也可以放在句首。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Keep the final consonants in breakfast. Say the stressed syllable clearly without adding extra vowels.",
+        "breakfast 結尾的輔音要清楚，重讀音節要突出，不要加多餘的元音。"
+      ],
+      "zh": [
+        "早 zǎo begins with z, not zh. 晚 wǎn ends in n, not ng.",
+        "「早 zǎo」是平舌 z；「晚 wǎn」以 n 結尾，不是 ng。"
+      ]
+    },
+    "practice": [
+      "Make a four-step daily timetable. Write a time and an action for each step.",
+      "做一個四步驟的日程表，每一步寫上時間和活動。"
+    ],
+    "words": [
+      "morning|早上|早上|zao3 shang5|🌅",
+      "evening|晚上|晚上|wan3 shang5|🌙",
+      "breakfast|早饭|早飯|zao3 fan4|🥣",
+      "sleep|睡觉|睡覺|shui4 jiao4|😴",
+      "today|今天|今天|jin1 tian1|📅",
+      "clock|钟|鐘|zhong1|🕰️"
+    ],
+    "little": [
+      "I eat in the morning.|我/早上/吃饭。|我/早上/吃飯。|wo3 zao3 shang5 chi1 fan4",
+      "I sleep in the evening.|我/晚上/睡觉。|我/晚上/睡覺。|wo3 wan3 shang5 shui4 jiao4",
+      "I eat breakfast.|我/吃/早饭。|我/吃/早飯。|wo3 chi1 zao3 fan4",
+      "I go home.|我/回/家。|我/回/家。|wo3 hui2 jia1"
+    ],
+    "junior": [
+      "I eat breakfast every morning.|我/每天/早上/吃/早饭。|我/每天/早上/吃/早飯。|wo3 mei3 tian1 zao3 shang5 chi1 zao3 fan4",
+      "I read in the evening.|我/晚上/看书。|我/晚上/看書。|wo3 wan3 shang5 kan4 shu1",
+      "I get up at seven.|我/七点/起床。|我/七點/起床。|wo3 qi1 dian3 qi3 chuang2",
+      "What time do you go home?|你/几点/回家？|你/幾點/回家？|ni3 ji3 dian3 hui2 jia1"
+    ],
+    "teen": [
+      "I usually have breakfast at seven in the morning.|我/通常/早上/七点/吃早饭。|我/通常/早上/七點/吃早飯。|wo3 tong1 chang2 zao3 shang5 qi1 dian3 chi1 zao3 fan4",
+      "I like to read quietly in the evening.|我/喜欢/晚上/安静地/看书。|我/喜歡/晚上/安靜地/看書。|wo3 xi3 huan5 wan3 shang5 an1 jing4 de5 kan4 shu1",
+      "After I get up, I get ready for the day.|起床/以后，/我/准备/开始/新的一天。|起床/以後，/我/準備/開始/新的一天。|qi3 chuang2 yi3 hou4 wo3 zhun3 bei4 kai1 shi3 xin1 de5 yi1 tian1",
+      "What time would be convenient for you?|什么/时间/对你/方便？|甚麼/時間/對你/方便？|shen2 me5 shi2 jian1 dui4 ni3 fang1 bian4"
+    ],
+    "questions": [
+      [
+        "When does the first activity happen?",
+        "第一個活動在甚麼時候進行？"
+      ],
+      [
+        "When does the second activity happen?",
+        "第二個活動在甚麼時候進行？"
+      ]
+    ],
+    "tutors": [
+      "What do you do in the morning?|你/早上/做/什么？|你/早上/做/甚麼？|ni3 zao3 shang5 zuo4 shen2 me5",
+      "What do you do in the evening?|你/晚上/做/什么？|你/晚上/做/甚麼？|ni3 wan3 shang5 zuo4 shen2 me5",
+      "Tell me another part of your day.|再/说说/你/一天的/生活。|再/說說/你/一天的/生活。|zai4 shuo1 shuo5 ni3 yi1 tian1 de5 sheng1 huo2"
+    ]
+  },
+  {
+    "id": "animals",
+    "title": "Animals & abilities",
+    "hant": "動物與本領",
+    "icon": "🐼",
+    "goal": [
+      "Describe animals and say what they can do.",
+      "介紹動物，說出牠們的本領。"
+    ],
+    "grammar": {
+      "en": [
+        "Use can + the action: A bird can fly. Can does not change with he, she or it.",
+        "can 後接動詞原形，例如 A bird can fly；主語是 he、she 或 it 時，can 也不變。"
+      ],
+      "zh": [
+        "Use 会 + action for a learned skill, and 能 for ability or possibility. Birds fly: 鸟会飞.",
+        "「會＋動作」可以表示本領；「能」表示能力或可能性，例如「鳥會飛」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Let the final t in cat stop cleanly. Do not add a vowel after it.",
+        "cat 結尾的 t 要收得清楚，不要在後面加元音。"
+      ],
+      "zh": [
+        "猫 māo is high and level; 狗 gǒu is low. Practise the tones before speeding up.",
+        "「貓 māo」讀高平聲，「狗 gǒu」讀低聲；先練準聲調，再加快。"
+      ]
+    },
+    "practice": [
+      "Draw an imaginary animal. Write its name, colour and two things it can do.",
+      "畫一隻想像的動物，寫出名字、顏色和兩項本領。"
+    ],
+    "words": [
+      "cat|猫|貓|mao1|🐱",
+      "dog|狗|狗|gou3|🐶",
+      "bird|鸟|鳥|niao3|🐦",
+      "fish|鱼|魚|yu2|🐟",
+      "panda|熊猫|熊貓|xiong2 mao1|🐼",
+      "rabbit|兔子|兔子|tu4 zi5|🐰"
+    ],
+    "little": [
+      "The cat can jump.|猫/会/跳。|貓/會/跳。|mao1 hui4 tiao4",
+      "The dog can run.|狗/会/跑。|狗/會/跑。|gou3 hui4 pao3",
+      "The bird can fly.|鸟/会/飞。|鳥/會/飛。|niao3 hui4 fei1",
+      "I like pandas.|我/喜欢/熊猫。|我/喜歡/熊貓。|wo3 xi3 huan5 xiong2 mao1"
+    ],
+    "junior": [
+      "The cat can jump onto the chair.|猫/会/跳到/椅子/上。|貓/會/跳到/椅子/上。|mao1 hui4 tiao4 dao4 yi3 zi5 shang4",
+      "The dog can run very fast.|狗/跑得/很快。|狗/跑得/很快。|gou3 pao3 de5 hen3 kuai4",
+      "A bird can fly, but a fish cannot.|鸟/会飞，/但是/鱼/不会。|鳥/會飛，/但是/魚/不會。|niao3 hui4 fei1 dan4 shi4 yu2 bu4 hui4",
+      "The panda is black and white.|熊猫/是/黑白/两色的。|熊貓/是/黑白/兩色的。|xiong2 mao1 shi4 hei1 bai2 liang3 se4 de5"
+    ],
+    "teen": [
+      "The cat can jump gently onto the chair.|猫/能/轻轻地/跳到/椅子/上。|貓/能/輕輕地/跳到/椅子/上。|mao1 neng2 qing1 qing1 de5 tiao4 dao4 yi3 zi5 shang4",
+      "The dog can run faster than I can.|狗/跑得/比我/快。|狗/跑得/比我/快。|gou3 pao3 de5 bi3 wo3 kuai4",
+      "Some birds can swim as well as fly.|有些/鸟/既/会游泳，/又/会飞。|有些/鳥/既/會游泳，/又/會飛。|you3 xie1 niao3 ji4 hui4 you2 yong3 you4 hui4 fei1",
+      "We should give animals enough space to live.|我们/应该/给/动物/足够的/生活/空间。|我們/應該/給/動物/足夠的/生活/空間。|wo3 men5 ying1 gai1 gei3 dong4 wu4 zu2 gou4 de5 sheng1 huo2 kong1 jian1"
+    ],
+    "questions": [
+      [
+        "Which animal can jump in this passage?",
+        "短文中哪隻動物會跳？"
+      ],
+      [
+        "Which animal can run in this passage?",
+        "短文中哪隻動物會跑？"
+      ]
+    ],
+    "tutors": [
+      "What can the cat do?|猫/会/做/什么？|貓/會/做/甚麼？|mao1 hui4 zuo4 shen2 me5",
+      "What can the dog do?|狗/会/做/什么？|狗/會/做/甚麼？|gou3 hui4 zuo4 shen2 me5",
+      "What can birds do?|鸟/会/做/什么？|鳥/會/做/甚麼？|niao3 hui4 zuo4 shen2 me5"
+    ]
+  },
+  {
+    "id": "town",
+    "title": "Around town",
+    "hant": "社區與方向",
+    "icon": "🗺️",
+    "goal": [
+      "Name places and give simple directions.",
+      "說出地點，指示簡單路線。"
+    ],
+    "grammar": {
+      "en": [
+        "Use Where is ...? to ask about a place. Directions use the action directly: Turn left. Go straight.",
+        "問地點用 Where is ...？指示方向直接用動詞，例如 Turn left、Go straight。"
+      ],
+      "zh": [
+        "Use 怎么走 to ask the way. Say 往左转 or 往右转 to tell someone to turn.",
+        "問路可以用「怎麼走」，指示轉彎可以說「往左轉」或「往右轉」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Keep the r in right different from the l in left. The tongue does not touch the roof for r.",
+        "分清 right 的 r 和 left 的 l；說 r 時舌尖不碰上顎。"
+      ],
+      "zh": [
+        "区 qū uses rounded lips for ü even though the dots are not written after q.",
+        "「區 qū」的韻母是 ü，嘴唇要圓；q 後面的 ü 不寫兩點。"
+      ]
+    },
+    "practice": [
+      "Draw a small map with four places. Write directions from one place to another.",
+      "畫一張有四個地點的小地圖，寫出從一處到另一處的路線。"
+    ],
+    "words": [
+      "park|公园|公園|gong1 yuan2|🌳",
+      "library|图书馆|圖書館|tu2 shu1 guan3|📚",
+      "hospital|医院|醫院|yi1 yuan4|🏥",
+      "left|左边|左邊|zuo3 bian1|⬅️",
+      "right|右边|右邊|you4 bian1|➡️",
+      "ahead|前面|前面|qian2 mian4|⬆️"
+    ],
+    "little": [
+      "I go to the park.|我/去/公园。|我/去/公園。|wo3 qu4 gong1 yuan2",
+      "This is the library.|这/是/图书馆。|這/是/圖書館。|zhe4 shi4 tu2 shu1 guan3",
+      "Turn left, please.|请/往左/转。|請/往左/轉。|qing3 wang3 zuo3 zhuan3",
+      "Go straight ahead.|一直/往前/走。|一直/往前/走。|yi1 zhi2 wang3 qian2 zou3"
+    ],
+    "junior": [
+      "The park is near my home.|公园/在/我家/附近。|公園/在/我家/附近。|gong1 yuan2 zai4 wo3 jia1 fu4 jin4",
+      "The library is beside the school.|图书馆/在/学校/旁边。|圖書館/在/學校/旁邊。|tu2 shu1 guan3 zai4 xue2 xiao4 pang2 bian1",
+      "Turn left at the next street.|到/下一条/街/往左/转。|到/下一條/街/往左/轉。|dao4 xia4 yi1 tiao2 jie1 wang3 zuo3 zhuan3",
+      "How do I get to the park?|去/公园/怎么/走？|去/公園/怎麼/走？|qu4 gong1 yuan2 zen3 me5 zou3"
+    ],
+    "teen": [
+      "The park is a short walk from my home.|从/我家/走到/公园/只要/一会儿。|從/我家/走到/公園/只要/一會兒。|cong2 wo3 jia1 zou3 dao4 gong1 yuan2 zhi3 yao4 yi1 hui4 er5",
+      "The library is beside the school, opposite the hospital.|图书馆/在/学校/旁边，/医院/对面。|圖書館/在/學校/旁邊，/醫院/對面。|tu2 shu1 guan3 zai4 xue2 xiao4 pang2 bian1 yi1 yuan4 dui4 mian4",
+      "Go straight ahead, then turn left at the next street.|先/一直/往前/走，/再/到/下一条/街/往左/转。|先/一直/往前/走，/再/到/下一條/街/往左/轉。|xian1 yi1 zhi2 wang3 qian2 zou3 zai4 dao4 xia4 yi1 tiao2 jie1 wang3 zuo3 zhuan3",
+      "Could you show me the way on this map?|请/在/这张/地图/上/告诉/我/怎么走。|請/在/這張/地圖/上/告訴/我/怎麼走。|qing3 zai4 zhe4 zhang1 di4 tu2 shang4 gao4 su5 wo3 zen3 me5 zou3"
+    ],
+    "questions": [
+      [
+        "Which place is near home or visited in the first sentence?",
+        "第一句提到前往或在家附近的甚麼地方？"
+      ],
+      [
+        "Which place is described in the second sentence?",
+        "第二句介紹甚麼地方？"
+      ]
+    ],
+    "tutors": [
+      "Tell me about the park.|说说/公园/吧。|說說/公園/吧。|shuo1 shuo5 gong1 yuan2 ba5",
+      "Where is the library?|图书馆/在/哪里？|圖書館/在/哪裏？|tu2 shu1 guan3 zai4 na3 li3",
+      "Give me a direction.|请/告诉/我/怎么/走。|請/告訴/我/怎麼/走。|qing3 gao4 su5 wo3 zen3 me5 zou3"
+    ]
+  },
+  {
+    "id": "shopping",
+    "title": "Shopping & colours",
+    "hant": "購物與顏色",
+    "icon": "🛍️",
+    "goal": [
+      "Describe what you want and ask about price.",
+      "形容想買的物品，詢問價錢。"
+    ],
+    "grammar": {
+      "en": [
+        "Put a colour before the noun: a red shirt. Use this for one nearby item and these for several.",
+        "顏色放在名詞前，例如 a red shirt；附近一件物品用 this，多件用 these。"
+      ],
+      "zh": [
+        "Use 多少钱 to ask the price. Colours often take 的 before a noun: 红色的衣服.",
+        "問價錢用「多少錢」；顏色修飾名詞時常加「的」，例如「紅色的衣服」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "The vowel in blue is long and rounded. Keep the final z sound in shoes.",
+        "blue 的元音要圓唇並拉長；shoes 結尾的 z 要清楚。"
+      ],
+      "zh": [
+        "绿 lǜ uses ü, not u. Keep the lips rounded while the tongue stays forward.",
+        "「綠 lǜ」讀 ü，不是 u；嘴唇圓起，舌頭保持靠前。"
+      ]
+    },
+    "practice": [
+      "Make a pretend shop with price labels. Write two requests and a price question.",
+      "開一間模擬小店，寫上價錢牌，再寫兩句購物請求和一個價錢問題。"
+    ],
+    "words": [
+      "red|红色|紅色|hong2 se4|🔴",
+      "blue|蓝色|藍色|lan2 se4|🔵",
+      "green|绿色|綠色|lv4 se4|🟢",
+      "shirt|衬衫|襯衫|chen4 shan1|👕",
+      "shoes|鞋子|鞋子|xie2 zi5|👟",
+      "money|钱|錢|qian2|💰"
+    ],
+    "little": [
+      "I want red.|我/要/红色。|我/要/紅色。|wo3 yao4 hong2 se4",
+      "I like blue.|我/喜欢/蓝色。|我/喜歡/藍色。|wo3 xi3 huan5 lan2 se4",
+      "This is my shirt.|这/是/我的/衬衫。|這/是/我的/襯衫。|zhe4 shi4 wo3 de5 chen4 shan1",
+      "How much is it?|这个/多少/钱？|這個/多少/錢？|zhe4 ge5 duo1 shao5 qian2"
+    ],
+    "junior": [
+      "I would like the red shirt.|我/想要/那件/红色的/衬衫。|我/想要/那件/紅色的/襯衫。|wo3 xiang3 yao4 na4 jian4 hong2 se4 de5 chen4 shan1",
+      "These shoes are blue.|这双/鞋子/是/蓝色的。|這雙/鞋子/是/藍色的。|zhe4 shuang1 xie2 zi5 shi4 lan2 se4 de5",
+      "May I try this on?|我/可以/试试/这个/吗？|我/可以/試試/這個/嗎？|wo3 ke3 yi3 shi4 shi5 zhe4 ge5 ma5",
+      "How much does this shirt cost?|这件/衬衫/多少/钱？|這件/襯衫/多少/錢？|zhe4 jian4 chen4 shan1 duo1 shao5 qian2"
+    ],
+    "teen": [
+      "I am looking for a red shirt in a smaller size.|我/想/找/一件/小一点的/红色/衬衫。|我/想/找/一件/小一點的/紅色/襯衫。|wo3 xiang3 zhao3 yi1 jian4 xiao3 yi1 dian3 de5 hong2 se4 chen4 shan1",
+      "I prefer the blue shoes because they are more comfortable.|我/更/喜欢/蓝色的/鞋子，/因为/比较/舒服。|我/更/喜歡/藍色的/鞋子，/因為/比較/舒服。|wo3 geng4 xi3 huan5 lan2 se4 de5 xie2 zi5 yin1 wei4 bi3 jiao4 shu1 fu5",
+      "Could I try this on before I decide?|我/可以/先/试一下，/再/决定/吗？|我/可以/先/試一下，/再/決定/嗎？|wo3 ke3 yi3 xian1 shi4 yi1 xia4 zai4 jue2 ding4 ma5",
+      "How much do these two items cost altogether?|这/两件/东西/一共/多少/钱？|這/兩件/東西/一共/多少/錢？|zhe4 liang3 jian4 dong1 xi5 yi1 gong4 duo1 shao5 qian2"
+    ],
+    "questions": [
+      [
+        "What colour is wanted in the first sentence?",
+        "第一句想要甚麼顏色？"
+      ],
+      [
+        "Which colour is mentioned in the second sentence?",
+        "第二句提到甚麼顏色？"
+      ]
+    ],
+    "tutors": [
+      "What would you like?|你/想要/什么？|你/想要/甚麼？|ni3 xiang3 yao4 shen2 me5",
+      "Tell me about something blue.|说说/蓝色的/东西/吧。|說說/藍色的/東西/吧。|shuo1 shuo5 lan2 se4 de5 dong1 xi5 ba5",
+      "Say something about trying or wearing clothes.|说说/试穿/或者/穿/衣服/吧。|說說/試穿/或者/穿/衣服/吧。|shuo1 shuo5 shi4 chuan1 huo4 zhe3 chuan1 yi1 fu5 ba5"
+    ]
+  },
+  {
+    "id": "weather",
+    "title": "Weather & seasons",
+    "hant": "天氣與季節",
+    "icon": "🌦️",
+    "goal": [
+      "Describe the weather and choose suitable activities.",
+      "形容天氣，選擇合適的活動。"
+    ],
+    "grammar": {
+      "en": [
+        "Use It is + weather word: It is sunny. Use because to give a reason and if for a condition.",
+        "用 It is＋天氣形容詞，例如 It is sunny；because 表示原因，if 表示條件。"
+      ],
+      "zh": [
+        "Weather descriptions often use 很: 今天很冷. Use 下雨 for rain and 因为 for a reason.",
+        "形容天氣常用「很」，例如「今天很冷」；下雨用「下雨」，原因用「因為」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "In weather, the th is voiced. Keep it distinct from the unvoiced th in three.",
+        "weather 的 th 是濁音，要與 three 的清音 th 分清。"
+      ],
+      "zh": [
+        "雨 yǔ uses the ü vowel. 冷 lěng ends in ng, with the back of the tongue raised.",
+        "「雨 yǔ」的韻母是 ü；「冷 lěng」的 ng 結尾要抬起舌根。"
+      ]
+    },
+    "practice": [
+      "Keep a three-day weather diary with one sentence and a picture per day.",
+      "寫三天的天氣日記，每天畫一幅圖並寫一句話。"
+    ],
+    "words": [
+      "sunny|晴天|晴天|qing2 tian1|☀️",
+      "rainy|雨天|雨天|yu3 tian1|🌧️",
+      "hot|热|熱|re4|🥵",
+      "cold|冷|冷|leng3|🥶",
+      "summer|夏天|夏天|xia4 tian1|🏖️",
+      "winter|冬天|冬天|dong1 tian1|⛄"
+    ],
+    "little": [
+      "It is sunny today.|今天/是/晴天。|今天/是/晴天。|jin1 tian1 shi4 qing2 tian1",
+      "It is rainy today.|今天/是/雨天。|今天/是/雨天。|jin1 tian1 shi4 yu3 tian1",
+      "I feel hot.|我/觉得/热。|我/覺得/熱。|wo3 jue2 de5 re4",
+      "Take an umbrella.|带/一把/伞。|帶/一把/傘。|dai4 yi1 ba3 san3"
+    ],
+    "junior": [
+      "It is sunny, so we can play outside.|今天/是/晴天，/我们/可以/在外面/玩。|今天/是/晴天，/我們/可以/在外面/玩。|jin1 tian1 shi4 qing2 tian1 wo3 men5 ke3 yi3 zai4 wai4 mian4 wan2",
+      "It is rainy, so I take an umbrella.|今天/是/雨天，/所以/我/带伞。|今天/是/雨天，/所以/我/帶傘。|jin1 tian1 shi4 yu3 tian1 suo3 yi3 wo3 dai4 san3",
+      "Summer is hotter than winter.|夏天/比/冬天/热。|夏天/比/冬天/熱。|xia4 tian1 bi3 dong1 tian1 re4",
+      "What is the weather like tomorrow?|明天/天气/怎么样？|明天/天氣/怎麼樣？|ming2 tian1 tian1 qi4 zen3 me5 yang4"
+    ],
+    "teen": [
+      "If it is sunny tomorrow, we will spend some time outside.|如果/明天/是/晴天，/我们/就/去/外面/活动。|如果/明天/是/晴天，/我們/就/去/外面/活動。|ru2 guo3 ming2 tian1 shi4 qing2 tian1 wo3 men5 jiu4 qu4 wai4 mian4 huo2 dong4",
+      "I prefer to stay indoors on rainy days.|我/喜欢/在/雨天/留在/室内。|我/喜歡/在/雨天/留在/室內。|wo3 xi3 huan5 zai4 yu3 tian1 liu2 zai4 shi4 nei4",
+      "It is much colder today than it was yesterday.|今天/比/昨天/冷/多了。|今天/比/昨天/冷/多了。|jin1 tian1 bi3 zuo2 tian1 leng3 duo1 le5",
+      "We should check the weather before making plans.|我们/应该/先/看/天气，/再/做/计划。|我們/應該/先/看/天氣，/再/做/計劃。|wo3 men5 ying1 gai1 xian1 kan4 tian1 qi4 zai4 zuo4 ji4 hua4"
+    ],
+    "questions": [
+      [
+        "Which weather is mentioned in the first sentence?",
+        "第一句提到甚麼天氣？"
+      ],
+      [
+        "Which weather is mentioned in the second sentence?",
+        "第二句提到甚麼天氣？"
+      ]
+    ],
+    "tutors": [
+      "Tell me about a sunny day.|说说/晴天/吧。|說說/晴天/吧。|shuo1 shuo5 qing2 tian1 ba5",
+      "Tell me about a rainy day.|说说/雨天/吧。|說說/雨天/吧。|shuo1 shuo5 yu3 tian1 ba5",
+      "Say something about temperature.|说说/温度/吧。|說說/溫度/吧。|shuo1 shuo5 wen1 du4 ba5"
+    ]
+  },
+  {
+    "id": "hobbies",
+    "title": "Hobbies & invitations",
+    "hant": "興趣與邀請",
+    "icon": "🎨",
+    "goal": [
+      "Talk about interests and invite someone to join you.",
+      "談興趣，邀請別人一起參與。"
+    ],
+    "grammar": {
+      "en": [
+        "After enjoy, use the -ing form: I enjoy swimming. Invite someone with Would you like to ...?",
+        "enjoy 後接 -ing 形式，例如 I enjoy swimming；邀請別人可以用 Would you like to ...？"
+      ],
+      "zh": [
+        "Use 喜欢 + activity for an interest. Use 一起 to suggest doing it together.",
+        "「喜歡＋活動」表示興趣；建議共同參與可用「一起」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "In swimming, finish with ng at the back of the mouth. Do not add a hard g.",
+        "swimming 的 ng 用舌根收音，不要另加一個 g。"
+      ],
+      "zh": [
+        "唱 chàng starts with ch and ends with ng. Keep both parts clear.",
+        "「唱 chàng」以 ch 開頭，以 ng 結尾，兩部分都要清楚。"
+      ]
+    },
+    "practice": [
+      "Write a short invitation with an activity and a time. Ask someone to reply.",
+      "寫一個簡短邀請，包含活動和時間，請別人回覆。"
+    ],
+    "words": [
+      "swimming|游泳|游泳|you2 yong3|🏊",
+      "singing|唱歌|唱歌|chang4 ge1|🎤",
+      "drawing|画画|畫畫|hua4 hua4|🎨",
+      "dancing|跳舞|跳舞|tiao4 wu3|💃",
+      "football|足球|足球|zu2 qiu2|⚽",
+      "music|音乐|音樂|yin1 yue4|🎵"
+    ],
+    "little": [
+      "I like swimming.|我/喜欢/游泳。|我/喜歡/游泳。|wo3 xi3 huan5 you2 yong3",
+      "I like singing.|我/喜欢/唱歌。|我/喜歡/唱歌。|wo3 xi3 huan5 chang4 ge1",
+      "Draw with me.|和/我/一起/画画。|和/我/一起/畫畫。|he2 wo3 yi1 qi3 hua4 hua4",
+      "Let us play!|我们/一起/玩/吧！|我們/一起/玩/吧！|wo3 men5 yi1 qi3 wan2 ba5"
+    ],
+    "junior": [
+      "I enjoy swimming on Sundays.|我/喜欢/星期天/游泳。|我/喜歡/星期天/游泳。|wo3 xi3 huan5 xing1 qi1 tian1 you2 yong3",
+      "My friend enjoys singing.|我的/朋友/喜欢/唱歌。|我的/朋友/喜歡/唱歌。|wo3 de5 peng2 you5 xi3 huan5 chang4 ge1",
+      "Would you like to draw with me?|你/想/和我/一起/画画/吗？|你/想/和我/一起/畫畫/嗎？|ni3 xiang3 he2 wo3 yi1 qi3 hua4 hua4 ma5",
+      "Let us meet at two.|我们/两点/见/吧。|我們/兩點/見/吧。|wo3 men5 liang3 dian3 jian4 ba5"
+    ],
+    "teen": [
+      "I enjoy swimming because it helps me relax.|我/喜欢/游泳，/因为/游泳/让我/放松。|我/喜歡/游泳，/因為/游泳/讓我/放鬆。|wo3 xi3 huan5 you2 yong3 yin1 wei4 you2 yong3 rang4 wo3 fang4 song1",
+      "My friend has recently started learning to sing.|我的/朋友/最近/开始/学/唱歌。|我的/朋友/最近/開始/學/唱歌。|wo3 de5 peng2 you5 zui4 jin4 kai1 shi3 xue2 chang4 ge1",
+      "Would you like to join our drawing activity this weekend?|这个/周末，/你/想/参加/我们的/画画/活动/吗？|這個/週末，/你/想/參加/我們的/畫畫/活動/嗎？|zhe4 ge5 zhou1 mo4 ni3 xiang3 can1 jia1 wo3 men5 de5 hua4 hua4 huo2 dong4 ma5",
+      "I would love to come, but I am busy that afternoon.|我/很想/来，/但是/那天/下午/没有/空。|我/很想/來，/但是/那天/下午/沒有/空。|wo3 hen3 xiang3 lai2 dan4 shi4 na4 tian1 xia4 wu3 mei2 you3 kong4"
+    ],
+    "questions": [
+      [
+        "Which activity does the speaker enjoy?",
+        "說話的人喜歡甚麼活動？"
+      ],
+      [
+        "Which activity is mentioned in the second sentence?",
+        "第二句提到甚麼活動？"
+      ]
+    ],
+    "tutors": [
+      "What activity do you enjoy?|你/喜欢/什么/活动？|你/喜歡/甚麼/活動？|ni3 xi3 huan5 shen2 me5 huo2 dong4",
+      "Tell me about singing.|说说/唱歌/吧。|說說/唱歌/吧。|shuo1 shuo5 chang4 ge1 ba5",
+      "Invite me to draw.|请/邀请/我/画画。|請/邀請/我/畫畫。|qing3 yao1 qing3 wo3 hua4 hua4"
+    ]
+  },
+  {
+    "id": "feelings",
+    "title": "Feelings & asking for help",
+    "hant": "感受與求助",
+    "icon": "💛",
+    "goal": [
+      "Describe how you feel and ask for support clearly.",
+      "表達感受，清楚地求助。"
+    ],
+    "grammar": {
+      "en": [
+        "Use I feel + an adjective: I feel tired. Use need + a noun or need to + a verb.",
+        "I feel 後加形容詞，例如 I feel tired；need 後加名詞，need to 後加動詞。"
+      ],
+      "zh": [
+        "Use 我觉得 + feeling, or 我很 + adjective. Use 我需要 to explain what support you need.",
+        "用「我覺得＋感受」或「我很＋形容詞」，用「我需要」表達需要的支援。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Begin happy with a gentle breath for h. Keep the last sound in sad different from sat.",
+        "happy 的 h 要輕輕呼氣；sad 結尾的音要與 sat 分清。"
+      ],
+      "zh": [
+        "累 lèi begins with l. 难过 nánguò begins with n. Keep these initials distinct.",
+        "「累 lèi」是 l 開頭，「難過 nánguò」是 n 開頭，要分清。"
+      ]
+    },
+    "practice": [
+      "Draw three faces and label their feelings. Write one helpful response to a worried friend.",
+      "畫三個表情並寫上感受，再寫一句安慰擔心的朋友的話。"
+    ],
+    "words": [
+      "happy|高兴|高興|gao1 xing4|😊",
+      "tired|累|累|lei4|😴",
+      "sad|难过|難過|nan2 guo4|😢",
+      "worried|担心|擔心|dan1 xin1|😟",
+      "rest|休息|休息|xiu1 xi5|🛋️",
+      "help|帮助|幫助|bang1 zhu4|🤝"
+    ],
+    "little": [
+      "I feel happy.|我/很/高兴。|我/很/高興。|wo3 hen3 gao1 xing4",
+      "I feel tired.|我/觉得/累。|我/覺得/累。|wo3 jue2 de5 lei4",
+      "I need help.|我/需要/帮助。|我/需要/幫助。|wo3 xu1 yao4 bang1 zhu4",
+      "Please stay with me.|请/陪/着/我。|請/陪/着/我。|qing3 pei2 zhe5 wo3"
+    ],
+    "junior": [
+      "I feel happy when we play together.|一起/玩的/时候，/我/很/高兴。|一起/玩的/時候，/我/很/高興。|yi1 qi3 wan2 de5 shi2 hou5 wo3 hen3 gao1 xing4",
+      "I feel tired and need a rest.|我/觉得/累，/需要/休息。|我/覺得/累，/需要/休息。|wo3 jue2 de5 lei4 xu1 yao4 xiu1 xi5",
+      "Could you help me with this?|你/可以/帮/我/一下/吗？|你/可以/幫/我/一下/嗎？|ni3 ke3 yi3 bang1 wo3 yi1 xia4 ma5",
+      "Would you like to talk about it?|你/想/说说/这件/事/吗？|你/想/說說/這件/事/嗎？|ni3 xiang3 shuo1 shuo5 zhe4 jian4 shi4 ma5"
+    ],
+    "teen": [
+      "I feel happy because we solved the problem together.|我/很/高兴，/因为/我们/一起/解决了/问题。|我/很/高興，/因為/我們/一起/解決了/問題。|wo3 hen3 gao1 xing4 yin1 wei4 wo3 men5 yi1 qi3 jie3 jue2 le5 wen4 ti2",
+      "I feel tired, so I would like to take a short break.|我/觉得/累，/所以/想/休息/一会儿。|我/覺得/累，/所以/想/休息/一會兒。|wo3 jue2 de5 lei4 suo3 yi3 xiang3 xiu1 xi5 yi1 hui4 er5",
+      "I am worried about this task and would appreciate some help.|我/有点/担心/这个/任务，/希望/有人/帮忙。|我/有點/擔心/這個/任務，/希望/有人/幫忙。|wo3 you3 dian3 dan1 xin1 zhe4 ge5 ren4 wu4 xi1 wang4 you3 ren2 bang1 mang2",
+      "Thank you for listening and taking my feelings seriously.|谢谢/你/认真地/听我/说/我的/感受。|謝謝/你/認真地/聽我/說/我的/感受。|xie4 xie5 ni3 ren4 zhen1 de5 ting1 wo3 shuo1 wo3 de5 gan3 shou4"
+    ],
+    "questions": [
+      [
+        "How does the speaker feel in the first sentence?",
+        "第一句表達甚麼感受？"
+      ],
+      [
+        "How does the speaker feel in the second sentence?",
+        "第二句表達甚麼感受？"
+      ]
+    ],
+    "tutors": [
+      "Tell me about feeling happy.|说说/高兴的/感觉/吧。|說說/高興的/感覺/吧。|shuo1 shuo5 gao1 xing4 de5 gan3 jue2 ba5",
+      "Tell me how you feel when you need rest.|需要/休息的/时候，/你/感觉/怎么样？|需要/休息的/時候，/你/感覺/怎麼樣？|xu1 yao4 xiu1 xi5 de5 shi2 hou5 ni3 gan3 jue2 zen3 me5 yang4",
+      "Ask me for support.|请/向/我/求助。|請/向/我/求助。|qing3 xiang4 wo3 qiu2 zhu4"
+    ]
+  },
+  {
+    "id": "travel",
+    "title": "Transport & journeys",
+    "hant": "交通與旅程",
+    "icon": "🚆",
+    "goal": [
+      "Choose transport, ask for a ticket and explain a journey.",
+      "選擇交通工具，購票，介紹旅程。"
+    ],
+    "grammar": {
+      "en": [
+        "Use by + transport: by bus, by train. Use take the bus when the vehicle is the object of the action.",
+        "by 後接交通工具，例如 by bus；以車輛作動詞受詞時可說 take the bus。"
+      ],
+      "zh": [
+        "Use 坐 for travelling by a vehicle: 坐火车. 从 introduces the starting point; 到 introduces the destination.",
+        "乘搭交通工具用「坐」，例如「坐火車」；起點用「從」，終點用「到」。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Start train with t and r together. Keep the s at the end of bus clear.",
+        "train 開頭的 t、r 要連在一起；bus 結尾的 s 要清楚。"
+      ],
+      "zh": [
+        "车 chē and 去 qù have different initials and vowels. Practise each slowly.",
+        "「車 chē」和「去 qù」的聲母、韻母都不同，先慢慢練習。"
+      ]
+    },
+    "practice": [
+      "Plan a pretend journey. Write the start, destination, transport and one ticket request.",
+      "設計一次模擬旅程，寫起點、目的地、交通工具和一句購票請求。"
+    ],
+    "words": [
+      "bus|公共汽车|公共汽車|gong1 gong4 qi4 che1|🚌",
+      "train|火车|火車|huo3 che1|🚆",
+      "ticket|票|票|piao4|🎟️",
+      "station|车站|車站|che1 zhan4|🚉",
+      "plane|飞机|飛機|fei1 ji1|✈️",
+      "walk|走路|走路|zou3 lu4|🚶"
+    ],
+    "little": [
+      "I take the bus.|我/坐/公共汽车。|我/坐/公共汽車。|wo3 zuo4 gong1 gong4 qi4 che1",
+      "I take the train.|我/坐/火车。|我/坐/火車。|wo3 zuo4 huo3 che1",
+      "One ticket, please.|请/给/我/一张/票。|請/給/我/一張/票。|qing3 gei3 wo3 yi1 zhang1 piao4",
+      "We walk home.|我们/走路/回家。|我們/走路/回家。|wo3 men5 zou3 lu4 hui2 jia1"
+    ],
+    "junior": [
+      "I go to school by bus.|我/坐/公共汽车/去/学校。|我/坐/公共汽車/去/學校。|wo3 zuo4 gong1 gong4 qi4 che1 qu4 xue2 xiao4",
+      "We take the train to the city.|我们/坐/火车/去/城里。|我們/坐/火車/去/城裏。|wo3 men5 zuo4 huo3 che1 qu4 cheng2 li3",
+      "I would like two tickets, please.|我/想/买/两张/票。|我/想/買/兩張/票。|wo3 xiang3 mai3 liang3 zhang1 piao4",
+      "Where is the nearest station?|最近的/车站/在/哪里？|最近的/車站/在/哪裏？|zui4 jin4 de5 che1 zhan4 zai4 na3 li3"
+    ],
+    "teen": [
+      "Taking the bus is cheaper than taking a taxi.|坐/公共汽车/比/坐/出租车/便宜。|坐/公共汽車/比/坐/出租車/便宜。|zuo4 gong1 gong4 qi4 che1 bi3 zuo4 chu1 zu1 che1 pian2 yi5",
+      "We plan to take the train from here to the city.|我们/打算/从/这里/坐火车/去/城里。|我們/打算/從/這裏/坐火車/去/城裏。|wo3 men5 da3 suan4 cong2 zhe4 li3 zuo4 huo3 che1 qu4 cheng2 li3",
+      "Could I have two tickets for the next train, please?|请/给我/两张/下一班/火车的/票。|請/給我/兩張/下一班/火車的/票。|qing3 gei3 wo3 liang3 zhang1 xia4 yi1 ban1 huo3 che1 de5 piao4",
+      "Please let me know when we reach the station.|到/车站的/时候，/请/告诉/我。|到/車站的/時候，/請/告訴/我。|dao4 che1 zhan4 de5 shi2 hou5 qing3 gao4 su5 wo3"
+    ],
+    "questions": [
+      [
+        "Which transport is mentioned first?",
+        "首先提到哪種交通工具？"
+      ],
+      [
+        "Which transport is mentioned in the second sentence?",
+        "第二句提到哪種交通工具？"
+      ]
+    ],
+    "tutors": [
+      "Tell me about taking a bus.|说说/坐/公共汽车/吧。|說說/坐/公共汽車/吧。|shuo1 shuo5 zuo4 gong1 gong4 qi4 che1 ba5",
+      "Tell me about a train journey.|说说/坐/火车/吧。|說說/坐/火車/吧。|shuo1 shuo5 zuo4 huo3 che1 ba5",
+      "Ask for a ticket.|请/买票。|請/買票。|qing3 mai3 piao4"
+    ]
+  },
+  {
+    "id": "stories",
+    "title": "Yesterday & stories",
+    "hant": "昨天與故事",
+    "icon": "📖",
+    "goal": [
+      "Tell a short past event in a clear order.",
+      "按清楚的順序說一件過去的事。"
+    ],
+    "grammar": {
+      "en": [
+        "Past events use past forms: go becomes went, play becomes played. Use first, then and finally to order events.",
+        "過去的事用過去式，例如 go 變 went、play 變 played；用 first、then、finally 表示次序。"
+      ],
+      "zh": [
+        "Time words such as 昨天 locate an event in the past. 了 often marks a completed action; it is not a past-tense ending for every verb.",
+        "「昨天」等時間詞表示過去；「了」常表示動作完成，並不是每個過去動詞都要加。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "The ending of played is d, while the ending of walked is t. Do not add a whole extra syllable.",
+        "played 結尾讀 d，walked 結尾讀 t；不要多加一個音節。"
+      ],
+      "zh": [
+        "The 了 in 看了 is usually short and light: le. Do not stretch it into a full stressed tone.",
+        "「看了」的「了」通常讀短而輕的 le，不要讀成重讀音節。"
+      ]
+    },
+    "practice": [
+      "Draw three pictures of a real or imaginary day. Write one sentence for each: first, then, finally.",
+      "畫三幅圖，介紹真實或想像的一天，每幅寫一句，依次使用「先、再、最後」。"
+    ],
+    "words": [
+      "yesterday|昨天|昨天|zuo2 tian1|📅",
+      "last week|上周|上週|shang4 zhou1|🗓️",
+      "first|首先|首先|shou3 xian1|1️⃣",
+      "then|然后|然後|ran2 hou4|➡️",
+      "finally|最后|最後|zui4 hou4|🏁",
+      "story|故事|故事|gu4 shi5|📖"
+    ],
+    "little": [
+      "I played yesterday.|我/昨天/玩了。|我/昨天/玩了。|wo3 zuo2 tian1 wan2 le5",
+      "I went out last week.|我/上周/出门了。|我/上週/出門了。|wo3 shang4 zhou1 chu1 men2 le5",
+      "Then I went home.|然后/我/回家了。|然後/我/回家了。|ran2 hou4 wo3 hui2 jia1 le5",
+      "I had fun.|我/玩得/很/开心。|我/玩得/很/開心。|wo3 wan2 de5 hen3 kai1 xin1"
+    ],
+    "junior": [
+      "Yesterday I played in the park.|我/昨天/在/公园/玩了。|我/昨天/在/公園/玩了。|wo3 zuo2 tian1 zai4 gong1 yuan2 wan2 le5",
+      "Last week we visited a friend.|我们/上周/去/看了/一个/朋友。|我們/上週/去/看了/一個/朋友。|wo3 men5 shang4 zhou1 qu4 kan4 le5 yi1 ge4 peng2 you5",
+      "Then we walked home together.|然后/我们/一起/走路/回家。|然後/我們/一起/走路/回家。|ran2 hou4 wo3 men5 yi1 qi3 zou3 lu4 hui2 jia1",
+      "What did you do yesterday?|你/昨天/做了/什么？|你/昨天/做了/甚麼？|ni3 zuo2 tian1 zuo4 le5 shen2 me5"
+    ],
+    "teen": [
+      "Yesterday I went to the park and met an old friend.|我/昨天/去/公园，/遇到了/一个/老朋友。|我/昨天/去/公園，/遇到了/一個/老朋友。|wo3 zuo2 tian1 qu4 gong1 yuan2 yu4 dao4 le5 yi1 ge4 lao3 peng2 you5",
+      "Last week we visited a place we had never seen before.|我们/上周/去了/一个/以前/没去过的/地方。|我們/上週/去了/一個/以前/沒去過的/地方。|wo3 men5 shang4 zhou1 qu4 le5 yi1 ge4 yi3 qian2 mei2 qu4 guo5 de5 di4 fang5",
+      "Then we walked home and talked about what had happened.|然后/我们/走路/回家，/聊了/发生的/事情。|然後/我們/走路/回家，/聊了/發生的/事情。|ran2 hou4 wo3 men5 zou3 lu4 hui2 jia1 liao2 le5 fa1 sheng1 de5 shi4 qing5",
+      "At first I was nervous, but in the end I enjoyed it.|开始/我/有点/紧张，/最后/却/很/开心。|開始/我/有點/緊張，/最後/卻/很/開心。|kai1 shi3 wo3 you3 dian3 jin3 zhang1 zui4 hou4 que4 hen3 kai1 xin1"
+    ],
+    "questions": [
+      [
+        "When did the first event happen?",
+        "第一件事在甚麼時候發生？"
+      ],
+      [
+        "When did the second event happen?",
+        "第二件事在甚麼時候發生？"
+      ]
+    ],
+    "tutors": [
+      "What did you do yesterday?|你/昨天/做了/什么？|你/昨天/做了/甚麼？|ni3 zuo2 tian1 zuo4 le5 shen2 me5",
+      "What happened last week?|上周/发生了/什么？|上週/發生了/甚麼？|shang4 zhou1 fa1 sheng1 le5 shen2 me5",
+      "What happened next?|然后/呢？|然後/呢？|ran2 hou4 ne5"
+    ]
+  },
+  {
+    "id": "plans",
+    "title": "Plans & opinions",
+    "hant": "計劃與意見",
+    "icon": "💬",
+    "goal": [
+      "Make a plan, give a reason and respond to another opinion.",
+      "訂計劃，說明原因，回應別人的意見。"
+    ],
+    "grammar": {
+      "en": [
+        "Use going to for a plan and because for a reason. Respond politely with I agree or I see your point, but ...",
+        "計劃可用 going to，原因用 because；有禮貌地回應可用 I agree 或 I see your point, but ...。"
+      ],
+      "zh": [
+        "Use 打算 + action for a plan, 因为…所以… for cause and result, and 我觉得 to introduce an opinion.",
+        "用「打算＋動作」表達計劃，「因為……所以……」表達因果，「我覺得」引出意見。"
+      ]
+    },
+    "sound": {
+      "en": [
+        "Stress the key information in a plan: tomorrow, meet, park. Keep small connecting words lighter.",
+        "說計劃時重讀 tomorrow、meet、park 等關鍵詞，連接詞可以輕讀。"
+      ],
+      "zh": [
+        "Keep sentence rhythm in short meaning groups. Do not pause between every Chinese character.",
+        "按意思分成短語來說，不要每個字都停頓。"
+      ]
+    },
+    "practice": [
+      "Make a two-day plan and explain one choice. Write a polite response to a different plan.",
+      "訂一個兩天的計劃，解釋一個選擇，再寫一句有禮貌的回應。"
+    ],
+    "words": [
+      "tomorrow|明天|明天|ming2 tian1|🌅",
+      "weekend|周末|週末|zhou1 mo4|🗓️",
+      "plan|计划|計劃|ji4 hua4|📝",
+      "because|因为|因為|yin1 wei4|💡",
+      "together|一起|一起|yi1 qi3|🤝",
+      "agree|同意|同意|tong2 yi4|👍"
+    ],
+    "little": [
+      "I will play tomorrow.|我/明天/要/玩。|我/明天/要/玩。|wo3 ming2 tian1 yao4 wan2",
+      "I rest at the weekend.|我/周末/休息。|我/週末/休息。|wo3 zhou1 mo4 xiu1 xi5",
+      "Let us go together.|我们/一起/去/吧。|我們/一起/去/吧。|wo3 men5 yi1 qi3 qu4 ba5",
+      "I agree with you.|我/同意/你。|我/同意/你。|wo3 tong2 yi4 ni3"
+    ],
+    "junior": [
+      "I am going to play outside tomorrow.|我/打算/明天/去/外面/玩。|我/打算/明天/去/外面/玩。|wo3 da3 suan4 ming2 tian1 qu4 wai4 mian4 wan2",
+      "We are going to rest this weekend.|我们/打算/这个/周末/休息。|我們/打算/這個/週末/休息。|wo3 men5 da3 suan4 zhe4 ge5 zhou1 mo4 xiu1 xi5",
+      "Let us go together because it is more fun.|我们/一起/去/吧，/因为/这样/更/好玩。|我們/一起/去/吧，/因為/這樣/更/好玩。|wo3 men5 yi1 qi3 qu4 ba5 yin1 wei4 zhe4 yang4 geng4 hao3 wan2",
+      "I agree, but I would like to go later.|我/同意，/但是/我/想/晚一点/去。|我/同意，/但是/我/想/晚一點/去。|wo3 tong2 yi4 dan4 shi4 wo3 xiang3 wan3 yi1 dian3 qu4"
+    ],
+    "teen": [
+      "Tomorrow I am going to practise the skills I found difficult.|我/打算/明天/练习/那些/比较/难的/技巧。|我/打算/明天/練習/那些/比較/難的/技巧。|wo3 da3 suan4 ming2 tian1 lian4 xi2 na4 xie1 bi3 jiao4 nan2 de5 ji4 qiao3",
+      "This weekend we plan to rest before starting another busy week.|这个/周末，/我们/打算/先/休息，/再/开始/忙碌的一周。|這個/週末，/我們/打算/先/休息，/再/開始/忙碌的一週。|zhe4 ge5 zhou1 mo4 wo3 men5 da3 suan4 xian1 xiu1 xi5 zai4 kai1 shi3 mang2 lu4 de5 yi1 zhou1",
+      "I think we should go together so that everyone can join in.|我/觉得/我们/应该/一起/去，/让/大家/都能/参加。|我/覺得/我們/應該/一起/去，/讓/大家/都能/參加。|wo3 jue2 de5 wo3 men5 ying1 gai1 yi1 qi3 qu4 rang4 da4 jia1 dou1 neng2 can1 jia1",
+      "I see your point, but could we consider another time?|我/明白/你的/意思，/不过/可以/考虑/另一个/时间/吗？|我/明白/你的/意思，/不過/可以/考慮/另一個/時間/嗎？|wo3 ming2 bai5 ni3 de5 yi4 si5 bu4 guo4 ke3 yi3 kao3 lv4 ling4 yi1 ge4 shi2 jian1 ma5"
+    ],
+    "questions": [
+      [
+        "When is the first activity planned?",
+        "第一個活動計劃在甚麼時候進行？"
+      ],
+      [
+        "When is the rest planned?",
+        "計劃在甚麼時候休息？"
+      ]
+    ],
+    "tutors": [
+      "What are you going to do tomorrow?|你/明天/打算/做/什么？|你/明天/打算/做/甚麼？|ni3 ming2 tian1 da3 suan4 zuo4 shen2 me5",
+      "What is your plan for the weekend?|你/周末/有什么/计划？|你/週末/有甚麼/計劃？|ni3 zhou1 mo4 you3 shen2 me5 ji4 hua4",
+      "Suggest doing something together.|请/建议/大家/一起/做/一件事。|請/建議/大家/一起/做/一件事。|qing3 jian4 yi4 da4 jia1 yi1 qi3 zuo4 yi1 jian4 shi4"
+    ]
+  }
+]

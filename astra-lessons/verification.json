@@ -1,0 +1,50 @@
+{
+  "scope": "Global English and Putonghua foundation courses; Hong Kong starting market.",
+  "courses": [
+    {
+      "language": "en",
+      "units": 16,
+      "lessons": 112,
+      "newLessons": 105,
+      "exerciseInstances": 1716,
+      "items": 516
+    },
+    {
+      "language": "zh",
+      "units": 16,
+      "lessons": 112,
+      "newLessons": 105,
+      "exerciseInstances": 1715,
+      "items": 455
+    }
+  ],
+  "resources": [
+    {
+      "file": "voa-lets-learn-english-level-1.pdf",
+      "bytes": 21264031,
+      "sha256": "8daba536470d0fac24548e4edb128d906782b8c5395fe7ce146c58d804d7a95c"
+    },
+    {
+      "file": "fsi-chinese-orientation.pdf",
+      "bytes": 2264935,
+      "sha256": "344781532e4dbf44c4f58101c289a098d4dbcc9daa7c10fa844952bf550fbd7d"
+    },
+    {
+      "file": "fsi-chinese-pronunciation-numbers-classroom.pdf",
+      "bytes": 9506819,
+      "sha256": "c04864b94c84e532bbb09d1fcb64bbee95f028d17b92d0377f90b70244f763f0"
+    }
+  ],
+  "verification": {
+    "typecheck": "passed",
+    "contentCheck": "passed",
+    "unitTests": "284 passed, 1 skipped",
+    "productionBuild": "passed",
+    "browser": "English comprehension retry and sentence ordering; Mandarin pinyin; test-mode first answer; all 16 units; mobile layout; no page errors."
+  },
+  "limitations": [
+    "Foundation scope; not official CEFR/HSK certification or complete advanced/exam coverage.",
+    "Free-writing tasks are offline and not automatically graded.",
+    "New curriculum requires bilingual educator review before public launch."
+  ]
+}
