@@ -167,12 +167,17 @@
   "settings.demo.version": "アプリのバージョン",
   "settings.voice.auto": "自動",
   "settings.voice.unavailable": "利用不可",
-  "settings.voice.choiceHint": "この端末に保存されます。利用できない音声には接続やサービスの設定が必要です。",
+  "settings.voice.choiceHint": "音声の選択はこの端末に保存されます。",
   "settings.voice.preview": "音声を試聴",
   "settings.voice.playing": "再生中…",
   "settings.me.course.yue": "広東語",
   "settings.voice.selection": "選択中の音声：{voice}",
   "settings.voice.automaticUses": "自動では最初に{voice}を使用します。",
   "settings.voice.courseUnavailable": "このコースでは利用できません",
-  "settings.update.reload": "最新版を読み込む"
+  "settings.update.reload": "最新版を読み込む",
+  "settings.voice.accessRequired": "招待コードが必要です",
+  "settings.voice.connectionRequired": "接続を確認してください",
+  "settings.beta.accountAccess": "このアカウントでは発音評価とクラウド音声を利用できます。この端末で招待コードを入力する必要はありません。",
+  "settings.beta.unchecked": "このコードはまだ確認されていません。保存ボタンを押して確認してください。",
+  "settings.beta.optional": "招待コードをお持ちの場合は、ここに入力できます。"
 }

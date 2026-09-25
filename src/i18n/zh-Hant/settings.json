@@ -167,12 +167,17 @@
   "settings.demo.version": "應用程式版本",
   "settings.voice.auto": "自動",
   "settings.voice.unavailable": "未能使用",
-  "settings.voice.choiceHint": "選擇會儲存在此裝置。未能使用的聲音需要連線或完成服務設定。",
+  "settings.voice.choiceHint": "你的聲音選擇會儲存在這部裝置上。",
   "settings.voice.preview": "試聽聲音",
   "settings.voice.playing": "播放中…",
   "settings.me.course.yue": "廣東話",
   "settings.voice.selection": "已選聲音：{voice}",
   "settings.voice.automaticUses": "自動模式會先使用{voice}。",
   "settings.voice.courseUnavailable": "不支援此課程",
-  "settings.update.reload": "取得最新網頁版本"
+  "settings.update.reload": "取得最新網頁版本",
+  "settings.voice.accessRequired": "需要邀請碼",
+  "settings.voice.connectionRequired": "請檢查連線",
+  "settings.beta.accountAccess": "你的帳戶已可使用發音評分和雲端聲音。這部裝置無需再輸入邀請碼。",
+  "settings.beta.unchecked": "此邀請碼尚未驗證。請按「儲存邀請碼」進行驗證。",
+  "settings.beta.optional": "如有邀請碼，你可以在此輸入。"
 }

@@ -134,7 +134,7 @@ export function ParentZone() {
       window.removeEventListener('focus', updateServices);
       window.removeEventListener('online', updateServices);
     };
-  }, [p.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [p.id, account.status, account.email]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!show || !services) return;
@@ -236,7 +236,7 @@ export function ParentZone() {
 
       <section id="teacher-voice">
         <h2 className="section-title">{t('settings.demo.voice')}</h2>
-        <div className="form-card"><TeacherVoiceSelect services={services} /></div>
+        <div className="form-card"><TeacherVoiceSelect services={services} onRefresh={() => refreshHealth().then(setServices)} /></div>
       </section>
 
       <section>

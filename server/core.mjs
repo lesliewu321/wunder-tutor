@@ -649,6 +649,9 @@ export function createApi(rawEnv, deps = {}) {
         if (!authorized) codeGuesses.fail(client);
       }
 
+      // Keep code validation separate from account entitlement for truthful client status.
+      const codeAccepted = Boolean(ACCESS_CODE && offered && authorized);
+
       // A signed-in family: the account unlocks the API once it has a plan — 'beta' from the first time the access code
       // came with the sign-in (on any device), 'family' once they pay. Its use is counted per day against the plan.
       const token = /^Bearer\s+(\S+)$/i.exec(request.headers.get('authorization') ?? '')?.[1];
@@ -667,7 +670,7 @@ export function createApi(rawEnv, deps = {}) {
         // Before the code is entered the app only learns that one is needed — not which services exist.
         const open = authorized;
         return json(200, {
-          ok: true, needsCode: status.needsCode, codeSet: Boolean(ACCESS_CODE), authorized,
+          ok: true, needsCode: status.needsCode, codeSet: Boolean(ACCESS_CODE), authorized, codeAccepted,
           family: Boolean(family), plan: family ? plan : null,
           azure: open && status.azure, claude: open && status.claude, gemini: open && status.gemini,
           ttsVersion: open && status.gemini ? status.ttsVersion : null,

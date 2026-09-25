@@ -113,6 +113,23 @@ describe('the API with family accounts', () => {
     expect(await health(api(s), { authorization: 'Bearer junk', 'x-wunder-access': 'open-sesame' })).toMatchObject({ authorized: true, family: false });
   });
 
+  it('reports account access without accepting a missing or invalid invite code', async () => {
+    const s = supabase({ plan: 'beta' });
+    const a = api(s), authorization = 'Bearer ' + await token();
+    expect(await health(a, { authorization })).toMatchObject({ authorized: true, family: true, plan: 'beta', codeAccepted: false });
+    expect(await health(a, { authorization, 'x-wunder-access': 'invalid-code' })).toMatchObject({ authorized: true, codeAccepted: false });
+    const answer = await a.handle(new Request('http://x/api/redeem', { method: 'POST', headers: { authorization }, body: JSON.stringify({ code: 'invalid-code', device: 'device-aaaaaaaa' }) }));
+    expect(await answer.json()).toEqual({ ok: false, reason: 'unknown' });
+    expect(s.db.plan).toBe('beta');
+    expect(await health(a, { authorization, 'x-wunder-access': 'open-sesame' })).toMatchObject({ authorized: true, codeAccepted: true });
+  });
+
+  it('an invalid code cannot give a free account beta access', async () => {
+    const s = supabase();
+    expect(await health(api(s), { authorization: 'Bearer ' + await token(), 'x-wunder-access': 'invalid-code' })).toMatchObject({ authorized: false, plan: 'free', codeAccepted: false });
+    expect(s.db.plan).not.toBe('beta');
+  });
+
   it('stops at the day\'s limit with a reason the app can show', async () => {
     const s = supabase({ plan: 'beta', used: DAILY_LIMITS.beta.voice });
     const res = await api(s).handle(new Request('http://x/api/tts', { method: 'POST', body: '{"text":"milk"}', headers: { authorization: `Bearer ${await token()}` } }));

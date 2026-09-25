@@ -167,12 +167,17 @@
   "settings.demo.version": "应用版本",
   "settings.voice.auto": "自动",
   "settings.voice.unavailable": "暂不可用",
-  "settings.voice.choiceHint": "选择会保存在此设备。暂不可用的声音需要联网或完成服务设置。",
+  "settings.voice.choiceHint": "你的声音选择会保存在这台设备上。",
   "settings.voice.preview": "试听声音",
   "settings.voice.playing": "播放中…",
   "settings.me.course.yue": "广东话",
   "settings.voice.selection": "已选声音：{voice}",
   "settings.voice.automaticUses": "自动模式会先使用{voice}。",
   "settings.voice.courseUnavailable": "不支援此课程",
-  "settings.update.reload": "取得最新网页版本"
+  "settings.update.reload": "取得最新网页版本",
+  "settings.voice.accessRequired": "需要邀请码",
+  "settings.voice.connectionRequired": "请检查连接",
+  "settings.beta.accountAccess": "你的账户已可使用发音评分和云端声音。这台设备无需再输入邀请码。",
+  "settings.beta.unchecked": "此邀请码尚未验证。请点击「保存邀请码」进行验证。",
+  "settings.beta.optional": "如有邀请码，你可以在此输入。"
 }

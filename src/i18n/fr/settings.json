@@ -172,12 +172,17 @@
   "settings.demo.version": "Version de l’application",
   "settings.voice.auto": "Automatique",
   "settings.voice.unavailable": "indisponible",
-  "settings.voice.choiceHint": "Choix enregistré sur cet appareil. Les voix indisponibles nécessitent une connexion ou la configuration du service.",
+  "settings.voice.choiceHint": "Votre choix de voix est enregistré sur cet appareil.",
   "settings.voice.preview": "Écouter la voix",
   "settings.voice.playing": "Lecture…",
   "settings.me.course.yue": "Cantonais",
   "settings.voice.selection": "Voix sélectionnée : {voice}",
   "settings.voice.automaticUses": "Le mode automatique commence par {voice}.",
   "settings.voice.courseUnavailable": "Indisponible pour ce cours",
-  "settings.update.reload": "Charger la dernière version web"
+  "settings.update.reload": "Charger la dernière version web",
+  "settings.voice.accessRequired": "Code d’invitation requis",
+  "settings.voice.connectionRequired": "Vérifiez la connexion",
+  "settings.beta.accountAccess": "Votre compte donne déjà accès à l’évaluation de la prononciation et aux voix en ligne. Aucun code d’invitation n’est nécessaire sur cet appareil.",
+  "settings.beta.unchecked": "Ce code n’a pas encore été vérifié. Appuyez sur le bouton d’enregistrement pour le vérifier.",
+  "settings.beta.optional": "Si vous avez un code d’invitation, vous pouvez le saisir ici."
 }

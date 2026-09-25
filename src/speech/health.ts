@@ -15,8 +15,10 @@ export interface ApiHealth {
   ttsVersion: string;
   /** The hosted API is locked behind a beta access code… */
   needsCode: boolean;
-  /** …and the code stored on this device was accepted. */
+  /** This device may use the API through its invite code, account plan, or open local server. */
   authorized: boolean;
+  /** The supplied invite code itself was checked, independently of account access. */
+  codeAccepted?: boolean;
   /** False when the server has no code set at all: then nothing a learner types can unlock it. */
   codeSet: boolean;
   /** "Say it right" can read photos and prepare typed text (Gemini). */
@@ -142,7 +144,8 @@ export const apiHealth = (): Promise<ApiHealth> => {
       return (latest = {
         voiceProviders: j.voiceProviders, voiceVersions: j.voiceVersions,
         azure: !!j.azure, claude: !!j.claude, gemini: !!j.gemini, ttsVersion: typeof j.ttsVersion === 'string' ? j.ttsVersion : '',
-        needsCode: !!j.needsCode, authorized: !!j.authorized, codeSet: j.codeSet !== false, read: !!j.read, reached: true,
+        needsCode: !!j.needsCode, authorized: !!j.authorized, codeAccepted: j.codeAccepted === true, codeSet: j.codeSet !== false, read: !!j.read, reached: true,
+        family: !!j.family, plan: typeof j.plan === 'string' ? j.plan : null,
       });
     } catch {
       // Offline, too slow, or a passing server fault: not remembered, so the next screen asks again.

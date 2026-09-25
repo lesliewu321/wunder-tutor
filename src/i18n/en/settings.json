@@ -172,12 +172,17 @@
   "settings.demo.version": "App version",
   "settings.voice.auto": "Automatic",
   "settings.voice.unavailable": "unavailable",
-  "settings.voice.choiceHint": "Saved on this device. Unavailable voices need a connection or service setup.",
+  "settings.voice.choiceHint": "Your voice choice is saved on this device.",
   "settings.voice.preview": "Preview voice",
   "settings.voice.playing": "Playing…",
   "settings.me.course.yue": "Cantonese",
   "settings.voice.selection": "Selected voice: {voice}",
   "settings.voice.automaticUses": "Automatic starts with {voice}.",
   "settings.voice.courseUnavailable": "Unavailable for this course",
-  "settings.update.reload": "Get latest web version"
+  "settings.update.reload": "Get latest web version",
+  "settings.voice.accessRequired": "Invite code required",
+  "settings.voice.connectionRequired": "Check connection",
+  "settings.beta.accountAccess": "Your account already has access to pronunciation scoring and cloud voices. No invite code is needed on this device.",
+  "settings.beta.unchecked": "This code has not been checked. Choose Save code to check it.",
+  "settings.beta.optional": "You can add an invite code here if you have one."
 }
