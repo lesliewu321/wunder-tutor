@@ -1,5 +1,6 @@
-import { Fragment, useEffect, useId, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { handleFor, makeHandle } from '../../engine/handles';
+import { readsTraditional } from '../../engine/region';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { settingsName, type Accent, type AgeBand, type ChildProfile, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
@@ -19,6 +20,8 @@ import { forgetContributions } from '../../speech/health';
 import { AccountPanel } from './AccountPanel';
 import { InviteCodeForm } from './InviteCodeForm';
 
+/** The Course list's last entry: not a course, it opens the list of courses to tick. */
+const MANAGE = '__manage';
 const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
 const COURSES: CourseId[] = ['en', 'zh', 'ja', 'ko', 'fr', 'es']; // the same order as Home and setup (French after Korean, Leslie 2026-09-25)
 /** A course's name on the Me card: English carries the accent; Putonghua and French keep their own names. */
@@ -29,13 +32,12 @@ const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { zh: 'settings.me.co
  * a native <select>: a learner can take more than one course, and a <select> picks one. Changes apply as they are
  * ticked, like the other rows; the last course left cannot be unticked.
  */
-function CoursePicker({ p }: { p: ChildProfile }) {
+function CourseSheet({ p, open, setOpen }: { p: ChildProfile; open: boolean; setOpen: (open: boolean) => void }) {
   const { t } = useT();
   const patch = useStore((s) => s.patchProfile);
-  const [open, setOpen] = useState(false);
   // Said after trying to untick the only course left, until the next change.
   const [keep, setKeep] = useState(false);
-  const id = useId();
+  useEffect(() => { if (open) setKeep(false); }, [open]);
   // Putonghua keeps its own name, in the learner's characters (written in Simplified here); French and Japanese theirs.
   const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : c === 'ja' ? '日本語' : c === 'ko' ? '한국어' : c === 'es' ? 'Español' : 'Français');
   const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'fr' ? 'fr' : c === 'ja' ? 'ja' : c === 'ko' ? 'ko' : c === 'es' ? 'es' : undefined);
@@ -51,12 +53,6 @@ function CoursePicker({ p }: { p: ChildProfile }) {
   const title = t('settings.learning.courses.title', { name: p.name });
   return (
     <>
-      <div className="select-row"><span id={`${id}label`}>{t('settings.learning.courses')}</span>
-        <button type="button" className="select-button" aria-haspopup="dialog" aria-expanded={open} aria-labelledby={`${id}label ${id}value`} onClick={() => { setKeep(false); setOpen(true); }}>
-          {/* Three names wrap on a phone: never inside a name (普通話 must not break), and the dot stays with the name before it. */}
-          <span id={`${id}value`}>{COURSES.filter((c) => p.learning.includes(c)).map((c, i, all) => <Fragment key={c}>{i > 0 && ' '}<span className="select-button__name"><span lang={lang(c)}>{name(c)}</span>{i < all.length - 1 && <span aria-hidden>{'\u00a0·'}</span>}</span></Fragment>)}</span>
-        </button>
-      </div>
       <Sheet open={open} onClose={() => setOpen(false)} label={title}>
         <div className="course-sheet">
           <h2>{title}</h2>
@@ -95,14 +91,24 @@ export function Me() {
   const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', ja: '日本語 Japanese', ko: '한국어 Korean', fr: 'Français', es: 'Español' }; // order (Leslie, 2026-09-25): French after Korean
   // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
   const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
+  const [managing, setManaging] = useState(false);
 
   return (
     <div className="screen me">
       <TopBar title={t('settings.me.title')} right={<IconButton icon="cog" label={settingsName(p.band)} onClick={() => nav('/parents')} />} />
+      {/* The course, at the very top (Leslie, 2026-09-25). Its list ends with adding or removing courses — the one place
+          for that now; Settings no longer has a Courses row. */}
+      <label className="course-pick"><span>{t('home.course.aria')}</span>
+        <select value={p.course} onChange={(e) => { if (e.target.value === MANAGE) setManaging(true); else setCourse(e.target.value as CourseId); }}>
+          {myCourses.map((id) => <option key={id} value={id}>{inScript(courseLabel[id], p.zhScript)}</option>)}
+          <option value={MANAGE}>{t('settings.learning.courses.manage')}</option>
+        </select>
+      </label>
+      <CourseSheet p={p} open={managing} setOpen={setManaging} />
       <section className="me__card">
         <div className="me__avatar">{p.avatar}</div>
         <h2>{p.name}</h2>
-        <p>{t(BAND_LABEL[p.band])} · {p.learning.map((c) => t(c === 'en' ? (p.accent === 'en-US' ? 'settings.me.course.enUS' : 'settings.me.course.enGB') : COURSE_LABEL[c])).join(' + ')}</p>
+        <p>{t(BAND_LABEL[p.band])}</p>
         <div className="stat-row">
           <div className="stat"><b>{studyMinutes}<small> min</small></b><span>{t('settings.me.studyTime')}</span></div>
           <div className="stat stat--sun"><b>{p.streak.best}</b><span>{t('settings.me.longest')}</span></div>
@@ -111,13 +117,6 @@ export function Me() {
         <p className="fineprint">{t('settings.me.level')} {level} · {p.xp} XP</p>
       </section>
 
-      {myCourses.length > 1 && (
-        <label className="course-pick"><span>{t('home.course.aria')}</span>
-          <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
-            {myCourses.map((id) => <option key={id} value={id}>{inScript(courseLabel[id], p.zhScript)}</option>)}
-          </select>
-        </label>
-      )}
 
       <section>
         <h2 className="section-title">{t('settings.me.goal.title')}</h2>
@@ -248,13 +247,16 @@ export function ParentZone() {
           <label className="select-row"><span>{t('settings.learning.age')}</span>
             <select value={p.band === 'adult' ? 18 : p.age} onChange={(e) => { const age = Number(e.target.value); patch(p.id, { age, band: bandForAge(age) }); }}>{Array.from({ length: 13 }, (_, i) => i + 5).map((n) => <option key={n} value={n}>{n}</option>)}<option value={18}>{t('settings.learning.age.adult')}</option></select>
           </label>
-          <CoursePicker p={p} />
-          <label className="select-row"><span>{t('settings.learning.accent')}</span>
-            <select value={p.accent} onChange={(e) => patch(p.id, { accent: e.target.value as Accent })}><option value="en-US">{t('settings.learning.accent.us')}</option><option value="en-GB">{t('settings.learning.accent.gb')}</option></select>
-          </label>
-          <label className="select-row"><span>{t('settings.learning.script')}</span>
-            <select value={p.zhScript} onChange={(e) => patch(p.id, { zhScript: e.target.value as 'hant' | 'hans' })}><option value="hant">{t('settings.learning.script.hant')}</option><option value="hans">{t('settings.learning.script.hans')}</option></select>
-          </label>
+          {p.learning.includes('en') && (
+            <label className="select-row"><span>{t('settings.learning.accent')}</span>
+              <select value={p.accent} onChange={(e) => patch(p.id, { accent: e.target.value as Accent })}><option value="en-US">{t('settings.learning.accent.us')}</option><option value="en-GB">{t('settings.learning.accent.gb')}</option></select>
+            </label>
+          )}
+          {p.learning.includes('zh') && readsTraditional(language()) && (
+            <label className="select-row"><span>{t('settings.learning.script')}</span>
+              <select value={p.zhScript} onChange={(e) => patch(p.id, { zhScript: e.target.value as 'hant' | 'hans' })}><option value="hans">{t('settings.learning.script.hans')}</option><option value="hant">{t('settings.learning.script.hant')}</option></select>
+            </label>
+          )}
           <label className="select-row"><span>{t('settings.learning.home')}</span>
             <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{homeLanguageLabel(l.id)}</option>)}</select>
           </label>

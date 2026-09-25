@@ -26,6 +26,7 @@
   "settings.learning.age.adult": "成人",
   "settings.learning.courses": "课程",
   "settings.learning.courses.title": "{name} 的课程",
+  "settings.learning.courses.manage": "新增或移除课程…",
   "settings.learning.courses.hint": "选一个或多个课程，之后可以随时切换。",
   "settings.learning.courses.keep": "最少要保留一个课程，请先选另一个。",
   "settings.learning.accent": "英文口音",

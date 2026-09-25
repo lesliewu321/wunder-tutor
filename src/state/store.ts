@@ -9,6 +9,7 @@ import { nextItemProgress, starsFor } from '../engine/learning';
 import { achievement, bumpStreak, XP } from '../engine/rewards';
 import { ALL_LESSONS } from '../content/course';
 import { HOME_LANGUAGES } from '../content/translations';
+import { readsTraditional } from '../engine/region';
 import { setDisplayScript } from '../content/zh/script';
 import { deviceLanguage, setLanguage } from '../i18n';
 import { nextVoice } from '../speech/pitch';
@@ -90,7 +91,7 @@ export const useStore = create<AppState>()(
         const id = uid();
         const learning: CourseId[] = input.learning?.length ? input.learning : ['en'];
         const profile: ChildProfile = {
-          id, ...input, learning, course: learning[0], zhScript: input.zhScript ?? 'hant',
+          id, ...input, learning, course: learning[0], zhScript: input.zhScript ?? 'hans',
           band: bandForAge(input.age), createdAt: Date.now(), xp: 0, dailyGoalXp: input.dailyGoalXp ?? 60,
           streak: { count: 0, lastDay: null, best: 0 }, lessonsCompleted: {}, items: {}, pronunciation: emptyProfile(), achievements: [], conversations: [],
         };
@@ -254,7 +255,7 @@ export const useStore = create<AppState>()(
     }),
     {
       name: 'wunder-tutor/v1',
-      version: 3,
+      version: 4,
       storage: createJSONStorage(() => stateStorage),
       partialize: ({ profiles, activeId, settings, attempts }) => ({ profiles, activeId, settings, attempts }),
       // v1 → v2: learners gain courses (English / Mandarin) and a character-set choice.
@@ -271,6 +272,12 @@ export const useStore = create<AppState>()(
         // completely for now"); a learner who had one is at home in 'Another language'.
         if (version < 3 && s.profiles) {
           for (const p of Object.values(s.profiles)) if (!HOME_LANGUAGES.some((l) => l.id === p.homeLanguage)) p.homeLanguage = 'other';
+        }
+        // v3 → v4: Putonghua is Simplified unless the learner is in HK / TW / MO (Leslie, 2026-09-25); elsewhere the
+        // characters row is gone, so a Traditional choice left from the old default could not be undone.
+        if (version < 4 && s.profiles) {
+          const appLanguage = (state as { settings?: { language?: string } }).settings?.language;
+          if (!readsTraditional(appLanguage)) for (const p of Object.values(s.profiles)) p.zhScript = 'hans';
         }
         return state as AppState;
       },

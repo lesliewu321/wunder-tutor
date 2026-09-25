@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { readsTraditional } from '../../engine/region';
 import { DAILY_GOALS, goalDetail } from '../../engine/rewards';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { contentBand, type Accent, type AgeBand, type CourseId, type Goal, type HomeLanguage, type Level } from '../../domain/types';
@@ -100,7 +101,9 @@ export function Onboarding() {
   // US English gives the most detailed pronunciation feedback (every sound named, "what came out instead"), so it
   // leads; British stays one tap away.
   const [accent, setAccent] = useState<Accent>('en-US');
-  const [script, setScript] = useState<'hant' | 'hans'>('hant');
+  // Putonghua is Simplified by default everywhere (Leslie, 2026-09-25); Traditional is offered in HK / TW / MO only.
+  const traditionalHere = readsTraditional(language());
+  const [script, setScript] = useState<'hant' | 'hans'>('hans');
   const [keepRecordings, setKeepRecordings] = useState(settings.storeRecordings);
   // Ticked by default (Leslie's decision, 2026-09-21). It is shown, and it can be unticked here or in Settings later.
   const [contribute, setContribute] = useState(true);
@@ -163,7 +166,7 @@ export function Onboarding() {
     // How long each day (Leslie, 2026-09-25, from SuperChinese's "How long are you planning to study daily?").
     'time',
     // One page about the language itself, when it has something to choose: English its accent, Putonghua its script.
-    ...(firstCourse === 'en' || firstCourse === 'zh' ? ['course' as const] : []),
+    ...(firstCourse === 'en' || (firstCourse === 'zh' && traditionalHere) ? ['course' as const] : []),
     // The email and the invite code before the check (Leslie, 2026-09-22): without a code the teacher was silent there.
     // Before the check, one page for every age that says what it is for (Leslie, 2026-09-23: the check appeared right
     // after the invite code with nothing to say why).
@@ -199,7 +202,7 @@ export function Onboarding() {
     }
     madeId.current = createProfile({
       name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: age!, homeLanguage: home ?? 'other',
-      level: level!, goal: goal!, accent, learning, zhScript: script,
+      level: level!, goal: goal!, accent, learning, zhScript: traditionalHere ? script : 'hans',
       dailyGoalXp: DAILY_GOALS.find((g) => g.minutes === minutes)?.xp,
     });
     next();
@@ -367,7 +370,7 @@ export function Onboarding() {
 
       return shell(
         <div className="stack">
-          {([['hant', '繁', 'onboarding.script.hant.title', 'onboarding.script.hant.detail'], ['hans', '简', 'onboarding.script.hans.title', 'onboarding.script.hans.detail']] as const).map(([id, badge, title, detail]) => (
+          {([['hans', '简', 'onboarding.script.hans.title', 'onboarding.script.hans.detail'], ['hant', '繁', 'onboarding.script.hant.title', 'onboarding.script.hant.detail']] as const).map(([id, badge, title, detail]) => (
             <button key={id} type="button" className={`tile tile--wide ${script === id ? 'is-on' : ''}`} aria-pressed={script === id} onClick={() => setScript(id)}>
               <span className="code-badge" lang={id === 'hant' ? 'zh-Hant' : 'zh-Hans'}>{badge}</span><span><b lang={id === 'hant' ? 'zh-Hant' : 'zh-Hans'}>{t(title)}</b><small>{t(detail)}</small></span>
             </button>

@@ -26,6 +26,7 @@
   "settings.learning.age.adult": "大人",
   "settings.learning.courses": "コース",
   "settings.learning.courses.title": "{name}さんのコース",
+  "settings.learning.courses.manage": "コースを追加・削除…",
   "settings.learning.courses.hint": "1つ以上選んでください。いつでも切りかえられます。",
   "settings.learning.courses.keep": "コースは最低1つ必要です。先にほかのコースを選んでください。",
   "settings.learning.accent": "英語のアクセント",

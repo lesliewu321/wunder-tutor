@@ -26,6 +26,7 @@
   "settings.learning.age.adult": "Adulte",
   "settings.learning.courses": "Cours",
   "settings.learning.courses.title": "Les cours de {name}",
+  "settings.learning.courses.manage": "Ajouter ou retirer des cours…",
   "settings.learning.courses.hint": "Choisissez-en un ou plusieurs. Vous pouvez passer de l’un à l’autre à tout moment.",
   "settings.learning.courses.keep": "Il faut garder au moins un cours. Choisissez-en d’abord un autre.",
   "settings.learning.accent": "Accent anglais",
