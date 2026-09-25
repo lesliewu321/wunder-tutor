@@ -280,14 +280,6 @@
 .say__line-text .zh__char { padding: 0 0.05em; }
 
 /* Home: two ways to learn — the course, or a page from the learner's book */
-.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.mode { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-card); border: 2px solid transparent; text-align: left; color: var(--ink); transition: border-color 0.15s, background 0.15s; }
-.mode.is-on { border-color: var(--primary); background: var(--primary-soft); }
-.mode__icon { flex: none; width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: var(--surface-2); color: var(--primary); }
-.mode.is-on .mode__icon { background: var(--primary); color: #fff; }
-.mode__text { min-width: 0; }
-.mode__text b { display: block; font-family: var(--font-display); font-size: 1.05rem; line-height: 1.2; }
-.mode__text small { display: block; color: var(--ink-soft); font-size: 0.8rem; line-height: 1.25; }
 
 /* My book */
 .book { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 760px; margin-inline: auto; }

@@ -15,17 +15,20 @@ import type { Key } from './i18n';
 import { useT } from './i18n/useT';
 import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
+import { BookTab } from './features/say/BookTab';
 import { SayIt } from './features/say/SayIt';
 import { CameraHost } from './features/say/CameraHost';
 import { pressBack } from './back';
 import { isApp } from './platform';
 
-// Four places to go. What a screen DOES lives on the screen: the camera is My book's own button (Home, second mode),
-// the microphone belongs to lessons and conversations. A camera in the bar was out of place beside the course and a
-// second "New photo" beside the book.
+// Five places to go. What a screen DOES lives on the screen: the camera is Snap & say's own button, the microphone
+// belongs to lessons and conversations. A camera in the bar was out of place beside the course and a second "New
+// photo" beside the book. Snap & say was Home's second mode until 2026-09-25, when Leslie drew Home's two mode cards
+// onto the bar: the Course card was the Learn tab twice over, so it went, and the book got a tab and an icon of its own.
 const TABS: { to: string; label: Key; icon: IconName }[] = [
   { to: '/', label: 'common.nav.learn', icon: 'home' },
   { to: '/lab', label: 'common.nav.lab', icon: 'lab' },
+  { to: '/book', label: 'common.nav.book', icon: 'snap' },
   { to: '/progress', label: 'common.nav.progress', icon: 'chart' },
   { to: '/me', label: 'common.nav.me', icon: 'user' },
 ];
@@ -107,6 +110,7 @@ export function App() {
             <Route element={<Tabs />}>
               <Route index element={<Home />} />
               <Route path="lab" element={<LabHome />} />
+              <Route path="book" element={<BookTab />} />
               <Route path="speak" element={<PracticeHome />} />
               <Route path="progress" element={<Progress />} />
               <Route path="me" element={<Me />} />

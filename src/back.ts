@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 // goes back a page, from another tab goes to Learn, and on Learn leaves the app, as Android apps do.
 
 /** The bottom bar's tabs other than Learn ("/"). */
-const TABS = ['/lab', '/progress', '/me'];
+const TABS = ['/lab', '/book', '/progress', '/me'];
 
 export type BackStep = 'sheet' | 'page' | 'history' | 'learn' | 'exit';
 

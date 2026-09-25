@@ -14,8 +14,6 @@ import { rich, useT } from '../../i18n/useT';
 import { Icon } from '../../ui/Icon';
 import { Button, ProgressBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
-import { BookHome } from '../say/BookHome';
-import { useBook } from '../say/page';
 
 export function Home() {
   const { t, tn } = useT();
@@ -37,7 +35,6 @@ export function Home() {
   // What this course's Review would hand out: items of this course that a review can find (buildReview).
   const due = dueItems(p, Date.now()).filter((d) => { const it = ITEM_INDEX[d.itemId]; return !!it && itemCourse(it) === p.course; }).length;
   const review = unit.lessons[unit.lessons.length - 1];
-  const { mode, setMode, pages } = useBook(p.id);
   const [api, setApi] = useState<ApiHealth | null>(null);
   useEffect(() => { void apiHealth().then(setApi); }, []);
   // Never let simulated scores pass for real ones.
@@ -60,19 +57,6 @@ export function Home() {
         </div>
       </header>
 
-      {/* Two ways to learn: follow the course, or practise a page from a book. */}
-      <div className="modes" role="tablist" aria-label={t('home.modes.aria')}>
-        <button type="button" role="tab" aria-selected={mode === 'course'} className={`mode ${mode === 'course' ? 'is-on' : ''}`} onClick={() => setMode('course')}>
-          <span className="mode__icon" aria-hidden><Icon name="home" size={22} /></span>
-          <span className="mode__text"><b>{t('home.mode.course')}</b><small>{t(p.band === 'little' ? 'home.mode.course.sub.little' : 'home.mode.course.sub')}</small></span>
-        </button>
-        <button type="button" role="tab" aria-selected={mode === 'book'} className={`mode ${mode === 'book' ? 'is-on' : ''}`} onClick={() => setMode('book')}>
-          <span className="mode__icon" aria-hidden><Icon name="book" size={22} /></span>
-          <span className="mode__text"><b>{t('home.mode.book')}</b><small>{pages.length ? tn('home.mode.book.pages', pages.length) : t('home.mode.book.empty')}</small></span>
-        </button>
-      </div>
-
-      {mode === 'book' ? <BookHome p={p} /> : <>
       {/* Switching between the learner's own courses — the ones a grown-up chose in Settings (Leslie, 2026-09-21: "even if
           I select only 2 languages in settings, all 4 appear in front page"). One course needs no switch: the card below
           already names it. A dropdown, like the settings rows: side-by-side buttons ran out of room at three. */}
@@ -156,7 +140,6 @@ export function Home() {
         ))}
       </section>
       </div>
-      </>}
     </div>
   );
 }

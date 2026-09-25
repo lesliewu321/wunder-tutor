@@ -25,6 +25,7 @@ describe("the phone's Back", () => {
 
   it('goes to Learn from another tab, and leaves the app from Learn', () => {
     expect(at('/lab')).toBe('learn');
+    expect(at('/book')).toBe('learn');
     expect(at('/progress')).toBe('learn');
     expect(at('/me')).toBe('learn');
     expect(at('/')).toBe('exit');

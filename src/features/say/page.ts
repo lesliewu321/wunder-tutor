@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Reading } from '../../speech/read';
 
-// "My book": every page a learner photographed (or typed), newest first, with their best score for each sentence — and
-// which of Home's two modes they last used. Kept on this device for each learner, so the pages are still there
-// tomorrow; never uploaded. One page is "open": the one Home shows in full and /say?s=N practises. (Each page has its
-// own id and `changed` time, so that pages can travel with the learner once families have accounts.)
+// "My book": every page a learner photographed (or typed), newest first, with their best score for each sentence.
+// Kept on this device for each learner, so the pages are still there tomorrow; never uploaded. One page is "open": the
+// one the Snap & say tab shows in full and /say?s=N practises. (Each page has its own id and `changed` time, so that
+// pages can travel with the learner once families have accounts.)
 
 export interface BookPage { id: string; reading: Reading; best: Record<number, number>; at: number; changed: number }
 /** `gone`: pages deleted here (id → when), remembered for a while so that the family's other devices delete them too. */
 export interface Shelf { pages: BookPage[]; open: string | null; gone?: Record<string, number> }
-export type HomeMode = 'course' | 'book';
 
 /** My book holds this many pages; the oldest makes room for a new one (the learner is told). */
 export const MAX_PAGES = 30;
@@ -17,6 +16,7 @@ export const MAX_PAGES = 30;
 const shelfKey = (profileId: string) => `wunder-tutor/pages/${profileId}`;
 /** Until 2026-09-20 a learner had one page only, under this key: it becomes the first page of the book. */
 const onePageKey = (profileId: string) => `wunder-tutor/book/${profileId}`;
+/** Until 2026-09-25 Home had two modes (course / book) and remembered the last one here; only forgetBook still knows the key. */
 const modeKey = (profileId: string) => `wunder-tutor/home-mode/${profileId}`;
 const listeners = new Set<() => void>();
 /** What is on the shelves right now. Also the only copy when the browser won't store anything (private mode, full). */
@@ -97,16 +97,8 @@ export function replacePages(profileId: string, pages: BookPage[], gone: Record<
   write(profileId, { pages: sorted, open: sorted.some((p) => p.id === shelf.open) ? shelf.open : sorted[0]?.id ?? null, gone });
 }
 
-/** Called whenever any learner's book or Home mode changes (sync listens). */
+/** Called whenever any learner's book changes (sync listens). */
 export const onBookChange = (f: () => void): (() => void) => { listeners.add(f); return () => { listeners.delete(f); }; };
-
-export const loadMode = (profileId: string): HomeMode => {
-  try { return localStorage.getItem(modeKey(profileId)) === 'book' ? 'book' : 'course'; } catch { return 'course'; }
-};
-export function saveMode(profileId: string, mode: HomeMode): void {
-  try { localStorage.setItem(modeKey(profileId), mode); } catch { /* private mode */ }
-  listeners.forEach((f) => f());
-}
 
 /** "Delete pronunciation history": the pages stay (they are the learner's reading, like lessons), their scores go. */
 export function forgetScores(profileId: string, now = Date.now()): void {
@@ -123,19 +115,17 @@ export function forgetBook(profileId: string): void {
 
 export interface Book {
   pages: BookPage[];
-  /** The open page: shown in full on Home, practised by /say. */
+  /** The open page: shown in full on the Snap & say tab, practised by /say. */
   page: BookPage | null;
-  mode: HomeMode;
   addPage: (reading: Reading) => { page: BookPage; dropped: BookPage | null };
   openPage: (id: string) => void;
   deletePage: (id: string) => void;
   scorePage: (id: string, sentence: number, score: number) => void;
-  setMode: (m: HomeMode) => void;
 }
 
-/** The learner's book and Home mode, updated wherever they change (the camera, a practised sentence). */
+/** The learner's book, updated wherever it changes (the camera, a practised sentence). */
 export function useBook(profileId: string): Book {
-  const read = useCallback(() => { const shelf = loadShelf(profileId); return { pages: shelf.pages, page: shelf.pages.find((p) => p.id === shelf.open) ?? null, mode: loadMode(profileId) }; }, [profileId]);
+  const read = useCallback(() => { const shelf = loadShelf(profileId); return { pages: shelf.pages, page: shelf.pages.find((p) => p.id === shelf.open) ?? null }; }, [profileId]);
   const [state, setState] = useState(read);
   useEffect(() => {
     const f = () => setState(read());
@@ -149,6 +139,5 @@ export function useBook(profileId: string): Book {
     openPage: useCallback((id: string) => openPage(profileId, id), [profileId]),
     deletePage: useCallback((id: string) => deletePage(profileId, id), [profileId]),
     scorePage: useCallback((id: string, sentence: number, score: number) => scorePage(profileId, id, sentence, score), [profileId]),
-    setMode: useCallback((m: HomeMode) => saveMode(profileId, m), [profileId]),
   };
 }

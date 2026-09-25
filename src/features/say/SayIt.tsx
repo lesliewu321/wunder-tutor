@@ -22,7 +22,7 @@ export function SayIt() {
   const items = lines.map((l) => sayItem(l, p));
   const current = page && Number.isInteger(active) ? items[active] : null;
   // Back to the page: undo the step that opened the sentence (so the back button can't land on it again).
-  const close = () => ((window.history.state as { idx?: number } | null)?.idx ? nav(-1) : nav('/', { replace: true }));
+  const close = () => ((window.history.state as { idx?: number } | null)?.idx ? nav(-1) : nav('/book', { replace: true }));
   const next = items.findIndex((it, i) => i > active && it);
   // The next sentence's take is made while this one is being said: a learner's own lines are never in the shared
   // cache, so each is generated on request, and a hard one can take the server ten seconds.
@@ -32,7 +32,7 @@ export function SayIt() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page?.id, next]);
 
-  if (!page || !current) return <Navigate to="/" replace />;
+  if (!page || !current) return <Navigate to="/book" replace />;
   return (
     <div className="screen lesson">
       <header className="lesson__bar">

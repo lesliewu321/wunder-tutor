@@ -9,7 +9,7 @@ import { CameraScreen } from './CameraScreen';
 import { onOpenCamera } from './camera';
 import { readProblem, readingProblem, setupProblem, type Problem } from './messages';
 import { tellIfFull } from './BookHome';
-import { addPage, saveMode } from './page';
+import { addPage } from './page';
 
 // The one camera screen, opened from anywhere with openCamera(). Being open is a step in the browser's history
 // (`state.camera` on the page the learner was on), so the phone's Back button closes the camera instead of leaving
@@ -65,8 +65,7 @@ export function CameraHost() {
           const nothing = readingProblem(reading, kid);
           if (nothing) return { text: nothing };
           tellIfFull(addPage(p.id, reading).dropped);
-          saveMode(p.id, 'book');
-          nav('/', { replace: true }); // Home takes the camera's place in the history
+          nav('/book', { replace: true }); // the Snap & say tab takes the camera's place in the history
           return null;
         } catch (e) {
           if (signal.aborted || (e instanceof ReadError && e.code === 'cancelled')) return null;
