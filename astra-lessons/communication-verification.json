@@ -71,7 +71,7 @@
     "pageErrors": []
   },
   "editorialReview": "independent language-teacher review pending",
-  "published": false,
+  "published": true,
   "sha256": {
     "astra-lessons/courses/en-communication.json": "ad3f5ecd30362a361aefc48acd960eb2e38b0038fcb92cd35305c518af5e87c4",
     "astra-lessons/courses/zh-communication.json": "9cc8463991b15407df5c3c5b60a3afe5db4f3089c96278a289192847ddb6266a",
@@ -80,5 +80,14 @@
     "astra-lessons/courses/fr-communication.json": "85c329fbd6da1450ff73c2eadecc2f7296fb242d3dbc616db547efb55fc67610",
     "astra-lessons/courses/es-communication.json": "e7e8eb7efcc936d5daadc706721d96972872a4df5b98f59939efc973ad85e687"
   },
-  "typecheck": "passed"
+  "typecheck": "passed",
+  "deployment": {
+    "commit": "e7c5d23e758da614710a918b2c53d2310d17fdc8",
+    "id": "1a4d32c8-1275-40e5-999e-bde5d2382a83",
+    "url": "https://1a4d32c8.wunder-tutor.pages.dev",
+    "productionUrl": "https://app.wundertutor.com",
+    "cleanTree": true,
+    "verifiedAt": "2026-09-25T08:48:47.599Z",
+    "productionBundleMatches": true
+  }
 }

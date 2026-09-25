@@ -104,3 +104,29 @@ npm run deploy                   # build + deploy to Cloudflare Pages (web only)
 5. Ideas given to Leslie for Snap & say: school dictation (默書) lists, textbook read-aloud, snapped words into
    review, a weekly parent page, a daily snap challenge. Not built.
 6. Christmas lessons for all six courses — only when Leslie asks.
+
+
+## 2026-09-25 — Astra communication packs released
+
+This update supersedes the communication-pack status and old lesson counts above.
+
+- Deployed content commit: e7c5d23e758da614710a918b2c53d2310d17fdc8.
+- Cloudflare Pages production deployment: 1a4d32c8-1275-40e5-999e-bde5d2382a83.
+- Live: https://app.wundertutor.com ; deployment: https://1a4d32c8.wunder-tutor.pages.dev.
+- Added 162 lessons: Getting Around, People & Small Talk, and Work & Professional Communication in English,
+  Putonghua, Japanese, Korean, French and Spanish. Each language has 27 lessons with three age-band versions;
+  children use school/teamwork situations. Books, sources and answer keys are in astra-lessons; start at
+  astra-lessons/COMMUNICATION-MAP.md. English/Putonghua now have 139 playable lessons each; the other four have 34 each.
+- The five failures recorded above are resolved: updated progression/count expectations and added French
+  pronunciation entries. The full suite passes 356 tests; one optional export test is skipped there and passes
+  separately via npm run i18n:export. npm run typecheck, npm run content:check and npm run i18n:check all pass.
+- npm run deploy built and published from the clean detached worktree .wrangler/communication-release at the
+  deployed commit. Git status was empty before and after deployment. The deploy script now records commit-dirty=false.
+  Both deployment and custom-domain HTML return HTTP 200 and reference the exact built JavaScript bundle;
+  downloaded bundle bytes match the local build (SHA256 e1f4e6e201db8f7dbad4e36db2c56178071550fd91826af422e3e5912dffde36).
+- Existing unused Mandarin item warnings and Vite's large-bundle warning remain non-blocking. Independent
+  language-teacher review remains pending; these original materials are not institutionally accredited.
+- Main checkout retains unrelated source-library files, shared README changes, the notification plan and the
+  pre-existing Vite timestamp file. They were preserved and excluded from deployment. No GitHub push or mobile build.
+- This release record and the published flag are committed after deployment; the deployed application commit is
+  the one above, not the later documentation-only commit.
