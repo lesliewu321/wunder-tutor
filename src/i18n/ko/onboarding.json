@@ -140,5 +140,6 @@
   "onboarding.check.title.en": "내 학습 계획",
   "onboarding.check.title.zh": "내 보통화 학습 계획",
   "onboarding.check.startWith": "먼저 할 것",
-  "onboarding.check.hint": "쉬워질 때까지 레슨과 실험실에 계속 나와요."
+  "onboarding.check.hint": "쉬워질 때까지 레슨과 실험실에 계속 나와요.",
+  "onboarding.consent.contribute.detail": "이름 없이 연습 녹음을 보관하여 발음 평가를 개선하는 데 사용하는 것을 허용해요. 최대 90일 동안 보관하며 설정에서 끌 수 있어요."
 }

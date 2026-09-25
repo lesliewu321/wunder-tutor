@@ -164,5 +164,10 @@
   "settings.demo.tutor": "對話導師",
   "settings.demo.tutor.claude": "Claude（即時）",
   "settings.demo.tutor.scripted": "預設對白",
-  "settings.demo.version": "應用程式版本"
+  "settings.demo.version": "應用程式版本",
+  "settings.voice.auto": "自動",
+  "settings.voice.unavailable": "未能使用",
+  "settings.voice.choiceHint": "選擇會儲存在此裝置。未能使用的聲音需要連線或完成服務設定。",
+  "settings.voice.preview": "試聽聲音",
+  "settings.voice.playing": "播放中…"
 }

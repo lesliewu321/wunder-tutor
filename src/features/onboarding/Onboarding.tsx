@@ -394,7 +394,7 @@ export function Onboarding() {
               The two choices after it are preferences, both changeable later in Settings. */}
           <label className="switch-row"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span>{t(adult ? 'onboarding.consent.agree.adult' : 'onboarding.consent.agree.child')}</span></label>
           <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>{t('onboarding.consent.keep')}</span></label>
-          <label className="switch-row"><input type="checkbox" checked={contribute} onChange={(e) => setContribute(e.target.checked)} /><span className="switch" aria-hidden /><span>{t(adult ? 'onboarding.consent.contribute.adult' : 'onboarding.consent.contribute.child')}</span></label>
+          <label className="switch-row switch-row--card"><input type="checkbox" checked={contribute} onChange={(e) => setContribute(e.target.checked)} /><span className="switch" aria-hidden /><span><b>{t('settings.voice.contribute.label')}</b><small>{t('onboarding.consent.contribute.detail')}</small></span></label>
         </>,
         <Button size="lg" block disabled={!agreed} icon="mic" onClick={() => void create()}>{t('onboarding.consent.allow')}</Button>,
         { grownUp: true, title: t('onboarding.consent.title'), sub: t(adult ? 'onboarding.consent.sub.adult' : 'onboarding.consent.sub.child') },

@@ -140,5 +140,6 @@
   "onboarding.check.title.en": "Tu plan",
   "onboarding.check.title.zh": "Tu plan de chino mandarín",
   "onboarding.check.startWith": "Empieza por",
-  "onboarding.check.hint": "Volverán en las lecciones y en el Lab hasta que sean fáciles."
+  "onboarding.check.hint": "Volverán en las lecciones y en el Lab hasta que sean fáciles.",
+  "onboarding.consent.contribute.detail": "Permite que el equipo conserve las grabaciones sin nombre para mejorar la evaluación de pronunciación, durante un máximo de 90 días. Puedes desactivarlo en Ajustes."
 }

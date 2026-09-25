@@ -1,6 +1,7 @@
 // The checking list for the translation: every line of wording, English next to 繁體中文.
 //   npm run i18n:export     → i18n-review.json (and .csv) in the repo root
 // Run through vitest (plain `vite-node` hangs on this machine); it does nothing during a normal `npm test`.
+import { AGE_BANDS, ageGuidance, stageLabel as curriculumStageLabel } from '../astra-lessons/curriculum';
 import { writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { COURSES, courseTitle, ITEM_INDEX, lessonTitle, unitSubtitle, unitTitle } from '../src/content/course';
@@ -11,7 +12,7 @@ import { HOME_LANGUAGES, homeLanguageLabel } from '../src/content/translations';
 import { SEASON_EVENTS, SEASONAL_LESSONS } from '../src/content/seasonal';
 import { ZH_SOUNDS } from '../src/content/zh/sounds';
 import { ACHIEVEMENT_CATALOGUE, achievement, badgeDetail, badgeName, DAILY_GOALS, goalDetail, goalLabel } from '../src/engine/rewards';
-import { catalogs, en, noteContent, setLanguage, tc } from '../src/i18n';
+import { catalogs, en, meaningKey, noteContent, setLanguage, tc } from '../src/i18n';
 import type { AgeBand, SpeakItem } from '../src/domain/types';
 
 const BANDS: AgeBand[] = ['little', 'junior', 'teen', 'adult'];
@@ -45,9 +46,16 @@ const itemMeanings = (): Record<string, { items: string[]; langs: string[] }> =>
     Object.values(r).forEach(walk);
   };
   walk(SCENARIOS.map((sc) => [sc.turns, sc.closing]));
+  // Standalone scenario scripts keep their existing meaning scope; course lessons include every spoken line.
+  lines.splice(0, lines.length, ...lines.filter(it => it.meaning));
+  walk(Object.values(COURSES));
+  for (const course of Object.values(COURSES)) for (const unit of course.units) for (const lesson of unit.lessons)
+    for (const list of Object.values(lesson.exercises)) for (const ex of list)
+      if (ex.type === 'dialogue' && !ex.tutor) lines.push({ id: ex.id, kind: 'sentence', text: ex.tutorLine });
   for (const it of [...Object.values(ITEM_INDEX), ...lines]) {
-    if (!it.meaning) continue;
-    const m = (out[it.meaning] ??= { items: [], langs: [] });
+    const key = meaningKey(it);
+    if (!key) continue;
+    const m = (out[key] ??= { items: [], langs: [] });
     if (m.items.length < 3 && !m.items.includes(it.text)) m.items.push(it.text);
     const lang = it.lang ?? 'en';
     if (!m.langs.includes(lang)) m.langs.push(lang);
@@ -77,9 +85,11 @@ describe.skipIf(!process.env.I18N_EXPORT)('i18n review export', () => {
       for (const b of BANDS) quiet(() => tipFor(id, b));
     }
     for (const st of LAB_STAGES) quiet(() => stageLabel(st));
+    for (const band of AGE_BANDS) ageGuidance(band);
     for (const course of Object.values(COURSES)) {
       for (const b of BANDS) quiet(() => courseTitle(course, b));
       for (const unit of course.units) {
+        curriculumStageLabel(unit);
         for (const b of BANDS) { quiet(() => unitTitle(unit, b)); quiet(() => unitSubtitle(unit, b)); }
         for (const lesson of unit.lessons) quiet(() => lessonTitle(lesson));
       }

@@ -30,7 +30,8 @@
     "codes:off": "node scripts/invite-codes.mjs off",
     "contributions:pull": "node scripts/contributions-pull.mjs",
     "lessons:build": "node astra-lessons/build.mjs",
-    "lessons:communication": "vite-node astra-lessons/build-communication.ts"
+    "lessons:communication": "vite-node astra-lessons/build-communication.ts",
+    "lessons:curriculum": "node astra-lessons/build-curriculum.mjs && node astra-lessons/export-curriculum.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

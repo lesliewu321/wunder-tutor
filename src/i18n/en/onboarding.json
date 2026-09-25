@@ -140,5 +140,6 @@
   "onboarding.check.title.en": "Your plan",
   "onboarding.check.title.zh": "Your Putonghua plan",
   "onboarding.check.startWith": "Start with",
-  "onboarding.check.hint": "These come back in lessons and the Lab until they’re easy."
+  "onboarding.check.hint": "These come back in lessons and the Lab until they’re easy.",
+  "onboarding.consent.contribute.detail": "Let the team keep practice recordings, without a name, to improve pronunciation checks. Kept for up to 90 days. You can turn this off in Settings."
 }

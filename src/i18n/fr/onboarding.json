@@ -140,5 +140,6 @@
   "onboarding.check.title.en": "Le programme",
   "onboarding.check.title.zh": "Le programme de mandarin",
   "onboarding.check.startWith": "Pour commencer",
-  "onboarding.check.hint": "Ils reviennent dans les leçons et le Labo jusqu’à ce qu’ils soient faciles."
+  "onboarding.check.hint": "Ils reviennent dans les leçons et le Labo jusqu’à ce qu’ils soient faciles.",
+  "onboarding.consent.contribute.detail": "Autorisez l’équipe à conserver les enregistrements sans nom pour améliorer l’évaluation de la prononciation, pendant 90 jours maximum. Vous pouvez désactiver ce choix dans les réglages."
 }

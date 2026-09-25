@@ -1,3 +1,4 @@
+import { ageGuidance, stageLabel } from '../../../astra-lessons/curriculum';
 import { useEffect, useState } from 'react';
 import { LessonMap, sceneFor, type MapNode } from './LessonMap';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +26,7 @@ export function Home() {
   const setCourse = useStore((s) => s.setCourse);
   // Festival bonus lessons on now for this learner's courses (content/seasonal/events.json).
   const seasons = activeSeasons(new Date(), p.learning);
-  const COURSE = courseFor(p.course);
+  const COURSE = courseFor(p.course, p.band);
   const unit = currentUnit(COURSE, p.lessonsCompleted);
   const lessons = courseLessons(COURSE);
   const [selected, setSelected] = useState<{ course: CourseId; unitId: string } | null>(null);
@@ -144,6 +145,8 @@ export function Home() {
           </select>
         </label>
         <p className="course-overview">{t('home.units.progress', { done: lessons.filter((l) => p.lessonsCompleted[l.id]).length, total: lessons.length })}</p>
+        <p className="course-overview" data-curriculum-stage>{stageLabel(pathUnit)}</p>
+        <p className="course-overview" data-curriculum-age>{ageGuidance(p.band)}</p>
         <h2 className="section-title">{pathUnit.icon} {unitTitle(pathUnit, p.band)}</h2>
         <p className="course-overview">{unitSubtitle(pathUnit, p.band)}</p>
         <div className="path__bar">

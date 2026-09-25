@@ -1,3 +1,4 @@
+import { TeacherVoiceSelect } from './TeacherVoiceSelect';
 import { useEffect, useState } from 'react';
 import { handleFor, makeHandle } from '../../engine/handles';
 import { readsTraditional } from '../../engine/region';
@@ -109,7 +110,7 @@ export function Me() {
 
   return (
     <div className="screen me">
-      <TopBar title={t('settings.me.title')} right={<IconButton icon="cog" label={settingsName(p.band)} onClick={() => nav('/parents')} />} />
+      <TopBar title={t('settings.me.title')} right={<IconButton className="settings-cog" icon="cog" label={settingsName(p.band)} onClick={() => nav('/parents')} />} />
       {/* The course, at the very top (Leslie, 2026-09-25). Its list ends with adding or removing courses — the one place
           for that now; Settings no longer has a Courses row. */}
       <label className="course-pick"><span>{t('home.course.aria')}</span>
@@ -280,14 +281,14 @@ export function ParentZone() {
       <section>
         <h2 className="section-title">{t('settings.voice.title')}</h2>
         {toggle('storeRecordings', t('settings.voice.keep.label'), t('settings.voice.keep.detail'))}
-        {services?.azure && toggle('contributeRecordings', t('settings.voice.contribute.label'), t('settings.voice.contribute.detail'))}
+        {toggle('contributeRecordings', t('settings.voice.contribute.label'), t('settings.voice.contribute.detail'))}
         {toggle('shareScores', t('settings.voice.share.label', { name: p.name }), t('settings.voice.share.detail'))}
         <div className="course-pick"><span>{rich(t('settings.voice.share.as', { handle: handleFor(p, patch) }))}</span><Button variant="ghost" size="sm" icon="retry" onClick={() => patch(p.id, { handle: makeHandle() })}>{t('settings.voice.share.reroll')}</Button></div>
         {/* Where recordings go, told truthfully for each case: the privacy line changes with the switch above. */}
         <p className="fineprint fineprint--left">{recordings == null ? t('settings.voice.counting') : sentences(
           tn('settings.voice.stored', recordings, { name }),
           t(!services?.azure ? 'settings.voice.leave.never' : settings.contributeRecordings ? 'settings.voice.leave.kept' : 'settings.voice.leave.scored'),
-          services?.gemini && t('settings.voice.teacher'),
+          (services?.gemini || Object.values(services?.voiceProviders ?? {}).some(Boolean)) && t('settings.voice.teacher'),
         )}</p>
         <button type="button" className="row-link row-link--share" disabled={!recordings} onClick={() => { setAgreed(false); setSharing(true); }}>
           <span className="row-link__icon"><Icon name="share" /></span>
@@ -335,7 +336,7 @@ export function ParentZone() {
             </select>
           </label>
           <div className="select-row"><span>{t('settings.demo.scoring')}</span><b>{services == null ? '…' : t(services.azure ? 'settings.demo.scoring.azure' : 'settings.demo.scoring.builtIn')}</b></div>
-          <div className="select-row"><span>{t('settings.demo.voice')}</span><b>{services == null ? '…' : t(services.gemini ? 'settings.demo.voice.gemini' : 'settings.demo.voice.device')}</b></div>
+          <TeacherVoiceSelect services={services} />
           <div className="select-row"><span>{t('settings.demo.tutor')}</span><b>{services == null ? '…' : t(services.claude ? 'settings.demo.tutor.claude' : 'settings.demo.tutor.scripted')}</b></div>
           <div className="select-row"><span>{t('settings.demo.version')}</span><b>{__APP_VERSION__}</b></div>
         </div>

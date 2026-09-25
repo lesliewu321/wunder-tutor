@@ -7,7 +7,8 @@ const [lang, only] = process.argv.slice(2);
 const langs = lang ? [lang] : readdirSync('src/i18n', { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== 'en').map((d) => d.name);
 if (!existsSync('i18n-source.json')) { console.error('i18n-source.json is missing: run `npm run i18n:export` first.'); process.exit(1); }
 const source = JSON.parse(readFileSync('i18n-source.json', 'utf8'));
-const lessonPacks = JSON.parse(readFileSync('astra-lessons/i18n/communication.json', 'utf8'));
+const packs = ['communication', 'curriculum'].map(name => JSON.parse(readFileSync('astra-lessons/i18n/' + name + '.json', 'utf8')));
+const lessonPacks = Object.fromEntries(langs.map(l => [l, Object.fromEntries(['content', 'lessons', 'meanings'].map(part => [part, Object.assign({}, ...packs.map(pack => pack[l]?.[part]))]))]));
 // Packs also serve standalone lesson books; merge their relevant runtime keys just as the app does.
 const packFor = (l, part, expected) => Object.fromEntries(Object.entries(lessonPacks[l]?.[part] ?? {}).filter(([key]) => key in expected));
 const read = (f) => JSON.parse(readFileSync(f, 'utf8'));

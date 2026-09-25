@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Exercise } from '../../domain/types';
 import { sameSentence, shuffled } from '../../engine/curriculum';
-import { language, tl, type Key } from '../../i18n';
+import { language, itemMeaning, tl, type Key } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import { playCorrect } from '../../ui/sounds';
 import { useActiveProfile } from '../../state/store';
@@ -72,6 +72,7 @@ export function LiteracyExercise({ ex, onDone, test = false }: { ex: Literacy; o
         {solved && <div className="card literacy__passage"><ItemText item={item} band={p.band} script={p.zhScript} /></div>}
       </>}
       <p role="status">{message}</p>
+      {solved && !test && itemMeaning(item) && <p className="prompt__meaning">{itemMeaning(item)}</p>}
     </div>
     <div className="choice__dock">
       {solved ? <Button variant="leaf" size="lg" block onClick={() => onDone(!wrong)}>{t('common.continue')}</Button>

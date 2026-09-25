@@ -140,5 +140,6 @@
   "onboarding.check.title.en": "你的计划",
   "onboarding.check.title.zh": "你的普通话计划",
   "onboarding.check.startWith": "先从这些开始",
-  "onboarding.check.hint": "这些发音会在各课和练习室里反复出现，直到变得容易为止。"
+  "onboarding.check.hint": "这些发音会在各课和练习室里反复出现，直到变得容易为止。",
+  "onboarding.consent.contribute.detail": "让团队保留不含姓名的练习录音，以改善发音评估。最多保留90天。你可以在设置中关闭。"
 }

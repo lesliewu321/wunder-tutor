@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 const PROJECT = 'wunder-tutor';
 const NAMES = ['AZURE_SPEECH_KEY', 'AZURE_SPEECH_REGION', 'GEMINI_API_KEY'];
 // Families' accounts (server/family.mjs): optional — without it the app works as before, accounts just have no plans or daily limits.
-const OPTIONAL = ['SUPABASE_SECRET_KEY'];
+const OPTIONAL = ['SUPABASE_SECRET_KEY', 'DASHSCOPE_API_KEY', 'GOOGLE_CLOUD_TTS_API_KEY'];
 const SUPABASE_URL = 'https://xzghsihffoliduqkjvck.supabase.co'; // public (also in wrangler.toml)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const checkOnly = process.argv.includes('--check');
@@ -79,7 +79,7 @@ for (const n of NAMES) {
 for (const n of OPTIONAL) {
   const v = env.get(n) ?? '';
   const clean = /^[!-~]+$/.test(v);
-  console.log(`  ${n.padEnd(20)} ${v ? `${String(v.length).padStart(3)} characters${clean ? '' : ' — has spaces or odd characters'}` : 'not set (optional: family accounts get no plans or daily limits without it)'}`);
+  console.log(`  ${n.padEnd(20)} ${v ? `${String(v.length).padStart(3)} characters${clean ? '' : ' — has spaces or odd characters'}` : 'not set (optional service)'}`);
   if (v && !clean) good = false;
   if (v && clean) values[n] = v;
 }
@@ -97,7 +97,24 @@ if (values.SUPABASE_SECRET_KEY) {
   supabaseOk = supabase.ok;
   console.log(`  Family accounts (Supabase secret key):   ${supabase.ok ? '✓ works' : `✗ refused (${supabase.status || 'no answer'}) ${supabase.message} — it must be the SECRET key (sb_secret_…), not the publishable one`}`);
 }
-if (!azure.ok || !google.ok || !supabaseOk) { console.log('\n✗ A key in .env does not work, so nothing was uploaded.'); process.exit(1); }
+let voicesOk = true;
+if (values.DASHSCOPE_API_KEY) {
+  const region = env.get('QWEN_TTS_REGION') || 'singapore';
+  if (!['singapore', 'beijing'].includes(region)) { console.log('  QWEN_TTS_REGION must be singapore or beijing.'); voicesOk = false; }
+  else {
+    values.QWEN_TTS_REGION = region;
+    const host = region === 'beijing' ? 'dashscope.aliyuncs.com' : 'dashscope-intl.aliyuncs.com';
+    const check = await ask('https://' + host + '/compatible-mode/v1/models', { headers: { Authorization: 'Bearer ' + values.DASHSCOPE_API_KEY } });
+    console.log('  Qwen key access: ' + (check.ok ? 'works (TTS model access still needs a voice preview)' : 'refused (' + check.status + ')'));
+    voicesOk = voicesOk && check.ok;
+  }
+}
+if (values.GOOGLE_CLOUD_TTS_API_KEY) {
+  const check = await ask('https://texttospeech.googleapis.com/v1/voices?languageCode=en-US', { headers: { 'x-goog-api-key': values.GOOGLE_CLOUD_TTS_API_KEY } });
+  console.log('  Google Cloud TTS: ' + (check.ok ? 'voice list accessible' : 'refused (' + check.status + ')'));
+  voicesOk = voicesOk && check.ok;
+}
+if (!azure.ok || !google.ok || !supabaseOk || !voicesOk) { console.log('\n✗ A key in .env does not work, so nothing was uploaded.'); process.exit(1); }
 if (checkOnly) { console.log('\n✓ They work. (--check: nothing was uploaded.)'); process.exit(0); }
 
 console.log(`\nUploading ${Object.keys(values).join(', ')} to the live app (${PROJECT})…`);

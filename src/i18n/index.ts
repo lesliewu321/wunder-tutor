@@ -26,6 +26,8 @@ import zhCommon from './zh-Hant/common.json';
 import zhContent from './zh-Hant/content.json';
 import zhContentCourse from './zh-Hant/content-course.json';
 import astraContent from '../../astra-lessons/i18n/zh-Hant.json';
+import curriculumCatalogs from '../../astra-lessons/i18n/curriculum.json';
+import type { SpeakItem } from '../domain/types';
 import communicationCatalogs from '../../astra-lessons/i18n/communication.json';
 import zhFeedback from './zh-Hant/feedback.json';
 import zhHome from './zh-Hant/home.json';
@@ -66,7 +68,7 @@ const LESSONS: Partial<Record<Language, Catalog>> = { en: {} };
 /** What practice items mean, keyed by the English meaning in the course data (`tm`). Fetched for every language. */
 const MEANINGS: Partial<Record<Language, Catalog>> = { en: {} };
 // Lesson-pack translations stay next to their authored material.
-for (const [locale, pack] of Object.entries(communicationCatalogs)) {
+for (const source of [communicationCatalogs, curriculumCatalogs]) for (const [locale, pack] of Object.entries(source)) {
   const l = locale as Language;
   CONTENT[l] = { ...CONTENT[l], ...pack.content };
   LESSONS[l] = { ...LESSONS[l], ...pack.lessons };
@@ -183,6 +185,15 @@ export const tm = (meaning: string | undefined, lang: string | undefined): strin
   if (current === 'en') return meaning;
   if (OWN_COURSE[current]?.includes(lang ?? 'en')) return null;
   return MEANINGS[current]?.[meaning] ?? meaning;
+};
+
+/** Meaning in the selected app language; English source items need their text as the lookup key. */
+export const meaningKey = (item: Pick<SpeakItem, 'text' | 'meaning' | 'lang' | 'kind'>): string | undefined =>
+  item.meaning ?? (!item.lang && item.kind !== 'sound' && item.kind !== 'syllable' ? item.text : undefined);
+export const itemMeaning = (item: Pick<SpeakItem, 'text' | 'meaning' | 'lang' | 'kind'>): string | null => {
+  const key = meaningKey(item);
+  if (current === 'en' && !item.lang && key === item.text) return null;
+  return tm(key, item.lang);
 };
 
 /** For the review list: while on, every `tc` call is noted with the English it was given. */

@@ -5,6 +5,7 @@ import { JA_COURSE, JA_ITEMS } from './ja/course';
 import { KO_COURSE, KO_ITEMS } from './ko/course';
 import { ES_COURSE, ES_ITEMS } from './es/course';
 import { buildCourse, type CourseFile } from './load';
+import { AGE_BANDS, mergeCurriculum } from '../../astra-lessons/curriculum';
 import { addCommunicationToBuilt } from '../../astra-lessons/communication';
 import { inScript } from './zh/script';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
@@ -20,7 +21,10 @@ export const EN = addCommunicationToBuilt(buildCourse(enData as unknown as Cours
 
 export const COURSE: Course = EN.course;
 export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE, fr: FR_COURSE, ja: JA_COURSE, ko: KO_COURSE, es: ES_COURSE };
-export const courseFor = (id: CourseId): Course => COURSES[id] ?? COURSE;
+const PATHS = Object.fromEntries(Object.entries(COURSES).map(([id, course]) => [id,
+  Object.fromEntries(AGE_BANDS.map(band => [band, mergeCurriculum(course, band)])),
+])) as Record<CourseId, Record<AgeBand, Course>>;
+export const courseFor = (id: CourseId, band: AgeBand = 'junior'): Course => (PATHS[id] ?? PATHS.en)[band];
 
 /**
  * Course, unit and lesson names as this learner sees them: plainer for teens and adults, Chinese in their script, and
@@ -33,19 +37,21 @@ export const courseTitle = (c: Course, band: AgeBand): string => {
   return plain ? tc(`course.${c.id}.title.adult`, plain) : tc(`course.${c.id}.title`, c.title);
 };
 export const unitTitle = (u: Unit, band: AgeBand): string => {
-  const plain = isGrownUp(band) && u.grownUp?.title;
+  const plain = isGrownUp(band) && !(band === 'teen' && /(^|-)work$/.test(u.id)) && u.grownUp?.title;
   return inScript(plain ? tc(`unit.${u.id}.title.adult`, plain) : tc(`unit.${u.id}.title`, u.title));
 };
 export const unitSubtitle = (u: Unit, band: AgeBand): string => {
-  const plain = isGrownUp(band) && u.grownUp?.subtitle;
+  const plain = isGrownUp(band) && !(band === 'teen' && /(^|-)work$/.test(u.id)) && u.grownUp?.subtitle;
   return inScript(plain ? tc(`unit.${u.id}.subtitle.adult`, plain) : tc(`unit.${u.id}.subtitle`, u.subtitle));
 };
 export const lessonTitle = (l: Pick<Lesson, 'id' | 'title'>): string => tc(`lesson.${l.id}.title`, l.title);
 
 export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units, ...FR_COURSE.units, ...JA_COURSE.units, ...KO_COURSE.units, ...ES_COURSE.units].flatMap((u) => u.lessons);
 /** A lesson by id: a course lesson, or a seasonal bonus lesson (content/seasonal/, kept out of ALL_LESSONS and progress). */
-export const findLesson = (id: string): Lesson | undefined => ALL_LESSONS.find((l) => l.id === id) ?? SEASONAL_LESSONS.find((l) => l.id === id);
-export const lessonsOf = (id: CourseId): Lesson[] => courseFor(id).units.flatMap((u) => u.lessons);
+export const findLesson = (id: string, band?: AgeBand): Lesson | undefined =>
+  (band ? Object.values(PATHS).flatMap(p => p[band].units.flatMap(u => u.lessons)) : ALL_LESSONS).find(l => l.id === id)
+  ?? SEASONAL_LESSONS.find(l => l.id === id);
+export const lessonsOf = (id: CourseId, band: AgeBand = 'junior'): Lesson[] => courseFor(id, band).units.flatMap((u) => u.lessons);
 
 /**
  * Every item a lesson can ask for, by id, plus every Mandarin, French and Japanese item (their Lab ladders and checks
@@ -56,7 +62,7 @@ export const ITEM_INDEX: Record<string, SpeakItem> = {};
 for (const l of ALL_LESSONS) {
   for (const band of ['little', 'junior', 'teen'] as const) {
     for (const ex of l.exercises[band]) {
-      const items = ex.type === 'speak' || ex.type === 'arrange' ? [ex.item] : ex.type === 'read-choice' ? [ex.passage, ...ex.options] : ex.type === 'choose-heard' ? ex.options : ex.type === 'minimal-pair' ? ex.pair : ex.replies;
+      const items = ex.type === 'speak' || ex.type === 'arrange' ? [ex.item] : ex.type === 'read-choice' ? [ex.passage, ...ex.options] : ex.type === 'choose-heard' ? ex.options : ex.type === 'minimal-pair' ? ex.pair : [...(ex.tutor ? [ex.tutor] : []), ...ex.replies];
       for (const it of items) ITEM_INDEX[it.id] = it;
     }
   }

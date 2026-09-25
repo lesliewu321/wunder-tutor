@@ -15,6 +15,7 @@ import { createFamilies } from './family.mjs';
 import { createInvites } from './invites.mjs';
 import { createTwisters } from './twisters.mjs';
 import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, PREVIEW_LINES, TtsError } from './tts.mjs';
+import { createTeacherVoices } from './teacher-voices.mjs';
 import { createBackupVoice } from './azure-tts.mjs';
 import { DEFAULT_READ_MODEL, readText } from './read.mjs';
 import { buildSystemPrompt, parseTutorOutput, SAFE_FALLBACK_REPLY, toMessages, TUTOR_SCHEMA, validateTutorInput } from './tutor.mjs';
@@ -248,6 +249,12 @@ export function createApi(rawEnv, deps = {}) {
     return (reader || (pa.AccuracyScore ?? 0) >= TEACHER_MIN_ACCURACY) && counted.every((u) => u.score >= TEACHER_MIN_SYLLABLE);
   }
 
+  const directVoices = createTeacherVoices({
+    azure: status.azure && AZURE_SPEECH_REGION ? (deps.backupVoice ?? createBackupVoice({ key: AZURE_SPEECH_KEY, region: AZURE_SPEECH_REGION })) : undefined,
+    qwenKey: cleanApiKey(env('DASHSCOPE_API_KEY')), qwenRegion: env('QWEN_TTS_REGION') || 'singapore',
+    chirpKey: cleanApiKey(env('GOOGLE_CLOUD_TTS_API_KEY')), cache: deps.ttsCache,
+    fetchImpl: deps.voiceFetch, maxGenerationsPerWindow: deps.ttsGenerationsPerWindow,
+  });
   const tts = status.gemini
     ? createTts({
       apiKey: GEMINI_API_KEY, model: GEMINI_LIVE_MODEL, voiceName: GEMINI_TTS_VOICE, endpoint: env('GEMINI_LIVE_ENDPOINT') || undefined,
@@ -454,17 +461,18 @@ export function createApi(rawEnv, deps = {}) {
   /** A request for one of the preview lines, which a device without a code may hear (the body is read again later). */
   const isPreview = async (request) => {
     try {
-      const { text, ephemeral, backup } = await request.clone().json();
-      return !ephemeral && !backup && PREVIEW_LINES.has(String(text ?? '').replace(/\s+/g, ' ').trim());
+      const { text, ephemeral, backup, provider } = await request.clone().json();
+      return (!provider || provider === 'gemini') && !ephemeral && !backup && PREVIEW_LINES.has(String(text ?? '').replace(/\s+/g, ' ').trim());
     } catch { return false; }
   };
 
   async function handleTts(request, client) {
-    if (!tts) throw new HttpError(503, 'gemini_not_configured');
     const input = await readJson(request);
+    const selected = input?.provider ?? 'gemini';
+    if (selected === 'gemini' && !tts) throw new HttpError(503, 'gemini_not_configured');
     if (input?.ephemeral && !allowOwnTextTts(client)) throw new HttpError(429, 'rate_limited');
     try {
-      const { wav, cached, voice } = await tts.speak(input);
+      const { wav, cached, voice } = await (selected === 'gemini' ? tts : directVoices).speak(input);
       return new Response(wav, {
         status: 200,
         headers: {
@@ -662,6 +670,8 @@ export function createApi(rawEnv, deps = {}) {
           family: Boolean(family), plan: family ? plan : null,
           azure: open && status.azure, claude: open && status.claude, gemini: open && status.gemini,
           ttsVersion: open && status.gemini ? status.ttsVersion : null,
+          voiceProviders: { ...Object.fromEntries(Object.entries(directVoices.providers).map(([id, configured]) => [id, open && configured])), gemini: open && status.gemini },
+          voiceVersions: open ? { ...directVoices.versions, gemini: status.ttsVersion } : {},
           read: open && status.read,
         });
       }

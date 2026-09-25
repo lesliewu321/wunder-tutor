@@ -164,5 +164,10 @@
   "settings.demo.tutor": "对话导师",
   "settings.demo.tutor.claude": "Claude（即时）",
   "settings.demo.tutor.scripted": "默认对白",
-  "settings.demo.version": "应用版本"
+  "settings.demo.version": "应用版本",
+  "settings.voice.auto": "自动",
+  "settings.voice.unavailable": "暂不可用",
+  "settings.voice.choiceHint": "选择会保存在此设备。暂不可用的声音需要联网或完成服务设置。",
+  "settings.voice.preview": "试听声音",
+  "settings.voice.playing": "播放中…"
 }

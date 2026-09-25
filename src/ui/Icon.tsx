@@ -33,7 +33,7 @@ const PATHS = {
   globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z',
   list: 'M8.5 6.5h11M8.5 12h11M8.5 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01',
   map: 'M3.5 6.5 9 4.5l6 2 5.5-2v13L15 19.5l-6-2-5.5 2ZM9 4.5v13M15 6.5v13',
-  cog: 'M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4ZM19.4 13.5l1.4-1.5-1.4-1.5.4-2-1.9-.8-.8-1.9-2 .4L13.5 4.2h-3L9 5.7l-2-.4-.8 1.9-1.9.8.4 2L3.2 12l1.5 1.5-.4 2 1.9.8.8 1.9 2-.4 1.5 1.5h3l1.5-1.5 2 .4.8-1.9 1.9-.8-.4-2Z',
+  cog: 'M19.15 10.08L21.26 10.37L21.26 13.63L19.15 13.92L18.41 15.70L19.70 17.39L17.39 19.70L15.70 18.41L13.92 19.15L13.63 21.26L10.37 21.26L10.08 19.15L8.30 18.41L6.61 19.70L4.30 17.39L5.59 15.70L4.85 13.92L2.74 13.63L2.74 10.37L4.85 10.08L5.59 8.30L4.30 6.61L6.61 4.30L8.30 5.59L10.08 4.85L10.37 2.74L13.63 2.74L13.92 4.85L15.70 5.59L17.39 4.30L19.70 6.61L18.41 8.30ZM15.1 12a3.1 3.1 0 1 0-6.2 0a3.1 3.1 0 1 0 6.2 0Z',
 } as const;
 
 export type IconName = keyof typeof PATHS | 'turtle';
@@ -49,7 +49,7 @@ export function Icon({ name, size = 24, fill, style }: { name: IconName; size?: 
   }
   const filled = fill || name === 'play' || name === 'stop';
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style} aria-hidden>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={name === 'cog' ? 1.7 : 2} strokeLinecap="round" strokeLinejoin="round" style={style} aria-hidden>
       <path d={PATHS[name]} />
     </svg>
   );

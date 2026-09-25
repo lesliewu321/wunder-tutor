@@ -1,4 +1,5 @@
-import { contentBand, type AgeBand, type Assessment, type ChildProfile, type CourseId, type Exercise, type ItemProgress, type Lesson, type PhonemeId, type PhonemeScore, type SpeakItem, type WordScore } from '../domain/types';
+import { lessonExercises } from '../../astra-lessons/curriculum';
+import { type AgeBand, type Assessment, type ChildProfile, type CourseId, type Exercise, type ItemProgress, type Lesson, type PhonemeId, type PhonemeScore, type SpeakItem, type WordScore } from '../domain/types';
 import { ITEM_INDEX } from '../content/course';
 import { LADDERS } from '../content/lab';
 import { inCourse, weakSounds } from '../intelligence/profile';
@@ -69,7 +70,7 @@ export const unitCourse = (unitId: string): CourseId => (/^(zh|fr|ja|ko|es)-/.ex
  * only. (It used to split items into Mandarin and everything else, so a French review could hand out English words.)
  */
 export const buildReview = (lesson: Lesson, profile: ChildProfile, now: number): Exercise[] => {
-  const fallback = lesson.exercises[contentBand(profile.band)];
+  const fallback = lessonExercises(lesson, profile.band);
   const course = unitCourse(lesson.unitId);
   const sameCourse = (i: SpeakItem) => itemCourse(i) === course;
   const due = dueItems(profile, now).map((p) => ITEM_INDEX[p.itemId]).filter((i): i is SpeakItem => !!i && sameCourse(i)).slice(0, 4);
@@ -86,7 +87,7 @@ export const buildReview = (lesson: Lesson, profile: ChildProfile, now: number):
 };
 
 export const exercisesFor = (lesson: Lesson, profile: ChildProfile, now = Date.now()): Exercise[] =>
-  lesson.kind === 'review' ? buildReview(lesson, profile, now) : lesson.exercises[contentBand(profile.band)];
+  lesson.kind === 'review' ? buildReview(lesson, profile, now) : lessonExercises(lesson, profile.band);
 
 /** Already solid from earlier sessions — safe to skip when the child is flying through. */
 export const canSkip = (ex: Exercise, profile: ChildProfile): boolean =>

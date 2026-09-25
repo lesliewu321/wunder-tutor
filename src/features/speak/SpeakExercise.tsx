@@ -3,7 +3,6 @@ import type { Key } from '../../i18n';
 import { KoText } from '../../ui/KoText';
 import { isGrownUp, type AgeBand, type Assessment, type Attempt, type HomeLanguage, type PhonemeId, type SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
-import { translationFor } from '../../content/translations';
 import { isMastered, MAX_TRIES } from '../../engine/learning';
 import { badgeName } from '../../engine/rewards';
 import type { SpeechErrorCode } from '../../speech';
@@ -12,7 +11,7 @@ import { noSoundMessage } from '../../speech/health';
 import { localeOf, playBlob, stopPlayback, voice } from '../../speech/voice';
 import { markSyllable } from '../../content/zh/pinyin';
 import { hanChars } from '../../content/zh/script';
-import { inEnglish, t, tm } from '../../i18n';
+import { inEnglish, t, itemMeaning, language } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
 import { useActiveProfile, useStore } from '../../state/store';
 import { correctionFor, focusWordIndex, GOOD, headline, soundToDrill, tier, writtenWords } from '../../tutor/feedback';
@@ -76,7 +75,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   const mastered = !!current && isMastered(current.assessment, band);
   const test = mode === 'test';
   const outOfTries = takes.length >= (mode === 'check' || test ? 1 : MAX_TRIES);
-  const translation = prompt === 'translation' ? translationFor(item.id, profile.homeLanguage) : undefined;
+  const translation = prompt === 'translation' ? itemMeaning(item) : undefined;
   const effectivePrompt = prompt === 'translation' && !translation ? 'image' : prompt;
 
   const take = useSpeechTake({
@@ -185,7 +184,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
         <div className={`prompt prompt--${item.kind}`}>
           {item.picture && <div className="prompt__pic" aria-hidden>{item.picture}</div>}
           {!revealed && effectivePrompt === 'translation' ? (
-            <><div className="prompt__hint">{t('speak.prompt.translate')}</div><p className="prompt__translation" lang={profile.homeLanguage}>{translation}</p></>
+            <><div className="prompt__hint">{t('speak.prompt.translate')}</div><p className="prompt__translation" lang={language()}>{translation}</p></>
           ) : !revealed ? (
             <p className="prompt__hint prompt__hint--big">{t('speak.prompt.unseen')}</p>
           ) : (
@@ -207,7 +206,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                 : item.ja ? <JaText item={{ text: item.text, ja: item.ja }} band={band} /> : item.ko ? <KoText item={{ text: item.text, ko: item.ko }} band={band} /> : item.text}
             </p>
           )}
-          {revealed && tm(item.meaning, item.lang) && band !== 'little' && phase !== 'result' && <p className="prompt__meaning">{tm(item.meaning, item.lang)}</p>}
+          {revealed && !test && itemMeaning(item) && phase !== 'result' && <p className="prompt__meaning">{itemMeaning(item)}</p>}
 
           {phase !== 'result' && !test && (
             <div className="listen-row">

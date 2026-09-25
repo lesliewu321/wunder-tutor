@@ -164,5 +164,10 @@
   "settings.demo.tutor": "会話の先生",
   "settings.demo.tutor.claude": "Claude（ライブ）",
   "settings.demo.tutor.scripted": "シナリオ",
-  "settings.demo.version": "アプリのバージョン"
+  "settings.demo.version": "アプリのバージョン",
+  "settings.voice.auto": "自動",
+  "settings.voice.unavailable": "利用不可",
+  "settings.voice.choiceHint": "この端末に保存されます。利用できない音声には接続やサービスの設定が必要です。",
+  "settings.voice.preview": "音声を試聴",
+  "settings.voice.playing": "再生中…"
 }

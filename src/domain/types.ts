@@ -5,7 +5,7 @@ import { t, type Language } from '../i18n';
 
 /** Who is learning: children by age, or a grown-up (a parent, or any adult learner). */
 export type AgeBand = 'little' | 'junior' | 'teen' | 'adult';
-/** Lessons are written for three bands; grown-ups get the teen material, which is natural, full sentences. */
+/** Legacy source packs have three bands; merged lesson paths add an explicit adult edition. Lab checks retain the teen fallback. */
 export type ContentBand = 'little' | 'junior' | 'teen';
 export const contentBand = (band: AgeBand): ContentBand => (band === 'adult' ? 'teen' : band);
 /** Teens and adults get the grown-up presentation: phonetic symbols, less mascot, no stars. */
@@ -100,7 +100,7 @@ export interface Lesson {
   icon: string;
   kind: 'words' | 'phrases' | 'pronunciation' | 'listening' | 'speaking' | 'conversation' | 'review';
   /** Exercises per age band — the same lesson teaches different material to a 6- and a 14-year-old. */
-  exercises: Record<ContentBand, Exercise[]>;
+  exercises: Record<ContentBand, Exercise[]> & Partial<Record<'adult', Exercise[]>>;
   guide?: { goal: string; goalHant: string; tip: string; tipHant: string; practice: string; practiceHant: string };
 }
 

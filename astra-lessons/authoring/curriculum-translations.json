@@ -1,0 +1,276 @@
+{
+  "locales": [
+    "en",
+    "zh-Hant",
+    "zh-Hans",
+    "ja",
+    "ko",
+    "fr",
+    "es"
+  ],
+  "labels": {
+    "curriculum.stage.1": [
+      "1 · First words and patterns",
+      "1 · 基礎詞彙與句型",
+      "1 · 基础词汇与句型",
+      "1 · 基本の単語と文型",
+      "1 · 기초 단어와 문형",
+      "1 · Premiers mots et structures",
+      "1 · Primeras palabras y estructuras"
+    ],
+    "curriculum.stage.2": [
+      "2 · Everyday conversations",
+      "2 · 日常對話",
+      "2 · 日常对话",
+      "2 · 日常会話",
+      "2 · 일상 대화",
+      "2 · Conversations du quotidien",
+      "2 · Conversaciones cotidianas"
+    ],
+    "curriculum.stage.3": [
+      "3 · Putting it together",
+      "3 · 綜合運用",
+      "3 · 综合运用",
+      "3 · 学んだことを使う",
+      "3 · 배운 내용 활용하기",
+      "3 · Mise en pratique",
+      "3 · Ponlo en práctica"
+    ],
+    "curriculum.age.little": [
+      "Little · Ages 5–7: point, listen and say short phrases. Try a pretend conversation with a trusted adult.",
+      "Little · 5–7歲：指一指、聽一聽，再說簡短句子。和熟悉的大人一起玩對話遊戲。",
+      "Little · 5–7岁：指一指、听一听，再说简短句子。和熟悉的大人一起玩对话游戏。",
+      "Little · 5〜7歳：指さし、聞いて、短い言葉を言ってみよう。信頼できる大人と会話ごっこをしよう。",
+      "Little · 5–7세: 가리키고 듣고 짧게 말해 봐요. 믿을 수 있는 어른과 역할놀이로 대화해 봐요.",
+      "Little · 5–7 ans : montre, écoute et dis de courtes phrases. Joue une conversation avec un adulte de confiance.",
+      "Little · 5–7 años: señala, escucha y di frases cortas. Practica una conversación de juego con un adulto de confianza."
+    ],
+    "curriculum.age.junior": [
+      "Junior · Ages 8–11: build short sentences, find details and practise a conversation with a partner.",
+      "Junior · 8–11歲：組成簡短句子、找出細節，並和同伴練習對話。",
+      "Junior · 8–11岁：组成简短句子、找出细节，并和同伴练习对话。",
+      "Junior · 8〜11歳：短い文を作り、詳しい情報を見つけ、相手と会話を練習しよう。",
+      "Junior · 8–11세: 짧은 문장을 만들고 세부 내용을 찾아 짝과 대화 연습을 해요.",
+      "Junior · 8–11 ans : construis des phrases courtes, repère les détails et entraîne-toi à converser avec un partenaire.",
+      "Junior · 8–11 años: construye frases cortas, encuentra detalles y practica una conversación con otra persona."
+    ],
+    "curriculum.age.teen": [
+      "Teen · Ages 12–17: connect ideas and give clear replies. Use school, friendship and team-project situations.",
+      "Teen · 12–17歲：連貫表達想法，清楚回應。練習學校、友誼及團隊專題的情境。",
+      "Teen · 12–17岁：连贯表达想法，清楚回应。练习学校、友谊及团队项目的情境。",
+      "Teen · 12〜17歳：考えをつなげ、分かりやすく答えよう。学校、友人関係、グループ活動の場面で練習しよう。",
+      "Teen · 12–17세: 생각을 연결하고 명확하게 답해요. 학교, 친구 관계, 팀 프로젝트 상황으로 연습해요.",
+      "Teen · 12–17 ans : relie tes idées et réponds clairement. Entraîne-toi dans des situations scolaires, amicales et de projets en équipe.",
+      "Teen · 12–17 años: conecta ideas y responde con claridad. Practica situaciones de clase, amistad y proyectos en equipo."
+    ],
+    "curriculum.age.adult": [
+      "Adult · Ages 18+: start with a short foundation task, then extend your replies for everyday life, travel and work.",
+      "Adult · 18歲或以上：先做簡短基礎練習，再延伸回應，應用於日常生活、旅遊及工作。",
+      "Adult · 18岁及以上：先做简短基础练习，再延伸回应，应用于日常生活、旅行及工作。",
+      "Adult · 18歳以上：短い基礎練習から始め、日常生活、旅行、仕事で使える、より詳しい応答へ進みます。",
+      "Adult · 18세 이상: 짧은 기초 과제로 시작한 뒤 일상생활, 여행, 직장에서 쓸 수 있는 더 긴 답변을 연습해요.",
+      "Adult · 18 ans et plus : commencez par un court exercice de base, puis développez vos réponses pour le quotidien, les voyages et le travail.",
+      "Adult · 18 años o más: empieza con una breve actividad básica y amplía tus respuestas para la vida diaria, los viajes y el trabajo."
+    ]
+  },
+  "meanings": [
+    [
+      "I would like some orange juice.",
+      "我想要一些橙汁。",
+      "我想要一些橙汁。",
+      "オレンジジュースをお願いします。",
+      "오렌지 주스를 주세요.",
+      "Je voudrais du jus d’orange.",
+      "Quisiera un poco de zumo de naranja."
+    ],
+    [
+      "I would like a cheese sandwich.",
+      "我想要一份芝士三文治。",
+      "我想要一份奶酪三明治。",
+      "チーズサンドイッチをお願いします。",
+      "치즈 샌드위치를 주세요.",
+      "Je voudrais un sandwich au fromage.",
+      "Quisiera un sándwich de queso."
+    ],
+    [
+      "I am a little hungry.",
+      "我有一點肚餓。",
+      "我有一点饿。",
+      "少しお腹がすいています。",
+      "조금 배가 고파요.",
+      "J’ai un peu faim.",
+      "Tengo un poco de hambre."
+    ],
+    [
+      "No, thank you. Just the fish.",
+      "不用，謝謝。只要魚就好。",
+      "不用，谢谢。只要鱼就好。",
+      "いいえ、結構です。魚だけでお願いします。",
+      "아니요, 괜찮아요. 생선만 주세요.",
+      "Non merci. Seulement le poisson.",
+      "No, gracias. Solo el pescado."
+    ],
+    [
+      "grandmother",
+      "祖母／外祖母",
+      "祖母／外祖母",
+      "祖母",
+      "할머니",
+      "grand-mère",
+      "abuela"
+    ],
+    [
+      "table",
+      "桌子",
+      "桌子",
+      "テーブル",
+      "탁자",
+      "table",
+      "mesa"
+    ],
+    [
+      "Ask me for support.",
+      "需要支援時可以找我。",
+      "需要支持时可以找我。",
+      "助けが必要なら私に頼んでください。",
+      "도움이 필요하면 저에게 말해 주세요.",
+      "Demandez-moi de l’aide.",
+      "Pídeme ayuda."
+    ],
+    [
+      "At ten. tomorrow",
+      "十點。明天。",
+      "十点。明天。",
+      "10時に。明日。",
+      "10시에. 내일.",
+      "À dix heures. Demain.",
+      "A las diez. Mañana."
+    ],
+    [
+      "tomorrow At ten.",
+      "明天。十點。",
+      "明天。十点。",
+      "明日。10時に。",
+      "내일. 10시에.",
+      "Demain. À dix heures.",
+      "Mañana. A las diez."
+    ],
+    [
+      "Yes, I can. today",
+      "可以，我能做到。今天。",
+      "可以，我能做到。今天。",
+      "はい、できます。今日。",
+      "네, 할 수 있어요. 오늘.",
+      "Oui, je peux. Aujourd’hui.",
+      "Sí, puedo. Hoy."
+    ],
+    [
+      "Hello! What would you like?",
+      "你好！你想要甚麼？",
+      "你好！你想要什么？",
+      "こんにちは！何になさいますか？",
+      "안녕하세요! 무엇을 드릴까요?",
+      "Bonjour ! Que désirez-vous ?",
+      "¡Hola! ¿Qué te gustaría?"
+    ],
+    [
+      "Here you are!",
+      "給你！",
+      "给你！",
+      "どうぞ！",
+      "여기 있어요!",
+      "Voilà !",
+      "¡Aquí tienes!"
+    ],
+    [
+      "Would you like a banana too?",
+      "你也想要一隻香蕉嗎？",
+      "你也想要一根香蕉吗？",
+      "バナナもいかがですか？",
+      "바나나도 드릴까요?",
+      "Voulez-vous aussi une banane ?",
+      "¿Quieres también un plátano?"
+    ],
+    [
+      "Hello! Welcome to the Wunder Café. What would you like to drink?",
+      "你好！歡迎來到 Wunder Café。你想喝甚麼？",
+      "你好！欢迎来到 Wunder Café。你想喝什么？",
+      "こんにちは！Wunder Caféへようこそ。お飲み物は何になさいますか？",
+      "안녕하세요! Wunder Café에 오신 것을 환영해요. 무엇을 마시겠어요?",
+      "Bonjour ! Bienvenue au Wunder Café. Que voulez-vous boire ?",
+      "¡Hola! Bienvenido a Wunder Café. ¿Qué te gustaría beber?"
+    ],
+    [
+      "Of course! And something to eat?",
+      "當然可以！想吃點甚麼嗎？",
+      "当然可以！想吃点什么吗？",
+      "もちろんです！食べ物もいかがですか？",
+      "물론이죠! 먹을 것도 드릴까요?",
+      "Bien sûr ! Et quelque chose à manger ?",
+      "¡Por supuesto! ¿Y algo para comer?"
+    ],
+    [
+      "Good choice. Are you very hungry today?",
+      "選得好。你今天很肚餓嗎？",
+      "选得好。你今天很饿吗？",
+      "いいですね。今日はとてもお腹がすいていますか？",
+      "좋은 선택이에요. 오늘 많이 배고픈가요?",
+      "Bon choix. Avez-vous très faim aujourd’hui ?",
+      "Buena elección. ¿Tienes mucha hambre hoy?"
+    ],
+    [
+      "Here you are. Enjoy your food!",
+      "來了。請慢用！",
+      "来了。请慢用！",
+      "どうぞ。ごゆっくりお召し上がりください！",
+      "여기 있어요. 맛있게 드세요!",
+      "Voilà. Bon appétit !",
+      "Aquí tienes. ¡Buen provecho!"
+    ],
+    [
+      "Good afternoon! Welcome to the Wunder Café. Are you ready to order?",
+      "午安！歡迎來到 Wunder Café。準備好點餐了嗎？",
+      "下午好！欢迎来到 Wunder Café。准备好点餐了吗？",
+      "こんにちは！Wunder Caféへようこそ。ご注文はお決まりですか？",
+      "안녕하세요! Wunder Café에 오신 것을 환영합니다. 주문하시겠어요?",
+      "Bonjour ! Bienvenue au Wunder Café. Êtes-vous prêt à commander ?",
+      "¡Buenas tardes! Bienvenido a Wunder Café. ¿Ya sabes qué vas a pedir?"
+    ],
+    [
+      "The fish is very fresh today, and our hot chocolate is famous.",
+      "今天的魚很新鮮，我們的熱朱古力也很有名。",
+      "今天的鱼很新鲜，我们的热巧克力也很有名。",
+      "今日の魚はとても新鮮で、当店のホットチョコレートも有名です。",
+      "오늘 생선이 아주 신선하고 저희 핫초콜릿도 유명해요.",
+      "Le poisson est très frais aujourd’hui et notre chocolat chaud est réputé.",
+      "El pescado está muy fresco hoy y nuestro chocolate caliente es famoso."
+    ],
+    [
+      "Excellent choice. Would you like fresh vegetables with that?",
+      "選得很好。要配一些新鮮蔬菜嗎？",
+      "选得很好。要配一些新鲜蔬菜吗？",
+      "よいお選びですね。新鮮な野菜もお付けしますか？",
+      "아주 좋은 선택이에요. 신선한 채소도 곁들여 드릴까요?",
+      "Excellent choix. Voulez-vous des légumes frais avec cela ?",
+      "Excelente elección. ¿Quieres acompañarlo con verduras frescas?"
+    ],
+    [
+      "Perfect. I’ll bring everything in three minutes.",
+      "好的。我會在三分鐘內把餐點送來。",
+      "好的。我会在三分钟内把餐点送来。",
+      "かしこまりました。3分で全部お持ちします。",
+      "좋아요. 3분 안에 모두 가져다드릴게요.",
+      "Parfait. Je vous apporte tout dans trois minutes.",
+      "Perfecto. Lo traeré todo en tres minutos."
+    ],
+    [
+      "Is it yummy?",
+      "好吃嗎？",
+      "好吃吗？",
+      "おいしいですか？",
+      "맛있나요?",
+      "C’est bon ?",
+      "¿Está rico?"
+    ]
+  ]
+}

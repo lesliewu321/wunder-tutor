@@ -169,5 +169,10 @@
   "settings.demo.tutor": "Tutor de conversación",
   "settings.demo.tutor.claude": "Claude (en directo)",
   "settings.demo.tutor.scripted": "Con guion",
-  "settings.demo.version": "Versión de la app"
+  "settings.demo.version": "Versión de la app",
+  "settings.voice.auto": "Automática",
+  "settings.voice.unavailable": "no disponible",
+  "settings.voice.choiceHint": "Se guarda en este dispositivo. Las voces no disponibles necesitan conexión o configuración del servicio.",
+  "settings.voice.preview": "Probar la voz",
+  "settings.voice.playing": "Reproduciendo…"
 }

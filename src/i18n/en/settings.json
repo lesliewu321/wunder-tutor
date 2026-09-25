@@ -169,5 +169,10 @@
   "settings.demo.tutor": "Conversation tutor",
   "settings.demo.tutor.claude": "Claude (live)",
   "settings.demo.tutor.scripted": "Scripted",
-  "settings.demo.version": "App version"
+  "settings.demo.version": "App version",
+  "settings.voice.auto": "Automatic",
+  "settings.voice.unavailable": "unavailable",
+  "settings.voice.choiceHint": "Saved on this device. Unavailable voices need a connection or service setup.",
+  "settings.voice.preview": "Preview voice",
+  "settings.voice.playing": "Playing…"
 }

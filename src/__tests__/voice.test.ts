@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 // Each test imports a fresh copy of the modules (the voice keeps the server's answer and its takes).
 
 /** A pretend server: /api/health, and /api/tts answering with a tiny WAV, whichever voice is asked for. */
-const server = (opts: { authorized?: boolean; slow?: Promise<void>; tts?: (body: Record<string, unknown>, call: number) => Response } = {}) => {
+const server = (opts: { authorized?: boolean; voices?: Record<string, boolean>; slow?: Promise<void>; tts?: (body: Record<string, unknown>, call: number) => Response } = {}) => {
   const calls: Record<string, unknown>[] = [];
   const wav = (voice: 'teacher' | 'backup') => new Response(new Uint8Array(44 + 3200), { headers: { 'content-type': 'audio/wav', 'x-tts-voice': voice } });
   vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
@@ -12,7 +12,7 @@ const server = (opts: { authorized?: boolean; slow?: Promise<void>; tts?: (body:
     if (url.includes('/api/health')) {
       await opts.slow;
       const a = opts.authorized ?? true;
-      return new Response(JSON.stringify({ ok: true, needsCode: true, codeSet: true, authorized: a, azure: a, gemini: a, claude: a, ttsVersion: a ? 'v1' : null }), { headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify({ ok: true, needsCode: true, codeSet: true, authorized: a, azure: a, gemini: a, claude: a, voiceProviders: opts.voices, ttsVersion: a ? 'v1' : null }), { headers: { 'content-type': 'application/json' } });
     }
     if (url.includes('/api/tts')) {
       const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
@@ -100,4 +100,19 @@ describe('the teacher’s voice on a phone', () => {
     await expect(voice.speak('water', { accent: 'en-GB' })).rejects.toMatchObject({ reason: 'playback' });
     expect(calls).toHaveLength(1);
   });
+  it('routes the same text to each selected provider and keeps their cached takes separate', async () => {
+    const { calls } = server({ voices: { azure: true, qwen: true, chirp: true, gemini: true } });
+    audio();
+    const { voice } = await import('../speech/voice');
+    const { setTeacherVoiceChoice } = await import('../speech/teacherPreference');
+    for (const provider of ['azure', 'qwen', 'chirp', 'azure'] as const) {
+      setTeacherVoiceChoice(provider);
+      expect(await voice.engine()).toBe(provider);
+      await voice.speak('你好', { accent: 'zh-CN' });
+    }
+    setTeacherVoiceChoice('qwen');
+    await Promise.all([voice.speak('你好', { accent: 'zh-CN', slow: true }), voice.speak('你好', { accent: 'zh-CN', slow: true })]);
+    expect(calls.map(c => c.provider)).toEqual(['azure', 'qwen', 'chirp']);
+  });
+
 });

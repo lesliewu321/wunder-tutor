@@ -1,3 +1,4 @@
+import { selectedVoice, teacherVoiceChoice, voiceConfigured, type CloudVoice } from './teacherPreference';
 import { createStore, get, set } from 'idb-keyval';
 import type { Accent, Locale, SpeakItem } from '../domain/types';
 import { apiFetch, apiHealth, knownHealth } from './health';
@@ -131,7 +132,7 @@ if (typeof document !== 'undefined') {
 }
 
 /** Play a blob (a learner's own take, or a generated teacher take). Resolves when playback ends or is stopped. */
-export const playBlob = (blob: Blob): Promise<void> =>
+export const playBlob = (blob: Blob, rate = 1): Promise<void> =>
   new Promise((resolve, reject) => {
     pauseCurrent();
     const el = element();
@@ -145,6 +146,8 @@ export const playBlob = (blob: Blob): Promise<void> =>
     el.onpause = () => { if (el.paused) end(); };
     el.onerror = () => end(new Error('playback-unavailable'));
     el.src = url;
+    el.playbackRate = rate;
+    el.preservesPitch = true;
     el.play().catch((e) => end(e instanceof Error ? e : new Error('playback-unavailable')));
   });
 
@@ -168,12 +171,14 @@ class GeminiTakes {
   private inflight = new Map<string, Promise<Blob>>();
   /** Model/voice the server generates with — a different voice is a different take. */
   version = '';
+  constructor(readonly provider: CloudVoice = 'gemini') {}
 
   /** Takes that failed the tone check this session — not fetched again. */
   private rejected = new Set<string>();
 
   fetch(text: string, opts: SpeakOptions): Promise<Blob> {
-    const key = ttsKey(this.version, text, opts);
+    // Qwen slow playback stretches the same recording locally; it needs no second paid take.
+    const key = ttsKey(this.version, text, this.provider === 'qwen' ? { ...opts, slow: false } : opts);
     const hit = this.memory.get(key);
     if (hit) return Promise.resolve(hit);
     if (this.rejected.has(key)) return Promise.reject(new Error('tts tone mismatch'));
@@ -190,8 +195,8 @@ class GeminiTakes {
    * knows the teacher's voice; the backup voice reads exactly the text (and passed the server's tone gate).
    */
   private async toneOk(blob: Blob, text: string, opts: SpeakOptions): Promise<boolean> {
-    if (opts.accent !== 'zh-CN' || blob.type === BACKUP_TYPE) return true;
-    try { return teacherToneOk(await blob.arrayBuffer(), text, this.version.split('/')[1] ?? ''); } catch { return true; }
+    if (this.provider !== 'gemini' || opts.accent !== 'zh-CN' || blob.type === BACKUP_TYPE) return true;
+    try { return teacherToneOk(await blob.arrayBuffer(), text, this.version.split('/').slice(-1)[0] ?? ''); } catch { return true; }
   }
 
   private async load(key: string, text: string, opts: SpeakOptions): Promise<Blob> {
@@ -225,7 +230,7 @@ class GeminiTakes {
     try {
       const res = await apiFetch('/api/tts', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
-        body: JSON.stringify({ text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined, ephemeral: opts.ephemeral || undefined, backup: opts.backup || undefined }),
+        body: JSON.stringify({ provider: this.provider, text, accent: opts.accent, slow: !!opts.slow, kind: opts.kind === 'syllable' ? 'syllable' : undefined, ephemeral: opts.ephemeral || undefined, backup: opts.backup || undefined }),
       });
       if (!res.ok || !res.headers.get('content-type')?.startsWith('audio/')) {
         let code = `http_${res.status}`;
@@ -247,22 +252,27 @@ class GeminiTakes {
 
 class TeacherVoice implements ReferenceVoice {
   private web = new WebSpeechVoice();
-  private takes = new GeminiTakes();
-  private gemini: boolean | null = null;
+  private takes = new Map<CloudVoice, GeminiTakes>();
   /** Bumped by stop() and by every new speak(), so a slow download can't start talking over something newer. */
   private seq = 0;
 
-  constructor() { void this.ready(); }
+  constructor() { void this.ready().catch(() => undefined); }
 
   /**
    * What the server offers this device, read again before each use: apiHealth keeps the answer until it may have
    * changed (a new invite code, a failed check). Read once at start, the teacher stayed silent after a code was entered
    * in Settings, until the app was closed (see fromHealth).
    */
-  private async ready(): Promise<void> {
+  private async ready(): Promise<GeminiTakes | null> {
     const h = await apiHealth();
-    this.gemini = h.gemini;
-    this.takes.version = h.ttsVersion;
+    const provider = selectedVoice(h);
+    if (provider === 'device') return null;
+    if (!voiceConfigured(provider, h)) throw new VoiceError('take', 'voice_not_configured');
+    let takes = this.takes.get(provider);
+    if (!takes) { takes = new GeminiTakes(provider); this.takes.set(provider, takes); }
+    // Preserve existing Gemini cache keys; newly selectable providers get their own namespace.
+    takes.version = provider === 'gemini' ? h.ttsVersion : provider + '/' + (h.voiceVersions?.[provider] ?? h.ttsVersion);
+    return takes;
   }
 
   /**
@@ -272,25 +282,29 @@ class TeacherVoice implements ReferenceVoice {
    * the server has answered at all, the answer is yes: speak() finds out, and says why if it cannot.
    */
   available(): boolean {
-    return this.web.available() || knownHealth()?.gemini !== false;
+    const h = knownHealth();
+    if (!h) return true;
+    const provider = selectedVoice(h);
+    return provider === 'device' ? this.web.available() : voiceConfigured(provider, h);
   }
 
   /** Which engine is in use — shown in the Parent Zone. */
-  async engine(): Promise<'gemini' | 'device' | 'none'> {
-    await this.ready();
-    return this.gemini ? 'gemini' : this.web.available() ? 'device' : 'none';
+  async engine(): Promise<CloudVoice | 'device' | 'none'> {
+    const takes = await this.ready();
+    return takes?.provider ?? (this.web.available() ? 'device' : 'none');
   }
 
   /** Warm the cache for something the learner is about to hear. */
   prefetch(text: string, opts: SpeakOptions): void {
-    void this.ready().then(() => { if (this.gemini) void this.takes.fetch(text, opts).catch(() => undefined); });
+    void this.ready().then(takes => takes?.fetch(text, opts)).catch(() => undefined);
   }
 
   async speak(text: string, opts: SpeakOptions): Promise<void> {
     const mine = ++this.seq;
     this.web.stop();
     pauseCurrent();
-    await this.ready();
+    let takes: GeminiTakes | null = null;
+    try { takes = await this.ready(); } catch (e) { if (teacherVoiceChoice() !== 'auto') throw e; }
     if (mine !== this.seq) return;
     // Which half failed matters to the learner. On the web a failure quietly became the device voice and nobody had
     // to know; in the phone app there is no device voice (Android's WebView has no speechSynthesis), so whatever
@@ -299,22 +313,27 @@ class TeacherVoice implements ReferenceVoice {
     // will not serve one that is not clean enough, and for the hardest tongue twister it never gets one.
     let refused: VoiceError | null = null;
     // Setup's accent preview plays before the device has a code: the server serves those few lines to anyone.
-    if (this.gemini || opts.preview) {
+    if (!takes && opts.preview && teacherVoiceChoice() === 'auto') {
+      takes = this.takes.get('gemini') ?? new GeminiTakes('gemini');
+      this.takes.set('gemini', takes);
+    }
+    if (takes) {
       let blob: Blob | undefined;
       try {
-        blob = await this.takes.fetch(text, opts);
+        blob = await takes.fetch(text, opts);
       } catch (e) {                                       // the take was never made, or was judged not good enough
         refused = e instanceof VoiceError ? e : new VoiceError('take');
       }
       if (mine !== this.seq) return;
       if (blob) {
         try {
-          return await playBlob(blob);
+          return await playBlob(blob, takes.provider === 'qwen' && opts.slow ? 0.65 : 1);
         } catch {
           if (mine !== this.seq) return;                  // a real playback fault: the device, or the audio itself
         }
       }
     }
+    if (takes && teacherVoiceChoice() !== 'auto') throw refused ?? new VoiceError('playback');
     if (this.web.available()) return this.web.speak(text, opts);
     throw refused ?? new VoiceError('playback');
   }

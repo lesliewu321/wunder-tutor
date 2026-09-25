@@ -6,6 +6,8 @@ import { VoiceError } from './types';
 import { apiUrl } from '../platform';
 
 export interface ApiHealth {
+  voiceProviders?: Partial<Record<'azure' | 'qwen' | 'chirp' | 'gemini', boolean>>;
+  voiceVersions?: Partial<Record<'azure' | 'qwen' | 'chirp' | 'gemini', string>>;
   azure: boolean;
   claude: boolean;
   gemini: boolean;
@@ -137,6 +139,7 @@ export const apiHealth = (): Promise<ApiHealth> => {
       if (!res.ok || !res.headers.get('content-type')?.includes('json')) return (latest = NONE);
       const j = await res.json();
       return (latest = {
+        voiceProviders: j.voiceProviders, voiceVersions: j.voiceVersions,
         azure: !!j.azure, claude: !!j.claude, gemini: !!j.gemini, ttsVersion: typeof j.ttsVersion === 'string' ? j.ttsVersion : '',
         needsCode: !!j.needsCode, authorized: !!j.authorized, codeSet: j.codeSet !== false, read: !!j.read, reached: true,
       });

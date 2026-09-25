@@ -1,3 +1,4 @@
+import { ageGuidance } from '../../../astra-lessons/curriculum';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { Achievement, Exercise, PhonemeId, SpeakItem } from '../../domain/types';
@@ -10,7 +11,7 @@ import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
 import { useBack } from '../../back';
-import { tl, tm } from '../../i18n';
+import { tl, itemMeaning } from '../../i18n';
 import { LiteracyExercise } from './LiteracyExercise';
 import { useT } from '../../i18n/useT';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
@@ -47,7 +48,7 @@ function LessonRun() {
   const completeLesson = useStore((s) => s.completeLesson);
   const completeTest = useStore((s) => s.completeTest);
   const finishItem = useStore((s) => s.finishItem);
-  const lesson = findLesson(lessonId);
+  const lesson = findLesson(lessonId, profile.band);
 
   // The queue is built once per visit — adaptation edits it in place as the child performs.
   const initial = useMemo<Step[]>(() => (lesson ? exercisesFor(lesson, profile) : []), [lessonId]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -56,7 +57,7 @@ function LessonRun() {
   const [results, setResults] = useState<ItemResult[]>([]);
   const [listenScore, setListenScore] = useState({ right: 0, total: 0 });
   const [confirmExit, setConfirmExit] = useState(false);
-  const [started, setStarted] = useState(test || !lesson?.guide);
+  const [started, setStarted] = useState(test);
   const [outcome, setOutcome] = useState<LessonOutcome | null>(null);
   const [testDone, setTestDone] = useState<TestRecord | null>(null);
   useEffect(() => { if (test && lesson) toast(t('lesson.test.start'), '📝'); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -147,15 +148,16 @@ function LessonRun() {
     setListenScore(checks);
     advance(queue, results, checks);
   };
-  if (!started && lesson.guide) {
+  if (!started) {
     const g = lesson.guide;
     return <div className="screen lesson-guide">
       <IconButton icon="close" label={t('lesson.leave.button')} onClick={() => nav('/')} />
       <span className="lesson-guide__icon" aria-hidden>{lesson.icon}</span>
       <h1>{lessonTitle(lesson)}</h1>
-      <div className="card"><h2>{t('lesson.guide.goal')}</h2><p>{tl(g.goal, g.goalHant)}</p></div>
+      <p className="course-overview">{ageGuidance(profile.band)}</p>
+      {g && <><div className="card"><h2>{t('lesson.guide.goal')}</h2><p>{tl(g.goal, g.goalHant)}</p></div>
       <div className="card"><h2>{t('lesson.guide.tip')}</h2><p>{tl(g.tip, g.tipHant)}</p></div>
-      <div className="card"><h2>{t('lesson.guide.practice')}</h2><p>{tl(g.practice, g.practiceHant)}</p></div>
+      <div className="card"><h2>{t('lesson.guide.practice')}</h2><p>{tl(g.practice, g.practiceHant)}</p></div></>}
       <Button size="lg" variant="primary" block onClick={() => setStarted(true)}>{t('lesson.guide.start')}</Button>
     </div>;
   }
@@ -227,7 +229,7 @@ function DialogueExercise({ ex, onDone, test = false }: { ex: Extract<Exercise, 
       <span className="bubble-row__who" aria-hidden>{ex.picture ?? '🧑‍🍳'}</span>
       <button type="button" className="bubble" onClick={() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined)}>
         {ex.tutor ? <ItemText item={ex.tutor} band={profile.band} script={profile.zhScript} /> : ex.tutorLine} <span aria-hidden>🔈</span>
-        {ex.tutor?.lang && tm(ex.tutor.meaning, ex.tutor.lang) && profile.band !== 'little' && <small className="bubble__meaning">{tm(ex.tutor.meaning, ex.tutor.lang)}</small>}
+        {itemMeaning(ex.tutor ?? { text: ex.tutorLine, kind: 'sentence' }) && <small className="bubble__meaning">{itemMeaning(ex.tutor ?? { text: ex.tutorLine, kind: 'sentence' })}</small>}
       </button>
     </div>
   );

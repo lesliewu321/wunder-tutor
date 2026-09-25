@@ -140,5 +140,6 @@
   "onboarding.check.title.en": "あなたのプラン",
   "onboarding.check.title.zh": "あなたの中国語プラン",
   "onboarding.check.startWith": "まずはこれから",
-  "onboarding.check.hint": "かんたんになるまで、レッスンやラボでくり返し出てきます。"
+  "onboarding.check.hint": "かんたんになるまで、レッスンやラボでくり返し出てきます。",
+  "onboarding.consent.contribute.detail": "名前を付けずに練習録音をチームが保管し、発音評価の改善に使うことを許可します。保管期間は最長90日です。設定でオフにできます。"
 }
