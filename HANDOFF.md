@@ -343,3 +343,32 @@ This update supersedes the communication-pack status and old lesson counts above
 - Temporary release checkout/junction and this task's QA server cleaned up. Port 5173 untouched. No keys,
   mobile build or GitHub push. Concurrent HANDOFF/source-library changes and subsequent commit 79716ce
   (Cantonese naming) are preserved; that subsequent commit was not part of this deployment.
+
+## 2026-09-25 — Keep Cantonese selected when showing festival lessons
+
+- Deployed application commit: af7c46d053ff58762b51ac682f12299832c381d5.
+  Pages deployment: 0558e612-05ea-4919-bcc0-9b5e70bb7af5
+  (https://0558e612.wunder-tutor.pages.dev); live https://app.wundertutor.com.
+- Reproduced on the previous live build: selecting Cantonese after Putonghua left a Putonghua Mid-Autumn
+  card on Home; its click handler switched the active course back to Putonghua. Home now asks for seasonal
+  lessons in the single selected course. The seasonal API accepts one course, and its card never changes it.
+  The existing Mid-Autumn lesson is still available when Putonghua is selected.
+- Main Cantonese lessons already contain spoken Cantonese and Jyutping. Verified the public app opens
+  /lesson/yue-greetings-1 with 你好！ / nei5 hou2 and sends zh-HK requests. No teacher-provider change was made.
+  Added regressions for every other course excluding the Mandarin festival and for Azure/Chirp/Qwen keeping
+  identical Chinese text in separate Cantonese/Mandarin client caches.
+- Required checks passed in the clean detached release: npm test (1844 passed; two optional export tests
+  skipped), typecheck, content:check, i18n:export and i18n:check. Existing unused Mandarin-item and bundle-size
+  warnings remain. All seven app-language catalogs pass; no learner-facing copy was added.
+- Browser QA: all 28 course/age Home combinations keep bonus cards in their course; 14 Cantonese lesson
+  checks cover seven app languages, both character settings and all four ages. Listen/Slow request zh-HK;
+  Jyutping remains visible. The first fixture incorrectly expected fresh requests for already cached audio;
+  corrected the cache-aware assertion and the lesson checks passed. No page errors.
+- Production and deployment HTML/main JS match the build. JS SHA256:
+  c9a0496076327d32c16b2c3e91d9878a76fe3a886bfdea1cc128dea8e7df6850.
+  A fresh production browser confirmed no Mandarin bonus on Cantonese Home, the correct lesson URL/text,
+  and zh-HK requests. Speech APIs and font CDN were intercepted for browser checks; this verifies routing,
+  not an auditory evaluation of paid provider audio.
+- npm run deploy ran from clean committed .wrangler/cantonese-routing-release. No secrets read/uploaded,
+  GitHub push, mobile build or change to port 5173. Temporary release checkout removed after verification.
+  Concurrent course-naming, health, source-library and HANDOFF changes preserved.
