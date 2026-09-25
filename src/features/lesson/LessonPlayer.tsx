@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { Achievement, Exercise, PhonemeId, SpeakItem } from '../../domain/types';
-import { findLesson, lessonTitle } from '../../content/course';
+import { findLesson, ITEM_INDEX, lessonTitle } from '../../content/course';
+import { RETEST_BELOW } from '../../engine/testing';
 import { LADDERS } from '../../content/lab';
 import { exampleSpeech, phonemeInfo, soundLocale, tipFor } from '../../content/phonemes';
 import { shownText } from '../../content/zh/script';
@@ -24,7 +25,7 @@ import { SpeakExercise, type SpeakResult } from '../speak/SpeakExercise';
 import { ChoiceExercise } from './ChoiceExercise';
 
 type Step = Exercise | { id: string; type: 'drill-intro'; sound: PhonemeId };
-interface ItemResult extends SpeakResult { text: string }
+interface ItemResult extends SpeakResult { text: string; itemId: string }
 
 /** A fresh player for every visit: "Take it again" changes the address, and everything starts over. */
 export function LessonPlayer() {
@@ -43,6 +44,7 @@ function LessonRun() {
   const profile = useActiveProfile();
   const completeLesson = useStore((s) => s.completeLesson);
   const completeTest = useStore((s) => s.completeTest);
+  const finishItem = useStore((s) => s.finishItem);
   const lesson = findLesson(lessonId);
 
   // The queue is built once per visit — adaptation edits it in place as the child performs.
@@ -86,7 +88,11 @@ function LessonRun() {
       ? Math.round((spoken.reduce((n, r) => n + r.best, 0) + checks.right * 100) / (spoken.length + checks.total))
       : spoken.length ? Math.round(spoken.reduce((n, r) => n + r.best, 0) / spoken.length)
       : checks.total ? Math.round((checks.right / checks.total) * 100) : 100;
-    if (test) setTestDone(completeTest(lesson.id, avg));
+    if (test) {
+      // A weak test score is evidence: the item goes back onto the review schedule, and the next Review picks it up.
+      for (const r of all) if (r.tries > 0 && r.best < RETEST_BELOW) { const it = ITEM_INDEX[r.itemId]; if (it) finishItem(it, r.best, false, 1); }
+      setTestDone(completeTest(lesson.id, avg));
+    }
     else setOutcome(completeLesson(lesson.id, avg));
   };
 
@@ -96,7 +102,7 @@ function LessonRun() {
   };
 
   const onSpeakDone = (ex: Extract<Exercise, { type: 'speak' }> | { item: SpeakItem; id: string }, r: SpeakResult) => {
-    const all = [...results, { ...r, text: shownText(ex.item) }];
+    const all = [...results, { ...r, text: shownText(ex.item), itemId: ex.item.id }];
     setResults(all);
     if (test) { advance(queue, all); return; }
     let next = queue;

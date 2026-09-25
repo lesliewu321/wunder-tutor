@@ -8,6 +8,7 @@ import { courseLessons, currentUnit, lessonUnlocked } from '../../engine/curricu
 import { dueItems, itemCourse, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
 import { focusSound, weakSoundsIn } from '../../intelligence/profile';
+import { testDue } from '../../engine/testing';
 import { useActiveProfile, useStore } from '../../state/store';
 import type { CourseId } from '../../domain/types';
 import type { Key } from '../../i18n';
@@ -45,6 +46,13 @@ export function Home() {
   const [pathMode, setPathModeState] = useState<'learn' | 'test'>(() => { try { return localStorage.getItem(`wunder-tutor/path-mode/${p.id}`) === 'test' ? 'test' : 'learn'; } catch { return 'learn'; } });
   const setPathMode = (m: 'learn' | 'test') => { setPathModeState(m); try { localStorage.setItem(`wunder-tutor/path-mode/${p.id}`, m); } catch { /* private mode */ } };
   const testing = pathMode === 'test';
+  // A test that is worth taking now (engine/testing.ts), shown on the hero once a day at most; the path tags it too.
+  const dueTest = unit.lessons.find((l) => testDue(p, l.id, ids));
+  const today = new Date().toDateString();
+  const [nudged, setNudged] = useState(() => { try { return localStorage.getItem(`wunder-tutor/test-nudge/${p.id}`) === today; } catch { return false; } });
+  const showTest = !!dueTest && !nudged && !testing;
+  useEffect(() => { if (showTest) { try { localStorage.setItem(`wunder-tutor/test-nudge/${p.id}`, today); } catch { /* private mode */ } } }, [showTest, p.id, today]); // eslint-disable-line react-hooks/exhaustive-deps
+  void setNudged;
   useEffect(() => { void apiHealth().then(setApi); }, []);
   // Never let simulated scores pass for real ones.
   const practiceMode = api !== null && !api.azure;
@@ -97,11 +105,13 @@ export function Home() {
         <div className="hero__text">
           <span className="hero__unit">{t('home.hero.unit', { course: courseTitle(COURSE, p.band), n: COURSE.units.indexOf(unit) + 1 })}</span>
           <h1>{unitTitle(unit, p.band)}</h1>
-          <p>{next ? rich(t('home.hero.next', { title: `${next.icon} ${lessonTitle(next)}` })) : due ? tn('home.hero.due', due) : t('home.hero.finished')}</p>
+          <p>{showTest && dueTest ? rich(t('home.hero.test', { title: `${dueTest.icon} ${lessonTitle(dueTest)}` })) : next ? rich(t('home.hero.next', { title: `${next.icon} ${lessonTitle(next)}` })) : due ? tn('home.hero.due', due) : t('home.hero.finished')}</p>
           <div className="hero__progress"><ProgressBar value={doneCount / ids.length} tone="sun" /><span>{doneCount}/{ids.length}</span></div>
         </div>
         <Mascot mood="happy" size={104} className="hero__pip" />
-        <Button variant="coral" size="lg" block onClick={() => nav(`/lesson/${next?.id ?? review.id}`)}>{t(doneCount === 0 ? 'home.hero.start' : next ? 'home.hero.continue' : 'home.hero.review')}</Button>
+        {showTest && dueTest
+          ? <Button variant="coral" size="lg" block onClick={() => nav(`/lesson/${dueTest.id}?mode=test`)}>{t('home.hero.takeTest')}</Button>
+          : <Button variant="coral" size="lg" block onClick={() => nav(`/lesson/${next?.id ?? review.id}`)}>{t(doneCount === 0 ? 'home.hero.start' : next ? 'home.hero.continue' : 'home.hero.review')}</Button>}
       </section>
 
       <button type="button" className="focus-card" onClick={() => nav(`/lab/${encodeURIComponent(focus)}`)}>
@@ -161,7 +171,7 @@ export function Home() {
               <li key={l.id}>
                 <button type="button" className={`node ${done ? 'node--done' : current ? 'node--current' : unlocked ? '' : 'node--locked'}`} disabled={!unlocked} onClick={() => nav(`/lesson/${l.id}`)}>
                   <span className="node__icon">{unlocked ? l.icon : <Icon name="lock" size={22} />}</span>
-                  <span className="node__text"><b>{lessonTitle(l)}</b><small>{done ? t('home.path.again') : current ? t('home.path.upNext') : unlocked ? t('home.path.ready') : t('home.path.locked', { title: prerequisite ? lessonTitle(prerequisite) : '' })}</small></span>
+                  <span className="node__text"><b>{lessonTitle(l)}</b><small>{done ? t(testDue(p, l.id, ids) ? 'home.path.testDue' : 'home.path.again') : current ? t('home.path.upNext') : unlocked ? t('home.path.ready') : t('home.path.locked', { title: prerequisite ? lessonTitle(prerequisite) : '' })}</small></span>
                   {done ? p.band === 'adult' ? <span className="node__go node__go--done" aria-label={t('home.path.done.aria')}><Icon name="check" size={16} /></span> : <span className="node__stars" aria-label={tn('home.path.stars.aria', done.stars)}>{'★'.repeat(done.stars)}<i>{'★'.repeat(3 - done.stars)}</i></span> : current ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
                 </button>
               </li>
