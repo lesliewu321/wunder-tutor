@@ -76,6 +76,61 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
     author CSV export/import promised in the plan is not written yet.
   - The one-off generator that dumped the golden and the JSON from the TypeScript is gone with the TypeScript (a copy
     sits in the session scratchpad); it cannot run again and need not.
+- **The big build, step 2 — test mode (in the working tree, NOT committed, NOT deployed — see the collision note):**
+  Leslie: "a test mode, same lessons but without teacher". `/lesson/<id>?mode=test` runs the very same exercises with
+  nothing to listen to (no auto-play, no Listen/Slow, no hint ear), no tips (no fix card, no word sheet, no spoken tip,
+  no teacher/slow in the compare row — only "Me"), ONE go per item, no drills slipped in and no fast track; a listening
+  exercise takes the first pick as the answer (marked, no slow replay; "Not this time — the answer is marked in
+  green."); result headlines are the test's own ("Excellent!" / "Good." / "Keep going."), never "one thing to fix". At
+  the end a score sheet (`TestComplete` in LessonPlayer.tsx): test score, first-try listening tally, every line with
+  its score, "Back to lessons" / "Take it again" (the player remounts on the address: `LessonPlayer` keys `LessonRun`
+  on pathname + search). The store's `completeTest(lessonId, score)` keeps `profile.tests[lessonId] = { at, score,
+  best, taken }` — no lesson XP, no stars, the lesson stays as it was (attempt XP still accrues; attempts carry context
+  `'test'`); `mergeProfiles` keeps the best and the latest across devices. Home: a **Learn / Test** switch (chips)
+  above the lesson path, remembered per learner on the device (`wunder-tutor/path-mode/<id>`); in Test a child can
+  test only lessons already completed (grown-ups anything), a tested lesson shows "Best score N" with a score chip. Run
+  in the 5199 copy at phone width: the full food-1 test (five spoken items via the demo mic, one listening question
+  answered wrong on purpose) to the score sheet (77, 0/1). Tests: +2 (`test-mode.test.ts`); 272 pass, typecheck clean.
+  Still to do: show test scores on the Progress page; the literacy exercises (`read-choice`, `arrange`) are another
+  agent's work and keep their own hints in a test.
+- **COLLISION NOTE (2026-09-25 ~11:40 onwards): a second agent works in this same checkout.** While this session built
+  test mode, something else — no Claude Desktop session on this machine mentions it; most likely a Codex agent Leslie
+  started for the comprehensive course — wrote, uncommitted, in batches: `read-choice` and `arrange` exercise types
+  (types.ts, load.ts, the schema), lesson `guide` pages, `LiteracyExercise.tsx`, `engine/curriculum.ts` (multi-unit
+  navigation, "Explore units" on Home), `content/authoring/`, `content/resources/`, and words for all of it. It built
+  on the content split within minutes of the split landing. Its edits and this session's share types.ts,
+  LessonPlayer.tsx, Home.tsx, screens.css and the i18n files; every edit here was a targeted replacement on a fresh
+  read, and the tree typechecks and passes 272 tests with both sets of changes in place. **Nothing of step 2 is
+  committed**, because a commit of the shared files would also commit that agent's half-done work (LessonPlayer
+  imports its untracked LiteracyExercise.tsx). Leslie decides: commit both together, or let the other agent land first
+  and then commit test mode on top. No deploy for the same reason.
+- **Recordings moved to R2, consent on by default (DEPLOYED ~04:15 UTC, Pages c2367879, from the uncommitted tree):**
+  Leslie: "refract recordings to r2 now. we will enable consent by default" and, on the switch, "it is visible and can
+  be disabled by toggle … I may only go as far as making it less prominent, but still visible" — agreed: visible on the
+  privacy page, on by default, one tap off, and the wording now says what is kept, for how long (90 days) and that
+  deleting deletes. Built: bucket `wunder-tutor-recordings` (R2, location hint apac, lifecycle rule expire-90-days —
+  `npx wrangler r2 bucket lifecycle list wunder-tutor-recordings`), bound as `RECORDINGS` in wrangler.toml;
+  `server/invites.mjs` `contribute()` puts the WAV in the `recordings` store when one is given (R2 live, a folder
+  `server/.cache/recordings/` locally — set `RECORDINGS_DIR` to move it) and writes the row with `store: 'r2'`;
+  migration `20260925130000_contributions_store.sql` (applied) adds `contributions.store` ('supabase' for the 180
+  rows from before, 'r2' from now); `forget(device)` deletes a device's audio from whichever store and then the rows;
+  new route `POST /api/contributions/forget { device }` → `{ deleted }` (no code needed, the device id is the handle;
+  bad id → 400 `invalid_device`; 6/10 min per address). App: `defaultSettings.contributeRecordings = true` (a device
+  set up before the switch existed still has no value = no); "Delete recordings" and "Delete everything" call
+  `forgetContributions()` (src/speech/health.ts) as well. **Proven live:** a real kept take → row `store='r2'` →
+  `wrangler r2 object get … --remote` downloaded 24,916 bytes → forget → `{deleted:1}` → the object is gone. Locally
+  the same round trip with the folder store (the local server needs `SUPABASE_URL` in the environment — it is not
+  in .env — or contributions are simply off there). Tests +2 (invites.test.mjs); 284 pass. Not yet: an eval-side
+  puller for R2 (eval/volunteers.ts still reads the exported files); the 180 Supabase-Storage rows stay where they are.
+- **THE KV MYSTERY IS SOLVED — wrangler 4 talks to a LOCAL simulation unless `--remote`.** `wrangler r2 object get`
+  said "key does not exist" for an object the live Function had just written, and its first lines said "Resource
+  location: local — Use --remote". So on 2026-09-23 `warm-voice.mjs --push` wrote its 1,000 takes into a local KV
+  simulation under .wrangler/, not into production: the live namespace has 308 keys (the live server's own cache),
+  the local one 1,000. The bindings were right all along. `scripts/warm-voice.mjs` now passes `--remote` on both
+  its commands; the push has NOT been re-run yet (see the voice-cache paragraph of 2026-09-23 for the rules).
+- **Korean and Spanish requested** (Leslie, mid-turn: "add korean and spanish to app") — after R2. A search agent is
+  mapping every touchpoint of a course language (types, content, engine, speech, server locale lists, i18n, evals,
+  the contributions.locale CHECK constraint) as this is written; the plan and the work come next.
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
