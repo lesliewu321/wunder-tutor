@@ -57,7 +57,7 @@ export function Me() {
         <h2>{p.name}</h2>
         <p>{t(BAND_LABEL[p.band])}</p>
         <div className="stat-row">
-          <div className="stat"><b>{studyMinutes}<small> min</small></b><span>{t('settings.me.studyTime')}</span></div>
+          <div className="stat"><b>{studyMinutes}<small> {t('settings.me.minutes')}</small></b><span>{t('settings.me.studyTime')}</span></div>
           <div className="stat stat--sun"><b>{p.streak.best}</b><span>{t('settings.me.longest')}</span></div>
           <div className="stat stat--coral"><b>{liveStreak(p.streak)}</b><span>{t('settings.me.streak')}</span></div>
         </div>

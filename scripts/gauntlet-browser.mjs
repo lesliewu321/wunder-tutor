@@ -2,7 +2,7 @@
 // Optional PLAYWRIGHT_PACKAGE is an absolute package.json path for a bundled Playwright installation.
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
-const require = createRequire(process.env.PLAYWRIGHT_PACKAGE || import.meta.url);
+const require = createRequire(process.env.PLAYWRIGHT_PACKAGE || 'C:/Users/Leslie/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json');
 const { chromium } = require('playwright');
 const base = process.env.GAUNTLET_URL || 'http://127.0.0.1:5176';
 const browser = await chromium.launch({ headless: true, channel: process.env.GAUNTLET_BROWSER || 'msedge' });
@@ -43,7 +43,7 @@ try{
   // UI flows including empty bonus and Scan states must stay translated for every app language.
   for(const path of ['/parents','/notifications','/speak','/lab','/twisters','/book','/lesson/yue-greetings-1']){
    await navigate(path);await check(locale+path);
-   if(path==='/parents')assert(await page.locator('#teacher-voice select option').count()===6,'voice choices '+locale);
+   if(path==='/parents')assert(await page.locator('#teacher-voice select').count()===3,'voice choices '+locale);
    if(path==='/speak')assert(await page.locator('.scenario-list li').count()===24,'Cantonese scenes '+locale);
   }
  }
@@ -53,20 +53,20 @@ try{
  for(const course of ['en','zh','yue','ja','ko','fr','es']){await page.locator('.me .course-pick select').selectOption(course);assert(await page.evaluate(()=>window.__store.getState().profiles[window.__store.getState().activeId].course)===course,'course switch '+course);}
  await page.evaluate(async()=>{const i=await import('/src/i18n/index.ts');await i.loadLanguage('en');const s=window.__store.getState();s.setSettings({language:'en'});s.patchProfile(s.activeId,{band:'adult',course:'yue'});});
  await navigate('/parents');
- const select=page.locator('#teacher-voice select');
- assert(await select.locator('option[value=gemini]').evaluate(e=>e.disabled),'Gemini must be disabled for Cantonese: '+await page.evaluate(()=>JSON.stringify({profile:window.__store.getState().profiles[window.__store.getState().activeId].course,options:document.querySelector('#teacher-voice select')?.outerHTML})));
- for(const provider of ['azure','qwen','chirp','device','auto']){await select.selectOption(provider);assert(await select.inputValue()===provider,'choice not shown');}
+ const select=page.getByRole('combobox',{name:'Primary voice',exact:true});
+ assert(!await page.locator('#teacher-voice option[value=gemini]').count(),'Gemini must stay hidden');
+ for(const provider of ['azure','qwen','chirp','device']){await select.selectOption(provider);assert(await select.inputValue()===provider,'choice not shown');}
  await select.selectOption('qwen');
  await page.reload({waitUntil:'domcontentloaded'});await select.waitFor();assert(await select.inputValue()==='qwen','choice did not persist');
  await page.locator('#teacher-voice').scrollIntoViewIfNeeded();
  fs.mkdirSync('.wrangler',{recursive:true});
  await page.screenshot({path:'.wrangler/gauntlet-teacher-voice.png'});
- await page.getByRole('button',{name:'Preview voice',exact:true}).click();
- await page.waitForFunction(()=>Array.from(document.querySelectorAll('#teacher-voice button')).some(b=>b.textContent==='Preview voice'&&!b.disabled));
+ await page.getByRole('button',{name:'Preview primary',exact:true}).click();
+ await page.waitForFunction(()=>Array.from(document.querySelectorAll('#teacher-voice button')).some(b=>b.textContent==='Preview primary'&&!b.disabled));
  assert(calls.some(c=>c.provider==='qwen'&&c.accent==='zh-HK'),'Qwen preview wrong locale');
  await navigate('/');await page.screenshot({path:'.wrangler/gauntlet-cantonese-home.png'});
  await navigate('/lesson/yue-greetings-1');
  const start=page.locator('.lesson-guide button').last();
  if(await start.count())await start.click();
- console.log(JSON.stringify({homePermutations:rows,localizedFlows:49,voiceChoices:6,persistence:true,hkRouting:true,pageErrors:errors}));
+ console.log(JSON.stringify({homePermutations:rows,localizedFlows:49,voiceChoices:4,persistence:true,hkRouting:true,pageErrors:errors}));
 }finally{await browser.close();}

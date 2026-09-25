@@ -152,4 +152,20 @@ describe('gauntlet: teacher voice configuration matrix', () => {
     expect(s.calls.map(c => c.provider)).toEqual(['qwen']);
   });
 
+
+  it('does not play or cache a silent WAV and uses the configured backup', async () => {
+    const silent = new Uint8Array(524), view = new DataView(silent.buffer);
+    silent.set(new TextEncoder().encode('RIFF'),0);silent.set(new TextEncoder().encode('WAVE'),8);
+    silent.set(new TextEncoder().encode('data'),12);view.setUint32(16,504,true);
+    const s = await setup(15,async b=>b.provider==='qwen'?new Response(silent,{headers:{'content-type':'audio/wav'}}):wav());
+    await s.voice.speak('你好',{accent:'zh-CN'});
+    await s.voice.speak('你好',{accent:'zh-CN'});
+    expect(s.calls.map(c=>c.provider)).toEqual(['qwen','chirp','qwen']);
+    expect(s.played).toHaveLength(2);
+  });
+  it.each(locales)('recovers from HTTP 500 on the primary for %s',async accent=>{
+    const primary=accent.startsWith('zh')?'qwen':'chirp';
+    const s=await setup(15,async b=>b.provider===primary?Response.json({error:'internal_error'},{status:500}):wav());
+    await s.voice.speak('sample',{accent});expect(s.calls).toHaveLength(2);expect(s.played).toHaveLength(1);
+  });
 });

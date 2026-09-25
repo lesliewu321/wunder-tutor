@@ -1,3 +1,4 @@
+import { noSoundMessage } from '../../speech/health';
 import { ReminderOffer } from '../../notifications/Notifications';
 import { ageGuidance } from '../../../astra-lessons/curriculum';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -208,7 +209,7 @@ function DrillIntro({ sound, onDone }: { sound: PhonemeId; onDone: () => void })
         <h2>{info.category === 'tone' ? t('lesson.drill.title.tone', { tone }) : t('lesson.drill.title.sound', { label: info.label })}</h2>
         {sound === 'yue:tones' ? <CantoneseTones size={210} /> : info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={210} /> : <Mouth pose={info.pose} size={210} />}
         <p className="drill-intro__tip">{tipFor(sound, profile.band)}</p>
-        <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: soundLocale(sound, profile.accent), slow: true }).catch(() => undefined)}>🔈 {t('lesson.drill.hear', { example: info.example })}</button>
+        <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: soundLocale(sound, profile.accent), slow: true }).catch(async (e) => toast(await noSoundMessage(profile.band, e), '🔇'))}>🔈 {t('lesson.drill.hear', { example: info.example })}</button>
       </div>
       <div className="drill-intro__dock"><Button variant="primary" size="lg" block onClick={onDone}>{t('lesson.drill.ready')}</Button></div>
     </div>
@@ -222,14 +223,14 @@ function DialogueExercise({ ex, onDone, test = false }: { ex: Extract<Exercise, 
 
   const tutorLocale = localeOf(ex.tutor, profile.accent);
   useEffect(() => {
-    const timer = setTimeout(() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined), 400);
+    const timer = setTimeout(() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(async (e) => toast(await noSoundMessage(profile.band, e), '🔇')), 400);
     return () => { clearTimeout(timer); stopPlayback(); };
   }, [ex.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const bubble = (
     <div className="bubble-row">
       <span className="bubble-row__who" aria-hidden>{ex.picture ?? '🧑‍🍳'}</span>
-      <button type="button" className="bubble" onClick={() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined)}>
+      <button type="button" className="bubble" onClick={() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(async (e) => toast(await noSoundMessage(profile.band, e), '🔇'))}>
         {ex.tutor ? <ItemText item={ex.tutor} band={profile.band} script={profile.zhScript} /> : ex.tutorLine} <span aria-hidden>🔈</span>
         {itemMeaning(ex.tutor ?? { text: ex.tutorLine, kind: 'sentence' }) && <small className="bubble__meaning">{itemMeaning(ex.tutor ?? { text: ex.tutorLine, kind: 'sentence' })}</small>}
       </button>

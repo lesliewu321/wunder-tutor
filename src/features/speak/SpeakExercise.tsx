@@ -124,7 +124,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
   // Young children can't read a correction — Tutu says it out loud. Older learners can tap to hear it.
   const sayTip = useCallback((text: string) => {
     stopPlayback();
-    void voice.speak(text, { accent: profile.accent }).catch(() => undefined);
+    void voice.speak(text, { accent: profile.accent }).catch(async (e) => toast(await noSoundMessage(profile.band, e), '🔇'));
   }, [profile.accent]);
   // Said aloud, so in English whatever the App language (see inEnglish).
   const tipToSay = current && view === 'result' && band === 'little' && !test ? inEnglish(() => spokenTip(current.assessment, band, profile.homeLanguage)) : null;

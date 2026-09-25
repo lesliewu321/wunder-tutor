@@ -190,5 +190,6 @@
   "settings.voice.previewBackup": "대체 음성 듣기",
   "settings.voice.resetPair": "앱 기본 설정 사용",
   "settings.voice.defaultPair": "앱 기본 설정을 사용 중입니다.",
-  "settings.voice.customPair": "저장한 설정을 사용 중입니다."
+  "settings.voice.customPair": "저장한 설정을 사용 중입니다.",
+  "settings.me.minutes": "분"
 }

@@ -190,5 +190,6 @@
   "settings.voice.previewBackup": "试听后备声音",
   "settings.voice.resetPair": "使用应用默认",
   "settings.voice.defaultPair": "正在使用应用默认。",
-  "settings.voice.customPair": "正在使用你保存的选择。"
+  "settings.voice.customPair": "正在使用你保存的选择。",
+  "settings.me.minutes": "分钟"
 }

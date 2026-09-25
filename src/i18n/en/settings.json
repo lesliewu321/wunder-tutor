@@ -195,5 +195,6 @@
   "settings.voice.previewBackup": "Preview backup",
   "settings.voice.resetPair": "Use app defaults",
   "settings.voice.defaultPair": "Using app defaults.",
-  "settings.voice.customPair": "Using your saved choices."
+  "settings.voice.customPair": "Using your saved choices.",
+  "settings.me.minutes": "min"
 }

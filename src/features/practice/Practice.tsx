@@ -1,3 +1,4 @@
+import { noSoundMessage } from '../../speech/health';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { contentBand, isGrownUp, type AgeBand, type Assessment, type PhonemeId, type SpeakItem } from '../../domain/types';
@@ -98,9 +99,9 @@ export function Conversation() {
 
   // Each line in its own voice: the Mandarin teacher for Putonghua, the French one for French, the learner's accent
   // for English.
-  const say = (it: SpeakItem) => voice.speak(it.say ?? it.text, { accent: localeOf(it, p.accent), kind: it.kind }).catch(() => undefined);
+  const say = (it: SpeakItem) => voice.speak(it.say ?? it.text, { accent: localeOf(it, p.accent), kind: it.kind }).catch(async (e) => toast(await noSoundMessage(p.band, e), '🔇'));
   // A tip is advice in the app's language; it is read aloud only when that is English, the teacher's own language.
-  const sayTip = (text: string) => (language() === 'en' ? voice.speak(text, { accent: p.accent }).catch(() => undefined) : undefined);
+  const sayTip = (text: string) => (language() === 'en' ? voice.speak(text, { accent: p.accent }).catch(async (e) => toast(await noSoundMessage(p.band, e), '🔇')) : undefined);
 
   const tutorTurn = async (history: Line[], note?: string) => {
     if (!scenario) return;

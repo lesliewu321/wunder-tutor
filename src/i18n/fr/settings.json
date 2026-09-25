@@ -195,5 +195,6 @@
   "settings.voice.previewBackup": "Écouter la voix de secours",
   "settings.voice.resetPair": "Utiliser les réglages de l’app",
   "settings.voice.defaultPair": "Réglages de l’app utilisés.",
-  "settings.voice.customPair": "Vos choix enregistrés sont utilisés."
+  "settings.voice.customPair": "Vos choix enregistrés sont utilisés.",
+  "settings.me.minutes": "min"
 }

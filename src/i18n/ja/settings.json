@@ -190,5 +190,6 @@
   "settings.voice.previewBackup": "予備を試聴",
   "settings.voice.resetPair": "アプリの初期設定を使う",
   "settings.voice.defaultPair": "アプリの初期設定を使用中。",
-  "settings.voice.customPair": "保存した設定を使用中。"
+  "settings.voice.customPair": "保存した設定を使用中。",
+  "settings.me.minutes": "分"
 }

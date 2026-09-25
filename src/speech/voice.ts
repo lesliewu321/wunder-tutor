@@ -208,14 +208,30 @@ class GeminiTakes {
     try { return teacherToneOk(await blob.arrayBuffer(), text, this.version.split('/').slice(-1)[0] ?? ''); } catch { return true; }
   }
 
+  /** A valid WAV containing only zero PCM samples must never count as a teacher take. */
+  private async audible(blob: Blob): Promise<boolean> {
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    const id = (at: number) => String.fromCharCode(...bytes.subarray(at, at + 4));
+    // Unsupported/corrupt formats are rejected by the media engine, which also triggers backup.
+    if (id(0) !== 'RIFF' || id(8) !== 'WAVE') return true;
+    const view = new DataView(bytes.buffer);
+    for (let at = 12; at + 8 <= bytes.length;) {
+      const size = view.getUint32(at + 4, true);
+      if (id(at) === 'data') return bytes.subarray(at + 8, Math.min(bytes.length, at + 8 + size)).some(byte => byte !== 0);
+      at += 8 + size + (size & 1);
+    }
+    return false;
+  }
+
   private async load(key: string, text: string, opts: SpeakOptions): Promise<Blob> {
     try {
       const stored = this.store && (await get<Blob>(key, this.store));
-      if (stored && (await this.toneOk(stored, text, opts))) { this.memory.set(key, stored); return stored; }
+      if (stored && (await this.audible(stored)) && (await this.toneOk(stored, text, opts))) { this.memory.set(key, stored); return stored; }
     } catch { /* storage unavailable — fetch instead */ }
 
     const got = await this.ask(text, opts);
     const blob = got.voice === 'backup' ? new Blob([got.blob], { type: BACKUP_TYPE }) : got.blob;
+    if (!(await this.audible(blob))) throw new VoiceError('take', 'voice_no_audio');
     if (!(await this.toneOk(blob, text, opts))) {
       // The teacher's take, turned away by this device's tone check, is not the last word: the backup voice reads the
       // line (the server keeps that take beside the teacher's). Before, the line went silent for the session (2026-09-22).

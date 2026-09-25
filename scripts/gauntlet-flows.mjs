@@ -43,7 +43,7 @@ for(const locale of ['en','zh-Hant','zh-Hans','ja','ko','fr','es']){
   for(const route of ['/','/me','/progress','/lab','/twisters','/notifications','/book']){await nav(route);await page.locator('.screen').first().waitFor();assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),locale+'/'+course+route+' overflow');report.screens.push(locale+'/'+course+route)}
  }
  await nav('/book');await page.locator('.book__type').first().click();await page.locator('#say-text').fill('Hello world. I like apples.');await page.getByRole('button',{name:copy['home.book.typeSheet.go'],exact:true}).click();await page.locator('.say__lines li').first().waitFor();assert(await page.locator('.say__lines li').count()===2,'Notebook line count');
- await page.locator('.book__delete').click();await page.getByRole('button',{name:copy['home.book.delete.cta'],exact:true}).click();await page.locator('.book__start').waitFor();report.notebooks.push(locale);
+ await page.locator('.book__delete').click();await page.getByRole('dialog').getByRole('button',{name:copy['home.book.delete.cta'],exact:true}).click();await page.locator('.book__start').waitFor();report.notebooks.push(locale);
  await page.setViewportSize({width:320,height:720});await nav('/me');assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),locale+' 320px profile overflow');
  await page.screenshot({path:'.wrangler/gauntlet-profile-'+locale+'.png'});
  assert(!report.errors.length,report.errors.join('\n'));await context.close();console.log(locale+' completed: lessons, conversations, seven main screens, Notebook save/delete');

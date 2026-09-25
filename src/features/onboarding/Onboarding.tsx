@@ -1,3 +1,4 @@
+import { noSoundMessage } from '../../speech/health';
 import { LanguageFlag, flagEmoji } from '../../ui/LanguageFlag';
 import { useEffect, useRef, useState } from 'react';
 import { readsTraditional } from '../../engine/region';
@@ -21,7 +22,7 @@ import { eraseAccountLearners, useAccount } from '../../account/account';
 import { apiHealth, refreshHealth, type ApiHealth } from '../../speech';
 import { micSupported } from '../../speech/recorder';
 import { ACCENT_PREVIEW_LINE, localeOf, voice } from '../../speech/voice';
-import { useProfile, useStore } from '../../state/store';
+import { bandForAge, useProfile, useStore } from '../../state/store';
 import { Button, IconButton, ProgressBar, Sheet, toast } from '../../ui/kit';
 import { Icon } from '../../ui/Icon';
 import { Mascot } from '../../ui/Mascot';
@@ -202,18 +203,18 @@ export function Onboarding() {
     creating.current = true;
     setCreatingProfile(true);
     try {
-    setSettings({ storeRecordings: keepRecordings, contributeRecordings: contribute, consentedAt: Date.now() });
-    // Ask for the microphone now, with the grown-up present, so a child never meets a permission prompt alone.
-    if (micSupported()) {
-      try { (await navigator.mediaDevices.getUserMedia({ audio: true })).getTracks().forEach((track) => track.stop()); }
-      catch { toast(t('onboarding.consent.micBlocked'), '🎙️'); }
-    }
-    madeId.current = createProfile({
-      name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: age!, homeLanguage: home ?? 'other',
-      level: level!, goal: goal!, accent, learning, zhScript: traditionalHere ? script : 'hans',
-      dailyGoalXp: DAILY_GOALS.find((g) => g.minutes === minutes)?.xp,
-    });
-    next();
+      setSettings({ storeRecordings: keepRecordings, contributeRecordings: contribute, consentedAt: Date.now() });
+      // Ask for the microphone now, with the grown-up present, so a child never meets a permission prompt alone.
+      if (micSupported()) {
+        try { (await navigator.mediaDevices.getUserMedia({ audio: true })).getTracks().forEach((track) => track.stop()); }
+        catch { toast(t('onboarding.consent.micBlocked'), '🎙️'); }
+      }
+      madeId.current = createProfile({
+        name: name.trim() || t(adult ? 'onboarding.defaultName.adult' : 'onboarding.defaultName.child'), avatar, age: age!, homeLanguage: home ?? 'other',
+        level: level!, goal: goal!, accent, learning, zhScript: traditionalHere ? script : 'hans',
+        dailyGoalXp: DAILY_GOALS.find((g) => g.minutes === minutes)?.xp,
+      });
+      next();
     } finally { creating.current = false; setCreatingProfile(false); }
   };
 
@@ -367,7 +368,7 @@ export function Onboarding() {
         <div className="stack">
           {([['en-US', 'onboarding.accent.us.badge', 'onboarding.accent.us.title', 'onboarding.accent.us.detail'], ['en-GB', 'onboarding.accent.uk.badge', 'onboarding.accent.uk.title', 'onboarding.accent.uk.detail']] as const).map(([id, flag, title, detail]) => (
             <button key={id} type="button" className={`tile tile--wide ${accent === id ? 'is-on' : ''}`} aria-pressed={accent === id}
-              onClick={() => { setAccent(id); void voice.speak(ACCENT_PREVIEW_LINE, { accent: id, preview: true }).catch(() => undefined); }}>
+              onClick={() => { setAccent(id); void voice.speak(ACCENT_PREVIEW_LINE, { accent: id, preview: true }).catch(async (e) => toast(await noSoundMessage(bandForAge(age ?? 9), e), '🔇')); }}>
               <span className="code-badge">{t(flag)}</span><span><b>{t(title)}</b><small>{t(detail)}</small></span><span className="tile__aside" aria-hidden>🔈</span>
             </button>
           ))}

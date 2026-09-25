@@ -3,7 +3,7 @@ import { qwenHost } from './qwen-endpoint.mjs';
 import { createTeacherVoices } from './teacher-voices.mjs';
 import { pcmToWav } from './tts.mjs';
 
-const wav = pcmToWav(Buffer.alloc(480), 24000);
+const wav = pcmToWav(Buffer.alloc(480, 1), 24000);
 const audioUrl = 'https://dashscope-result-sg.oss-ap-southeast-1.aliyuncs.com/test.wav';
 const req = { provider: 'qwen', text: 'Hello!', accent: 'en-US' };
 

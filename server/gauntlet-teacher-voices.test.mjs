@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createTeacherVoices } from './teacher-voices.mjs';
 import { pcmToWav } from './tts.mjs';
-const wav = pcmToWav(Buffer.alloc(480), 24000);
+const wav = pcmToWav(Buffer.alloc(480, 1), 24000);
 const langs = { 'en-US': 'English', 'en-GB': 'English', 'zh-CN': 'Chinese', 'zh-HK': 'Auto', 'ja-JP': 'Japanese', 'ko-KR': 'Korean', 'fr-FR': 'French', 'es-ES': 'Spanish' };
 const providers = ['azure', 'chirp', 'qwen'];
 const samples = { 'en-US': 'Hello!', 'en-GB': 'Hello!', 'zh-CN': '你好！', 'zh-HK': '唔該！', 'ja-JP': 'こんにちは。', 'ko-KR': '안녕하세요.', 'fr-FR': 'Bonjour !', 'es-ES': '¡Hola!' };
 describe('gauntlet: real provider adapters with controlled upstreams', () => {
   for (const provider of providers) for (const accent of Object.keys(langs)) for (const slow of [false, true]) for (const region of provider === 'qwen' ? ['singapore', 'beijing', 'qwencloud'] : ['singapore']) {
     it(`${provider}/${accent}/slow=${slow}/${region}`, async () => {
-      const azure = vi.fn(async () => ({ pcm: Buffer.alloc(480), rate: 24000 }));
+      const azure = vi.fn(async () => ({ pcm: Buffer.alloc(480, 1), rate: 24000 }));
       const fetchImpl = vi.fn(async (url, init) => {
         if (url.includes('googleapis.com')) { const b = JSON.parse(init.body); const code = accent === 'zh-CN' ? 'cmn-CN' : accent === 'zh-HK' ? 'yue-HK' : accent; expect(b.voice.name).toBe(code + '-Chirp3-HD-Aoede'); expect(b.input.text).toBe(samples[accent]); expect(b.audioConfig.speakingRate).toBe(slow ? .65 : 1); return Response.json({ audioContent: wav.toString('base64') }); }
         if (url.includes('/generation')) { expect(url).toContain(region === 'qwencloud' ? 'https://maas.qwencloudapi.com/' : region === 'beijing' ? 'https://dashscope.aliyuncs.com/' : 'https://dashscope-intl.aliyuncs.com/'); const b = JSON.parse(init.body); expect(b.input.language_type).toBe(langs[accent]); expect(b.input.voice).toBe(accent === 'zh-HK' ? 'Kiki' : 'Cherry'); expect(b.input.text).toBe(samples[accent]); return Response.json({ output: { audio: { url: 'https://dashscope-result-sg.oss-ap-southeast-1.aliyuncs.com/test.wav' } } }); }
@@ -25,7 +25,25 @@ describe('gauntlet: real provider adapters with controlled upstreams', () => {
     });
   }
   it.each(providers)('%s survives cache read and write failures', async provider => {
-    const s = createTeacherVoices({ azure: async () => ({ pcm: Buffer.alloc(480), rate: 24000 }), chirpKey: 'fixture', qwenKey: 'fixture', fetchImpl: async url => url.includes('googleapis') ? Response.json({ audioContent: wav.toString('base64') }) : url.includes('/generation') ? Response.json({ output: { audio: { url: 'https://dashscope-result-sg.oss-ap-southeast-1.aliyuncs.com/test.wav' } } }) : new Response(wav), cache: { get: async () => { throw Error('KV unavailable'); }, put: async () => { throw Error('KV full'); } } });
+    const s = createTeacherVoices({ azure: async () => ({ pcm: Buffer.alloc(480, 1), rate: 24000 }), chirpKey: 'fixture', qwenKey: 'fixture', fetchImpl: async url => url.includes('googleapis') ? Response.json({ audioContent: wav.toString('base64') }) : url.includes('/generation') ? Response.json({ output: { audio: { url: 'https://dashscope-result-sg.oss-ap-southeast-1.aliyuncs.com/test.wav' } } }) : new Response(wav), cache: { get: async () => { throw Error('KV unavailable'); }, put: async () => { throw Error('KV full'); } } });
     expect((await s.speak({ provider, text: 'Hello', accent: 'en-US' })).wav).toEqual(wav);
+  });
+
+  it.each(providers)('%s rejects generated silence without caching it', async provider => {
+    const silence = pcmToWav(Buffer.alloc(480), 24000), put = vi.fn();
+    const service = createTeacherVoices({ azure: async () => ({pcm: Buffer.alloc(480), rate:24000}), chirpKey:'fixture',qwenKey:'fixture',cache:{put},
+      fetchImpl: async url => url.includes('googleapis') ? Response.json({audioContent:silence.toString('base64')}) : url.includes('/generation') ? Response.json({output:{audio:{url:'https://dashscope-result-sg.oss-ap-southeast-1.aliyuncs.com/silent.wav'}}}) : new Response(silence) });
+    await expect(service.speak({provider,text:'Hello',accent:'en-US'})).rejects.toMatchObject({code:'voice_no_audio'});
+    expect(put).not.toHaveBeenCalled();
+  });
+  it.each([Buffer.from('broken'),pcmToWav(Buffer.alloc(480),24000)])('repairs unusable cached audio', async cached => {
+    const azure=vi.fn(async()=>({pcm:Buffer.alloc(480,1),rate:24000})),put=vi.fn();
+    const service=createTeacherVoices({azure,cache:{get:async()=>cached,put}});
+    expect((await service.speak({provider:'azure',text:'Hello',accent:'en-US'})).wav).toEqual(wav);
+    expect(azure).toHaveBeenCalledOnce();expect(put).toHaveBeenCalledOnce();
+  });
+  it.each(['TimeoutError','TypeError'])('classifies %s as a recoverable provider failure',async name=>{
+    const service=createTeacherVoices({qwenKey:'fixture',fetchImpl:async()=>{const e=new Error();e.name=name;throw e;}});
+    await expect(service.speak({provider:'qwen',text:'Hello',accent:'en-US'})).rejects.toMatchObject({status:502,code:name==='TimeoutError'?'voice_timeout':'voice_unavailable'});
   });
 });

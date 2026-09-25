@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { createTeacherVoices } from './teacher-voices.mjs';
 import { pcmToWav } from './tts.mjs';
 import { createApi } from './core.mjs';
-const wav = pcmToWav(Buffer.alloc(480), 24000);
+const wav = pcmToWav(Buffer.alloc(480, 1), 24000);
 const req = { provider: 'azure', text: 'Hello!', accent: 'en-US' };
-const azure = () => Promise.resolve({ pcm: Buffer.alloc(480), rate: 24000 });
+const azure = () => Promise.resolve({ pcm: Buffer.alloc(480, 1), rate: 24000 });
 describe('selected teacher voices', () => {
   it('serves Azure directly without a Gemini key, still behind the same access control', async () => {
     const api = createApi({ AZURE_SPEECH_KEY: 'test', AZURE_SPEECH_REGION: 'eastasia', BETA_ACCESS_CODE: 'test-code' }, { backupVoice: azure });

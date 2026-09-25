@@ -195,5 +195,6 @@
   "settings.voice.previewBackup": "Escuchar voz de respaldo",
   "settings.voice.resetPair": "Usar valores de la app",
   "settings.voice.defaultPair": "Se usan los valores de la app.",
-  "settings.voice.customPair": "Se usan tus preferencias guardadas."
+  "settings.voice.customPair": "Se usan tus preferencias guardadas.",
+  "settings.me.minutes": "min"
 }
