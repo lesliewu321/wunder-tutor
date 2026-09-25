@@ -12,7 +12,7 @@ import { noSoundMessage } from '../../speech/health';
 import { localeOf, playBlob, stopPlayback, voice } from '../../speech/voice';
 import { markSyllable } from '../../content/zh/pinyin';
 import { hanChars } from '../../content/zh/script';
-import { inEnglish, t } from '../../i18n';
+import { inEnglish, t, tm } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
 import { useActiveProfile, useStore } from '../../state/store';
 import { correctionFor, focusWordIndex, GOOD, headline, soundToDrill, tier, writtenWords } from '../../tutor/feedback';
@@ -207,7 +207,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                 : item.ja ? <JaText item={{ text: item.text, ja: item.ja }} band={band} /> : item.ko ? <KoText item={{ text: item.text, ko: item.ko }} band={band} /> : item.text}
             </p>
           )}
-          {revealed && item.meaning && band !== 'little' && phase !== 'result' && <p className="prompt__meaning">{item.meaning}</p>}
+          {revealed && tm(item.meaning, item.lang) && band !== 'little' && phase !== 'result' && <p className="prompt__meaning">{tm(item.meaning, item.lang)}</p>}
 
           {phase !== 'result' && !test && (
             <div className="listen-row">

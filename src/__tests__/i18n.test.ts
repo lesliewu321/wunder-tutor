@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { catalogs, en, LANGUAGES, language, loadLanguage, sentences, setLanguage, t, tc, tl, tn, type Key, type Language } from '../i18n';
+import { catalogs, en, LANGUAGES, language, loadLanguage, sentences, setLanguage, t, tc, tl, tm, tn, type Key, type Language } from '../i18n';
 
 const zh = catalogs.interface['zh-Hant']!;
 const holes = (text: string): string[] => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
@@ -98,5 +98,33 @@ describe('App language: every language', () => {
       setLanguage(l);
       expect(sentences('A.', 'B.')).toBe(joined);
     }
+  });
+});
+
+// Leslie, 2026-09-25: the meaning under a practice word "should be translated to app language for all courses".
+describe('App language: what a practice word means', () => {
+  beforeAll(async () => { await Promise.all((['zh-Hant', 'zh-Hans', 'ja', 'ko', 'fr', 'es'] as Language[]).map(loadLanguage)); });
+  afterEach(() => setLanguage('en'));
+
+  it('reads in the App language, from every course', () => {
+    setLanguage('zh-Hant');
+    expect(tm('croissant', 'fr-FR')).not.toBe('croissant');
+    setLanguage('fr');
+    expect(tm('hello', 'zh-CN')).not.toBe('hello');
+    setLanguage('en');
+    expect(tm('a round red or green fruit', undefined)).toBe('a round red or green fruit');
+  });
+
+  it('is left out where the App language is the course’s own — it would only repeat the word', () => {
+    for (const [l, lang] of [['zh-Hant', 'zh-CN'], ['zh-Hans', 'zh-CN'], ['ja', 'ja-JP'], ['ko', 'ko-KR'], ['fr', 'fr-FR'], ['es', 'es-ES']] as const) {
+      setLanguage(l);
+      expect(tm('hello', lang)).toBeNull();
+    }
+  });
+
+  it('shows the English until a meaning is translated', () => {
+    setLanguage('ja');
+    expect(tm('a meaning nobody wrote yet', 'fr-FR')).toBe('a meaning nobody wrote yet');
+    expect(tm(undefined, 'fr-FR')).toBeNull();
   });
 });

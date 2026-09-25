@@ -18,7 +18,11 @@ words to say, the teacher's voice, pinyin, example words inside tips ("think", "
 - `<language>/lessons.json` — lesson guides and reading questions, keyed by the English line itself
   (`tl(english, hant)`): the course data carries only English and 繁體中文, and an edited English line falls back to
   English instead of showing a stale translation.
-- `npm run i18n:check -- <language> interface|content|lessons` — the same keys as the source, every {placeholder} and
+- `<language>/meanings.json` — what practice words and sentences mean (the grey line under "croissant"), keyed by the
+  English `meaning` in the course data (`tm(meaning, itemLang)`). Fetched on demand for every language, 繁體中文 too.
+  A meaning is left out where the App language is the course's own language (a Putonghua word's meaning in Chinese
+  would only repeat it), so those entries need no translation.
+- `npm run i18n:check -- <language> interface|content|lessons|meanings` — the same keys as the source, every {placeholder} and
   **bold** kept, nothing empty. Japanese, Korean and Chinese write only the `.other` form of a count.
 
 - `en/<area>.json` — the English source, flat `"area.thing": "text"`. Typed: `t('settings.title')` with a wrong key

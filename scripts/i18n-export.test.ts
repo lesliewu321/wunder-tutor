@@ -3,7 +3,7 @@
 // Run through vitest (plain `vite-node` hangs on this machine); it does nothing during a normal `npm test`.
 import { writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { COURSES, courseTitle, lessonTitle, unitSubtitle, unitTitle } from '../src/content/course';
+import { COURSES, courseTitle, ITEM_INDEX, lessonTitle, unitSubtitle, unitTitle } from '../src/content/course';
 import { LAB_STAGES, stageLabel } from '../src/content/lab';
 import { PHONEMES, phonemeInfo, soundLabel, tipFor } from '../src/content/phonemes';
 import { SCENARIOS, scenarioBlurb, scenarioTitle } from '../src/content/scenarios';
@@ -26,6 +26,21 @@ const lessonPhrases = (): Record<string, string> => {
     Object.values(r).forEach(walk);
   };
   walk(Object.values(COURSES));
+  return out;
+};
+/**
+ * What a practice word or sentence means, shown under it (Leslie, 2026-09-25: "this should be translated to app
+ * language for all courses"): English meaning → where it is used, for the translator (the item and its language).
+ */
+const itemMeanings = (): Record<string, { items: string[]; langs: string[] }> => {
+  const out: Record<string, { items: string[]; langs: string[] }> = {};
+  for (const it of Object.values(ITEM_INDEX)) {
+    if (!it.meaning) continue;
+    const m = (out[it.meaning] ??= { items: [], langs: [] });
+    if (m.items.length < 3 && !m.items.includes(it.text)) m.items.push(it.text);
+    const lang = it.lang ?? 'en';
+    if (!m.langs.includes(lang)) m.langs.push(lang);
+  }
   return out;
 };
 const quiet = (read: () => unknown) => { try { read(); } catch { /* an id this accessor doesn't know */ } };
@@ -80,7 +95,7 @@ describe.skipIf(!process.env.I18N_EXPORT)('i18n review export', () => {
     writeFileSync('i18n-review.json', JSON.stringify(rows, null, 1));
     // The source for a new App language: every line in English, the interface (with its one/other forms), the wording
     // that lives with data, and the lesson guides and reading questions (keyed by their English, see `tl` in src/i18n).
-    writeFileSync('i18n-source.json', JSON.stringify({ interface: en, content: Object.fromEntries([...seen, ...Object.keys(zhContent).filter((k) => !seen.has(k)).map((k) => [k, ''])].sort(([x], [y]) => (order.get(x) ?? 1e9) - (order.get(y) ?? 1e9))), lessons: lessonPhrases() }, null, 1));
+    writeFileSync('i18n-source.json', JSON.stringify({ interface: en, content: Object.fromEntries([...seen, ...Object.keys(zhContent).filter((k) => !seen.has(k)).map((k) => [k, ''])].sort(([x], [y]) => (order.get(x) ?? 1e9) - (order.get(y) ?? 1e9))), lessons: lessonPhrases(), meanings: itemMeanings() }, null, 1));
     const cell = (v: string) => `"${v.replace(/"/g, '""')}"`;
     writeFileSync('i18n-review.csv', `﻿${['key', 'where', 'English', '繁體中文', 'correction', 'comment'].map(cell).join(',')}\r\n${rows.map((r) => [r.key, r.area, r.en, r.zh, '', ''].map(cell).join(',')).join('\r\n')}\r\n`);
     const noEnglish = rows.filter((r) => !r.en).map((r) => r.key);

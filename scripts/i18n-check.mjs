@@ -1,4 +1,4 @@
-// npm run i18n:check [-- <lang> [interface|content|lessons]] — checks a translation of the App language against the
+// npm run i18n:check [-- <lang> [interface|content|lessons|meanings]] — checks a translation of the App language against the
 // English source (i18n-source.json, written by `npm run i18n:export`): the same keys, every {placeholder} and **bold**
 // mark kept, nothing empty. Chinese (zh-Hant) keeps its lesson wording in the course data, so it has no lessons.json.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -44,6 +44,23 @@ for (const l of langs) {
     const en = Object.fromEntries(Object.keys(source.lessons).map((k) => [k, k]));
     if (!existsSync(file)) say(l, 'lessons.json', 'file missing', [file]);
     else try { compare(l, 'lessons.json', en, read(file)); } catch (e) { say(l, 'lessons.json', 'not valid JSON', [String(e.message)]); }
+  }
+}
+// What practice items mean (`<lang>/meanings.json`, English meaning → translation). A meaning is not needed in the
+// language of its own course (a Putonghua word's meaning in Chinese would repeat the word), so those may be left out.
+const OWN = { 'zh-Hant': ['zh-CN'], 'zh-Hans': ['zh-CN'], ja: ['ja-JP'], ko: ['ko-KR'], fr: ['fr-FR'], es: ['es-ES', 'es-MX'] };
+if (!only || only === 'meanings') {
+  for (const l of langs) {
+    const file = `src/i18n/${l}/meanings.json`;
+    const own = OWN[l] ?? [];
+    const need = Object.entries(source.meanings ?? {}).filter(([, m]) => !m.langs.every((x) => own.includes(x))).map(([k]) => k);
+    if (!existsSync(file)) { say(l, 'meanings.json', 'file missing', [file]); continue; }
+    try {
+      const tr = read(file);
+      say(l, 'meanings.json', 'missing', need.filter((k) => tr[k] == null));
+      say(l, 'meanings.json', 'not a meaning in the courses', Object.keys(tr).filter((k) => !(k in (source.meanings ?? {}))));
+      say(l, 'meanings.json', 'empty', Object.entries(tr).filter(([, v]) => typeof v !== 'string' || !v.trim()).map(([k]) => k));
+    } catch (e) { say(l, 'meanings.json', 'not valid JSON', [String(e.message)]); }
   }
 }
 console.log(problems ? `${problems} problem(s).` : `OK: ${langs.join(', ')}${only ? ` (${only})` : ''}.`);

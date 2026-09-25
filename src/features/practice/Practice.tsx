@@ -7,7 +7,7 @@ import { findScenario, scenarioBlurb, scenariosFor, scenarioTitle } from '../../
 import type { ZhScript } from '../../content/zh/script';
 import { badgeName } from '../../engine/rewards';
 import { useBack } from '../../back';
-import { language } from '../../i18n';
+import { language, tm } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import type { SpeechErrorCode } from '../../speech';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
@@ -65,7 +65,7 @@ function LineText({ it, band, script }: { it: SpeakItem; band: AgeBand; script: 
   return (
     <span className="line-text">
       <ItemText item={it} band={band} script={script} />
-      {it.lang && it.meaning && band !== 'little' && <small className="bubble__meaning">{it.meaning}</small>}
+      {it.lang && tm(it.meaning, it.lang) && band !== 'little' && <small className="bubble__meaning">{tm(it.meaning, it.lang)}</small>}
     </span>
   );
 }

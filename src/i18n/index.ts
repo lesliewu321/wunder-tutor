@@ -62,6 +62,8 @@ const INTERFACE: Partial<Record<Language, Catalog>> = {
 const CONTENT: Partial<Record<Language, Catalog>> = { en: {}, 'zh-Hant': { ...zhContent, ...zhContentCourse, ...astraContent } };
 /** Lesson guides and reading questions, keyed by their English (`tl`). 繁體中文 keeps its own in the course data. */
 const LESSONS: Partial<Record<Language, Catalog>> = { en: {} };
+/** What practice items mean, keyed by the English meaning in the course data (`tm`). Fetched for every language. */
+const MEANINGS: Partial<Record<Language, Catalog>> = { en: {} };
 
 // Components re-render when a fetched language arrives (useT subscribes to this).
 let revision = 0;
@@ -71,21 +73,24 @@ export const catalogRevision = (): number => revision;
 
 // The other languages: every JSON file under src/i18n/<language>/, fetched as separate chunks. `content.json` is the
 // wording that lives with data, `lessons.json` the lesson guides; every other file is part of the interface.
-const FILES = import.meta.glob<{ default: Catalog }>(['./zh-Hans/*.json', './ja/*.json', './ko/*.json', './fr/*.json', './es/*.json']);
+// 繁體中文's item meanings are fetched the same way, so the bundle does not carry them for everyone.
+const FILES = import.meta.glob<{ default: Catalog }>(['./zh-Hant/meanings.json', './zh-Hans/*.json', './ja/*.json', './ko/*.json', './fr/*.json', './es/*.json']);
 const loading = new Map<Language, Promise<void>>();
 
-/** Fetches a language's wording once; resolves when it is ready (at once for English and 繁體中文). */
+/** Fetches a language's wording once; resolves when it is ready (at once for English). */
 export const loadLanguage = (l: Language): Promise<void> => {
-  if (INTERFACE[l]) return Promise.resolve();
+  if (l === 'en') return Promise.resolve();
   let p = loading.get(l);
   if (!p) {
     p = (async () => {
-      const ui: Catalog = {}, content: Catalog = {}, lessons: Catalog = {};
+      const ui: Catalog = {}, content: Catalog = {}, lessons: Catalog = {}, meanings: Catalog = {};
       await Promise.all(Object.entries(FILES).filter(([path]) => path.startsWith(`./${l}/`)).map(async ([path, load]) => {
         const words = (await load()).default;
-        Object.assign(path.endsWith('/content.json') ? content : path.endsWith('/lessons.json') ? lessons : ui, words);
+        const into = path.endsWith('/content.json') ? content : path.endsWith('/lessons.json') ? lessons : path.endsWith('/meanings.json') ? meanings : ui;
+        Object.assign(into, words);
       }));
-      INTERFACE[l] = ui; CONTENT[l] = content; LESSONS[l] = lessons;
+      // 繁體中文 keeps the catalogs it was bundled with; what was fetched is added to them.
+      INTERFACE[l] = { ...ui, ...INTERFACE[l] }; CONTENT[l] = { ...content, ...CONTENT[l] }; LESSONS[l] = { ...lessons, ...LESSONS[l] }; MEANINGS[l] = meanings;
       revision++;
       for (const listener of listeners) listener();
     })().catch((e) => { loading.delete(l); console.warn('[i18n] could not load', l, e); });
@@ -157,6 +162,21 @@ export const tc = (key: string, english: string, params?: Params): string => {
  */
 export const tl = (english: string, hant: string): string => (current === 'zh-Hant' ? hant : LESSONS[current]?.[english] ?? english);
 
+/** The courses whose words need no meaning in this App language: it is their own language. */
+const OWN_COURSE: Partial<Record<Language, string[]>> = { 'zh-Hant': ['zh-CN'], 'zh-Hans': ['zh-CN'], ja: ['ja-JP'], ko: ['ko-KR'], fr: ['fr-FR'], es: ['es-ES', 'es-MX'] };
+
+/**
+ * What a practice word or sentence means, in the App language (Leslie, 2026-09-25: "this should be translated to app
+ * language for all courses"). `lang` is the item's language (none = English). Null where the App language is the
+ * item's own — a Putonghua word's meaning in Chinese would only repeat it. Untranslated: the English.
+ */
+export const tm = (meaning: string | undefined, lang: string | undefined): string | null => {
+  if (!meaning) return null;
+  if (current === 'en') return meaning;
+  if (OWN_COURSE[current]?.includes(lang ?? 'en')) return null;
+  return MEANINGS[current]?.[meaning] ?? meaning;
+};
+
 /** For the review list: while on, every `tc` call is noted with the English it was given. */
 let seen: Map<string, string> | null = null;
 export const noteContent = (on: boolean): Map<string, string> | null => (seen = on ? new Map() : null);
@@ -176,4 +196,4 @@ export const inEnglish = <T>(read: () => T): T => {
 export const sentences = (...parts: (string | false | null | undefined)[]): string => parts.filter(Boolean).join(isChinese() || current === 'ja' ? '' : ' ');
 
 /** For tests and the review export. */
-export const catalogs = { interface: INTERFACE, content: CONTENT, lessons: LESSONS };
+export const catalogs = { interface: INTERFACE, content: CONTENT, lessons: LESSONS, meanings: MEANINGS };

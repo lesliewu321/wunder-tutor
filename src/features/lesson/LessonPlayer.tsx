@@ -10,7 +10,7 @@ import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
 import { useBack } from '../../back';
-import { tl } from '../../i18n';
+import { tl, tm } from '../../i18n';
 import { LiteracyExercise } from './LiteracyExercise';
 import { useT } from '../../i18n/useT';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
@@ -227,7 +227,7 @@ function DialogueExercise({ ex, onDone, test = false }: { ex: Extract<Exercise, 
       <span className="bubble-row__who" aria-hidden>{ex.picture ?? '🧑‍🍳'}</span>
       <button type="button" className="bubble" onClick={() => void voice.speak(ex.tutorLine, { accent: tutorLocale }).catch(() => undefined)}>
         {ex.tutor ? <ItemText item={ex.tutor} band={profile.band} script={profile.zhScript} /> : ex.tutorLine} <span aria-hidden>🔈</span>
-        {ex.tutor?.lang && ex.tutor.meaning && profile.band !== 'little' && <small className="bubble__meaning">{ex.tutor.meaning}</small>}
+        {ex.tutor?.lang && tm(ex.tutor.meaning, ex.tutor.lang) && profile.band !== 'little' && <small className="bubble__meaning">{tm(ex.tutor.meaning, ex.tutor.lang)}</small>}
       </button>
     </div>
   );
