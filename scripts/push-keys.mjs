@@ -13,6 +13,7 @@ import { spawn, execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { qwenHost } from '../server/qwen-endpoint.mjs';
 
 const PROJECT = 'wunder-tutor';
 const NAMES = ['AZURE_SPEECH_KEY', 'AZURE_SPEECH_REGION', 'GEMINI_API_KEY'];
@@ -100,11 +101,11 @@ if (values.SUPABASE_SECRET_KEY) {
 let voicesOk = true;
 if (values.DASHSCOPE_API_KEY) {
   const region = env.get('QWEN_TTS_REGION') || 'singapore';
-  if (!['singapore', 'beijing'].includes(region)) { console.log('  QWEN_TTS_REGION must be singapore or beijing.'); voicesOk = false; }
+  const host = qwenHost(region);
+  if (!host) { console.log('  QWEN_TTS_REGION must be qwencloud, singapore or beijing.'); voicesOk = false; }
   else {
     values.QWEN_TTS_REGION = region;
-    const host = region === 'beijing' ? 'dashscope.aliyuncs.com' : 'dashscope-intl.aliyuncs.com';
-    const check = await ask('https://' + host + '/compatible-mode/v1/models', { headers: { Authorization: 'Bearer ' + values.DASHSCOPE_API_KEY } });
+    const check = await ask('https://' + host + '/compatible-mode/v1/models', { redirect: 'error', headers: { Authorization: 'Bearer ' + values.DASHSCOPE_API_KEY } });
     console.log('  Qwen key access: ' + (check.ok ? 'works (TTS model access still needs a voice preview)' : 'refused (' + check.status + ')'));
     voicesOk = voicesOk && check.ok;
   }

@@ -2,6 +2,7 @@
 import { createHash } from 'node:crypto';
 import { BACKUP_VOICES, readWav } from './azure-tts.mjs';
 import { MAX_TTS_CHARS, pcmToWav, TtsError } from './tts.mjs';
+import { qwenHost as resolveQwenHost } from './qwen-endpoint.mjs';
 const LANGUAGES = { 'en-US': 'English', 'en-GB': 'English', 'zh-CN': 'Chinese', 'ja-JP': 'Japanese', 'ko-KR': 'Korean', 'fr-FR': 'French', 'es-ES': 'Spanish' };
 const MAX_AUDIO = 8 * 1024 * 1024;
 async function audioBytes(response) {
@@ -15,8 +16,8 @@ async function audioBytes(response) {
   return Buffer.concat(chunks);
 }
 export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapore', chirpKey = '', cache, fetchImpl = fetch, maxGenerationsPerWindow = 120, windowMs = 600000 }) {
-  const qwenHost = qwenRegion === 'beijing' ? 'dashscope.aliyuncs.com' : 'dashscope-intl.aliyuncs.com';
-  const providers = { azure: !!azure, qwen: !!qwenKey && ['singapore', 'beijing'].includes(qwenRegion), chirp: !!chirpKey };
+  const qwenHost = resolveQwenHost(qwenRegion);
+  const providers = { azure: !!azure, qwen: !!qwenKey && !!qwenHost, chirp: !!chirpKey };
   const versions = { azure: 'azure-neural-v1/' + Object.values(BACKUP_VOICES).join(','), qwen: 'qwen3-tts-flash/Cherry/' + qwenRegion, chirp: 'chirp3-hd/Aoede' };
   const inflight = new Map(); const memory = new Map();
   let start = Date.now(), generated = 0;
@@ -39,7 +40,7 @@ export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapo
       wav = Buffer.from(data.audioContent, 'base64');
     } else {
       const res = await fetchImpl('https://' + qwenHost + '/api/v1/services/aigc/multimodal-generation/generation', {
-        method: 'POST', signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + qwenKey },
+        method: 'POST', signal, redirect: 'error', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + qwenKey },
         body: JSON.stringify({ model: 'qwen3-tts-flash', input: { text: req.text, voice: 'Cherry', language_type: LANGUAGES[req.accent] } }),
       });
       if (!res.ok) throw new TtsError('qwen_unavailable', res.status === 429 ? 429 : 502);

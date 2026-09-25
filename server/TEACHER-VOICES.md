@@ -9,11 +9,13 @@ Automatic keeps Gemini first, then uses Azure if Gemini is unconfigured, then th
 | Choice | Configuration | Default voice |
 | --- | --- | --- |
 | Azure Neural | AZURE_SPEECH_KEY + AZURE_SPEECH_REGION | Existing per-language neural voices in azure-tts.mjs |
-| Qwen | DASHSCOPE_API_KEY; QWEN_TTS_REGION = singapore (default) or beijing | qwen3-tts-flash / Cherry |
+| Qwen | DASHSCOPE_API_KEY; QWEN_TTS_REGION = qwencloud, singapore (default) or beijing | qwen3-tts-flash / Cherry |
 | Google Chirp 3 HD | GOOGLE_CLOUD_TTS_API_KEY, with Cloud Text-to-Speech enabled and billing configured | Aoede, selected by language |
 | Gemini | Existing GEMINI_API_KEY and optional model/voice overrides | Existing Gemini teacher |
 
-Keys are server-only. The Google Cloud TTS key is separate from the Gemini AI Studio key. Restrict it to Cloud Text-to-Speech. Qwen's key must match the selected region. Qwen accepts English as a language but does not expose separate US/UK accent controls here. Chirp maps the app's zh-CN to its cmn-CN locale. Qwen slow playback uses the same recording at a pitch-preserving 0.65 playback rate; Azure/Chirp/Gemini synthesise a separate slow take.
+Keys are server-only. The Google Cloud TTS key is separate from the Gemini AI Studio key. Restrict it to Cloud Text-to-Speech. Qwen's key must match the selected service/region. Qwen accepts English as a language but does not expose separate US/UK accent controls here. Chirp maps the app's zh-CN to its cmn-CN locale. Qwen slow playback uses the same recording at a pitch-preserving 0.65 playback rate; Azure/Chirp/Gemini synthesise a separate slow take.
+
+For the QwenCloud API Keys page displaying `maas.qwencloudapi.com`, use its **Pay-As-You-Go** key as `DASHSCOPE_API_KEY` in the ignored `.env` and set `QWEN_TTS_REGION=qwencloud`. A Singapore selection is not required for this endpoint; `qwencloud` names the service, not a data-residency guarantee. Both key validation and speech generation use that host. The app adds the speech API path itself; do not paste the OpenAI-compatible or Anthropic-compatible base URL into the region setting. Alibaba Model Studio keys still use `singapore` (`dashscope-intl.aliyuncs.com`) or `beijing` (`dashscope.aliyuncs.com`). There is no automatic fallback between services.
 
 Leslie runs npm run keys:push to validate and upload configured keys from the ignored .env file, then redeploys. The script includes the optional keys and Qwen region. It checks Qwen key access and Google's voice list without paid speech generation; use the in-app preview to check actual synthesis afterwards. No keys are added by this change. On 2026-09-25 the production secret inventory contained Azure and Gemini, but no Qwen or Google Cloud TTS keys.
 
@@ -26,6 +28,8 @@ Learner-authored text marked ephemeral is not written to the shared server or pr
 Provider APIs are mocked in tests; Azure can be tried with existing deployment credentials. Qwen and Chirp require owner configuration before a real synthesis test. Mandarin teacher-tone calibration remains specific to Gemini; do not claim that the new voices have passed the existing calibrated pronunciation gate. Audition them on real devices before changing the default.
 
 Official implementation references (checked 2026-09-25):
+- [QwenCloud API keys](https://docs.qwencloud.com/api-reference/preparation/api-key)
+- [QwenCloud speech synthesis](https://docs.qwencloud.com/api-reference/speech-synthesis/qwen-tts)
 - [Qwen TTS API](https://docs.modelstudio.console.alibabacloud.com/en/model-studio/qwen-tts-api)
 - [Google Chirp 3 HD](https://docs.cloud.google.com/text-to-speech/docs/chirp3-hd)
 
