@@ -1291,5 +1291,7 @@
   "badge.unit-es-food.detail": "Tu as terminé toutes les leçons de l’unité « Miam, à table ! » en espagnol.",
   "season.mid-autumn.title": "Fête de la mi-automne",
   "season.mid-autumn.blurb": "Gâteaux de lune, lanternes et pleine lune : dis-le en mandarin.",
-  "lesson.zh-season-mid-autumn-1.title": "Fête de la mi-automne"
+  "lesson.zh-season-mid-autumn-1.title": "Fête de la mi-automne",
+  "season.christmas.title": "Noël",
+  "season.christmas.blurb": "Sapin, cadeaux et vœux d’hiver."
 }

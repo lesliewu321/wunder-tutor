@@ -12,7 +12,7 @@ import { testDue } from '../../engine/testing';
 import { useActiveProfile, useStore } from '../../state/store';
 import { activeSeasons } from '../../content/seasonal';
 import type { CourseId } from '../../domain/types';
-import type { Key } from '../../i18n';
+import { dateLocale, type Key } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
 import { Icon } from '../../ui/Icon';
 import { Button, ProgressBar } from '../../ui/kit';
@@ -109,11 +109,11 @@ export function Home() {
 
       {/* A festival's bonus lesson while it is on (Leslie, 2026-09-25: "push lessons for chinese learners" at Mid-Autumn).
           It opens in its own course, switching to it if the learner was on another. */}
-      {seasons.map(({ event, course, lesson }) => (
+      {seasons.map(({ event, course, lesson, day }) => (
         <button key={event.id} type="button" className="season-card" onClick={() => { if (p.course !== course) setCourse(course); nav(`/lesson/${lesson.id}`); }}>
           <span className="season-card__icon" aria-hidden>{event.icon}</span>
           <span className="season-card__text">
-            <small>{t('home.season.tag')}</small>
+            <small>{t('home.season.tag')} · <i>{day.toLocaleDateString(dateLocale(), { weekday: 'short', day: 'numeric', month: 'short' })}</i> · <i>{t(course === 'en' ? 'common.course.en' : `settings.me.course.${course}` as Key)}</i></small>
             <b>{tc(`season.${event.id}.title`, event.title)}</b>
             <span>{tc(`season.${event.id}.blurb`, event.blurb)}</span>
           </span>

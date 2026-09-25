@@ -1,15 +1,27 @@
 {
-  "_": "The seasonal calendar (Leslie, 2026-09-25): when each festival's bonus lesson is offered, and to learners of which course. Lunar festivals move, so every year's date is written out — add the next years here, never compute them. A lesson is offered from `before` days ahead of the day to `after` days after it, on the learner's own calendar. This file is also what a future push-notification sender reads to announce a festival (docs/NOTIFICATIONS-PLAN.md: content announcements, opt-in).",
+  "_": "The seasonal calendar (Leslie, 2026-09-25: \"the seasonal lessons should be accompanied by date and language. mid autumn should only apply to zh learners, whereas christmas lessons will apply to all my languages\"). Each festival says WHEN — `days` for festivals that move (lunar: every year's date written out, never computed) or `every` (MM-DD) for a fixed date — and WHICH LANGUAGES: `courses`, the courses whose learners it is for. `lessons` gives the lesson per course; a course listed without a lesson yet simply shows nothing. The card is shown from `before` days ahead to `after` days after the day, on the learner's own calendar. A future push-notification sender reads this same file (docs/NOTIFICATIONS-PLAN.md: content announcements, opt-in).",
   "events": [
     {
       "id": "mid-autumn",
       "icon": "🥮",
       "title": "Mid-Autumn Festival",
       "blurb": "Mooncakes, lanterns and the full moon — say it in Putonghua.",
-      "lessons": { "zh": "zh-season-mid-autumn-1" },
+      "courses": ["zh"],
       "days": ["2026-09-25", "2027-09-15", "2028-10-03", "2029-09-22", "2030-09-12"],
       "before": 10,
-      "after": 4
+      "after": 4,
+      "lessons": { "zh": "zh-season-mid-autumn-1" }
+    },
+    {
+      "id": "christmas",
+      "icon": "🎄",
+      "title": "Christmas",
+      "blurb": "Trees, presents and winter wishes.",
+      "courses": ["en", "zh", "ja", "ko", "fr", "es"],
+      "every": "12-25",
+      "before": 14,
+      "after": 6,
+      "lessons": {}
     }
   ]
 }

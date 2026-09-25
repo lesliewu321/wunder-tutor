@@ -454,5 +454,7 @@
 .season-card__text { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
 .season-card__text small { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sun-deep); }
 .season-card__text b { font-family: var(--font-display); font-size: 1.15rem; color: var(--ink); }
-.season-card__text span { font-size: 0.86rem; color: var(--ink-soft); }
+.season-card__text > span { font-size: 0.86rem; color: var(--ink-soft); }
+/* The day and the language each stay on one line (普通話 must not break). */
+.season-card__text small i { font-style: normal; white-space: nowrap; }
 .season-card__go { position: relative; z-index: 1; flex: none; padding: 8px 12px; border-radius: 999px; background: var(--coral); color: #fff; font-weight: 800; font-size: 0.86rem; }
