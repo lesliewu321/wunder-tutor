@@ -91,7 +91,7 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   test only lessons already completed (grown-ups anything), a tested lesson shows "Best score N" with a score chip. Run
   in the 5199 copy at phone width: the full food-1 test (five spoken items via the demo mic, one listening question
   answered wrong on purpose) to the score sheet (77, 0/1). Tests: +2 (`test-mode.test.ts`); 272 pass, typecheck clean.
-  Still to do: show test scores on the Progress page; the literacy exercises (`read-choice`, `arrange`) are another
+  Progress shows "Test scores" (best per lesson, times taken) since ~04:35; the literacy exercises (`read-choice`, `arrange`) are another
   agent's work and keep their own hints in a test.
 - **COLLISION NOTE (2026-09-25 ~11:40 onwards): a second agent works in this same checkout.** While this session built
   test mode, something else — no Claude Desktop session on this machine mentions it; most likely a Codex agent Leslie
@@ -134,9 +134,31 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   .wrangler/ is harmless. Slow takes are still not warmed.
 - Azure's pronunciation-assessment locale list (docs repo, read 2026-09-25) includes **ko-KR, es-ES and es-MX**; the
   table names locales only, so expect scores without phoneme names, as for fr-FR and ja-JP.
-- **Korean and Spanish requested** (Leslie, mid-turn: "add korean and spanish to app") — after R2. A search agent is
-  mapping every touchpoint of a course language (types, content, engine, speech, server locale lists, i18n, evals,
-  the contributions.locale CHECK constraint) as this is written; the plan and the work come next.
+- **Korean and Spanish (Leslie, mid-turn: "add korean and spanish to app") — built the same afternoon.** Decisions taken
+  without a round trip: both are DATA courses (`content/courses/ko.json`, `es.json`, read by `src/content/ko/course.ts`,
+  `es/course.ts` like zh); Spanish is fixed to Spain (`es-ES`, distinción, Castilian voice) — a per-learner es-ES/es-MX
+  choice would break the item.lang-as-locale assumption everywhere; sound ids are namespaced `ko:`/`es:` (r, θ, ɲ
+  would collide with English and French ids). **Korean** carries a hand-written PRONOUNCED form per item (`ko: { pron,
+  romaja }`, 국물 → 궁물, 같이 → 가치), modelled on Japanese: `src/content/ko/hangul.ts` takes blocks apart (initial,
+  vowel, 받침), romanises, names the taught class of each block (`unitOf`: ko:tense, ko:aspirated, ko:r, ko:eo, ko:eu,
+  ko:batchim — six sounds, `ko/sounds.ts`) and offers sound sequences (`phoneCandidates`) that `src/speech/ko/assess.ts`
+  (`nameKorean`) lines Azure's unnamed per-sound scores up with, block by block, exactly as `nameJapanese` does.
+  **Spanish** needs no lexicon: `src/content/es/lexicon.ts` reads sounds from spelling (c/z+e,i → θ, silent h and u,
+  ll → ʝ, rr vs r, ch, ñ, x…), syllabifies, and `esAlignmentCandidates` names the taught sound per phone (eight sounds,
+  `es/sounds.ts`: es:rr es:r es:j es:ñ es:z es:b es:ll es:vowel), used by `namePhonemes` like the French candidates.
+  Wired everywhere the touchpoint map (below) said: types (Locale, CourseId, SpeakItem.lang/ko), loader + schema (lang
+  enums, ko object, hangul checks), course/lab/scenario registries, learning.ts maps, profile.ts (`inCourse` now by
+  namespace), mock provider branches, voice fallback by language prefix, ItemText/SpeakExercise (`KoText`), ChoiceExercise
+  punctuation (Chinese punctuation only for zh/ja now), Onboarding (LEARN: ko and es ready), CourseCheck, Home labels,
+  Profile course picker, Lab (no /id/ for namespaced sounds), unit badges, `wordKey` Unicode-aware, i18n keys
+  (settings.me.course.ko/es, speak.status.first.unseen.fr/ja/ko/es — the old "say it in Putonghua" for French pictures
+  is gone), scenarios.test, eval/voice-lines. Server: LOCALES, Gemini instruction blocks for ko-KR and es-ES, hangul
+  accepted as text, transcript check for hangul and Unicode-aware tokens, backup voices ko-KR-SunHiNeural /
+  es-ES-ElviraNeural. DB: contributions.locale now allows ja-JP, ko-KR, es-ES, es-MX (it refused ja-JP before — a real
+  bug the map found). Content (items, 7 lessons × 3 bands, check, ladders, 3 scenarios each, zh-Hant titles and sound
+  texts) was authored by two subagents from a written spec; tests `ko.test.ts`, `es.test.ts`, `ko-es-models.test.ts`.
+  **Never measured against live ko-KR / es-ES scoring** — probe first (eval/probe.mjs) before trusting a named sound;
+  the courses ship as "scored", and the Lab and feedback stay word-level wherever the alignment finds no fit.
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.

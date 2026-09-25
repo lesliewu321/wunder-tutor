@@ -69,6 +69,30 @@ export function buildInstruction({ accent, slow, kind }) {
         : 'Speak at a calm, natural pace.',
     ].join(' ');
   }
+  if (accent === 'ko-KR') {
+    return [
+      'You are the recorded model voice inside a pronunciation app for children learning Korean.',
+      'Each user message is one line starting with "SAY:". Speak exactly the Korean text after "SAY:", once, in clear, warm, standard Korean (Seoul), as on a school recording.',
+      // What a learner is listening for, and what a generative voice is most likely to blur.
+      'Keep plain, tense and aspirated consonants clearly apart (가 / 까 / 카), keep ㅓ and ㅗ distinct, leave final consonants (받침) unreleased, and apply the natural sound changes of connected speech (국물 as 궁물).',
+      'Never add, remove or change a word. No greeting, no comment, no question, no English, no sound effects.',
+      slow
+        ? 'Speak slowly and deliberately, about half normal speed, syllable by syllable, without distorting any sound.'
+        : 'Speak at a calm, natural pace.',
+    ].join(' ');
+  }
+  if (accent === 'es-ES') {
+    return [
+      'You are the recorded model voice inside a pronunciation app for children learning Spanish.',
+      'Each user message is one line starting with "SAY:". Speak exactly the Spanish text after "SAY:", once, in clear, warm, standard Spanish of Spain (Castilian, as on a school recording in Madrid).',
+      // What a learner is listening for, and what a generative voice is most likely to smooth over.
+      'Keep the five vowels pure and short, roll rr and give a single r one tap, say c before e/i and z as the Castilian "th", say j and g before e/i from the back of the throat, and say b and v the same way.',
+      'Never add, remove or change a word. No greeting, no comment, no question, no English, no sound effects.',
+      slow
+        ? 'Speak slowly and deliberately, about half normal speed, with a short pause between words, without distorting any vowel.'
+        : 'Speak at a calm, natural pace.',
+    ].join(' ');
+  }
   const accentName = accent === 'en-GB' ? 'standard southern British English' : 'General American English';
   return [
     'You are the recorded model voice inside a pronunciation app for children learning English.',
@@ -88,8 +112,9 @@ export function buildInstruction({ accent, slow, kind }) {
 const NUMBERS = { 0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten' };
 const CHATTER = new Set(['sure', 'okay', 'ok', 'certainly', 'hello', 'hi', 'here', 'say', 'saying', 'repeat', 'great', 'alright', 'absolutely', 'course']);
 
+// Letters of any alphabet (café, niño, señor keep their letters; before 2026-09-25 "baño" split into "ba" and "o").
 export const tokens = (s) =>
-  String(s).toLowerCase().replace(/[’`]/g, "'").replace(/[^a-z0-9' ]+/g, ' ').split(/\s+/).filter(Boolean).map((t) => NUMBERS[t] ?? t);
+  String(s).toLowerCase().replace(/[’`]/g, "'").replace(/[^\p{L}\p{N}' ]+/gu, ' ').split(/\s+/).filter(Boolean).map((t) => NUMBERS[t] ?? t);
 
 /**
  * Did the model say what we asked, and nothing else? Transcription of short or unusual words is
@@ -98,8 +123,20 @@ export const tokens = (s) =>
 const han = (s) => [...String(s)].filter((c) => /\p{Script=Han}/u.test(c));
 
 const kana = (s) => [...String(s)].filter((c) => /[\p{Script=Hiragana}\p{Script=Katakana}ー]/u.test(c));
+const hangul = (s) => [...String(s)].filter((c) => /\p{Script=Hangul}/u.test(c));
 
 export function transcriptMatches(expected, heard) {
+  if (hangul(expected).length) {
+    // Korean: the transcript is hangul too, but spacing and a homophone can differ, so compare blocks loosely —
+    // never accepting extra speech (a greeting, a comment in English).
+    const want = hangul(expected);
+    const got = hangul(heard);
+    if (!String(heard).trim()) return true;
+    if (/[a-z]{3,}/i.test(heard)) return false;
+    if (got.length > want.length + 2) return false;
+    if (want.length <= 2) return true;
+    return want.filter((c) => got.includes(c)).length / want.length >= 0.5;
+  }
   if (kana(expected).length) {
     // Japanese: the transcript may write a word in kanji that the line has in kana (みず / 水), or the reverse, so it
     // cannot be compared letter by letter — only checked for what must never be served: English, or a lot of extra
@@ -389,9 +426,12 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     const locale = input.locale ?? input.accent;
     const zh = locale === 'zh-CN';
     const ja = locale === 'ja-JP';
-    if (ja ? !kana(text).length && !han(text).length : zh ? !han(text).length : !/[a-z]/i.test(text)) throw new TtsError('invalid_text', 400);
+    const ko = locale === 'ko-KR';
+    if (ko ? !hangul(text).length : ja ? !kana(text).length && !han(text).length : zh ? !han(text).length : !/\p{L}/u.test(text)) throw new TtsError('invalid_text', 400);
     const fr = locale === 'fr-FR';
-    const req = { text, accent: zh ? 'zh-CN' : ja ? 'ja-JP' : fr ? 'fr-FR' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !zh && !fr && !ja && input.kind === 'syllable' ? 'syllable' : undefined };
+    const es = locale === 'es-ES';
+    const foreign = zh || ja || fr || ko || es;
+    const req = { text, accent: zh ? 'zh-CN' : ja ? 'ja-JP' : fr ? 'fr-FR' : ko ? 'ko-KR' : es ? 'es-ES' : locale === 'en-GB' ? 'en-GB' : 'en-US', slow: !!input.slow, kind: !foreign && input.kind === 'syllable' ? 'syllable' : undefined };
     const key = keyFor(req);
     // A learner's own text (a photographed page may hold a name) is not written to the shared cache.
     const keep = cache && !input.ephemeral;

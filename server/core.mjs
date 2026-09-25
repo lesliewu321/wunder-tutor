@@ -26,7 +26,10 @@ const CLAUDE_TIMEOUT_MS = 20_000;
 // documented for a subset of locales only, and an unsupported value would fail the whole scoring.
 // ja-JP scores per sound and per syllable, names neither, and splits words its own way: the app lines the scores up
 // with the beats of its own reading (src/speech/ja/assess.ts).
-const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN', 'fr-FR', 'ja-JP']);
+// ko-KR and es-ES (2026-09-25): Azure lists both for pronunciation assessment; assumed scored-but-unnamed like fr-FR
+// and ja-JP until probed. The app names Korean sounds from the blocks of its own pronounced form (src/speech/ko) and
+// Spanish ones from spelling (src/content/es/lexicon.ts).
+const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN', 'fr-FR', 'ja-JP', 'ko-KR', 'es-ES']);
 /** At most this many "likely mistake" re-scorings of one take (each is billed as a scoring). */
 const MAX_ALTS = 5;
 /**

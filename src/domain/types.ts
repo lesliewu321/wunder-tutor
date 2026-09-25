@@ -15,8 +15,8 @@ export const settingsName = (band: AgeBand): string => t(band === 'adult' ? 'com
 /** The English accent a child is taught. */
 export type Accent = 'en-US' | 'en-GB';
 /** What a piece of speech is scored and spoken as: English in the child's accent, or the language of another course. */
-export type Locale = Accent | 'zh-CN' | 'fr-FR' | 'ja-JP';
-export type CourseId = 'en' | 'zh' | 'fr' | 'ja';
+export type Locale = Accent | 'zh-CN' | 'fr-FR' | 'ja-JP' | 'ko-KR' | 'es-ES';
+export type CourseId = 'en' | 'zh' | 'fr' | 'ja' | 'ko' | 'es';
 /** Mandarin tone: 1–4, and 5 for the neutral (light) tone. */
 export type Tone = 1 | 2 | 3 | 4 | 5;
 /**
@@ -50,12 +50,14 @@ export interface SpeakItem {
   focus?: PhonemeId[];
   /** Spoken form for the reference voice when it differs from the text (e.g. isolated sounds). */
   say?: string;
-  /** Mandarin, French and Japanese items carry their own language; everything else is English in the learner's accent. */
-  lang?: 'zh-CN' | 'fr-FR' | 'ja-JP';
+  /** Mandarin, French, Japanese, Korean and Spanish items carry their own language; everything else is English in the learner's accent. */
+  lang?: 'zh-CN' | 'fr-FR' | 'ja-JP' | 'ko-KR' | 'es-ES';
   /** Mandarin items: `text` is Simplified (what the scorer is sent); this adds what the child reads. */
   zh?: ZhText;
   /** Japanese items: `text` is the line as written (kanji and kana, what the scorer is sent); this adds how it is read. */
   ja?: JaText;
+  /** Korean items: `text` is the line as written (what the scorer is sent); this adds how it is said. */
+  ko?: KoText;
   /** "Speak from a translation" prompts, by the learner's home language; an item without one falls back to a picture prompt. */
   translations?: Partial<Record<HomeLanguage, string>>;
 }
@@ -67,6 +69,13 @@ export interface JaText {
   romaji: string;
   /** The line in pieces for printing: each piece's kana reading is printed over it when the piece is kanji. */
   ruby: { text: string; reading?: string }[];
+}
+
+export interface KoText {
+  /** The line as it is SAID, in hangul with the sound changes applied (국물 → 궁물, 같이 → 가치): the beats and the sounds go by it. */
+  pron: string;
+  /** Revised Romanization, written by hand (it does not show tensification), for a learner who cannot read hangul yet. */
+  romaja: string;
 }
 
 export interface ZhText {

@@ -19,9 +19,9 @@ import { AccountPanel } from './AccountPanel';
 import { InviteCodeForm } from './InviteCodeForm';
 
 const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
-const COURSES: CourseId[] = ['en', 'zh', 'fr', 'ja'];
+const COURSES: CourseId[] = ['en', 'zh', 'fr', 'ja', 'ko', 'es'];
 /** A course's name on the Me card: English carries the accent; Putonghua and French keep their own names. */
-const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { zh: 'settings.me.course.zh', fr: 'settings.me.course.fr', ja: 'settings.me.course.ja' };
+const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { zh: 'settings.me.course.zh', fr: 'settings.me.course.fr', ja: 'settings.me.course.ja', ko: 'settings.me.course.ko', es: 'settings.me.course.es' };
 
 /**
  * The courses row, looking like the dropdowns around it (Leslie, 2026-09-21). It opens a list to tick rather than being
@@ -36,10 +36,10 @@ function CoursePicker({ p }: { p: ChildProfile }) {
   const [keep, setKeep] = useState(false);
   const id = useId();
   // Putonghua keeps its own name, in the learner's characters (written in Simplified here); French and Japanese theirs.
-  const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : c === 'ja' ? '日本語' : 'Français');
-  const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'fr' ? 'fr' : c === 'ja' ? 'ja' : undefined);
+  const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : c === 'ja' ? '日本語' : c === 'ko' ? '한국어' : c === 'es' ? 'Español' : 'Français');
+  const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'fr' ? 'fr' : c === 'ja' ? 'ja' : c === 'ko' ? 'ko' : c === 'es' ? 'es' : undefined);
   // In the list, what the course's own name may not tell the grown-up reading it.
-  const gloss = (c: CourseId) => (c === 'fr' || c === 'ja' || (c === 'zh' && language() !== 'zh-Hant') ? t(COURSE_LABEL[c]) : null);
+  const gloss = (c: CourseId) => (c === 'fr' || c === 'ja' || c === 'ko' || c === 'es' || (c === 'zh' && language() !== 'zh-Hant') ? t(COURSE_LABEL[c]) : null);
   const toggle = (c: CourseId) => {
     const on = p.learning.includes(c);
     if (on && p.learning.length === 1) { setKeep(true); return; }

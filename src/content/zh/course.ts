@@ -1,15 +1,15 @@
 import type { Course, PhonemeId, SpeakItem } from '../../domain/types';
 import { buildCourse, type CourseFile, type Ladder } from '../load';
-import zhData from '../../../content/courses/zh.json';
+import zhData from '../../../astra-lessons/courses/zh.json';
 
-// The Mandarin (Putonghua) course for Hong Kong children who already meet Putonghua at school — DATA since 2026-09-25
-// (content/courses/zh.json), read through the loader. Every item there carries Simplified characters (what the scorer
+// The Mandarin course for global learners; Hong Kong is the starting market. DATA since 2026-09-25
+// (astra-lessons/courses/zh.json), read through the loader. Every item there carries Simplified characters (what the scorer
 // is sent), Traditional characters (what a Hong Kong child reads) and numbered pinyin with citation tones; the loader
 // checks each one the way zhItem() always did.
 
 export { zi } from './item';
 
-export const ZH = buildCourse(zhData as unknown as CourseFile, 'content/courses/zh.json');
+export const ZH = buildCourse(zhData as unknown as CourseFile, 'astra-lessons/courses/zh.json');
 
 export const ZH_COURSE: Course = ZH.course;
 

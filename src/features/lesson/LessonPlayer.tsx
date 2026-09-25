@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { Achievement, Exercise, PhonemeId, SpeakItem } from '../../domain/types';
 import { findLesson, lessonTitle } from '../../content/course';
 import { LADDERS } from '../../content/lab';
@@ -8,8 +8,12 @@ import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
 import { useBack } from '../../back';
+import { language } from '../../i18n';
+import { LiteracyExercise } from './LiteracyExercise';
 import { useT } from '../../i18n/useT';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
+import { type TestRecord } from '../../domain/types';
+import { tier } from '../../tutor/feedback';
 import { useActiveProfile, useStore, type LessonOutcome } from '../../state/store';
 import { Button, Confetti, IconButton, ProgressBar, Sheet, toast } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
@@ -22,12 +26,23 @@ import { ChoiceExercise } from './ChoiceExercise';
 type Step = Exercise | { id: string; type: 'drill-intro'; sound: PhonemeId };
 interface ItemResult extends SpeakResult { text: string }
 
+/** A fresh player for every visit: "Take it again" changes the address, and everything starts over. */
 export function LessonPlayer() {
+  const loc = useLocation();
+  return <LessonRun key={loc.pathname + loc.search} />;
+}
+
+function LessonRun() {
   const { t } = useT();
   const { lessonId = '' } = useParams();
+  const [params] = useSearchParams();
+  // Test mode (Leslie, 2026-09-25: "same lessons but without teacher"): the very same exercises, nothing to listen
+  // to, no tips, one go per item, no drills slipped in and no fast track — and a score sheet instead of stars.
+  const test = params.get('mode') === 'test';
   const nav = useNavigate();
   const profile = useActiveProfile();
   const completeLesson = useStore((s) => s.completeLesson);
+  const completeTest = useStore((s) => s.completeTest);
   const lesson = findLesson(lessonId);
 
   // The queue is built once per visit — adaptation edits it in place as the child performs.
@@ -37,13 +52,16 @@ export function LessonPlayer() {
   const [results, setResults] = useState<ItemResult[]>([]);
   const [listenScore, setListenScore] = useState({ right: 0, total: 0 });
   const [confirmExit, setConfirmExit] = useState(false);
+  const [started, setStarted] = useState(test || !lesson?.guide);
   const [outcome, setOutcome] = useState<LessonOutcome | null>(null);
+  const [testDone, setTestDone] = useState<TestRecord | null>(null);
+  useEffect(() => { if (test && lesson) toast(t('lesson.test.start'), '📝'); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const strong = useRef(0);
   const drilled = useRef(new Set<PhonemeId>());
   const startXp = useRef(profile.xp);
 
   // The phone's Back asks first, like the ✕: leaving throws the lesson away. A finished lesson just goes back.
-  useBack(() => { if (!lesson || outcome) return false; setConfirmExit(true); return true; });
+  useBack(() => { if (!lesson || outcome || testDone) return false; setConfirmExit(true); return true; });
 
   useEffect(() => () => stopPlayback(), []);
 
@@ -62,21 +80,25 @@ export function LessonPlayer() {
     return <div className="screen screen--center"><p>{t('lesson.missing.body')}</p><Button onClick={() => nav('/')}>{t('lesson.missing.home')}</Button></div>;
   }
 
-  const finishLesson = (all: ItemResult[]) => {
+  const finishLesson = (all: ItemResult[], checks = listenScore) => {
     const spoken = all.filter((r) => r.tries > 0);
-    const avg = spoken.length ? Math.round(spoken.reduce((n, r) => n + r.best, 0) / spoken.length)
-      : listenScore.total ? Math.round((listenScore.right / listenScore.total) * 100) : 100;
-    setOutcome(completeLesson(lesson.id, avg));
+    const avg = lesson.guide && spoken.length + checks.total > 0
+      ? Math.round((spoken.reduce((n, r) => n + r.best, 0) + checks.right * 100) / (spoken.length + checks.total))
+      : spoken.length ? Math.round(spoken.reduce((n, r) => n + r.best, 0) / spoken.length)
+      : checks.total ? Math.round((checks.right / checks.total) * 100) : 100;
+    if (test) setTestDone(completeTest(lesson.id, avg));
+    else setOutcome(completeLesson(lesson.id, avg));
   };
 
-  const advance = (nextQueue: Step[], all: ItemResult[]) => {
-    if (index + 1 >= nextQueue.length) finishLesson(all);
+  const advance = (nextQueue: Step[], all: ItemResult[], checks = listenScore) => {
+    if (index + 1 >= nextQueue.length) finishLesson(all, checks);
     else setIndex(index + 1);
   };
 
   const onSpeakDone = (ex: Extract<Exercise, { type: 'speak' }> | { item: SpeakItem; id: string }, r: SpeakResult) => {
     const all = [...results, { ...r, text: shownText(ex.item) }];
     setResults(all);
+    if (test) { advance(queue, all); return; }
     let next = queue;
 
     // Struggling → isolate the sound: mouth guide, then syllable → word, before moving on.
@@ -102,8 +124,26 @@ export function LessonPlayer() {
     advance(next, all);
   };
 
+  if (testDone) return <TestComplete lessonId={lesson.id} title={lessonTitle(lesson)} results={results} record={testDone} listen={listenScore} />;
   if (outcome) return <LessonComplete title={lessonTitle(lesson)} results={results} outcome={outcome} xpGained={profile.xp - startXp.current} streak={liveStreak(profile.streak)} listen={listenScore} />;
 
+  const checked = (first: boolean) => {
+    const checks = { right: listenScore.right + (first ? 1 : 0), total: listenScore.total + 1 };
+    setListenScore(checks);
+    advance(queue, results, checks);
+  };
+  if (!started && lesson.guide) {
+    const g = lesson.guide, hant = language() === 'zh-Hant';
+    return <div className="screen lesson-guide">
+      <IconButton icon="close" label={t('lesson.leave.button')} onClick={() => nav('/')} />
+      <span className="lesson-guide__icon" aria-hidden>{lesson.icon}</span>
+      <h1>{lessonTitle(lesson)}</h1>
+      <div className="card"><h2>{t('lesson.guide.goal')}</h2><p>{hant ? g.goalHant : g.goal}</p></div>
+      <div className="card"><h2>{t('lesson.guide.tip')}</h2><p>{hant ? g.tipHant : g.tip}</p></div>
+      <div className="card"><h2>{t('lesson.guide.practice')}</h2><p>{hant ? g.practiceHant : g.practice}</p></div>
+      <Button size="lg" variant="primary" block onClick={() => setStarted(true)}>{t('lesson.guide.start')}</Button>
+    </div>;
+  }
   const step = queue[index];
   return (
     <div className="screen lesson">
@@ -114,11 +154,12 @@ export function LessonPlayer() {
       </header>
 
       <div className="lesson__body" key={step.id}>
-        {step.type === 'speak' && <SpeakExercise item={step.item} prompt={step.prompt} context="lesson" onDone={(r) => onSpeakDone(step, r)} />}
+        {step.type === 'speak' && <SpeakExercise item={step.item} prompt={step.prompt} context={test ? 'test' : 'lesson'} mode={test ? 'test' : 'practice'} onDone={(r) => onSpeakDone(step, r)} />}
         {(step.type === 'choose-heard' || step.type === 'minimal-pair') && (
-          <ChoiceExercise ex={step} onDone={(first) => { setListenScore((s) => ({ right: s.right + (first ? 1 : 0), total: s.total + 1 })); advance(queue, results); }} />
+          <ChoiceExercise ex={step} test={test} onDone={checked} />
         )}
-        {step.type === 'dialogue' && <DialogueExercise ex={step} onDone={(it, r) => onSpeakDone({ item: it, id: step.id }, r)} />}
+        {(step.type === 'read-choice' || step.type === 'arrange') && <LiteracyExercise ex={step} test={test} onDone={checked} />}
+        {step.type === 'dialogue' && <DialogueExercise ex={step} test={test} onDone={(it, r) => onSpeakDone({ item: it, id: step.id }, r)} />}
         {step.type === 'drill-intro' && <DrillIntro sound={step.sound} onDone={() => advance(queue, results)} />}
       </div>
 
@@ -155,7 +196,7 @@ function DrillIntro({ sound, onDone }: { sound: PhonemeId; onDone: () => void })
   );
 }
 
-function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialogue' }>; onDone: (item: SpeakItem, r: SpeakResult) => void }) {
+function DialogueExercise({ ex, onDone, test = false }: { ex: Extract<Exercise, { type: 'dialogue' }>; onDone: (item: SpeakItem, r: SpeakResult) => void; test?: boolean }) {
   const { t } = useT();
   const profile = useActiveProfile();
   const [choice, setChoice] = useState<SpeakItem | null>(ex.replies.length === 1 ? ex.replies[0] : null);
@@ -192,7 +233,39 @@ function DialogueExercise({ ex, onDone }: { ex: Extract<Exercise, { type: 'dialo
   return (
     <div className="dialogue dialogue--speaking">
       {bubble}
-      <SpeakExercise item={choice} context="lesson" onDone={(r) => onDone(choice, r)} />
+      <SpeakExercise item={choice} context={test ? 'test' : 'lesson'} mode={test ? 'test' : 'practice'} onDone={(r) => onDone(choice, r)} />
+    </div>
+  );
+}
+
+/** The score sheet: every line said, with its score; the listening tally; the best so far. No stars, no confetti — a test measures. */
+function TestComplete({ lessonId, title, results, record, listen }: { lessonId: string; title: string; results: ItemResult[]; record: TestRecord; listen: { right: number; total: number } }) {
+  const { t } = useT();
+  const nav = useNavigate();
+  const spoken = results.filter((r) => r.tries > 0);
+  return (
+    <div className="screen complete">
+      <div className="complete__stage">
+        <Mascot mood={record.score >= 75 ? 'cheer' : 'happy'} size={112} />
+        <h1>{t('lesson.test.title')}</h1>
+        <p className="complete__lesson">{title}</p>
+        <div className="stat-row">
+          <div className="stat"><b>{record.score}</b><span>{t('lesson.test.score')}</span></div>
+          {listen.total > 0 && <div className="stat"><b>{listen.right}/{listen.total}</b><span>{t('lesson.complete.stat.listening')}</span></div>}
+        </div>
+        {record.taken > 1 && <p className="complete__lesson">{t('lesson.test.best', { n: record.best })}</p>}
+        {spoken.length > 0 && (
+          <ol className="say__lines">
+            {spoken.map((r, i) => (
+              <li key={i}><span className="say__line"><span className="say__line-text">{r.text}</span><span className={`chip-score chip-score--${tier(r.best)}`}>{r.best}</span></span></li>
+            ))}
+          </ol>
+        )}
+      </div>
+      <div className="complete__dock">
+        <Button variant="leaf" size="lg" block onClick={() => nav('/')}>{t('lesson.test.home')}</Button>
+        <Button variant="ghost" block onClick={() => nav(`/lesson/${lessonId}?mode=test&again=${Date.now()}`, { replace: true })}>{t('lesson.test.again')}</Button>
+      </div>
     </div>
   );
 }

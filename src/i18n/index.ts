@@ -21,6 +21,7 @@ import speak from './en/speak.json';
 import zhCommon from './zh-Hant/common.json';
 import zhContent from './zh-Hant/content.json';
 import zhContentCourse from './zh-Hant/content-course.json';
+import astraContent from '../../astra-lessons/i18n/zh-Hant.json';
 import zhFeedback from './zh-Hant/feedback.json';
 import zhHome from './zh-Hant/home.json';
 import zhLab from './zh-Hant/lab.json';
@@ -45,7 +46,7 @@ const INTERFACE: Record<Language, Partial<Record<string, string>>> = {
   en,
   'zh-Hant': { ...zhCommon, ...zhOnboarding, ...zhSettings, ...zhSpeak, ...zhFeedback, ...zhHome, ...zhLesson, ...zhLab, ...zhPractice, ...zhProgress },
 };
-const CONTENT: Record<Language, Partial<Record<string, string>>> = { en: {}, 'zh-Hant': { ...zhContent, ...zhContentCourse } };
+const CONTENT: Record<Language, Partial<Record<string, string>>> = { en: {}, 'zh-Hant': { ...zhContent, ...zhContentCourse, ...astraContent } };
 
 let current: Language = 'en';
 

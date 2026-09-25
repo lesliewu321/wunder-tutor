@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isGrownUp, type ChildProfile, type PhonemeId } from '../../domain/types';
 import { LADDERS, LAB_STAGES, stageLabel, type LabStage } from '../../content/lab';
-import { exampleSpeech, isJaSound, isLongLabel, isZhSound, phonemeInfo, soundLocale, tipFor } from '../../content/phonemes';
+import { exampleSpeech, isEsSound, isJaSound, isKoSound, isLongLabel, isZhSound, phonemeInfo, soundLocale, tipFor } from '../../content/phonemes';
 import { shownText } from '../../content/zh/script';
 import { XP, badgeName } from '../../engine/rewards';
 import type { Key } from '../../i18n';
@@ -69,7 +69,7 @@ export function LabHome() {
                 <span className="sound-card__glyph" data-long={isLongLabel(info.label) || undefined}>{info.label}</span>
                 <span className="sound-card__text">
                   <b>{info.name}</b>
-                  <small>{t('lab.home.asIn', { example: info.example })}{isGrownUp(p.band) && !isZhSound(id) && !isJaSound(id) ? ` · /${id}/` : ''}</small>
+                  <small>{t('lab.home.asIn', { example: info.example })}{isGrownUp(p.band) && !isZhSound(id) && !isJaSound(id) && !isKoSound(id) && !isEsSound(id) ? ` · /${id}/` : ''}</small>
                   <ProgressBar value={done / total} tone="leaf" />
                 </span>
                 <span className="sound-card__side">
@@ -97,7 +97,7 @@ export function LabSound() {
   const st = status(p, sound);
   const nextStage = LAB_STAGES.find((s) => stageDone(p, sound, s) < ladder[s].length) ?? 'sentence';
   // A Mandarin tone or a Japanese beat has no IPA symbol worth showing; each example is said in its own language.
-  const noSymbol = isZhSound(sound) || isJaSound(sound);
+  const noSymbol = isZhSound(sound) || isJaSound(sound) || isKoSound(sound) || isEsSound(sound);
   const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: soundLocale(sound, p.accent), slow }).catch((e) => void noSoundMessage(p.band, e).then((m) => toast(m, '🔇')));
 
   return (

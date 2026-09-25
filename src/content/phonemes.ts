@@ -3,6 +3,8 @@ import { EN } from './course';
 import { tc } from '../i18n';
 import { FR_SOUNDS } from './fr/sounds';
 import { JA_SOUNDS } from './ja/sounds';
+import { KO_SOUNDS } from './ko/sounds';
+import { ES_SOUNDS } from './es/sounds';
 import { ZH_SOUNDS } from './zh/sounds';
 import { inScript } from './zh/script';
 
@@ -335,16 +337,21 @@ export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries([
   ...FR_SOUNDS.map((p) => [p.id, p] as const),
   // Japanese beats and sound classes are namespaced "ja:…" like the Mandarin units (see ja/sounds.ts).
   ...JA_SOUNDS.map((p) => [p.id, p] as const),
+  // Korean block classes "ko:…" and Spanish sounds "es:…" (namespaced: r, θ, ɲ would collide with English and French ids).
+  ...KO_SOUNDS.map((p) => [p.id, p] as const),
+  ...ES_SOUNDS.map((p) => [p.id, p] as const),
 ]);
 
 /** Mandarin units are namespaced "zh:…", so the two catalogues never collide. */
 export const isZhSound = (id: PhonemeId): boolean => id.startsWith('zh:');
 export const isJaSound = (id: PhonemeId): boolean => id.startsWith('ja:');
+export const isKoSound = (id: PhonemeId): boolean => id.startsWith('ko:');
+export const isEsSound = (id: PhonemeId): boolean => id.startsWith('es:');
 const FR_IDS = new Set<PhonemeId>(FR_SOUNDS.map((p) => p.id));
 
 /** The language a sound's example is spoken in: a French or Japanese sound's example is a French or Japanese word. */
 export const soundLocale = (id: PhonemeId, accent: Accent): Locale =>
-  isZhSound(id) ? 'zh-CN' : isJaSound(id) ? 'ja-JP' : FR_IDS.has(id) ? 'fr-FR' : accent;
+  isZhSound(id) ? 'zh-CN' : isJaSound(id) ? 'ja-JP' : isKoSound(id) ? 'ko-KR' : isEsSound(id) ? 'es-ES' : FR_IDS.has(id) ? 'fr-FR' : accent;
 
 /**
  * A sound's guide as the learner reads it — a copy, worked out when asked for, so it follows the App language and the

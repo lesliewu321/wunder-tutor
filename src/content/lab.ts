@@ -3,6 +3,8 @@ import { tc } from '../i18n';
 import { EN } from './course';
 import { FR_LADDERS } from './fr/course';
 import { JA_LADDERS } from './ja/course';
+import { KO_LADDERS } from './ko/course';
+import { ES_LADDERS } from './es/course';
 import { type Ladder, type LabStage, LAB_STAGES as STAGES } from './load';
 import { ZH_LADDERS } from './zh/course';
 
@@ -18,5 +20,7 @@ export const LADDERS: Record<PhonemeId, Ladder> = {
   ...ZH_LADDERS,
   ...FR_LADDERS,
   ...JA_LADDERS,
+  ...KO_LADDERS,
+  ...ES_LADDERS,
   ...EN.ladders,
 };

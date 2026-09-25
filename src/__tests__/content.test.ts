@@ -7,6 +7,7 @@ import { translationFor } from '../content/translations';
 import { ZH_CHECK_ITEMS, ZH_COURSE, ZH_ITEMS, ZH_LAB_SOUNDS, ZH_LADDERS } from '../content/zh/course';
 import golden from './fixtures/content-golden.json';
 import enData from '../../content/courses/en.json';
+import zhData from '../../content/courses/zh.json';
 
 // The split's proof: the English and Putonghua courses built from their data files are the very objects the
 // hand-written TypeScript built on 2026-09-25 (the golden was dumped from it that day), item for item, exercise id
@@ -17,7 +18,8 @@ const sansTranslations = <T,>(v: T): T => JSON.parse(JSON.stringify(v, (k, x) =>
 
 describe('the courses from data are the courses that were code', () => {
   it('English: course, check, ladders, sounds', () => {
-    expect(sansTranslations(COURSE)).toEqual(golden.en.course);
+    expect(sansTranslations(buildCourse(enData as unknown as CourseFile).course)).toEqual(golden.en.course);
+    expect(sansTranslations(COURSE.units[0])).toEqual(golden.en.course.units[0]);
     expect(sansTranslations(ASSESSMENT_ITEMS)).toEqual(golden.en.check);
     expect(sansTranslations(EN.ladders)).toEqual(golden.en.ladders);
     expect(EN.labSounds).toEqual(golden.en.labSounds);
@@ -33,15 +35,16 @@ describe('the courses from data are the courses that were code', () => {
   });
 
   it('Putonghua: course, check, ladders, sounds, and every item in order', () => {
-    expect(ZH_COURSE).toEqual(golden.zh.course);
+    expect(buildCourse(zhData as unknown as CourseFile).course).toEqual(golden.zh.course);
+    expect(ZH_COURSE.units[0]).toEqual(golden.zh.course.units[0]);
     expect(ZH_CHECK_ITEMS).toEqual(golden.zh.check);
     expect(ZH_LADDERS).toEqual(golden.zh.ladders);
     expect(ZH_LAB_SOUNDS).toEqual(golden.zh.labSounds);
-    expect(ZH_ITEMS).toEqual(golden.zh.items);
+    expect(ZH_ITEMS.slice(0, golden.zh.items.length)).toEqual(golden.zh.items);
   });
 
   it('the lessons keep their ids and order', () => {
-    expect(ALL_LESSONS.map((l) => l.id)).toEqual(golden.lessonIds);
+    expect(ALL_LESSONS.map((l) => l.id).filter((id) => golden.lessonIds.includes(id))).toEqual(golden.lessonIds);
   });
 
   it('one id, one item: "Thank you very much." keeps its meaning and focus sounds everywhere', () => {

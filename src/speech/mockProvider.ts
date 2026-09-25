@@ -3,6 +3,8 @@ import { phonemeInfo } from '../content/phonemes';
 import { textPhones } from '../content/lexicon';
 import { frTokenize, frWordPhones } from '../content/fr/lexicon';
 import { morae } from '../content/ja/kana';
+import { blocks } from '../content/ko/hangul';
+import { esTokenize, esWordPhones } from '../content/es/lexicon';
 import { alternativesFor } from '../content/zh/alternatives';
 import { parseSyllable, splitPinyin, surfaceTones } from '../content/zh/pinyin';
 import { unitsFor } from './zh/assess';
@@ -53,7 +55,10 @@ export class MockPronunciationProvider implements PronunciationProvider {
     // Japanese is one line of beats, each named by the sound it is taught as (or unnamed), as the real scorer's are.
     const words = ctx.locale === 'ja-JP' && ctx.ja
       ? [{ word: referenceText, key: referenceText, syllables: morae(ctx.ja.kana).map((m) => ({ text: m.kana, phonemes: [m.unit ?? ''] })) }]
-      : ctx.locale === 'fr-FR' ? frTokenize(referenceText).map(frWordPhones) : textPhones(referenceText, ctx.accent);
+      : ctx.locale === 'ko-KR' && ctx.ko
+        ? [{ word: referenceText, key: referenceText, syllables: blocks(ctx.ko.pron).map((b) => ({ text: b.block, phonemes: [b.unit ?? ''] })) }]
+        : ctx.locale === 'es-ES' ? esTokenize(referenceText).map(esWordPhones)
+          : ctx.locale === 'fr-FR' ? frTokenize(referenceText).map(frWordPhones) : textPhones(referenceText, ctx.accent);
     const syllables = words.reduce((n, w) => n + w.syllables.length, 0);
 
     // Completeness: was there enough speech for the whole text? If not, trailing words were dropped.

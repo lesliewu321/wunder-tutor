@@ -45,6 +45,8 @@ const DEFS: Record<string, Omit<Achievement, 'earnedAt' | 'id'>> = {
   // A unit badge's id is `unit-<unit id>` (store.ts); without its line here the French one showed as "unit-fr-cafe".
   'unit-fr-cafe': { title: 'French café champion', detail: 'You finished every lesson in the French café unit.', icon: '🥐' },
   'unit-ja-food': { title: 'Japanese food champion', detail: 'You finished every lesson in the Japanese food unit.', icon: '🍙' },
+  'unit-ko-food': { title: 'Korean food champion', detail: 'You finished every lesson in the Korean food unit.', icon: '🍚' },
+  'unit-es-food': { title: 'Spanish food champion', detail: 'You finished every lesson in the Spanish food unit.', icon: '🥘' },
 };
 
 export const achievement = (id: string, now: number): Achievement => {

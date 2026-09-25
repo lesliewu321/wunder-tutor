@@ -4,6 +4,7 @@ import { apiHealth, type ApiHealth } from '../../speech';
 import { courseFor, courseTitle, ITEM_INDEX, lessonTitle, unitSubtitle, unitTitle } from '../../content/course';
 import { inScript } from '../../content/zh/script';
 import { isLongLabel, phonemeInfo } from '../../content/phonemes';
+import { courseLessons, currentUnit, lessonUnlocked } from '../../engine/curriculum';
 import { dueItems, itemCourse, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
 import { focusSound, weakSoundsIn } from '../../intelligence/profile';
@@ -21,7 +22,10 @@ export function Home() {
   const p = useActiveProfile();
   const setCourse = useStore((s) => s.setCourse);
   const COURSE = courseFor(p.course);
-  const unit = COURSE.units[0];
+  const unit = currentUnit(COURSE, p.lessonsCompleted);
+  const lessons = courseLessons(COURSE);
+  const [selected, setSelected] = useState<{ course: CourseId; unitId: string } | null>(null);
+  const pathUnit = COURSE.units.find((u) => selected?.course === p.course && u.id === selected.unitId && !u.locked && u.lessons.length) ?? unit;
   const ids = unit.lessons.map((l) => l.id);
   const nextId = nextLessonId(p, ids);
   const next = unit.lessons.find((l) => l.id === nextId);
@@ -36,11 +40,16 @@ export function Home() {
   const due = dueItems(p, Date.now()).filter((d) => { const it = ITEM_INDEX[d.itemId]; return !!it && itemCourse(it) === p.course; }).length;
   const review = unit.lessons[unit.lessons.length - 1];
   const [api, setApi] = useState<ApiHealth | null>(null);
+  // Learn or Test (Leslie, 2026-09-25): the same path, but a node opens the lesson without the teacher. Remembered
+  // per learner on this device. A child tests only what they have learnt; grown-ups may test anything.
+  const [pathMode, setPathModeState] = useState<'learn' | 'test'>(() => { try { return localStorage.getItem(`wunder-tutor/path-mode/${p.id}`) === 'test' ? 'test' : 'learn'; } catch { return 'learn'; } });
+  const setPathMode = (m: 'learn' | 'test') => { setPathModeState(m); try { localStorage.setItem(`wunder-tutor/path-mode/${p.id}`, m); } catch { /* private mode */ } };
+  const testing = pathMode === 'test';
   useEffect(() => { void apiHealth().then(setApi); }, []);
   // Never let simulated scores pass for real ones.
   const practiceMode = api !== null && !api.azure;
   // The Putonghua course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
-  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', fr: 'Français', ja: '日本語 Japanese' };
+  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', fr: 'Français', ja: '日本語 Japanese', ko: '한국어 Korean', es: 'Español' };
   // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
   const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
 
@@ -86,7 +95,7 @@ export function Home() {
       <div className="home__main">
       <section className="hero" style={{ ['--hero' as string]: unit.color }}>
         <div className="hero__text">
-          <span className="hero__unit">{t('home.hero.unit', { course: courseTitle(COURSE, p.band), n: 1 })}</span>
+          <span className="hero__unit">{t('home.hero.unit', { course: courseTitle(COURSE, p.band), n: COURSE.units.indexOf(unit) + 1 })}</span>
           <h1>{unitTitle(unit, p.band)}</h1>
           <p>{next ? rich(t('home.hero.next', { title: `${next.icon} ${lessonTitle(next)}` })) : due ? tn('home.hero.due', due) : t('home.hero.finished')}</p>
           <div className="hero__progress"><ProgressBar value={doneCount / ids.length} tone="sun" /><span>{doneCount}/{ids.length}</span></div>
@@ -115,19 +124,44 @@ export function Home() {
       </div>
 
       <section className="path" aria-label={t('home.path.aria')}>
-        <h2 className="section-title">{unit.icon} {unitTitle(unit, p.band)}</h2>
+        <label className="course-pick"><span>{t('home.units.browse')}</span>
+          <select value={pathUnit.id} onChange={(e) => setSelected({ course: p.course, unitId: e.target.value })}>
+            {COURSE.units.filter((u) => !u.locked && u.lessons.length).map((u, i) => <option key={u.id} value={u.id}>{i + 1}. {unitTitle(u, p.band)} ({u.lessons.filter((l) => p.lessonsCompleted[l.id]).length}/{u.lessons.length})</option>)}
+          </select>
+        </label>
+        <p className="course-overview">{t('home.units.progress', { done: lessons.filter((l) => p.lessonsCompleted[l.id]).length, total: lessons.length })}</p>
+        <h2 className="section-title">{pathUnit.icon} {unitTitle(pathUnit, p.band)}</h2>
+        <p className="course-overview">{unitSubtitle(pathUnit, p.band)}</p>
+        <div className="chips" role="tablist" aria-label={t('home.path.mode.aria')}>
+          <button type="button" role="tab" className={`chip ${!testing ? 'is-on' : ''}`} aria-selected={!testing} onClick={() => setPathMode('learn')}>{t('home.path.mode.learn')}</button>
+          <button type="button" role="tab" className={`chip ${testing ? 'is-on' : ''}`} aria-selected={testing} onClick={() => setPathMode('test')}>{t('home.path.mode.test')}</button>
+        </div>
         <ol className="path__list">
-          {unit.lessons.map((l, i) => {
+          {pathUnit.lessons.map((l) => {
             const done = p.lessonsCompleted[l.id];
             // Children follow the path one lesson at a time. Grown-ups may open any lesson; "Up next" still shows the way
             // (Leslie, 2026-09-21: kids in order, grown-ups free).
-            const unlocked = p.band === 'adult' || i === 0 || !!p.lessonsCompleted[unit.lessons[i - 1].id];
+            const unlocked = lessonUnlocked(lessons, l.id, p.band, p.lessonsCompleted);
+            const prerequisite = lessons.find((x) => !p.lessonsCompleted[x.id]);
             const current = l.id === nextId;
+            if (testing) {
+              const can = p.band === 'adult' || !!done;
+              const rec = p.tests?.[l.id];
+              return (
+                <li key={l.id}>
+                  <button type="button" className={`node ${rec ? 'node--done' : can ? '' : 'node--locked'}`} disabled={!can} onClick={() => nav(`/lesson/${l.id}?mode=test`)}>
+                    <span className="node__icon">{can ? l.icon : <Icon name="lock" size={22} />}</span>
+                    <span className="node__text"><b>{lessonTitle(l)}</b><small>{rec ? t('home.path.test.best', { n: rec.best }) : can ? t('home.path.test.ready') : t('home.path.test.locked')}</small></span>
+                    {rec ? <span className={`chip-score chip-score--${rec.best >= 90 ? 'good' : rec.best >= 75 ? 'okay' : 'weak'}`}>{rec.best}</span> : can ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
+                  </button>
+                </li>
+              );
+            }
             return (
               <li key={l.id}>
                 <button type="button" className={`node ${done ? 'node--done' : current ? 'node--current' : unlocked ? '' : 'node--locked'}`} disabled={!unlocked} onClick={() => nav(`/lesson/${l.id}`)}>
                   <span className="node__icon">{unlocked ? l.icon : <Icon name="lock" size={22} />}</span>
-                  <span className="node__text"><b>{lessonTitle(l)}</b><small>{done ? t('home.path.again') : current ? t('home.path.upNext') : unlocked ? t('home.path.ready') : t('home.path.locked', { title: lessonTitle(unit.lessons[i - 1]) })}</small></span>
+                  <span className="node__text"><b>{lessonTitle(l)}</b><small>{done ? t('home.path.again') : current ? t('home.path.upNext') : unlocked ? t('home.path.ready') : t('home.path.locked', { title: prerequisite ? lessonTitle(prerequisite) : '' })}</small></span>
                   {done ? p.band === 'adult' ? <span className="node__go node__go--done" aria-label={t('home.path.done.aria')}><Icon name="check" size={16} /></span> : <span className="node__stars" aria-label={tn('home.path.stars.aria', done.stars)}>{'★'.repeat(done.stars)}<i>{'★'.repeat(3 - done.stars)}</i></span> : current ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
                 </button>
               </li>
@@ -135,7 +169,7 @@ export function Home() {
           })}
         </ol>
         {/* Units still being written. Nothing a learner does opens them, so no padlock (Leslie asked why they were locked). */}
-        {COURSE.units.slice(1).map((u) => (
+        {COURSE.units.filter((u) => u.locked || !u.lessons.length).map((u) => (
           <div key={u.id} className="unit-soon"><span className="unit-soon__icon" aria-hidden>{u.icon}</span><span><b>{unitTitle(u, p.band)}</b><small>{unitSubtitle(u, p.band)}</small></span><span className="unit-soon__tag">{t('home.path.soon')}</span></div>
         ))}
       </section>

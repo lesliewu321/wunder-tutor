@@ -6,6 +6,8 @@ import { phonemeInfo } from '../../content/phonemes';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
 import { FR_CHECK_ITEMS } from '../../content/fr/course';
 import { JA_CHECK_ITEMS } from '../../content/ja/course';
+import { KO_CHECK_ITEMS } from '../../content/ko/course';
+import { ES_CHECK_ITEMS } from '../../content/es/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { LANGUAGES, language, type Key } from '../../i18n';
 import { useBack } from '../../back';
@@ -40,11 +42,11 @@ const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
   { id: 'everyday', icon: '🛒', title: 'onboarding.level.goal.everyday' }, { id: 'fun', icon: '🎮', title: 'onboarding.level.goal.fun' },
 ];
 /** The courses on offer first, then the ones coming soon (Leslie, 2026-09-22: "list coming soon languages last"). */
-const LEARN: { id: CourseId | 'es' | 'de' | 'ko'; label: Key; ready: boolean; lang?: string }[] = [
+const LEARN: { id: CourseId | 'de'; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
   { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' },
-  { id: 'es', label: 'onboarding.languages.learn.es', ready: false }, { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
-  { id: 'ko', label: 'onboarding.languages.learn.ko', ready: false, lang: 'ko' },
+  { id: 'ko', label: 'onboarding.languages.learn.ko', ready: true, lang: 'ko' }, { id: 'es', label: 'onboarding.languages.learn.es', ready: true, lang: 'es' },
+  { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
 ];
 /**
  * Who a sentence is about: the grown-up themself, the child by nickname, or "your child" before a nickname is typed.
@@ -136,7 +138,7 @@ export function Onboarding() {
   const firstCourse: CourseId = learning[0] ?? 'en';
   const checkItems = () => {
     const band = contentBand(useStore.getState().profiles[useStore.getState().activeId ?? '']?.band ?? 'junior');
-    return (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : firstCourse === 'ja' ? JA_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
+    return (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : firstCourse === 'ja' ? JA_CHECK_ITEMS : firstCourse === 'ko' ? KO_CHECK_ITEMS : firstCourse === 'es' ? ES_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
   };
   // The check's first takes are fetched while the grown-up signs in and hands over (a hard line can take the server ten
   // seconds), and the next one while the child says this one: Listen is instant, instead of a wait that looks like no sound.
@@ -459,7 +461,7 @@ export function Onboarding() {
       const strong = Object.values(profile.pronunciation.phonemes)
         .filter((s) => inCourse(s.phoneme, firstCourse) && s.ema >= 88 && phonemeInfo(s.phoneme).difficulty >= 0.35 && !focus.includes(s.phoneme)).slice(0, 3);
       // Tones and Japanese beats are known by their names; English and French sounds by an example word.
-      const byName = zh || firstCourse === 'ja';
+      const byName = zh || firstCourse === 'ja' || firstCourse === 'ko';
       return shell(
         <>
           <div className="card plan">

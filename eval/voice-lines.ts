@@ -12,6 +12,8 @@ import { fileURLToPath } from 'node:url';
 import { ALL_LESSONS, ASSESSMENT_ITEMS } from '../src/content/course';
 import { FR_CHECK_ITEMS } from '../src/content/fr/course';
 import { JA_CHECK_ITEMS } from '../src/content/ja/course';
+import { KO_CHECK_ITEMS } from '../src/content/ko/course';
+import { ES_CHECK_ITEMS } from '../src/content/es/course';
 import { LADDERS } from '../src/content/lab';
 import { exampleSpeech, soundLocale } from '../src/content/phonemes';
 import { SCENARIOS } from '../src/content/scenarios';
@@ -72,7 +74,7 @@ export function voiceLines(): VoiceLine[] {
     for (const rung of Object.values(ladder)) rung.forEach((it) => item(it, where));
     for (const acc of ACCENTS) add(exampleSpeech(sound), soundLocale(sound, acc), where);
   }
-  for (const [name, checks] of [['check en', ASSESSMENT_ITEMS], ['check zh', ZH_CHECK_ITEMS], ['check fr', FR_CHECK_ITEMS], ['check ja', JA_CHECK_ITEMS]] as const) {
+  for (const [name, checks] of [['check en', ASSESSMENT_ITEMS], ['check zh', ZH_CHECK_ITEMS], ['check fr', FR_CHECK_ITEMS], ['check ja', JA_CHECK_ITEMS], ['check ko', KO_CHECK_ITEMS], ['check es', ES_CHECK_ITEMS]] as const) {
     for (const band of BANDS) checks[band].forEach((it) => item(it, name));
   }
   for (const acc of ACCENTS) add(ACCENT_PREVIEW_LINE, acc, 'setup accent preview');

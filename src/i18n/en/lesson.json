@@ -1,24 +1,19 @@
 {
   "lesson.missing.body": "We couldn’t find that lesson.",
   "lesson.missing.home": "Back home",
-
   "lesson.fastTrack.toast": "You’re flying! Skipping ones you already know.",
-
   "lesson.leave.button": "Leave lesson",
   "lesson.leave.sheet": "Leave lesson?",
   "lesson.leave.title": "Leave this lesson?",
   "lesson.leave.body": "Your speaking scores are saved, but you’ll start this lesson from the beginning next time.",
   "lesson.leave.stay": "Keep going",
   "lesson.leave.confirm": "Leave",
-
   "lesson.drill.tag": "Quick sound workout",
   "lesson.drill.title.tone": "Let’s practise {tone}",
   "lesson.drill.title.sound": "Let’s fix the “{label}” sound",
   "lesson.drill.hear": "Hear it in “{example}”",
   "lesson.drill.ready": "I’m ready",
-
   "lesson.dialogue.title": "What will you say?",
-
   "lesson.choice.title.pair": "Which one did you hear?",
   "lesson.choice.title.heard": "What did you hear?",
   "lesson.choice.listenFor.tone": "Listen for {name}.",
@@ -29,7 +24,6 @@
   "lesson.choice.cheer.retry": "You got it!",
   "lesson.choice.nudge": "Not quite — listen again, nice and slow.",
   "lesson.choice.skip": "Skip",
-
   "lesson.complete.title": "Lesson complete!",
   "lesson.complete.stars": "{n} out of 3 stars",
   "lesson.complete.stat.pronunciation": "Pronunciation",
@@ -43,5 +37,29 @@
   "lesson.complete.mastered.again.adult": "“{text}” will come back soon for more practice.",
   "lesson.complete.mastered.again.kid": "Tutu will bring back “{text}” soon for more practice.",
   "lesson.complete.progress.little": "See my stars",
-  "lesson.complete.progress.older": "See my progress"
+  "lesson.complete.progress.older": "See my progress",
+  "lesson.test.start": "Test time — no teacher, one go each. Show what you can do!",
+  "lesson.test.title": "Test complete!",
+  "lesson.test.score": "Test score",
+  "lesson.test.best": "Your best so far: {n}",
+  "lesson.test.again": "Take it again",
+  "lesson.test.home": "Back to lessons",
+  "lesson.choice.test.right": "Right!",
+  "lesson.choice.test.wrong": "Not this time — the answer is marked in green.",
+  "lesson.guide.goal": "In this lesson",
+  "lesson.guide.tip": "How it works",
+  "lesson.guide.practice": "Try it away from the screen",
+  "lesson.guide.start": "Start lesson",
+  "lesson.literacy.arrange": "Build the sentence",
+  "lesson.literacy.read": "Read and understand",
+  "lesson.literacy.hear": "Listen to the passage",
+  "lesson.literacy.hearModel": "Hear the model sentence",
+  "lesson.literacy.instruction": "Tap the pieces in order. Tap a chosen piece to put it back.",
+  "lesson.literacy.yourSentence": "Your sentence",
+  "lesson.literacy.empty": "Your sentence goes here",
+  "lesson.literacy.reset": "Start again",
+  "lesson.literacy.check": "Check sentence",
+  "lesson.literacy.correct": "That sentence is correct. Say it aloud once more.",
+  "lesson.literacy.retry": "Not quite. Listen to the model and try another order.",
+  "lesson.literacy.readAgain": "Read or listen again. Look for the detail the question asks about."
 }

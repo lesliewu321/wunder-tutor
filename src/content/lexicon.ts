@@ -101,7 +101,8 @@ const guess = (word: string): string[] => {
 };
 
 /** A word's key for the memory of personal bests: letters for English, characters for Chinese. */
-export const wordKey = (word: string): string => word.toLowerCase().replace(/[’]/g, "'").replace(/[^a-z'\p{Script=Han}]/gu, '');
+// Letters of any script (2026-09-25: before, café keyed as "caf" and a hangul or kana word as ""); English lookups are unaffected.
+export const wordKey = (word: string): string => word.toLowerCase().replace(/[’]/g, "'").replace(/[^\p{L}']/gu, '');
 
 export const tokenize = (text: string): string[] =>
   text.split(/\s+/).map((t) => t.replace(/^[^A-Za-z']+|[^A-Za-z']+$/g, '')).filter(Boolean);

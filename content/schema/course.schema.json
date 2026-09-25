@@ -27,7 +27,9 @@
         "en",
         "zh",
         "fr",
-        "ja"
+        "ja",
+        "ko",
+        "es"
       ]
     },
     "title": {
@@ -46,7 +48,7 @@
     },
     "items": {
       "type": "object",
-      "description": "Every line a learner can be asked to say, by id. English: it-<slug of the text>. Mandarin: zh-<pinyin joined with dashes>, plus -s for a full sentence. Lab: lab-<sound>-<slug>.",
+      "description": "Every line a learner can be asked to say, by id. English: it-<slug of the text>. Mandarin: zh-<pinyin joined with dashes>, plus -s for a full sentence. Lab: lab-<sound>-<slug>. Korean: ko-<romaja of the pronounced form, words joined with dashes>. Spanish: es-<slug of the text, accents kept>.",
       "additionalProperties": {
         "$ref": "#/definitions/item"
       }
@@ -178,7 +180,9 @@
           "enum": [
             "zh-CN",
             "fr-FR",
-            "ja-JP"
+            "ja-JP",
+            "ko-KR",
+            "es-ES"
           ],
           "description": "Omitted for English, which is said in the learner's accent."
         },
@@ -240,6 +244,24 @@
             "type": "string"
           },
           "description": "'Speak from a translation' prompts by home language (yue, zh, es, …)."
+        },
+        "ko": {
+          "type": "object",
+          "required": [
+            "pron",
+            "romaja"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "pron": {
+              "type": "string",
+              "description": "The line as it is SAID, in hangul with sound changes applied (국물 → 궁물)."
+            },
+            "romaja": {
+              "type": "string",
+              "description": "Revised Romanization, by hand (it does not show tensification): tteokbokki."
+            }
+          }
         }
       }
     },

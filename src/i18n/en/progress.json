@@ -1,37 +1,31 @@
 {
   "progress.title": "My progress",
-
   "progress.empty.title": "Nothing to show yet",
   "progress.empty.body.adult": "Say your first words and every sound will be tracked here.",
   "progress.empty.body.kid": "Say your first words and Tutu will start tracking every sound.",
   "progress.empty.start": "Start a lesson",
-
   "progress.trend.label": "Pronunciation",
   "progress.trend.up": "Up from **{from}** to **{to}** this month. Keep going!",
   "progress.trend.steady": "Holding steady around **{to}**. A little practice each day moves it.",
   "progress.trend.first": "Today’s average. Come back tomorrow to start your trend line.",
   "progress.trend.day1": "Day 1",
   "progress.trend.chart": "Pronunciation from {from} to {to}",
-
   "progress.stat.lessons": "of {total} lessons",
   "progress.stat.speaking": "speaking out loud",
   "progress.stat.speaking.seconds": "{n}s",
   "progress.stat.speaking.minutes": "{n} min",
   "progress.stat.words": "words said clearly",
   "progress.stat.streak": "day streak · best {best}",
-
   "progress.weak.title": "Sounds that need work",
   "progress.weak.heardAs": "Often sounds like “{label}” · heard {n}×",
   "progress.weak.example": "as in “{example}” · heard {n}×",
   "progress.weak.none.adult": "No weak sounds right now.",
   "progress.weak.none.kid": "No weak sounds right now. Tutu will keep listening.",
-
   "progress.improving.title": "Strongest improvements",
-
   "progress.mastered.title": "Mastered sounds",
   "progress.mastered.none": "Keep a tricky sound clear on two different days and it lands here.",
-
   "progress.bests.title": "Personal bests",
-
+  "progress.tests.title": "Test scores",
+  "progress.tests.taken": "taken {n}×",
   "progress.badges.title": "Badges"
 }

@@ -19,7 +19,7 @@ const shuffle = <T,>(xs: T[], seed: string): T[] => {
 };
 
 /** Listening exercises: "choose what you heard" and minimal pairs (three / tree). */
-export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry: boolean) => void }) {
+export function ChoiceExercise({ ex, onDone, test = false }: { ex: ChoiceEx; onDone: (firstTry: boolean) => void; test?: boolean }) {
   const { t } = useT();
   const profile = useActiveProfile();
   const [picked, setPicked] = useState<string | null>(null);
@@ -29,7 +29,8 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
 
   const answer: SpeakItem = ex.type === 'choose-heard' ? ex.answer : ex.pair[ex.answerIndex];
   const options = useMemo(() => (ex.type === 'choose-heard' ? shuffle(ex.options, ex.id) : ex.pair), [ex]);
-  const solved = picked === answer.id;
+  // A test takes the first pick as the answer: marked right or wrong, no second go, no slow replay to teach it.
+  const solved = test ? picked !== null : picked === answer.id;
   const canHear = voice.available();
 
   const locale = localeOf(answer, profile.accent);
@@ -49,9 +50,10 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
 
   const choose = (it: SpeakItem) => {
     if (solved) return;
+    if (test) { setPicked(it.id); if (it.id !== answer.id) setWrong([it.id]); return; }
     if (it.id === answer.id) {
       setPicked(it.id);
-      if (ex.type === 'minimal-pair') void say(answer.lang ? `${ex.pair[0].text}，${ex.pair[1].text}。` : `${ex.pair[0].text}. ${ex.pair[1].text}.`, true);
+      if (ex.type === 'minimal-pair') void say(answer.lang === 'zh-CN' || answer.lang === 'ja-JP' ? `${ex.pair[0].text}，${ex.pair[1].text}。` : `${ex.pair[0].text}. ${ex.pair[1].text}.`, true);
     } else {
       setWrong((w) => [...w, it.id]);
       void say(answer.text, true);
@@ -70,7 +72,7 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
         <button type="button" className={`bigplay ${playing ? 'is-playing' : ''}`} onClick={() => void say(answer.text)} aria-label={t('lesson.choice.replay')}>
           <Icon name="speaker" size={40} />
         </button>
-        <button type="button" className="pill pill--sm" onClick={() => void say(answer.text, true)}><Icon name="turtle" size={18} />{t('common.slow')}</button>
+        {!test && <button type="button" className="pill pill--sm" onClick={() => void say(answer.text, true)}><Icon name="turtle" size={18} />{t('common.slow')}</button>}
         {!canHear && <p className="choice__sub">{t('lesson.choice.noSound.skip')}</p>}
 
         <div className={`options options--${options.length}`}>
@@ -90,7 +92,7 @@ export function ChoiceExercise({ ex, onDone }: { ex: ChoiceEx; onDone: (firstTry
       <div className="choice__dock">
         {solved ? (
           <>
-            <div className="choice__cheer"><Mascot mood="happy" size={72} /><p>{t(wrong.length ? 'lesson.choice.cheer.retry' : 'lesson.choice.cheer.first')}</p></div>
+            <div className="choice__cheer"><Mascot mood={test && wrong.length ? 'encourage' : 'happy'} size={72} /><p>{t(test ? (wrong.length ? 'lesson.choice.test.wrong' : 'lesson.choice.test.right') : wrong.length ? 'lesson.choice.cheer.retry' : 'lesson.choice.cheer.first')}</p></div>
             <Button variant="leaf" size="lg" block onClick={() => onDone(wrong.length === 0)}>{t('common.continue')}</Button>
           </>
         ) : wrong.length > 0 ? (

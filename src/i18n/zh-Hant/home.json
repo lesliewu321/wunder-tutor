@@ -39,6 +39,12 @@
   "home.path.soon": "即將推出",
   "home.path.done.aria": "已完成",
   "home.path.stars.aria.other": "{n} 顆星",
+  "home.path.mode.aria": "學習或測驗",
+  "home.path.mode.learn": "學習",
+  "home.path.mode.test": "測驗",
+  "home.path.test.ready": "按一下開始測驗",
+  "home.path.test.best": "最高分 {n}",
+  "home.path.test.locked": "先完成這一課",
   "home.book.notice.noCodeSet": "這個 Wunder Tutor 伺服器尚未設定邀請碼，因此無法閱讀相片。輸入英文文字則可以照常練習。",
   "home.book.notice.refused.kid": "這部裝置的邀請碼已不再獲接納。請家長到「{settings}」→「邀請碼」再輸入一次。輸入英文文字來練習則不需要邀請碼。",
   "home.book.notice.refused.adult": "這部裝置的邀請碼已不再獲接納。請到「{settings}」→「邀請碼」再輸入一次。輸入英文文字來練習則不需要邀請碼。",
@@ -125,5 +131,7 @@
   "home.read.nothing.otherLanguage": "Wunder Tutor 暫時只可以檢查英文和普通話。",
   "home.read.setup.noCodeSet": "這個 Wunder Tutor 伺服器尚未設定邀請碼，因此任何邀請碼都無法解鎖。",
   "home.read.setup.needsCode": "閱讀頁面需要邀請碼。",
-  "home.read.setup.broken": "閱讀頁面的功能暫時未能使用：{state}（Google）。這是 Wunder Tutor 伺服器的設定問題，與你的相機無關。"
+  "home.read.setup.broken": "閱讀頁面的功能暫時未能使用：{state}（Google）。這是 Wunder Tutor 伺服器的設定問題，與你的相機無關。",
+  "home.units.browse": "瀏覽單元",
+  "home.units.progress": "已完成 {done}／{total} 課"
 }

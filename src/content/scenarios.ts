@@ -2,6 +2,8 @@ import type { ContentBand, CourseId, SpeakItem } from '../domain/types';
 import { tc } from '../i18n';
 import { FR_SCENARIOS } from './fr/scenarios';
 import { JA_SCENARIOS } from './ja/scenarios';
+import { KO_SCENARIOS } from './ko/scenarios';
+import { ES_SCENARIOS } from './es/scenarios';
 import { ZH_SCENARIOS } from './zh/scenarios';
 
 type ByBand<T> = Record<ContentBand, T>;
@@ -127,7 +129,7 @@ const EN_SCENARIOS: Scenario[] = ([
 ] satisfies TextScenario[]).map(english);
 
 /** Every conversation, each in its course's language. */
-export const SCENARIOS: Scenario[] = [...EN_SCENARIOS, ...ZH_SCENARIOS, ...FR_SCENARIOS, ...JA_SCENARIOS];
+export const SCENARIOS: Scenario[] = [...EN_SCENARIOS, ...ZH_SCENARIOS, ...FR_SCENARIOS, ...JA_SCENARIOS, ...KO_SCENARIOS, ...ES_SCENARIOS];
 
 /** The conversations for the course being learned: a Putonghua learner talks in Putonghua. */
 export const scenariosFor = (course: CourseId): Scenario[] => SCENARIOS.filter((s) => s.course === course);

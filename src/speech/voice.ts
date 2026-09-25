@@ -54,7 +54,9 @@ class WebSpeechVoice implements ReferenceVoice {
     const norm = (l: string) => l.replace('_', '-').toLowerCase();
     const exact = this.voices.filter((v) => norm(v.lang) === accent.toLowerCase());
     // Mandarin must never fall back to a Cantonese (zh-HK) or Taiwanese voice, nor to English.
-    const pool = exact.length ? exact : accent === 'zh-CN' ? this.voices.filter((v) => /^(zh-cn|cmn)/.test(norm(v.lang))) : this.voices.filter((v) => norm(v.lang).startsWith('en'));
+    // Then any voice of the same language (fr-CA for fr-FR, es-MX for es-ES), and only then English.
+    const sameLanguage = accent === 'zh-CN' ? this.voices.filter((v) => /^(zh-cn|cmn)/.test(norm(v.lang))) : this.voices.filter((v) => norm(v.lang).startsWith(accent.slice(0, 2).toLowerCase()));
+    const pool = exact.length ? exact : sameLanguage.length ? sameLanguage : this.voices.filter((v) => norm(v.lang).startsWith('en'));
     for (const re of PREFERRED) { const v = pool.find((x) => re.test(x.name)); if (v) return v; }
     return pool[0];
   }

@@ -1,7 +1,8 @@
 # Wunder Tutor
 
 A pronunciation-first tutor for **English** (American by default, British optional) and **Mandarin (Putonghua)**.
-Built first for Hong Kong children and teens aged 5–17 (Cantonese at home), with a grown-up mode so parents can learn too.
+A global learning app, starting in Hong Kong, for children and teens aged 5–17, with a grown-up mode for adults.
+The foundation courses and downloaded reference materials are in [astra-lessons](astra-lessons/README.md).
 A PWA for phones, and a home learning platform on tablets.
 
 **Speak → see exactly which sound (or tone) was off → learn how to fix it → retry → hear and see the improvement.**
@@ -179,8 +180,8 @@ path), and in landscape the speaking screen sits side by side (what to say and t
   pronounces an isolated syllable or a slow sentence needs a listening check.
 - Without a Gemini key, reference audio is device TTS — quality varies by device, and isolated syllables are approximations.
 - The mock model's scores are simulated; with the demo microphone they are not related to real speech at all.
-- One fully authored unit per course (7 lessons × 3 bands each), 8 English + 9 Mandarin Lab sounds, 3 English
-  conversation scenarios.
+- English and Putonghua each have 16 foundation units (112 lessons × 3 age bands), including reading and sentence
+  building. New content is in astra-lessons; full advanced-level or official exam coverage is not claimed.
 - PWA icons are SVG only; add PNG icons (180/192/512) before shipping to iOS home screens.
 - Settings (Parent Zone) open without a grown-up check: the multiplication question was removed on 2026-09-22, so
   anyone holding the device can change settings, consent to sharing recordings, or delete data.

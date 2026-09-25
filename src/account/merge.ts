@@ -63,6 +63,8 @@ export function mergeProfiles(a: ChildProfile, b: ChildProfile): ChildProfile {
     achievements: byId<Achievement>(a.achievements, b.achievements, (x, y) => (x.earnedAt <= y.earnedAt ? x : y), (v) => v.earnedAt),
     conversations: byId<ConversationRecord>(a.conversations, b.conversations, (x) => x, (v) => v.at).slice(-50),
   };
+  const tests = union(a.tests ?? {}, b.tests ?? {}, (x, y) => ({ at: Math.max(x.at, y.at), score: x.at >= y.at ? x.score : y.score, best: Math.max(x.best, y.best), taken: Math.max(x.taken, y.taken) }));
+  if (Object.keys(tests).length) merged.tests = tests;
   if (voice) merged.voice = voice;
   if (a.zhChecked || b.zhChecked) merged.zhChecked = true;
   if (a.editedAt != null || b.editedAt != null) merged.editedAt = Math.max(a.editedAt ?? 0, b.editedAt ?? 0);

@@ -17,6 +17,8 @@ export const BACKUP_VOICES = {
   'zh-CN': 'zh-CN-XiaoxiaoNeural',
   'fr-FR': 'fr-FR-DeniseNeural',
   'ja-JP': 'ja-JP-NanamiNeural',
+  'ko-KR': 'ko-KR-SunHiNeural',
+  'es-ES': 'es-ES-ElviraNeural',
 };
 
 const XML = { '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' };

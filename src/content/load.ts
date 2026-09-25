@@ -29,6 +29,7 @@ export interface ItemData {
   lang?: SpeakItem['lang'];
   zh?: SpeakItem['zh'];
   ja?: SpeakItem['ja'];
+  ko?: SpeakItem['ko'];
   translations?: Partial<Record<HomeLanguage, string>>;
 }
 
@@ -92,6 +93,7 @@ function buildItem(file: string, id: string, d: ItemData): SpeakItem {
     return { ...it, ...(d.say ? { say: d.say } : {}), ...(d.kind ? { kind: d.kind } : {}), ...(d.translations ? { translations: d.translations } : {}) };
   }
   if (HAN.test(d.text) && d.lang !== 'ja-JP') throw new ContentError(file, where, 'has Chinese characters but no lang');
+  if (/[가-힣]/.test(d.text) && d.lang !== 'ko-KR') throw new ContentError(file, where, 'has hangul but is not lang ko-KR');
   const it: SpeakItem = { id, text: d.text, kind: d.kind ?? kindOfText(d.text) };
   if (d.say) it.say = d.say;
   if (d.picture) it.picture = d.picture;
@@ -99,6 +101,11 @@ function buildItem(file: string, id: string, d: ItemData): SpeakItem {
   if (d.focus?.length) it.focus = d.focus;
   if (d.lang) it.lang = d.lang;
   if (d.ja) it.ja = d.ja;
+  if (d.lang === 'ko-KR') {
+    if (!d.ko?.pron || !d.ko.romaja) throw new ContentError(file, where, 'is Korean (lang ko-KR) but has no ko { pron, romaja }');
+    if (!/[가-힣]/.test(d.text) || !/[가-힣]/.test(d.ko.pron)) throw new ContentError(file, where, 'a Korean item and its pronounced form are written in hangul');
+    it.ko = d.ko;
+  }
   if (d.translations) it.translations = d.translations;
   return it;
 }

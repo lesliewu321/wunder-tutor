@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ALL_LESSONS } from '../../content/course';
+import { ALL_LESSONS, lessonTitle } from '../../content/course';
 import { LADDERS } from '../../content/lab';
 import { isLongLabel, phonemeInfo } from '../../content/phonemes';
 import { ACHIEVEMENT_CATALOGUE, badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
@@ -94,6 +94,17 @@ export function Progress() {
         <section>
           <h2 className="section-title">{t('progress.bests.title')}</h2>
           <ul className="bests">{bests.map((w) => <li key={w.word}><span>{w.word}</span><b className={`score-text score-text--${tier(w.best)}`}>{w.best}</b></li>)}</ul>
+        </section>
+      )}
+
+      {/* Test mode: the best score per lesson tested (the same lesson without the teacher). */}
+      {Object.keys(p.tests ?? {}).length > 0 && (
+        <section>
+          <h2 className="section-title">{t('progress.tests.title')}</h2>
+          <ul className="bests">{Object.entries(p.tests ?? {}).sort((a, b) => b[1].at - a[1].at).map(([id, r]) => {
+            const lesson = ALL_LESSONS.find((l) => l.id === id);
+            return <li key={id}><span>{lesson ? lessonTitle(lesson) : id}<small className="fineprint"> · {t('progress.tests.taken', { n: r.taken })}</small></span><b className={`score-text score-text--${tier(r.best)}`}>{r.best}</b></li>;
+          })}</ul>
         </section>
       )}
 

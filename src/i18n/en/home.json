@@ -41,6 +41,12 @@
   "home.path.done.aria": "Done",
   "home.path.stars.aria.one": "{n} star",
   "home.path.stars.aria.other": "{n} stars",
+  "home.path.mode.aria": "Learn or test",
+  "home.path.mode.learn": "Learn",
+  "home.path.mode.test": "Test",
+  "home.path.test.ready": "Tap to take the test",
+  "home.path.test.best": "Best score {n}",
+  "home.path.test.locked": "Finish the lesson first",
   "home.book.notice.noCodeSet": "This Wunder Tutor server has no invite code set yet, so photos can’t be read. Typed English works.",
   "home.book.notice.refused.kid": "This device’s invite code isn’t accepted any more. A grown-up can enter it again in {settings} → Invite code. Typed English works without it.",
   "home.book.notice.refused.adult": "This device’s invite code isn’t accepted any more. Enter it again in {settings} → Invite code. Typed English works without it.",
@@ -128,5 +134,7 @@
   "home.read.nothing.otherLanguage": "Wunder Tutor can check English and Putonghua for now.",
   "home.read.setup.noCodeSet": "This Wunder Tutor server has no invite code set yet, so no code can unlock it.",
   "home.read.setup.needsCode": "Reading pages needs the invite code.",
-  "home.read.setup.broken": "Reading pages isn’t working yet: {state} (Google). It’s a setup problem on the Wunder Tutor server, not your camera."
+  "home.read.setup.broken": "Reading pages isn’t working yet: {state} (Google). It’s a setup problem on the Wunder Tutor server, not your camera.",
+  "home.units.browse": "Explore units",
+  "home.units.progress": "{done} of {total} lessons completed"
 }

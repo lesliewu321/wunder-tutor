@@ -1,37 +1,31 @@
 {
   "progress.title": "我的進度",
-
   "progress.empty.title": "暫時未有記錄",
   "progress.empty.body.adult": "說出你的第一個字詞，這裏就會開始記錄每一個音。",
   "progress.empty.body.kid": "說出你的第一個字詞，Tutu 就會開始記錄每一個音。",
   "progress.empty.start": "開始上課",
-
   "progress.trend.label": "發音",
   "progress.trend.up": "這個月由 **{from}** 分升到 **{to}** 分。繼續努力！",
   "progress.trend.steady": "穩定保持在 **{to}** 分左右。每天練習一點點，分數就會進步。",
   "progress.trend.first": "這是今天的平均分。明天再來，就會開始畫出你的進度線。",
   "progress.trend.day1": "第 1 日",
   "progress.trend.chart": "發音分數由 {from} 分變為 {to} 分",
-
   "progress.stat.lessons": "已完成的課（共 {total} 課）",
   "progress.stat.speaking": "開口說話",
   "progress.stat.speaking.seconds": "{n} 秒",
   "progress.stat.speaking.minutes": "{n} 分鐘",
   "progress.stat.words": "說得清楚的字詞",
   "progress.stat.streak": "連續日數 · 最佳 {best} 日",
-
   "progress.weak.title": "需要多練習的音",
   "progress.weak.heardAs": "聽起來常像「{label}」 · 聽過 {n} 次",
   "progress.weak.example": "例如「{example}」 · 聽過 {n} 次",
   "progress.weak.none.adult": "目前沒有較弱的音。",
   "progress.weak.none.kid": "目前沒有較弱的音。Tutu 會繼續留心聽。",
-
   "progress.improving.title": "進步最大的音",
-
   "progress.mastered.title": "已掌握的音",
   "progress.mastered.none": "在兩個不同的日子都把一個難讀的音說清楚，它就會出現在這裏。",
-
   "progress.bests.title": "個人最佳成績",
-
+  "progress.tests.title": "測驗分數",
+  "progress.tests.taken": "測過 {n} 次",
   "progress.badges.title": "徽章"
 }

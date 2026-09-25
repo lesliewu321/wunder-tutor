@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
+import { blockCount } from '../../content/ko/hangul';
 import type { Assessment, SpeakItem } from '../../domain/types';
 import { syllableCount } from '../../content/lexicon';
 import { moraCount } from '../../content/ja/kana';
@@ -64,7 +65,7 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
       const st = useStore.getState();
       const fresh = st.profiles[profile.id] ?? profile;
       const assessment = await provider.assess(rec, j.item.text, {
-        itemId: j.item.id, locale: localeOf(j.item, fresh.accent), accent: fresh.accent, zh: j.item.zh, ja: j.item.ja, script: fresh.zhScript, focus: j.item.focus,
+        itemId: j.item.id, locale: localeOf(j.item, fresh.accent), accent: fresh.accent, zh: j.item.zh, ja: j.item.ja, ko: j.item.ko, script: fresh.zhScript, focus: j.item.focus,
         // Tones are judged against the child's own voice once we've heard enough of it.
         speaker: fresh.voice && fresh.voice.takes >= 3 ? fresh.voice : null,
         band: fresh.band, homeLanguage: fresh.homeLanguage, profileId: fresh.id,
@@ -86,7 +87,7 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
     clearTimeout(simTimer.current);
     const j = job.current;
     if (!j) return;
-    if (useStore.getState().settings.demoMic) return assess(simulatedRecording(j.item.ja ? moraCount(j.item.ja.kana) : syllableCount(j.item.text)));
+    if (useStore.getState().settings.demoMic) return assess(simulatedRecording(j.item.ja ? moraCount(j.item.ja.kana) : j.item.ko ? blockCount(j.item.ko.pron) : syllableCount(j.item.text)));
     const rec = recorder.current;
     recorder.current = null;
     if (!rec) return;
@@ -99,7 +100,7 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
     stopPlayback();
     job.current = { item, attemptIndex };
     // Japanese is counted in beats from its reading: kanji and kana give an English syllable counter nothing to go on.
-    const syllables = item.ja ? moraCount(item.ja.kana) : syllableCount(item.text);
+    const syllables = item.ja ? moraCount(item.ja.kana) : item.ko ? blockCount(item.ko.pron) : syllableCount(item.text);
     if (settings.demoMic) {
       setPhase('listening');
       // Fake a lively input level so the listening state still reads as "I hear you".

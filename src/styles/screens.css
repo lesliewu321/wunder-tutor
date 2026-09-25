@@ -282,6 +282,7 @@
 /* Home: two ways to learn — the course, or a page from the learner's book */
 
 /* My book */
+.path .chips { margin: -2px 0 12px; }
 .book { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 760px; margin-inline: auto; }
 .book__start { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; background: var(--surface); border-radius: var(--r-xl); padding: 26px 20px 22px; box-shadow: var(--shadow-card); }
 .book__art { font-size: 3.4rem; line-height: 1; }
@@ -369,3 +370,22 @@
 /* The App language switch on the first screen: there for whoever needs it, out of the way for everyone else. */
 .onboard .segmented--lang, .segmented--lang { align-self: center; width: min(100%, 240px); }
 .segmented--lang button { min-height: 36px; font-size: 0.85rem; }
+
+/* Course teaching notes and literacy activities. */
+.lesson-guide { display: flex; flex-direction: column; gap: 18px; max-width: 760px; margin: auto; }
+.lesson-guide__icon { font-size: 48px; }
+.lesson-guide .card { padding: 20px; }
+.lesson-guide h2 { font-size: 18px; margin: 0 0 8px; }
+.lesson-guide p { line-height: 1.65; white-space: pre-line; }
+.course-overview { color: var(--muted); line-height: 1.6; margin: 8px 0 18px; }
+.literacy__passage { padding: 24px; margin: 18px 0; line-height: 2; font-size: 22px; text-align: left; }
+.literacy__options { display: grid; gap: 12px; margin-top: 22px; }
+.literacy__sentence, .literacy__chunks { display: flex; flex-wrap: wrap; gap: 10px; padding: 18px; margin: 18px 0; justify-content: center; }
+.literacy__sentence { border: 2px dashed var(--sky); border-radius: 18px; min-height: 90px; align-items: center; }
+.literacy .pill { min-height: 44px; }
+
+/* Literacy keeps the passage and its controls together on wide screens. */
+.choice.literacy { display: flex; flex-direction: column; width: 100%; max-width: 760px; margin: 0 auto; }
+.literacy .choice__stage { width: 100%; }
+.literacy .choice__dock { width: 100%; }
+.literacy__options .reply { justify-content: flex-start; text-align: left; padding: 16px; }
