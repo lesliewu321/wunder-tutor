@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --port 4321",
-    "build": "astro check && astro build",
+    "build": "npm run content:check && astro check && astro build",
     "preview": "astro preview",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name wundertutor-website --branch main --commit-dirty=true"
+    "deploy": "node scripts/require-clean.mjs && npm run build && wrangler pages deploy dist --project-name wundertutor-website --branch main --commit-dirty=false",
+    "content:check": "node scripts/check-content.mjs",
+    "content:sync": "node scripts/check-content.mjs --write",
+    "screenshots": "node scripts/capture-app.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",

@@ -1,20 +1,18 @@
 ---
 import '@/styles/global.css';
+import '@/styles/marketing.css';
 import Pip from '@/components/Pip.astro';
 import { SITE } from '@/lib/site';
-
 interface Props { title?: string; description?: string; noindex?: boolean }
 const { title, description = SITE.description, noindex = false } = Astro.props;
-const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — English pronunciation tutor for kids 5–17`;
+const fullTitle = title ? title + ' · ' + SITE.name : 'Wunder Tutor — Pronunciation Practice in 7 Languages';
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImage = new URL('/og.png', SITE.url).href;
-
-const nav = [
-  { href: '/#how', label: 'How it works' },
-  { href: '/#ages', label: 'Ages 5–17' },
-  { href: '/#parents', label: 'For parents' },
-  { href: '/#faq', label: 'FAQ' },
-];
+const nav = [{ href: '/#courses', label: 'Languages' }, { href: '/#screenshots', label: 'Inside the app' }, { href: '/#faq', label: 'FAQ' }];
+const schema = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'Organization', '@id': SITE.url + '/#organization', name: SITE.name, url: SITE.url, logo: SITE.url + '/favicon.svg' },
+  { '@type': 'WebSite', '@id': SITE.url + '/#website', name: SITE.name, url: SITE.url, publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'en' },
+] };
 ---
 <!doctype html>
 <html lang="en">
@@ -28,57 +26,41 @@ const nav = [
     <meta name="theme-color" content="#fff8ee" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Wunder Tutor — pronunciation practice in seven languages for kids, teens and adults" />
     <meta name="twitter:card" content="summary_large_image" />
-
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schema).replace(/</g, '\u003c')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg">Skip to content</a>
-
-    <header class="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-md">
-      <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
-        <a href="/" class="flex items-center gap-2" aria-label={`${SITE.name} home`}>
-          <Pip size={40} />
-          <span class="font-display text-xl font-extrabold tracking-tight">Wunder Tutor</span>
-        </a>
-        <nav class="hidden items-center gap-7 text-[0.95rem] font-bold text-muted-foreground md:flex" aria-label="Main">
-          {nav.map((n) => <a href={n.href} class="transition-colors hover:text-foreground">{n.label}</a>)}
-        </nav>
-        <a href={SITE.appUrl} class="inline-flex h-10 items-center rounded-xl bg-primary px-4 font-display text-[0.95rem] font-extrabold text-white shadow-[0_3px_0_#5236d1] transition hover:brightness-110 active:translate-y-0.5 active:shadow-none">
-          Open the app
-        </a>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-row">
+        <a href="/" class="brand" aria-label="Wunder Tutor home"><Pip size={38} /><span>Wunder Tutor</span></a>
+        <nav class="desktop-nav" aria-label="Main">{nav.map(n => <a href={n.href}>{n.label}</a>)}</nav>
+        <a href={SITE.appUrl} class="button button-small">Open the app <span aria-hidden="true">↗</span></a>
       </div>
+      <nav class="mobile-nav" aria-label="Mobile">{nav.map(n => <a href={n.href}>{n.label}</a>)}</nav>
     </header>
-
     <main id="main"><slot /></main>
-
-    <footer class="border-t border-border bg-muted/60">
-      <div class="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between">
-        <div class="flex items-center gap-3">
-          <Pip size={48} />
-          <div>
-            <p class="font-display text-lg font-extrabold">Wunder Tutor</p>
-            <p class="text-sm text-muted-foreground">{SITE.tagline}</p>
-          </div>
-        </div>
-        <nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm font-bold text-muted-foreground" aria-label="Footer">
-          <a href="/#how" class="hover:text-foreground">How it works</a>
-          <a href="/#parents" class="hover:text-foreground">For parents</a>
-          <a href="/privacy" class="hover:text-foreground">Privacy</a>
-          <a href={`mailto:${SITE.email}`} class="hover:text-foreground">Contact</a>
-          <a href={SITE.appUrl} class="hover:text-foreground">Open the app</a>
-        </nav>
+    <footer class="site-footer">
+      <div class="wrap footer-row">
+        <div><a href="/" class="brand"><Pip size={36} /><span>Wunder Tutor</span></a><p>{SITE.tagline}</p></div>
+        <nav aria-label="Footer"><a href="/#courses">Languages</a><a href="/#screenshots">Screenshots</a><a href="/#faq">FAQ</a><a href="/privacy">Privacy</a><a href={SITE.appUrl}>Open the app ↗</a></nav>
       </div>
-      <p class="mx-auto max-w-6xl px-5 pb-8 text-xs text-muted-foreground">© {new Date().getFullYear()} Wunder Tutor. Beta — features and content are still growing.</p>
+      <p class="wrap copyright">© {new Date().getFullYear()} Wunder Tutor. Beta · Content and features continue to grow.</p>
     </footer>
   </body>
 </html>

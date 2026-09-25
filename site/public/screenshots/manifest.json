@@ -1,0 +1,56 @@
+{
+  "capturedAt": "2026-09-25T13:57:25.892Z",
+  "source": "http://localhost:5173",
+  "appCommit": "2f92a9a37adff18b585e9ce38878c5e9e05b0152",
+  "profile": "Fictional local learner; no scores or recordings seeded. Notebook contains original typed sample text.",
+  "captures": [
+    {
+      "id": "learn",
+      "route": "/",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "id": "english-lesson",
+      "route": "/lesson/greetings-1",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "id": "lab",
+      "route": "/lab",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "id": "conversations",
+      "route": "/speak",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "id": "notebook",
+      "route": "/book",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "id": "cantonese-lesson",
+      "route": "/lesson/yue-greetings-2",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "id": "cantonese-tones",
+      "route": "/lab/yue%3Atones",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "id": "reminders",
+      "route": "/notifications",
+      "width": 780,
+      "height": 1688
+    }
+  ]
+}
