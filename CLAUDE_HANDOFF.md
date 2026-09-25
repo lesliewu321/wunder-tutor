@@ -36,7 +36,8 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   (`wunder-tutor/home-mode/<id>`) is no longer read or written; forgetBook still removes the old key. Seen in the
   5199 copy at phone width (a seeded learner via `__store`): Home without the cards, the tab, a typed page on it,
   Start reading → Back to the page lands on /book; and the tablet rail with five items. 261 tests, typecheck clean.
-  The tab label is long for a 320 px phone — check it there before the next build.
+  At 320 px "Snap & say" wrapped onto two lines: `.nav__label` is now nowrap and the bar's font is 0.66rem under
+  361 px (measured: every label one line, the long one 56 of 61 px).
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
