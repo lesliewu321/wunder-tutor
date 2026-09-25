@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { findTwister, formatMs, twisterItem, twisterResult, twistersFor, type TwisterResult } from '../../content/twisters';
-import type { CourseId, Locale } from '../../domain/types';
+import { COURSE_LOCALE, findTwister, formatMs, loadBests, saveBests, twisterItem, twisterResult, twistersFor, type TwisterResult } from '../../content/twisters';
 import type { Assessment } from '../../domain/types';
 import { useT } from '../../i18n/useT';
 import { apiFetch, deviceId } from '../../speech/health';
@@ -22,13 +21,6 @@ import { useSpeechTake } from '../speak/useSpeechTake';
 // time per twister goes on a board — the world's and the learner's region's — under the learner's nickname and avatar,
 // unless a grown-up has switched that off in Settings. No age, no account, no device id ever shows.
 
-/** The twisters are written per scorer locale; English ones are en-US lines said in the learner's own accent. */
-const COURSE_LOCALE: Record<CourseId, Locale> = { en: 'en-US', zh: 'zh-CN', fr: 'fr-FR', ja: 'ja-JP', ko: 'ko-KR', es: 'es-ES' };
-
-interface Best { ms: number; score: number; tries: number }
-const bestKey = (profileId: string) => `wunder-tutor/twisters/${profileId}`;
-const loadBests = (profileId: string): Record<string, Best> => { try { return JSON.parse(localStorage.getItem(bestKey(profileId)) ?? '{}'); } catch { return {}; } };
-const saveBests = (profileId: string, bests: Record<string, Best>) => { try { localStorage.setItem(bestKey(profileId), JSON.stringify(bests)); } catch { /* private mode */ } };
 
 interface BoardRow { nickname: string; avatar: string; region: string; ms: number }
 interface Board { region: string; global: BoardRow[]; regional: BoardRow[]; me: { ms: number; rank: number; rankRegion: number; region: string } | null }

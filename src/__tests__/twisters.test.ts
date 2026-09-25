@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { ALL_TWISTERS, formatMs, TWISTER_PASS, TWISTERS, twisterItem, twisterResult, twistersFor } from '../content/twisters';
+import { describe, expect, it, vi } from 'vitest';
+import { ALL_TWISTERS, bonusTwister, formatMs, saveBests, TWISTER_PASS, TWISTERS, twisterItem, twisterResult, twistersFor } from '../content/twisters';
 import type { Assessment } from '../domain/types';
 
 // The tongue-twister game's rules: what counts as "said it right", what the time is, and which twisters may be played.
@@ -42,5 +42,21 @@ describe('the twisters on offer', () => {
     expect(en.lang).toBeUndefined();
     const zh = twisterItem({ id: 'y', locale: 'zh-CN', text: '四是四。', picture: '🔢', sounds: [], level: 1, proven: true });
     expect(zh.lang).toBe('zh-CN');
+  });
+});
+
+// Leslie, 2026-09-25: tongue twisters "shown as a bonus round (perhaps after a completed module)".
+describe('the bonus round after a unit', () => {
+  const store = new Map<string, string>();
+  const local = { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v), removeItem: (k: string) => void store.delete(k) };
+  it('offers the easiest twister not yet passed, then the one with the slowest best time', () => {
+    vi.stubGlobal('localStorage', local);
+    const english = twistersFor('en-US');
+    expect(bonusTwister('en', 'kid')?.id).toBe(english[0].id);
+    const bests = Object.fromEntries(english.map((t, i) => [t.id, { ms: 2000 + i * 10, score: 90, tries: 1 }]));
+    bests[english[3].id].ms = 9000;
+    saveBests('kid', bests);
+    expect(bonusTwister('en', 'kid')?.id).toBe(english[3].id);
+    vi.unstubAllGlobals();
   });
 });

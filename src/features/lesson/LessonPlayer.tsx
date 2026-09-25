@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { Achievement, Exercise, PhonemeId, SpeakItem } from '../../domain/types';
-import { findLesson, ITEM_INDEX, lessonTitle } from '../../content/course';
+import { COURSES, findLesson, ITEM_INDEX, lessonTitle } from '../../content/course';
+import { bonusTwister, type Twister } from '../../content/twisters';
 import { RETEST_BELOW } from '../../engine/testing';
 import { LADDERS } from '../../content/lab';
 import { exampleSpeech, phonemeInfo, soundLocale, tipFor } from '../../content/phonemes';
@@ -17,6 +18,7 @@ import { type TestRecord } from '../../domain/types';
 import { tier } from '../../tutor/feedback';
 import { useActiveProfile, useStore, type LessonOutcome } from '../../state/store';
 import { Button, Confetti, IconButton, ProgressBar, Sheet, toast } from '../../ui/kit';
+import { Icon } from '../../ui/Icon';
 import { Mascot } from '../../ui/Mascot';
 import { Mouth } from '../../ui/Mouth';
 import { ToneContour } from '../../ui/ToneContour';
@@ -61,6 +63,10 @@ function LessonRun() {
   const strong = useRef(0);
   const drilled = useRef(new Set<PhonemeId>());
   const startXp = useRef(profile.xp);
+  // The unit this lesson belongs to, and whether it was already finished before this visit: the bonus round is for
+  // the moment a unit is completed, not for every replay.
+  const unitIds = useMemo(() => Object.values(COURSES).flatMap((c) => c.units).find((u) => u.lessons.some((l) => l.id === lessonId))?.lessons.map((l) => l.id) ?? [], [lessonId]);
+  const unitWasDone = useRef(unitIds.length > 0 && unitIds.every((id) => profile.lessonsCompleted[id]));
 
   // The phone's Back asks first, like the ✕: leaving throws the lesson away. A finished lesson just goes back.
   useBack(() => { if (!lesson || outcome || testDone) return false; setConfirmExit(true); return true; });
@@ -131,7 +137,10 @@ function LessonRun() {
   };
 
   if (testDone) return <TestComplete lessonId={lesson.id} title={lessonTitle(lesson)} results={results} record={testDone} listen={listenScore} />;
-  if (outcome) return <LessonComplete title={lessonTitle(lesson)} results={results} outcome={outcome} xpGained={profile.xp - startXp.current} streak={liveStreak(profile.streak)} listen={listenScore} />;
+  if (outcome) {
+    const unitDone = !unitWasDone.current && unitIds.length > 0 && unitIds.every((id) => profile.lessonsCompleted[id]);
+    return <LessonComplete title={lessonTitle(lesson)} results={results} outcome={outcome} xpGained={profile.xp - startXp.current} streak={liveStreak(profile.streak)} listen={listenScore} bonus={unitDone ? bonusTwister(profile.course, profile.id) : null} />;
+  }
 
   const checked = (first: boolean) => {
     const checks = { right: listenScore.right + (first ? 1 : 0), total: listenScore.total + 1 };
@@ -276,8 +285,10 @@ function TestComplete({ lessonId, title, results, record, listen }: { lessonId: 
   );
 }
 
-function LessonComplete({ title, results, outcome, xpGained, streak, listen }: {
+function LessonComplete({ title, results, outcome, xpGained, streak, listen, bonus }: {
   title: string; results: ItemResult[]; outcome: LessonOutcome; xpGained: number; streak: number; listen: { right: number; total: number };
+  /** A unit was just finished: a tongue twister as a bonus round (Leslie, 2026-09-25). */
+  bonus: Twister | null;
 }) {
   const { t } = useT();
   const nav = useNavigate();
@@ -321,6 +332,17 @@ function LessonComplete({ title, results, outcome, xpGained, streak, listen }: {
                 : t(profile.band === 'adult' ? 'lesson.complete.mastered.again.adult' : 'lesson.complete.mastered.again.kid', { text: again[0].text })}</p>
             </div>
           </div>
+        )}
+        {bonus && (
+          <button type="button" className="card callout callout--bonus" onClick={() => nav(`/twisters/${bonus.id}`)}>
+            <span className="callout__icon" aria-hidden>🌀</span>
+            <div>
+              <b>{t('lesson.complete.bonus.title')}</b>
+              <p>{t(profile.band === 'adult' ? 'lesson.complete.bonus.body.adult' : 'lesson.complete.bonus.body')}</p>
+              <p className="callout__twister"><span aria-hidden>{bonus.picture}</span> {bonus.text}</p>
+              <span className="callout__go">{t('lesson.complete.bonus.go')} <Icon name="chevron" size={18} /></span>
+            </div>
+          </button>
         )}
         {outcome.achievements.map((a: Achievement) => (
           <div key={a.id} className="card callout callout--badge"><span className="callout__icon" aria-hidden>{a.icon}</span><div><b>{badgeName(a)}</b><p>{badgeDetail(a)}</p></div></div>

@@ -57,6 +57,12 @@ export function LabHome() {
     <div className="screen lab">
       <TopBar title={t('lab.title')} />
       <p className="lead">{t(p.course === 'zh' ? 'lab.home.lead.zh' : 'lab.home.lead.en')}</p>
+      {/* Conversation practice (Leslie, 2026-09-25: "converstion practice should be in lab"). */}
+      <button type="button" className="row-link" onClick={() => nav('/speak')}>
+        <span className="row-link__icon"><Icon name="chat" /></span>
+        <span><b>{t(p.band === 'adult' ? 'home.talk.title.adult' : 'home.talk.title.kid')}</b><small>{t('home.talk.sub')}</small></span>
+        <Icon name="chevron" size={20} />
+      </button>
       <ul className="sound-list">
         {order.map((id, i) => {
           const info = phonemeInfo(id);

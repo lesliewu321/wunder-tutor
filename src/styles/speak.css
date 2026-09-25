@@ -184,6 +184,9 @@
 .callout__icon { font-size: 1.9rem; flex: none; }
 .callout p { color: var(--ink-soft); font-size: 0.92rem; }
 .callout--badge { background: var(--sun-soft); }
+.callout--bonus { background: var(--primary-soft); border: 2px solid var(--primary); cursor: pointer; }
+.callout--bonus .callout__twister { margin-top: 6px; color: var(--ink); font-weight: 700; }
+.callout--bonus .callout__go { display: inline-flex; align-items: center; gap: 2px; margin-top: 8px; color: var(--primary); font-weight: 800; }
 
 .teach__say { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: var(--primary); font-weight: 800; font-size: 0.92rem; }
 

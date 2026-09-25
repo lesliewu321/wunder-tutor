@@ -1,4 +1,4 @@
-import type { Assessment, Locale, PhonemeId, SpeakItem } from '../domain/types';
+import type { Assessment, Locale, PhonemeId, SpeakItem, CourseId } from '../domain/types';
 import type { Recording } from '../speech/types';
 import data from '../../content/twisters.json';
 
@@ -23,6 +23,26 @@ export const ALL_TWISTERS: Twister[] = data.twisters as Twister[];
 export const TWISTERS: Twister[] = ALL_TWISTERS.filter((t) => t.proven);
 
 /** The twisters of one language, shortest first. */
+/** The twisters are written per scorer locale; English ones are en-US lines said in the learner's own accent. */
+export const COURSE_LOCALE: Record<CourseId, Locale> = { en: 'en-US', zh: 'zh-CN', fr: 'fr-FR', ja: 'ja-JP', ko: 'ko-KR', es: 'es-ES' };
+
+/** A learner's best passing time per twister, kept on this device. */
+export interface TwisterBest { ms: number; score: number; tries: number }
+const bestKey = (profileId: string) => `wunder-tutor/twisters/${profileId}`;
+export const loadBests = (profileId: string): Record<string, TwisterBest> => { try { return JSON.parse(localStorage.getItem(bestKey(profileId)) ?? '{}'); } catch { return {}; } };
+export const saveBests = (profileId: string, bests: Record<string, TwisterBest>): void => { try { localStorage.setItem(bestKey(profileId), JSON.stringify(bests)); } catch { /* private mode */ } };
+
+/**
+ * The bonus round after a unit (Leslie, 2026-09-25: "shown as a bonus round (perhaps after a completed module)"): the
+ * easiest twister of the course not yet passed, else the one with the slowest best time — something left to win.
+ */
+export function bonusTwister(course: CourseId, profileId: string): Twister | null {
+  const list = twistersFor(COURSE_LOCALE[course]);
+  if (!list.length) return null;
+  const bests = loadBests(profileId);
+  return list.find((t) => !bests[t.id]) ?? [...list].sort((a, b) => bests[b.id].ms - bests[a.id].ms)[0];
+}
+
 export const twistersFor = (locale: Locale): Twister[] => TWISTERS.filter((t) => t.locale === locale).sort((a, b) => a.level - b.level);
 export const findTwister = (id: string): Twister | undefined => ALL_TWISTERS.find((t) => t.id === id);
 
