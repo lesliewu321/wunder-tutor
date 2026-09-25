@@ -146,3 +146,44 @@ This update supersedes the communication-pack status and old lesson counts above
   with no page errors. Actual sound output has not been auditioned on a physical phone.
 - Deployed from a clean detached worktree; production HTML and JavaScript match the built bundle.
   Unrelated local files preserved; no GitHub push or mobile build.
+
+
+## 2026-09-25 — Unified curriculum, teacher voices and settings restored
+
+- Deployed application commit: 7cdee3b (Unify age-based courses and add selectable teacher voices).
+- Cloudflare Pages production deployment: d0a71ce4-275b-4fab-898a-e6f8799d0a05.
+  Live: https://app.wundertutor.com ; release: https://d0a71ce4.wunder-tutor.pages.dev.
+- Original and Astra lessons now form 24 topic/difficulty paths across six languages and Little, Junior, Teen and
+  Adult. All 414 lesson IDs remain: English/Putonghua 139 each, Japanese/Korean/French/Spanish 34 each. Completed
+  lessons remain accessible. Adult plans add a foundation warm-up; teen work lessons use school/teamwork content.
+  Foundation review carryover follows the new order. See astra-lessons/CURRICULUM-MAP.md and curriculum-manifest.json.
+- App-language coverage includes every course item and tutor prompt, including older English items without meaning
+  fields. Little learners now see meanings too. Translation prompts follow the app language. Seven app languages
+  pass coverage checks. Reading/arrange meanings appear after solving, and test translation hints are hidden.
+  Translation coverage is not native-teacher approval; independent review remains pending.
+- Settings → Teacher voice now offers Automatic, Azure Neural, Qwen, Google Chirp 3 HD, Gemini and device speech,
+  with device-local persistence and a course-language preview. Explicit providers never silently switch on failure.
+  Provider/voice/accent/speed/text caches stay separate; existing Gemini cache keys are preserved. Qwen uses one
+  audio take for normal and pitch-preserving slow playback, so repeated Listen/Slow taps add no paid generation.
+- New server adapters preserve authentication, rate limits, generation budgets and private-text cache exclusions.
+  Azure is directly selectable without Gemini. Production has Azure/Gemini secrets; Qwen and Google Cloud TTS keys
+  are NOT configured, and those dropdown options remain unavailable. Leslie runs npm run keys:push after setting
+  the optional keys and Qwen region, then deploys. See server/TEACHER-VOICES.md and .env.example. No secrets uploaded.
+- Help improve Wunder Tutor no longer disappears when Azure health is unavailable. Onboarding shows the same
+  control as a visible card. Existing preferences and the previously requested defaults are preserved. The profile
+  settings cog is now symmetric with a larger, accessible button background.
+- Pronunciation scoring stays Azure. SpeechSuper (all six course languages) and Speechace (English/French/Spanish)
+  were suggested as separately evaluated alternatives, not integrated or benchmarked in this update.
+- Verification: npm test 369 passed, 2 optional exporter tests skipped in the normal suite; both exporters passed
+  separately. npm run typecheck, npm run content:check and npm run i18n:check passed. New regression tests cover all
+  24 paths, translated course text, progress, provider selection, cache isolation, rapid taps and API access control.
+  Edge browser QA passed consent toggling/persistence while disconnected, three mocked provider previews,
+  mobile layout, cog navigation and Chinese meanings in all four age groups. Profile screenshot visually checked.
+- npm run deploy built/published from the clean detached .wrangler/merged-release checkout. Tree clean before and
+  after. Production and deployment HTML return 200; JavaScript bytes match the build. SHA256:
+  022d85100d686e934be254ab47ebef435e52caa037178a35b55f859e8dd45a50.
+  Both APIs expose the new provider metadata. Live paid synthesis was not attempted: no local production access
+  code was present. Qwen/Chirp were validated against provider docs and mocked responses, not real credentials.
+- Existing unused Mandarin item and bundle-size warnings remain. Shared README/source-library/notification files
+  are preserved and excluded from the release. No GitHub push or mobile build. The temporary release checkout is
+  removed after verification to avoid duplicate Vitest discovery; Leslie's port 5173 server is untouched.
