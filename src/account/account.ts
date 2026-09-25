@@ -1,3 +1,4 @@
+import type { Language } from '../i18n';
 import { useSyncExternalStore } from 'react';
 import { loadShelf, onBookChange, replacePages } from '../features/say/page';
 import { useStore } from '../state/store';
@@ -124,7 +125,7 @@ export async function sendCode(email: string, create = true): Promise<AccountErr
 }
 
 /** `consent`: what was agreed to when the account is made. Signing in to an account that exists agrees to nothing new. */
-export async function signInWithCode(email: string, code: string, consent: { version: string; language: 'en' | 'zh-Hant'; wording: string } | null): Promise<AccountError | null> {
+export async function signInWithCode(email: string, code: string, consent: { version: string; language: Language; wording: string } | null): Promise<AccountError | null> {
   try {
     const b = await load();
     const { data, error } = await b.auth.verifyOtp({ email: email.trim(), token: code.replace(/\D/g, ''), type: 'email' });

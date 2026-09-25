@@ -3,14 +3,13 @@ import { LessonMap, sceneFor, type MapNode } from './LessonMap';
 import { useNavigate } from 'react-router-dom';
 import { apiHealth, type ApiHealth } from '../../speech';
 import { courseFor, courseTitle, ITEM_INDEX, lessonTitle, unitSubtitle, unitTitle } from '../../content/course';
-import { inScript } from '../../content/zh/script';
 import { isLongLabel, phonemeInfo } from '../../content/phonemes';
 import { courseLessons, currentUnit, lessonUnlocked } from '../../engine/curriculum';
 import { dueItems, itemCourse, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
 import { focusSound, weakSoundsIn } from '../../intelligence/profile';
 import { testDue } from '../../engine/testing';
-import { useActiveProfile, useStore } from '../../state/store';
+import { useActiveProfile } from '../../state/store';
 import type { CourseId } from '../../domain/types';
 import type { Key } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
@@ -22,7 +21,6 @@ export function Home() {
   const { t, tn } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
-  const setCourse = useStore((s) => s.setCourse);
   const COURSE = courseFor(p.course);
   const unit = currentUnit(COURSE, p.lessonsCompleted);
   const lessons = courseLessons(COURSE);
@@ -60,10 +58,6 @@ export function Home() {
   useEffect(() => { void apiHealth().then(setApi); }, []);
   // Never let simulated scores pass for real ones.
   const practiceMode = api !== null && !api.azure;
-  // The Putonghua course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
-  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', ja: '日本語 Japanese', ko: '한국어 Korean', fr: 'Français', es: 'Español' }; // order (Leslie, 2026-09-25): French after Korean
-  // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
-  const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
 
   return (
     <div className="screen home">
@@ -78,17 +72,8 @@ export function Home() {
         </div>
       </header>
 
-      {/* Switching between the learner's own courses — the ones a grown-up chose in Settings (Leslie, 2026-09-21: "even if
-          I select only 2 languages in settings, all 4 appear in front page"). One course needs no switch: the card below
-          already names it. A dropdown, like the settings rows: side-by-side buttons ran out of room at three. */}
-      {myCourses.length > 1 && (
-        <label className="course-pick"><span>{t('home.course.aria')}</span>
-          <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
-            {myCourses.map((id) => <option key={id} value={id}>{inScript(courseLabel[id], p.zhScript)}</option>)}
-          </select>
-        </label>
-      )}
-
+      {/* The course switch lives on the Profile tab (Leslie, 2026-09-25: "course should be located in me"); the card below
+          names the course on screen. */}
       {p.course === 'zh' && !p.zhChecked && (
         <button type="button" className="practice-note practice-note--check" onClick={() => nav('/check/zh')}>
           <span aria-hidden>🎤</span>

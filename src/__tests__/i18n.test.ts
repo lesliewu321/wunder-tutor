@@ -1,7 +1,7 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { catalogs, en, language, setLanguage, t, tc, tn, type Key } from '../i18n';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { catalogs, en, LANGUAGES, language, loadLanguage, sentences, setLanguage, t, tc, tl, tn, type Key, type Language } from '../i18n';
 
-const zh = catalogs.interface['zh-Hant'];
+const zh = catalogs.interface['zh-Hant']!;
 const holes = (text: string): string[] => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
 const bolds = (text: string): number => (text.match(/\*\*/g) ?? []).length;
 
@@ -52,5 +52,51 @@ describe('App language: reading a line', () => {
     setLanguage('zh-Hant');
     expect(tc('homeLanguage.yue', 'Cantonese')).toBe('廣東話');
     expect(tc('no.such.key', 'Plain English')).toBe('Plain English');
+  });
+});
+
+// Leslie, 2026-09-25: "add all the course languages to app language", "traditional and simplified chinese".
+describe('App language: every language', () => {
+  const FETCHED: Language[] = ['zh-Hans', 'ja', 'ko', 'fr', 'es'];
+  const NO_ONE = new Set<Language>(['zh-Hant', 'zh-Hans', 'ja', 'ko']);
+  beforeAll(async () => { await Promise.all(FETCHED.map(loadLanguage)); });
+  afterEach(() => setLanguage('en'));
+
+  it('offers all seven, in the order of the courses', () => {
+    expect(LANGUAGES.map((l) => l.id)).toEqual(['en', 'zh-Hant', 'zh-Hans', 'ja', 'ko', 'fr', 'es']);
+  });
+
+  it.each(FETCHED)('%s translates every line of the interface, keeping placeholders and bold marks', (l) => {
+    const own = catalogs.interface[l]!;
+    const missing = (Object.keys(en) as Key[]).filter((k) => own[k] == null && !(k.endsWith('.one') && NO_ONE.has(l)));
+    expect(missing).toEqual([]);
+    expect(Object.keys(own).filter((k) => !(k in en))).toEqual([]);
+    const wrong = (Object.keys(own) as Key[]).filter((k) => holes(own[k]!).join() !== holes(en[k]).join() || bolds(own[k]!) !== bolds(en[k]));
+    expect(wrong).toEqual([]);
+  });
+
+  it.each(FETCHED)('%s translates the wording that lives with data as 繁體中文 does, with the same placeholders', (l) => {
+    const hant = catalogs.content['zh-Hant']!, own = catalogs.content[l]!;
+    expect(Object.keys(hant).filter((k) => own[k] == null)).toEqual([]);
+    expect(Object.keys(own).filter((k) => holes(own[k]!).join() !== holes(hant[k] ?? own[k]!).join())).toEqual([]);
+  });
+
+  it('reads a lesson guide in the App language, and in English where a line is not translated', () => {
+    const english = Object.keys(catalogs.lessons['zh-Hans']!)[0], hant = '（繁體中文在課程資料裡）';
+    expect(english).toBeTruthy();
+    setLanguage('zh-Hant');
+    expect(tl(english, hant)).toBe(hant);
+    for (const l of FETCHED) {
+      setLanguage(l);
+      expect(tl(english, hant)).toBe(catalogs.lessons[l]![english]);
+      expect(tl('A line nobody has translated.', '無')).toBe('A line nobody has translated.');
+    }
+  });
+
+  it('runs sentences together only in Chinese and Japanese', () => {
+    for (const [l, joined] of [['en', 'A. B.'], ['zh-Hans', 'A.B.'], ['ja', 'A.B.'], ['ko', 'A. B.'], ['fr', 'A. B.']] as const) {
+      setLanguage(l);
+      expect(sentences('A.', 'B.')).toBe(joined);
+    }
   });
 });

@@ -12,8 +12,6 @@ export const HOME_LANGUAGES: { id: HomeLanguage; label: string; native: string }
   { id: 'pt', label: 'Portuguese', native: 'Português' },
   { id: 'ja', label: 'Japanese', native: '日本語' },
   { id: 'ko', label: 'Korean', native: '한국어' },
-  { id: 'hi', label: 'Hindi', native: 'हिन्दी' },
-  { id: 'ar', label: 'Arabic', native: 'العربية' },
   { id: 'other', label: 'Another language', native: '🌍' },
 ];
 

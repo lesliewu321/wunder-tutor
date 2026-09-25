@@ -1,0 +1,40 @@
+{
+  "practice.home.title.adult": "대화 연습",
+  "practice.home.title.kid": "Tutu와 말하기",
+  "practice.home.lead.adult": "장소를 고르고 소리 내어 진짜 대화를 나눠 보세요. 팁은 마지막에 나와요.",
+  "practice.home.lead.kid": "장소를 고르고 소리 내어 진짜 대화를 나눠 봐요. Tutu가 계속 이야기해 주고, 팁은 마지막에 나와요.",
+
+  "practice.missing.body": "그 대화는 지금 할 수 없어요.",
+
+  "practice.leave.button": "대화 나가기",
+  "practice.leave.sheet": "대화를 나갈까요?",
+  "practice.leave.title": "대화를 나갈까요?",
+  "practice.leave.body": "아주 잘하고 있어요. 몇 마디만 더 하면 돼요.",
+  "practice.leave.stay": "계속 말하기",
+  "practice.leave.confirm": "나가기",
+
+  "practice.line.play": "재생: {text}",
+  "practice.line.tip": "“{word}” 짧은 팁: {tip}",
+  "practice.demoMic.toast": "체험용 마이크가 켜졌어요. 점수는 가상이에요",
+
+  "practice.hint.choose": "뭐라고 말할지 골라요",
+  "practice.hint.ready": "마이크를 누르고 말해요",
+  "practice.hint.listening": "듣고 있어요…",
+  "practice.hint.processing": "알겠어요…",
+
+  "practice.summary.title": "대화 요약",
+  "practice.summary.stat.pronunciation": "발음",
+  "practice.summary.stat.lines": "말한 문장",
+  "practice.summary.strong.title": "잘한 점",
+  "practice.summary.strong.everyWord": "모든 단어를 말했어요",
+  "practice.summary.strong.rhythm": "부드럽고 고른 리듬",
+  "practice.summary.strong.melody": "자연스러운 억양",
+  "practice.summary.strong.clearSound": "또렷한 “{label}” 소리",
+  "practice.summary.strong.keptGoing": "대화를 계속 이어 갔어요",
+  "practice.summary.practise.title": "연습할 점",
+  "practice.summary.practise.sound": "“{example}”에 나오는 “{label}” 소리",
+  "practice.summary.practise.sound.symbol": "“{example}”에 나오는 “{label}” 소리 (/{symbol}/)",
+  "practice.summary.practise.tone": "“{example}”에 나오는 {name}",
+  "practice.summary.practise.none": "눈에 띄는 문제가 없었어요. 모든 소리가 또렷했어요!",
+  "practice.summary.drill": "2분 “{label}” 연습"
+}

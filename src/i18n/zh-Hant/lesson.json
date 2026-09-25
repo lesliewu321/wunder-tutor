@@ -50,6 +50,8 @@
   "lesson.guide.tip": "學習提示",
   "lesson.guide.practice": "離開螢幕也能練習",
   "lesson.guide.start": "開始這一課",
+  "lesson.evidence.1": "答案在第一句：{sentence}",
+  "lesson.evidence.2": "答案在第二句：{sentence}",
   "lesson.literacy.arrange": "組成句子",
   "lesson.literacy.read": "閱讀理解",
   "lesson.literacy.hear": "聽一聽短文",

@@ -15,6 +15,7 @@ eval/.cache
 
 # The translation's checking list (npm run i18n:export writes them; the page is published privately as an Artifact)
 i18n-review.json
+i18n-source.json
 i18n-review.csv
 i18n-review.html
 

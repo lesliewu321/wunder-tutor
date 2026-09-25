@@ -69,7 +69,7 @@ const list: PhonemeInfo[] = [
     problem: 'The “th” needs your tongue between your teeth.',
     detail: 'Voiceless dental fricative /θ/. The air hisses between tongue tip and upper teeth; the vocal folds do not vibrate. Many languages lack it, so learners swap in /s/, /t/ or /f/.',
     difficulty: 0.78, heardAs: 's',
-    l1: { fr: { boost: 0.08, heardAs: 's' }, de: { boost: 0.08, heardAs: 's' }, zh: { boost: 0.1, heardAs: 's' }, ja: { boost: 0.1, heardAs: 's' }, ko: { boost: 0.08, heardAs: 's' }, pt: { boost: 0.06, heardAs: 't' }, hi: { boost: 0.06, heardAs: 't' }, ar: { boost: 0.02, heardAs: 's' }, es: { boost: 0.02, heardAs: 't' } },
+    l1: { fr: { boost: 0.08, heardAs: 's' }, de: { boost: 0.08, heardAs: 's' }, zh: { boost: 0.1, heardAs: 's' }, ja: { boost: 0.1, heardAs: 's' }, ko: { boost: 0.08, heardAs: 's' }, pt: { boost: 0.06, heardAs: 't' }, es: { boost: 0.02, heardAs: 't' } },
   },
   {
     id: 'ð', label: 'th', name: 'Buzzy TH', example: 'this', category: 'consonant',
@@ -83,7 +83,7 @@ const list: PhonemeInfo[] = [
     problem: 'The “th” here should buzz, with your tongue between your teeth.',
     detail: 'Voiced dental fricative /ð/, as in “this, mother”. Common substitutions are /d/ and /z/.',
     difficulty: 0.72, heardAs: 'd',
-    l1: { fr: { boost: 0.08, heardAs: 'z' }, de: { boost: 0.08, heardAs: 'z' }, zh: { boost: 0.1, heardAs: 'd' }, ja: { boost: 0.1, heardAs: 'z' }, ko: { boost: 0.08, heardAs: 'd' }, pt: { boost: 0.06, heardAs: 'd' }, hi: { boost: 0.06, heardAs: 'd' }, es: { boost: 0.04, heardAs: 'd' } },
+    l1: { fr: { boost: 0.08, heardAs: 'z' }, de: { boost: 0.08, heardAs: 'z' }, zh: { boost: 0.1, heardAs: 'd' }, ja: { boost: 0.1, heardAs: 'z' }, ko: { boost: 0.08, heardAs: 'd' }, pt: { boost: 0.06, heardAs: 'd' }, es: { boost: 0.04, heardAs: 'd' } },
   },
   {
     id: 'r', label: 'r', name: 'English R', example: 'red', category: 'consonant',
@@ -97,7 +97,7 @@ const list: PhonemeInfo[] = [
     problem: 'Your tongue tapped the top of your mouth — English R doesn’t touch.',
     detail: 'Alveolar approximant /ɹ/. Unlike the tapped or trilled R of many languages, the tongue never makes contact; the tip bunches or curls back while the lips round slightly.',
     difficulty: 0.7, heardAs: 'l',
-    l1: { ja: { boost: 0.15, heardAs: 'l' }, ko: { boost: 0.13, heardAs: 'l' }, zh: { boost: 0.1, heardAs: 'l' }, es: { boost: 0.06, heardAs: 'ɾ' }, pt: { boost: 0.06, heardAs: 'h' }, fr: { boost: 0.1, heardAs: 'ʁ' }, de: { boost: 0.1, heardAs: 'ʁ' }, hi: { boost: 0.05, heardAs: 'ɾ' }, ar: { boost: 0.06, heardAs: 'ɾ' } },
+    l1: { ja: { boost: 0.15, heardAs: 'l' }, ko: { boost: 0.13, heardAs: 'l' }, zh: { boost: 0.1, heardAs: 'l' }, es: { boost: 0.06, heardAs: 'ɾ' }, pt: { boost: 0.06, heardAs: 'h' }, fr: { boost: 0.1, heardAs: 'ʁ' }, de: { boost: 0.1, heardAs: 'ʁ' } },
   },
   {
     id: 'l', label: 'l', name: 'Light L', example: 'like', category: 'consonant',
@@ -124,7 +124,7 @@ const list: PhonemeInfo[] = [
     problem: 'V needs your top teeth resting on your bottom lip.',
     detail: 'Voiced labiodental fricative /v/. Substituting /w/ (German, Hindi), /b/ (Spanish, Korean, Japanese) or /f/ is common.',
     difficulty: 0.55, heardAs: 'w',
-    l1: { de: { boost: 0.12, heardAs: 'w' }, hi: { boost: 0.15, heardAs: 'w' }, es: { boost: 0.18, heardAs: 'b' }, ko: { boost: 0.15, heardAs: 'b' }, ja: { boost: 0.15, heardAs: 'b' }, zh: { boost: 0.12, heardAs: 'w' }, ar: { boost: 0.12, heardAs: 'f' } },
+    l1: { de: { boost: 0.12, heardAs: 'w' }, es: { boost: 0.18, heardAs: 'b' }, ko: { boost: 0.15, heardAs: 'b' }, ja: { boost: 0.15, heardAs: 'b' }, zh: { boost: 0.12, heardAs: 'w' } },
   },
   {
     id: 'w', label: 'w', name: 'Round W', example: 'water', category: 'consonant',
@@ -137,7 +137,7 @@ const list: PhonemeInfo[] = [
     problem: 'W starts with small round lips — your teeth touched your lip, so it sounded like V.',
     detail: 'Labio-velar approximant /w/. Lips round tightly and release into the following vowel; there is no lip–teeth contact.',
     difficulty: 0.4, heardAs: 'v',
-    l1: { de: { boost: 0.25, heardAs: 'v' }, hi: { boost: 0.18, heardAs: 'v' }, fr: { boost: 0.05, heardAs: 'v' } },
+    l1: { de: { boost: 0.25, heardAs: 'v' }, fr: { boost: 0.05, heardAs: 'v' } },
   },
   {
     id: 'æ', label: 'a', name: 'Wide A', example: 'apple', category: 'vowel',
@@ -165,7 +165,7 @@ const list: PhonemeInfo[] = [
     problem: 'This vowel was too long — it sounded like “ee”.',
     detail: 'Near-close front lax vowel /ɪ/ (“ship”) versus tense /iː/ (“sheep”). Many languages have only one of the pair.',
     difficulty: 0.5, heardAs: 'i',
-    l1: { es: { boost: 0.18, heardAs: 'i' }, fr: { boost: 0.15, heardAs: 'i' }, pt: { boost: 0.15, heardAs: 'i' }, ja: { boost: 0.1, heardAs: 'i' }, ko: { boost: 0.1, heardAs: 'i' }, zh: { boost: 0.1, heardAs: 'i' }, ar: { boost: 0.08, heardAs: 'i' } },
+    l1: { es: { boost: 0.18, heardAs: 'i' }, fr: { boost: 0.15, heardAs: 'i' }, pt: { boost: 0.15, heardAs: 'i' }, ja: { boost: 0.1, heardAs: 'i' }, ko: { boost: 0.1, heardAs: 'i' }, zh: { boost: 0.1, heardAs: 'i' } },
   },
   {
     id: 'ʃ', label: 'sh', name: 'Quiet SH', example: 'fish', category: 'consonant',

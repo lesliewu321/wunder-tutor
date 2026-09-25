@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isGrownUp, type ChildProfile } from '../../domain/types';
-import { language, t } from '../../i18n';
+import { dateLocale, t } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import { apiHealth, getAccessCode, type ApiHealth } from '../../speech/health';
 import { prepareText, splitSentences, type Reading } from '../../speech/read';
@@ -43,7 +43,7 @@ export function BookHome({ p }: { p: ChildProfile }) {
   /** "Today", "Yesterday", then the date the way the App language writes it. */
   const when = (at: number) => {
     const days = Math.round((midnight(Date.now()) - midnight(at)) / DAY);
-    return days <= 0 ? t('home.book.when.today') : days === 1 ? t('home.book.when.yesterday') : new Date(at).toLocaleDateString(language() === 'en' ? 'en-GB' : 'zh-Hant-HK', { day: 'numeric', month: 'short' });
+    return days <= 0 ? t('home.book.when.today') : days === 1 ? t('home.book.when.yesterday') : new Date(at).toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' });
   };
   /** A page is known by its first words, as they are printed (in the learner's own characters for Chinese). */
   const titleOf = (pg: BookPage) => {

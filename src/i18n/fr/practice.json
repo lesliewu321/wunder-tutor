@@ -1,0 +1,40 @@
+{
+  "practice.home.title.adult": "Conversation",
+  "practice.home.title.kid": "Parle avec Tutu",
+  "practice.home.lead.adult": "Choisis un lieu et mène une vraie conversation à voix haute. Les conseils arrivent à la fin.",
+  "practice.home.lead.kid": "Choisis un lieu et mène une vraie conversation à voix haute. Tutu continue de discuter, et les conseils arrivent à la fin.",
+
+  "practice.missing.body": "Cette conversation n’est pas disponible.",
+
+  "practice.leave.button": "Quitter la conversation",
+  "practice.leave.sheet": "Quitter la conversation ?",
+  "practice.leave.title": "Quitter la conversation ?",
+  "practice.leave.body": "Tu te débrouilles très bien, il ne reste que quelques répliques.",
+  "practice.leave.stay": "Continuer",
+  "practice.leave.confirm": "Quitter",
+
+  "practice.line.play": "Écouter : {text}",
+  "practice.line.tip": "Petit conseil pour « {word} » : {tip}",
+  "practice.demoMic.toast": "Micro de démo activé : les scores sont simulés",
+
+  "practice.hint.choose": "Choisis quoi dire",
+  "practice.hint.ready": "Touche le micro et dis-le",
+  "practice.hint.listening": "J’écoute…",
+  "practice.hint.processing": "C’est noté…",
+
+  "practice.summary.title": "Bilan de la conversation",
+  "practice.summary.stat.pronunciation": "Prononciation",
+  "practice.summary.stat.lines": "Phrases dites",
+  "practice.summary.strong.title": "Points forts",
+  "practice.summary.strong.everyWord": "tu as dit chaque mot",
+  "practice.summary.strong.rhythm": "un rythme fluide et régulier",
+  "practice.summary.strong.melody": "une mélodie naturelle",
+  "practice.summary.strong.clearSound": "un « {label} » bien clair",
+  "practice.summary.strong.keptGoing": "tu as fait vivre la conversation",
+  "practice.summary.practise.title": "À travailler",
+  "practice.summary.practise.sound": "le son « {label} », comme dans « {example} »",
+  "practice.summary.practise.sound.symbol": "le son « {label} », comme dans « {example} » : /{symbol}/",
+  "practice.summary.practise.tone": "{name}, comme dans « {example} »",
+  "practice.summary.practise.none": "Rien à signaler : chaque son était clair !",
+  "practice.summary.drill": "Exercice de 2 minutes : « {label} »"
+}

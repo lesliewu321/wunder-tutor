@@ -8,6 +8,7 @@ import { applyAssessment, dayKey, emptyProfile } from '../intelligence/profile';
 import { nextItemProgress, starsFor } from '../engine/learning';
 import { achievement, bumpStreak, XP } from '../engine/rewards';
 import { ALL_LESSONS } from '../content/course';
+import { HOME_LANGUAGES } from '../content/translations';
 import { setDisplayScript } from '../content/zh/script';
 import { deviceLanguage, setLanguage } from '../i18n';
 import { nextVoice } from '../speech/pitch';
@@ -253,7 +254,7 @@ export const useStore = create<AppState>()(
     }),
     {
       name: 'wunder-tutor/v1',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => stateStorage),
       partialize: ({ profiles, activeId, settings, attempts }) => ({ profiles, activeId, settings, attempts }),
       // v1 → v2: learners gain courses (English / Mandarin) and a character-set choice.
@@ -265,6 +266,11 @@ export const useStore = create<AppState>()(
             p.course ??= 'en';
             p.zhScript ??= 'hant';
           }
+        }
+        // v2 → v3: Hindi and Arabic are no longer offered as a home language (Leslie, 2026-09-25: "drop hindi and arabic
+        // completely for now"); a learner who had one is at home in 'Another language'.
+        if (version < 3 && s.profiles) {
+          for (const p of Object.values(s.profiles)) if (!HOME_LANGUAGES.some((l) => l.id === p.homeLanguage)) p.homeLanguage = 'other';
         }
         return state as AppState;
       },

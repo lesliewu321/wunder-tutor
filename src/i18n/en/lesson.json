@@ -50,6 +50,8 @@
   "lesson.guide.tip": "How it works",
   "lesson.guide.practice": "Try it away from the screen",
   "lesson.guide.start": "Start lesson",
+  "lesson.evidence.1": "The evidence is in sentence 1: {sentence}",
+  "lesson.evidence.2": "The evidence is in sentence 2: {sentence}",
   "lesson.literacy.arrange": "Build the sentence",
   "lesson.literacy.read": "Read and understand",
   "lesson.literacy.hear": "Listen to the passage",

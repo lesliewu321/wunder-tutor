@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Exercise } from '../../domain/types';
 import { sameSentence, shuffled } from '../../engine/curriculum';
-import { language } from '../../i18n';
+import { language, tl, type Key } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import { useActiveProfile } from '../../state/store';
 import { ItemText } from '../../ui/ItemText';
@@ -13,7 +13,6 @@ type Literacy = Extract<Exercise, { type: 'read-choice' | 'arrange' }>;
 export function LiteracyExercise({ ex, onDone, test = false }: { ex: Literacy; onDone: (first: boolean) => void; test?: boolean }) {
   const { t } = useT();
   const p = useActiveProfile();
-  const hant = language() === 'zh-Hant';
   const [wrong, setWrong] = useState(false);
   const [solved, setSolved] = useState(false);
   const [picked, setPicked] = useState<number[]>([]);
@@ -25,6 +24,19 @@ export function LiteracyExercise({ ex, onDone, test = false }: { ex: Literacy; o
   const target = p.zhScript === 'hant' ? item.zh?.hant ?? item.text : item.text;
   const sentence = picked.map((i) => chunks[i]).join(item.zh ? '' : ' ');
   const hear = () => void voice.speak(item.text, { accent: localeOf(item, p.accent), kind: item.kind }).catch(async (e) => toast(await noSoundMessage(p.band, e), '🔇'));
+  // "The evidence is in sentence N: …" — one template per App language; the sentence is the passage's own, in the language
+  // being learned and in the learner's script. (The English lines of the two courses read the same, the English
+  // course quoting its sentence and the Putonghua course glossing it, so the English line can't carry the translation.)
+  const explanation = (): string => {
+    if (ex.type !== 'read-choice') return '';
+    const n = /^The evidence is in sentence ([12]): /.exec(ex.explanation)?.[1];
+    const quoted = /^答案在第.句：(.+)$/su.exec(ex.explanationHant)?.[1];
+    if (!n || !quoted || language() === 'zh-Hant') return tl(ex.explanation, ex.explanationHant);
+    let sentence = quoted;
+    const hant = ex.passage.zh?.hant, at = hant ? hant.indexOf(quoted) : -1;
+    if (hant && at >= 0 && p.zhScript === 'hans' && hant.length === ex.passage.text.length) sentence = ex.passage.text.slice(at, at + quoted.length);
+    return t(`lesson.evidence.${n}` as Key, { sentence });
+  };
   const check = () => {
     if (test) { onDone(sameSentence(sentence, target)); return; }
     if (sameSentence(sentence, target)) { setSolved(true); setMessage(t('lesson.literacy.correct')); }
@@ -36,11 +48,11 @@ export function LiteracyExercise({ ex, onDone, test = false }: { ex: Literacy; o
       {ex.type === 'read-choice' ? <>
         <div className="card literacy__passage"><ItemText item={ex.passage} band={p.band} script={p.zhScript} /></div>
         {!test && <button className="pill" type="button" onClick={hear}>{t('lesson.literacy.hear')}</button>}
-        <h3>{hant ? ex.questionHant : ex.question}</h3>
+        <h3>{tl(ex.question, ex.questionHant)}</h3>
         <div className="literacy__options">
           {options.map((o) => <button type="button" className="reply" key={o.id} disabled={solved} onClick={() => {
             if (test) { onDone(o.id === ex.answer.id); return; }
-            if (o.id === ex.answer.id) { setSolved(true); setMessage(hant ? ex.explanationHant : ex.explanation); }
+            if (o.id === ex.answer.id) { setSolved(true); setMessage(explanation()); }
             else { setWrong(true); setMessage(t('lesson.literacy.readAgain')); }
           }}>{o.picture && <span aria-hidden>{o.picture} </span>}<ItemText item={o} band={p.band} script={p.zhScript} /></button>)}
         </div>

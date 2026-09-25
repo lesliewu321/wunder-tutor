@@ -1,10 +1,25 @@
 # App language — how the wording is organised
 
-The family chooses the **App language** (Settings, and the first screen): English or 繁體中文 (Hong Kong). It changes the
+The family chooses the **App language** (Settings, and the first screen): English, 繁體中文 (Hong Kong), 简体中文,
+日本語, 한국어, Français or Español — the course languages, both Chinese scripts (Leslie, 2026-09-25). It changes the
 app's own wording — instructions, feedback, buttons, the grown-up screens. It never changes what is being learned: the
 words to say, the teacher's voice, pinyin, example words inside tips ("think", "媽") stay as they are.
 
 ## Files
+
+- **Seven languages, two kinds.** English and 繁體中文 are in the app bundle. The other five are fetched when chosen
+  (`loadLanguage` in `index.ts`, one chunk per file) and show English for the moment it takes; `useT()` re-renders
+  when they arrive.
+- **简体中文 is generated, never edited:** `npm run i18n:hans` converts every 繁體中文 file with OpenCC (hk → cn) plus a
+  short table of Hong Kong → mainland words (設定 → 设置, 電郵 → 邮箱 …). Run it after any Traditional change.
+- **日本語, 한국어, Français, Español** were machine-drafted on 2026-09-25 from `i18n-source.json` (`npm run
+  i18n:export` writes it: every English line, the data wording, and the lesson guides). Not yet checked by a native
+  speaker. After English changes, translate the new or changed keys and run the checker.
+- `<language>/lessons.json` — lesson guides and reading questions, keyed by the English line itself
+  (`tl(english, hant)`): the course data carries only English and 繁體中文, and an edited English line falls back to
+  English instead of showing a stale translation.
+- `npm run i18n:check -- <language> interface|content|lessons` — the same keys as the source, every {placeholder} and
+  **bold** kept, nothing empty. Japanese, Korean and Chinese write only the `.other` form of a count.
 
 - `en/<area>.json` — the English source, flat `"area.thing": "text"`. Typed: `t('settings.title')` with a wrong key
   does not compile.

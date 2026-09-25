@@ -1,6 +1,6 @@
-import { Fragment, type ReactNode } from 'react';
+import { Fragment, useSyncExternalStore, type ReactNode } from 'react';
 import { useStore } from '../state/store';
-import { t, tc, tn } from './index';
+import { catalogRevision, onCatalogs, t, tc, tl, tn } from './index';
 
 /**
  * In a component: `const { t } = useT();`. The functions are the same as the module's — the hook's job is to
@@ -9,7 +9,8 @@ import { t, tc, tn } from './index';
  */
 export function useT() {
   useStore((s) => s.settings.language);
-  return { t, tn, tc };
+  useSyncExternalStore(onCatalogs, catalogRevision, catalogRevision); // a fetched language has arrived
+  return { t, tn, tc, tl };
 }
 
 /**

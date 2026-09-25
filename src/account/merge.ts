@@ -1,4 +1,5 @@
 import type { Achievement, ChildProfile, ConversationRecord, DayStat, ItemProgress, PhonemeStat, PronunciationProfile, WordStat } from '../domain/types';
+import { HOME_LANGUAGES } from '../content/translations';
 import type { BookPage } from '../features/say/page';
 
 // Two devices of one family changed the same learner without hearing of each other (one was offline). Nothing a child
@@ -51,8 +52,9 @@ export function mergeProfiles(a: ChildProfile, b: ChildProfile): ChildProfile {
   const who = edited(a) === edited(b) ? fuller(a, b, () => 0) : edited(a) > edited(b) ? a : b;
   const streak = a.streak.lastDay === b.streak.lastDay ? fuller(a.streak, b.streak, (s) => s.count) : (a.streak.lastDay ?? '') > (b.streak.lastDay ?? '') ? a.streak : b.streak;
   const voice = a.voice && b.voice ? fuller(a.voice, b.voice, (v) => v.takes) : a.voice ?? b.voice;
+  // homeLanguage: a copy from before Hindi and Arabic were dropped (2026-09-25) comes back as 'other'.
   const merged: ChildProfile = {
-    id: a.id, name: who.name, avatar: who.avatar, age: who.age, band: who.band, homeLanguage: who.homeLanguage, level: who.level, goal: who.goal,
+    id: a.id, name: who.name, avatar: who.avatar, age: who.age, band: who.band, homeLanguage: HOME_LANGUAGES.some((l) => l.id === who.homeLanguage) ? who.homeLanguage : 'other', level: who.level, goal: who.goal,
     accent: who.accent, learning: who.learning, course: who.course, zhScript: who.zhScript, dailyGoalXp: who.dailyGoalXp,
     createdAt: Math.min(a.createdAt, b.createdAt),
     xp: Math.max(a.xp, b.xp),

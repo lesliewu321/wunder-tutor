@@ -1,5 +1,5 @@
 {
-  "settings.me.title": "我",
+  "settings.me.title": "個人資料",
   "settings.me.band.little": "小小探險家 · 5–7歲",
   "settings.me.band.junior": "小學生 · 8–11歲",
   "settings.me.band.teen": "青少年 · 12–17歲",
@@ -16,8 +16,6 @@
   "settings.me.streak": "連續日數",
   "settings.me.studyTime": "學習時間",
   "settings.me.longest": "最長連續",
-  "settings.me.progress": "我的進度",
-  "settings.me.progress.detail": "發音、分數、測驗和徽章",
   "settings.me.twisters": "繞口令",
   "settings.me.twisters.detail": "排行榜上的名字：{handle}",
   "settings.me.goal.title": "每日目標",

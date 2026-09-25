@@ -9,7 +9,7 @@ import { shownText } from '../../content/zh/script';
 import { canSkip, drillFor, exercisesFor, FAST_TRACK_SCORE, isDrill } from '../../engine/learning';
 import { badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
 import { useBack } from '../../back';
-import { language } from '../../i18n';
+import { tl } from '../../i18n';
 import { LiteracyExercise } from './LiteracyExercise';
 import { useT } from '../../i18n/useT';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
@@ -139,14 +139,14 @@ function LessonRun() {
     advance(queue, results, checks);
   };
   if (!started && lesson.guide) {
-    const g = lesson.guide, hant = language() === 'zh-Hant';
+    const g = lesson.guide;
     return <div className="screen lesson-guide">
       <IconButton icon="close" label={t('lesson.leave.button')} onClick={() => nav('/')} />
       <span className="lesson-guide__icon" aria-hidden>{lesson.icon}</span>
       <h1>{lessonTitle(lesson)}</h1>
-      <div className="card"><h2>{t('lesson.guide.goal')}</h2><p>{hant ? g.goalHant : g.goal}</p></div>
-      <div className="card"><h2>{t('lesson.guide.tip')}</h2><p>{hant ? g.tipHant : g.tip}</p></div>
-      <div className="card"><h2>{t('lesson.guide.practice')}</h2><p>{hant ? g.practiceHant : g.practice}</p></div>
+      <div className="card"><h2>{t('lesson.guide.goal')}</h2><p>{tl(g.goal, g.goalHant)}</p></div>
+      <div className="card"><h2>{t('lesson.guide.tip')}</h2><p>{tl(g.tip, g.tipHant)}</p></div>
+      <div className="card"><h2>{t('lesson.guide.practice')}</h2><p>{tl(g.practice, g.practiceHant)}</p></div>
       <Button size="lg" variant="primary" block onClick={() => setStarted(true)}>{t('lesson.guide.start')}</Button>
     </div>;
   }

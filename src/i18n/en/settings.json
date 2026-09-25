@@ -1,5 +1,5 @@
 {
-  "settings.me.title": "Me",
+  "settings.me.title": "Profile",
   "settings.me.band.little": "Little explorer · 5–7",
   "settings.me.band.junior": "Junior · 8–11",
   "settings.me.band.teen": "Teen · 12–17",
@@ -16,8 +16,6 @@
   "settings.me.streak": "Day streak",
   "settings.me.studyTime": "Study time",
   "settings.me.longest": "Longest streak",
-  "settings.me.progress": "My progress",
-  "settings.me.progress.detail": "Sounds, scores, tests and badges",
   "settings.me.twisters": "Tongue twisters",
   "settings.me.twisters.detail": "On the boards as {handle}",
   "settings.me.goal.title": "Daily goal",

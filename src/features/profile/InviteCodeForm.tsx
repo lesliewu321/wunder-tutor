@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { language, type Key } from '../../i18n';
+import { dateLocale, type Key } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import { getAccessCode, redeemInvite, refreshHealth, type ApiHealth, type InviteAnswer } from '../../speech';
 import { Button } from '../../ui/kit';
@@ -31,7 +31,7 @@ export function InviteCodeForm({ services, onServices }: { services: ApiHealth; 
       setRedeeming(false);
     }
   };
-  const inviteDate = (iso?: string) => (iso ? new Date(iso).toLocaleDateString(language() === 'zh-Hant' ? 'zh-HK' : 'en-GB', { day: 'numeric', month: 'short' }) : '');
+  const inviteDate = (iso?: string) => (iso ? new Date(iso).toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' }) : '');
   const inviteLine = (a: InviteAnswer | 'offline'): { text: string; good: boolean } => {
     if (a === 'offline') return { text: t('settings.beta.unreachable'), good: false };
     const vars = { used: a.used ?? 0, places: a.places ?? 0, date: inviteDate(a.expiresAt) };

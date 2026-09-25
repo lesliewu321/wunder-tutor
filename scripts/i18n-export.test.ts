@@ -14,6 +14,20 @@ import { catalogs, en, noteContent, setLanguage } from '../src/i18n';
 import type { AgeBand } from '../src/domain/types';
 
 const BANDS: AgeBand[] = ['little', 'junior', 'teen', 'adult'];
+/** The lesson guides and reading questions of every course: English → 繁體中文, one entry per distinct English line. */
+const lessonPhrases = (): Record<string, string> => {
+  const out: Record<string, string> = {};
+  const pairs = [['goal', 'goalHant'], ['tip', 'tipHant'], ['practice', 'practiceHant'], ['question', 'questionHant'], ['explanation', 'explanationHant']] as const;
+  const walk = (o: unknown): void => {
+    if (Array.isArray(o)) { o.forEach(walk); return; }
+    if (!o || typeof o !== 'object') return;
+    const r = o as Record<string, unknown>;
+    for (const [a, b] of pairs) if (typeof r[a] === 'string' && typeof r[b] === 'string') out[r[a] as string] = r[b] as string;
+    Object.values(r).forEach(walk);
+  };
+  walk(Object.values(COURSES));
+  return out;
+};
 const quiet = (read: () => unknown) => { try { read(); } catch { /* an id this accessor doesn't know */ } };
 
 /** Where a line shows up, in the order a family meets the app. */
@@ -50,6 +64,9 @@ describe.skipIf(!process.env.I18N_EXPORT)('i18n review export', () => {
     for (const s of SCENARIOS) { quiet(() => scenarioTitle(s)); for (const b of BANDS) quiet(() => scenarioBlurb(s, b)); }
     for (const l of HOME_LANGUAGES) quiet(() => homeLanguageLabel(l.id));
     noteContent(false);
+    // The sound badges share one line each, filled with the sound: the template, not the example it was noted with.
+    seen.set('badge.sound.name', 'Sound mastered: {name}');
+    seen.set('badge.sound.detail', 'Your “{label}” is now clear and steady.');
 
     const zhInterface = catalogs.interface['zh-Hant'], zhContent = catalogs.content['zh-Hant'];
     // In the catalogs' own order: they were written screen by screen, top to bottom, which is how a reader meets the lines.
@@ -61,6 +78,9 @@ describe.skipIf(!process.env.I18N_EXPORT)('i18n review export', () => {
       .sort((a, b) => parseInt(a.area, 10) - parseInt(b.area, 10) || (order.get(a.key) ?? 0) - (order.get(b.key) ?? 0));
 
     writeFileSync('i18n-review.json', JSON.stringify(rows, null, 1));
+    // The source for a new App language: every line in English, the interface (with its one/other forms), the wording
+    // that lives with data, and the lesson guides and reading questions (keyed by their English, see `tl` in src/i18n).
+    writeFileSync('i18n-source.json', JSON.stringify({ interface: en, content: Object.fromEntries([...seen, ...Object.keys(zhContent).filter((k) => !seen.has(k)).map((k) => [k, ''])].sort(([x], [y]) => (order.get(x) ?? 1e9) - (order.get(y) ?? 1e9))), lessons: lessonPhrases() }, null, 1));
     const cell = (v: string) => `"${v.replace(/"/g, '""')}"`;
     writeFileSync('i18n-review.csv', `﻿${['key', 'where', 'English', '繁體中文', 'correction', 'comment'].map(cell).join(',')}\r\n${rows.map((r) => [r.key, r.area, r.en, r.zh, '', ''].map(cell).join(',')).join('\r\n')}\r\n`);
     const noEnglish = rows.filter((r) => !r.en).map((r) => r.key);

@@ -8,7 +8,7 @@ import { blobToWav16k } from '../../speech/recorder';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
 import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, goalDetail, goalLabel, liveStreak } from '../../engine/rewards';
-import { LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
+import { isChinese, LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
 import { apiHealth, getAccessCode, serviceStatus, serviceWords, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
@@ -40,7 +40,7 @@ function CoursePicker({ p }: { p: ChildProfile }) {
   const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : c === 'ja' ? '日本語' : c === 'ko' ? '한국어' : c === 'es' ? 'Español' : 'Français');
   const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'fr' ? 'fr' : c === 'ja' ? 'ja' : c === 'ko' ? 'ko' : c === 'es' ? 'es' : undefined);
   // In the list, what the course's own name may not tell the grown-up reading it.
-  const gloss = (c: CourseId) => (c === 'fr' || c === 'ja' || c === 'ko' || c === 'es' || (c === 'zh' && language() !== 'zh-Hant') ? t(COURSE_LABEL[c]) : null);
+  const gloss = (c: CourseId) => (c === 'fr' || c === 'ja' || c === 'ko' || c === 'es' || (c === 'zh' && !isChinese()) ? t(COURSE_LABEL[c]) : null);
   const toggle = (c: CourseId) => {
     const on = p.learning.includes(c);
     if (on && p.learning.length === 1) { setKeep(true); return; }
@@ -88,6 +88,13 @@ export function Me() {
   const level = Math.floor(p.xp / 100) + 1;
   // Minutes spent speaking out loud, over every day on record.
   const studyMinutes = Math.round(Object.values(p.pronunciation.days).reduce((n, d) => n + (d.speakingMs ?? 0), 0) / 60000);
+  const setCourse = useStore((s) => s.setCourse);
+  // Switching between the learner's own courses — the ones a grown-up chose in Settings (Leslie, 2026-09-21: "even if I
+  // select only 2 languages in settings, all 4 appear in front page"); moved here from Home (2026-09-25). The Putonghua
+  // course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
+  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', ja: '日本語 Japanese', ko: '한국어 Korean', fr: 'Français', es: 'Español' }; // order (Leslie, 2026-09-25): French after Korean
+  // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
+  const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
 
   return (
     <div className="screen me">
@@ -104,6 +111,14 @@ export function Me() {
         <p className="fineprint">{t('settings.me.level')} {level} · {p.xp} XP</p>
       </section>
 
+      {myCourses.length > 1 && (
+        <label className="course-pick"><span>{t('home.course.aria')}</span>
+          <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
+            {myCourses.map((id) => <option key={id} value={id}>{inScript(courseLabel[id], p.zhScript)}</option>)}
+          </select>
+        </label>
+      )}
+
       <section>
         <h2 className="section-title">{t('settings.me.goal.title')}</h2>
         <div className="goal-picker">
@@ -115,11 +130,6 @@ export function Me() {
         </div>
       </section>
 
-      <button type="button" className="row-link" onClick={() => nav('/progress')}>
-        <span className="row-link__icon"><Icon name="chart" /></span>
-        <span><b>{t('settings.me.progress')}</b><small>{t('settings.me.progress.detail')}</small></span>
-        <Icon name="chevron" size={20} />
-      </button>
       <button type="button" className="row-link" onClick={() => nav('/twisters')}>
         <span className="row-link__icon" aria-hidden>🌀</span>
         <span><b>{t('settings.me.twisters')}</b><small>{t('settings.me.twisters.detail', { handle: handleFor(p, patch) })}</small></span>

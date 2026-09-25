@@ -1,3 +1,4 @@
+import type { Language } from '../i18n';
 import { AuthClient, type Session } from '@supabase/auth-js';
 import { PostgrestClient } from '@supabase/postgrest-js';
 import type { ChildProfile } from '../domain/types';
@@ -89,7 +90,7 @@ export function remoteFor(user: string): Remote {
 }
 
 /** What the grown-up agreed to when the account was made: kept with its wording, once per version. */
-export async function recordConsent(version: string, language: 'en' | 'zh-Hant', wording: string): Promise<void> {
+export async function recordConsent(version: string, language: Language, wording: string): Promise<void> {
   const seen = must('consents', await db.from('consents').select('id').eq('consent_type', 'terms_and_privacy').eq('policy_version', version).is('revoked_at', null).limit(1));
   if (!(seen ?? []).length) must('consent', await db.from('consents').insert({ consent_type: 'terms_and_privacy', policy_version: version, language, wording }));
 }

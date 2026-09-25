@@ -1,4 +1,4 @@
-import { t } from '../i18n';
+import { t, type Language } from '../i18n';
 // Core domain types shared by every layer (content, speech, engine, UI).
 // These mirror the tables in supabase/schema.sql so the local repository can
 // later be swapped for a Supabase-backed one without touching the UI.
@@ -24,7 +24,7 @@ export type Tone = 1 | 2 | 3 | 4 | 5;
  * 'en' = English at home (an expat family in Hong Kong, an English-speaking adult): the Mandarin, French and Japanese
  * courses predict an English speaker's trouble sounds from it; on the English course it simply adds no priors.
  */
-export type HomeLanguage = 'en' | 'yue' | 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'hi' | 'ar' | 'other';
+export type HomeLanguage = 'en' | 'yue' | 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'other';
 export type Level = 'new' | 'some' | 'confident';
 /**
  * Why someone is learning. A child's reasons and a grown-up's are not the same four — a 40-year-old is not learning
@@ -330,5 +330,5 @@ export interface ParentSettings {
   simulate: 'none' | 'network' | 'service' | 'slow';
   theme: 'auto' | 'light' | 'dark';
   /** The app's own wording (not what is being learned). Not chosen yet: the device's language decides. */
-  language?: 'en' | 'zh-Hant';
+  language?: Language;
 }

@@ -1,0 +1,40 @@
+{
+  "practice.home.title.adult": "会話の練習",
+  "practice.home.title.kid": "Tutuと話しましょう",
+  "practice.home.lead.adult": "場所を選んで、声に出して本物の会話をしましょう。アドバイスは最後に表示されます。",
+  "practice.home.lead.kid": "場所をえらんで、声に出して本物の会話をしましょう。Tutuがどんどん話しかけます。アドバイスは最後に出てきます。",
+
+  "practice.missing.body": "その会話は使えません。",
+
+  "practice.leave.button": "会話をやめる",
+  "practice.leave.sheet": "会話をやめますか？",
+  "practice.leave.title": "会話をやめますか？",
+  "practice.leave.body": "とてもいい調子です。あと少しで終わりです。",
+  "practice.leave.stay": "話しつづける",
+  "practice.leave.confirm": "やめる",
+
+  "practice.line.play": "再生：{text}",
+  "practice.line.tip": "「{word}」のワンポイント：{tip}",
+  "practice.demoMic.toast": "デモ用マイクがオン：スコアは仮のものです",
+
+  "practice.hint.choose": "言うことをえらびましょう",
+  "practice.hint.ready": "マイクをタップして言いましょう",
+  "practice.hint.listening": "聞いています…",
+  "practice.hint.processing": "わかりました…",
+
+  "practice.summary.title": "会話のまとめ",
+  "practice.summary.stat.pronunciation": "発音",
+  "practice.summary.stat.lines": "話した回数",
+  "practice.summary.strong.title": "よかったところ",
+  "practice.summary.strong.everyWord": "ぜんぶの単語を言えた",
+  "practice.summary.strong.rhythm": "なめらかで安定したリズム",
+  "practice.summary.strong.melody": "自然なイントネーション",
+  "practice.summary.strong.clearSound": "はっきりした「{label}」",
+  "practice.summary.strong.keptGoing": "会話をつづけられた",
+  "practice.summary.practise.title": "練習するところ",
+  "practice.summary.practise.sound": "「{example}」の「{label}」の音",
+  "practice.summary.practise.sound.symbol": "「{example}」の「{label}」の音（/{symbol}/）",
+  "practice.summary.practise.tone": "「{example}」の{name}",
+  "practice.summary.practise.none": "気になるところはありませんでした。どの音もはっきりしていました！",
+  "practice.summary.drill": "2分間の「{label}」トレーニング"
+}

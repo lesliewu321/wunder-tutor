@@ -18,6 +18,8 @@
     "deploy:egress": "wrangler deploy -c egress/wrangler.toml",
     "i18n:export": "node scripts/i18n-export.mjs",
     "i18n:import": "node scripts/i18n-import.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "i18n:hans": "node scripts/i18n-hans.mjs",
     "build:app": "node scripts/build-app.mjs",
     "app:android": "npm run build:app && npx cap open android",
     "app:apk": "npm run build:app && node scripts/build-apk.mjs",
@@ -47,6 +49,7 @@
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "opencc-js": "^1.4.2",
     "typescript": "^5.5.4",
     "vite": "^5.4.3",
     "vitest": "^2.0.5"
