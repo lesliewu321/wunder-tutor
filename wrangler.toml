@@ -22,10 +22,12 @@ SUPABASE_URL = "https://xzghsihffoliduqkjvck.supabase.co"
 binding = "TTS_CACHE"
 id = "138ec3dd03034f40ab92a58125cd6b07"
 
-# Calls to Google leave through a relay outside Hong Kong (the `wunder-egress` Worker, egress/): Google's Gemini service
-# refuses requests that leave from Hong Kong ("User location is not supported"), and a Function runs at the Cloudflare
-# location nearest the learner — for the launch market, Hong Kong. (Cloudflare's [placement] was tried first,
-# 2026-09-20: it is only a hint, and every request entering at HKG still ran at HKG.) Deploy the relay before the app:
+# Calls to Google from a location Google refuses — Hong Kong (and mainland China) — leave through a relay outside it
+# (the `wunder-egress` Worker, egress/): Google's Gemini service answers "User location is not supported" there, and
+# a Function runs at the Cloudflare location nearest the learner. Every other location (Taiwan, Singapore, Japan, …)
+# calls Google directly; each location probes once per isolate (functions/api/[[path]].js). (Cloudflare's [placement]
+# was tried first, 2026-09-20: it is only a hint, and every request entering at HKG still ran at HKG.) Deploy the
+# relay before the app:
 #   npm run deploy:egress
 [[durable_objects.bindings]]
 name = "EGRESS"
