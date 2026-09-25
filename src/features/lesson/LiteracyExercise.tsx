@@ -3,6 +3,7 @@ import type { Exercise } from '../../domain/types';
 import { sameSentence, shuffled } from '../../engine/curriculum';
 import { language, tl, type Key } from '../../i18n';
 import { useT } from '../../i18n/useT';
+import { playCorrect } from '../../ui/sounds';
 import { useActiveProfile } from '../../state/store';
 import { ItemText } from '../../ui/ItemText';
 import { Button, toast } from '../../ui/kit';
@@ -51,6 +52,8 @@ export function LiteracyExercise({ ex, onDone, test = false }: { ex: Literacy; o
         <h3>{tl(ex.question, ex.questionHant)}</h3>
         <div className="literacy__options">
           {options.map((o) => <button type="button" className="reply" key={o.id} disabled={solved} onClick={() => {
+            if (solved) return;
+            if (o.id === ex.answer.id) playCorrect();
             if (test) { onDone(o.id === ex.answer.id); return; }
             if (o.id === ex.answer.id) { setSolved(true); setMessage(explanation()); }
             else { setWrong(true); setMessage(t('lesson.literacy.readAgain')); }

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Exercise, SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
 import { useT } from '../../i18n/useT';
+import { playCorrect } from '../../ui/sounds';
 import { noSoundMessage } from '../../speech/health';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
 import { useActiveProfile } from '../../state/store';
@@ -50,6 +51,7 @@ export function ChoiceExercise({ ex, onDone, test = false }: { ex: ChoiceEx; onD
 
   const choose = (it: SpeakItem) => {
     if (solved) return;
+    if (it.id === answer.id) playCorrect();
     if (test) { setPicked(it.id); if (it.id !== answer.id) setWrong([it.id]); return; }
     if (it.id === answer.id) {
       setPicked(it.id);
