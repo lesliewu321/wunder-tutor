@@ -275,6 +275,14 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   keyed by the English meaning; tm(meaning, itemLang); hidden where the App language is the course's own. Machine
   drafts like the rest. Dev-server gotcha: two quick writes to one file can leave Vite serving the first ("tm is not
   defined"); re-saving the file fixes it — the build was never affected.
+- **Seasonal bonus lessons (commit fe6b1f0, DEPLOYED — Pages deployment 3020a749):** content/seasonal/<course>.json
+  (lessons, same loader/linter) + content/seasonal/events.json (calendar: each year's date written out, window 10 days
+  before / 4 after, lesson per course). First: Mid-Autumn for Putonghua (16 items, three age versions). Home card under
+  the hero while on; opens the lesson in its course. Out of ALL_LESSONS (no effect on progress/badges). Add a festival:
+  a unit in content/seasonal/<course>.json + an entry in events.json + its title/blurb in each <lang>/content.json.
+  Next dates to confirm before adding festivals: Chinese New Year, Dragon Boat. Teacher voice for the new lines is made
+  on first play (then cached); scripts/warm-voice.mjs could pre-warm them. Push announcements NOT built (see
+  docs/NOTIFICATIONS-PLAN.md): events.json is meant to be the sender's source.
 
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
