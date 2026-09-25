@@ -260,6 +260,14 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
     complete, not on replays. The Profile "Tongue twisters" row stays as the way to the boards. Verified in the 5199
     copy with the demo mic: the card shows after food-7 and opens /twisters/en-red-lorry.
   - Tests 329 (was 316). Not pushed to GitHub; no phone build.
+- **Profile / Settings / characters (2026-09-25, commit 3af17c5, DEPLOYED — Pages deployment 77f3309f, live, checked):**
+  Course dropdown first on Profile, always shown, last entry "Add or remove courses…" opens the courses sheet; the
+  Settings Courses row is gone (no gate: Leslie, "only gate is paywall" — Settings itself was never gated). Accent row
+  only with English; Chinese characters row only with Putonghua in HK/TW/MO (src/engine/region.ts). Putonghua is
+  Simplified by default everywhere (setup and new profiles); setup asks about characters only in HK/TW/MO. Store v4
+  moves learners outside HK/TW/MO to Simplified. Caveat: Windows' "Beijing, Chongqing, Hong Kong" time zone reports
+  Asia/Shanghai, so a HK desktop is recognised by its device language (en-HK/zh-HK) or 繁體中文 App language; phones
+  report Asia/Hong_Kong. The server knows the country (request.cf.country) if a stronger signal is ever needed.
 
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
