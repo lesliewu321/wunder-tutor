@@ -260,3 +260,20 @@ This update supersedes the communication-pack status and old lesson counts above
   typecheck likewise failed on unfinished Cantonese course/test/translation types. These unrelated changes
   were preserved and excluded from commit 7207ca4, including concurrent edits to teacher-voices.mjs.
 - No deployment, GitHub push, mobile build or dev-server restart. A clean release and live voice preview remain pending.
+
+
+## 2026-09-25 — QwenCloud live speech test passed
+
+- Tested the configured local QwenCloud key with the application adapter from commit 7207ca4 plus
+  the current shared checkout. No application code changed in this test. Pages deployment id: none
+  (no deployment or secret upload performed); production Qwen synthesis was not exercised.
+- Authentication/model listing returned HTTP 200 and included qwen3-tts-flash. Real English synthesis
+  and the HTTPS audio download both returned HTTP 200. The returned audio host was
+  dashscope-result-sgp.oss-ap-southeast-1.aliyuncs.com, accepted by the existing download allowlist.
+- Sample: "Hello! Welcome to Wunder Tutor." Cherry produced a valid 24 kHz WAV, 115244 bytes,
+  2.4 seconds of PCM audio, in approximately 1.6 seconds including download. Saved under the ignored
+  .wrangler/qwen-smoke-en.wav for listening. Slow playback reused the same cached take.
+- This confirms real API synthesis and WAV validation, not an auditory or multilingual quality assessment.
+  No secret values were displayed. Leslie remains responsible for npm run keys:push.
+- Required checks passed in the current shared checkout: npm test (1835 passed, 2 skipped), typecheck,
+  content:check and i18n:check. Concurrent Cantonese work has progressed since the earlier test failures.
