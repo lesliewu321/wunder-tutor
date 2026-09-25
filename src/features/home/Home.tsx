@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { LessonMap, sceneFor, type MapNode } from './LessonMap';
 import { useNavigate } from 'react-router-dom';
 import { apiHealth, type ApiHealth } from '../../speech';
 import { courseFor, courseTitle, ITEM_INDEX, lessonTitle, unitSubtitle, unitTitle } from '../../content/course';
@@ -46,6 +47,9 @@ export function Home() {
   const [pathMode, setPathModeState] = useState<'learn' | 'test'>(() => { try { return localStorage.getItem(`wunder-tutor/path-mode/${p.id}`) === 'test' ? 'test' : 'learn'; } catch { return 'learn'; } });
   const setPathMode = (m: 'learn' | 'test') => { setPathModeState(m); try { localStorage.setItem(`wunder-tutor/path-mode/${p.id}`, m); } catch { /* private mode */ } };
   const testing = pathMode === 'test';
+  // Map or list (Leslie, 2026-09-25: the scenic map as a "course alternative"): the map by default, remembered per learner.
+  const [pathView, setPathViewState] = useState<'map' | 'list'>(() => { try { return localStorage.getItem(`wunder-tutor/path-view/${p.id}`) === 'list' ? 'list' : 'map'; } catch { return 'map'; } });
+  const setPathView = (v: 'map' | 'list') => { setPathViewState(v); try { localStorage.setItem(`wunder-tutor/path-view/${p.id}`, v); } catch { /* private mode */ } };
   // A test that is worth taking now (engine/testing.ts), shown on the hero once a day at most; the path tags it too.
   const dueTest = unit.lessons.find((l) => testDue(p, l.id, ids));
   const today = new Date().toDateString();
@@ -147,42 +151,63 @@ export function Home() {
         <p className="course-overview">{t('home.units.progress', { done: lessons.filter((l) => p.lessonsCompleted[l.id]).length, total: lessons.length })}</p>
         <h2 className="section-title">{pathUnit.icon} {unitTitle(pathUnit, p.band)}</h2>
         <p className="course-overview">{unitSubtitle(pathUnit, p.band)}</p>
-        <div className="chips" role="tablist" aria-label={t('home.path.mode.aria')}>
-          <button type="button" role="tab" className={`chip ${!testing ? 'is-on' : ''}`} aria-selected={!testing} onClick={() => setPathMode('learn')}>{t('home.path.mode.learn')}</button>
-          <button type="button" role="tab" className={`chip ${testing ? 'is-on' : ''}`} aria-selected={testing} onClick={() => setPathMode('test')}>{t('home.path.mode.test')}</button>
+        <div className="path__bar">
+          <div className="chips" role="tablist" aria-label={t('home.path.mode.aria')}>
+            <button type="button" role="tab" className={`chip ${!testing ? 'is-on' : ''}`} aria-selected={!testing} onClick={() => setPathMode('learn')}>{t('home.path.mode.learn')}</button>
+            <button type="button" role="tab" className={`chip ${testing ? 'is-on' : ''}`} aria-selected={testing} onClick={() => setPathMode('test')}>{t('home.path.mode.test')}</button>
+          </div>
+          <div className="seg" role="group" aria-label={t('home.path.view.aria')}>
+            <button type="button" aria-pressed={pathView === 'map'} aria-label={t('home.path.view.map')} title={t('home.path.view.map')} onClick={() => setPathView('map')}><Icon name="map" size={20} /></button>
+            <button type="button" aria-pressed={pathView === 'list'} aria-label={t('home.path.view.list')} title={t('home.path.view.list')} onClick={() => setPathView('list')}><Icon name="list" size={20} /></button>
+          </div>
         </div>
-        <ol className="path__list">
-          {pathUnit.lessons.map((l) => {
+        {(() => {
+          // One model of the unit's lessons for both views (Leslie, 2026-09-25: the map is a "course alternative" —
+          // the list stays). Children follow the path one lesson at a time. Grown-ups may open any lesson; "Up next"
+          // still shows the way (Leslie, 2026-09-21: kids in order, grown-ups free).
+          const nodes: MapNode[] = pathUnit.lessons.map((l) => {
             const done = p.lessonsCompleted[l.id];
-            // Children follow the path one lesson at a time. Grown-ups may open any lesson; "Up next" still shows the way
-            // (Leslie, 2026-09-21: kids in order, grown-ups free).
             const unlocked = lessonUnlocked(lessons, l.id, p.band, p.lessonsCompleted);
             const prerequisite = lessons.find((x) => !p.lessonsCompleted[x.id]);
             const current = l.id === nextId;
             if (testing) {
               const can = p.band === 'adult' || !!done;
               const rec = p.tests?.[l.id];
-              return (
-                <li key={l.id}>
-                  <button type="button" className={`node ${rec ? 'node--done' : can ? '' : 'node--locked'}`} disabled={!can} onClick={() => nav(`/lesson/${l.id}?mode=test`)}>
-                    <span className="node__icon">{can ? l.icon : <Icon name="lock" size={22} />}</span>
-                    <span className="node__text"><b>{lessonTitle(l)}</b><small>{rec ? t('home.path.test.best', { n: rec.best }) : can ? t('home.path.test.ready') : t('home.path.test.locked')}</small></span>
-                    {rec ? <span className={`chip-score chip-score--${rec.best >= 90 ? 'good' : rec.best >= 75 ? 'okay' : 'weak'}`}>{rec.best}</span> : can ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
+              return {
+                id: l.id, icon: can ? l.icon : <Icon name="lock" size={26} />, title: lessonTitle(l),
+                sub: rec ? t('home.path.test.best', { n: rec.best }) : can ? t('home.path.test.ready') : t('home.path.test.locked'),
+                state: rec ? 'done' : can ? 'open' : 'locked',
+                score: rec?.best, mark: !rec && can ? 'play' : undefined,
+                onClick: () => nav(`/lesson/${l.id}?mode=test`),
+              };
+            }
+            return {
+              id: l.id, icon: unlocked ? l.icon : <Icon name="lock" size={26} />, title: lessonTitle(l),
+              sub: done ? t(testDue(p, l.id, ids) ? 'home.path.testDue' : 'home.path.again') : current ? t('home.path.upNext') : unlocked ? t('home.path.ready') : t('home.path.locked', { title: prerequisite ? lessonTitle(prerequisite) : '' }),
+              state: done ? 'done' : current ? 'current' : unlocked ? 'open' : 'locked',
+              stars: done && p.band !== 'adult' ? done.stars : undefined,
+              mark: done && p.band === 'adult' ? 'tick' : current ? 'play' : undefined,
+              onClick: () => nav(`/lesson/${l.id}`),
+            };
+          });
+          if (pathView === 'map') return <LessonMap label={t('home.path.aria')} unitIcon={pathUnit.icon} scene={sceneFor(p.band)} nodes={nodes} />;
+          return (
+            <ol className="path__list">
+              {nodes.map((n) => (
+                <li key={n.id}>
+                  <button type="button" className={`node ${n.state === 'open' ? '' : `node--${n.state}`}`} disabled={n.state === 'locked'} onClick={n.onClick}>
+                    <span className="node__icon">{n.icon}</span>
+                    <span className="node__text"><b>{n.title}</b><small>{n.sub}</small></span>
+                    {n.score !== undefined ? <span className={`chip-score chip-score--${n.score >= 90 ? 'good' : n.score >= 75 ? 'okay' : 'weak'}`}>{n.score}</span>
+                      : n.stars !== undefined ? <span className="node__stars" aria-label={tn('home.path.stars.aria', n.stars)}>{'★'.repeat(n.stars)}<i>{'★'.repeat(3 - n.stars)}</i></span>
+                      : n.mark === 'tick' ? <span className="node__go node__go--done" aria-label={t('home.path.done.aria')}><Icon name="check" size={16} /></span>
+                      : n.mark === 'play' ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
                   </button>
                 </li>
-              );
-            }
-            return (
-              <li key={l.id}>
-                <button type="button" className={`node ${done ? 'node--done' : current ? 'node--current' : unlocked ? '' : 'node--locked'}`} disabled={!unlocked} onClick={() => nav(`/lesson/${l.id}`)}>
-                  <span className="node__icon">{unlocked ? l.icon : <Icon name="lock" size={22} />}</span>
-                  <span className="node__text"><b>{lessonTitle(l)}</b><small>{done ? t(testDue(p, l.id, ids) ? 'home.path.testDue' : 'home.path.again') : current ? t('home.path.upNext') : unlocked ? t('home.path.ready') : t('home.path.locked', { title: prerequisite ? lessonTitle(prerequisite) : '' })}</small></span>
-                  {done ? p.band === 'adult' ? <span className="node__go node__go--done" aria-label={t('home.path.done.aria')}><Icon name="check" size={16} /></span> : <span className="node__stars" aria-label={tn('home.path.stars.aria', done.stars)}>{'★'.repeat(done.stars)}<i>{'★'.repeat(3 - done.stars)}</i></span> : current ? <span className="node__go"><Icon name="play" size={16} /></span> : null}
-                </button>
-              </li>
-            );
-          })}
-        </ol>
+              ))}
+            </ol>
+          );
+        })()}
         {/* Units still being written. Nothing a learner does opens them, so no padlock (Leslie asked why they were locked). */}
         {COURSE.units.filter((u) => u.locked || !u.lessons.length).map((u) => (
           <div key={u.id} className="unit-soon"><span className="unit-soon__icon" aria-hidden>{u.icon}</span><span><b>{unitTitle(u, p.band)}</b><small>{unitSubtitle(u, p.band)}</small></span><span className="unit-soon__tag">{t('home.path.soon')}</span></div>
