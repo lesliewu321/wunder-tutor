@@ -170,7 +170,7 @@
   "settings.voice.choiceHint": "选择会保存在此设备。暂不可用的声音需要联网或完成服务设置。",
   "settings.voice.preview": "试听声音",
   "settings.voice.playing": "播放中…",
-  "settings.me.course.yue": "广东话（香港）",
+  "settings.me.course.yue": "广东话",
   "settings.voice.selection": "已选声音：{voice}",
   "settings.voice.automaticUses": "自动模式会先使用{voice}。",
   "settings.voice.courseUnavailable": "不支援此课程",

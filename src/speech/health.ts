@@ -129,15 +129,16 @@ export const knownHealth = (): ApiHealth | null => latest;
 /** Asks the API which server-side services are available to this device. Absent API → none. */
 export const apiHealth = (): Promise<ApiHealth> => {
   health ??= (async () => {
+    const ctl = new AbortController();
+    // Generous: on a slow phone connection a short wait would silently drop the learner into simulated scores.
+    const timeout = setTimeout(() => ctl.abort(), 8000);
     try {
-      const ctl = new AbortController();
-      // Generous: on a slow phone connection a short wait would silently drop the learner into simulated scores.
-      const t = setTimeout(() => ctl.abort(), 8000);
       const res = await apiFetch('/api/health', { signal: ctl.signal });
-      clearTimeout(t);
-      if (res.status >= 500) throw new Error(`health ${res.status}`);
-      if (!res.ok || !res.headers.get('content-type')?.includes('json')) return (latest = NONE);
+      if (!res.ok || !res.headers.get('content-type')?.includes('json')) throw new Error('health_unavailable');
       const j = await res.json();
+      // Vite reports a stopped local API with HTTP 200 and ok:false. It is a connection failure,
+      // not a healthy server with no configured voices; do not cache it for the whole session.
+      if (j?.ok === false) throw new Error('health_unavailable');
       return (latest = {
         voiceProviders: j.voiceProviders, voiceVersions: j.voiceVersions,
         azure: !!j.azure, claude: !!j.claude, gemini: !!j.gemini, ttsVersion: typeof j.ttsVersion === 'string' ? j.ttsVersion : '',
@@ -147,6 +148,8 @@ export const apiHealth = (): Promise<ApiHealth> => {
       // Offline, too slow, or a passing server fault: not remembered, so the next screen asks again.
       health = null;
       return NONE;
+    } finally {
+      clearTimeout(timeout);
     }
   })();
   return health;

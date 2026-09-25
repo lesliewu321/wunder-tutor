@@ -175,7 +175,7 @@
   "settings.voice.choiceHint": "Se guarda en este dispositivo. Las voces no disponibles necesitan conexión o configuración del servicio.",
   "settings.voice.preview": "Probar la voz",
   "settings.voice.playing": "Reproduciendo…",
-  "settings.me.course.yue": "Cantonés (HK)",
+  "settings.me.course.yue": "Cantonés",
   "settings.voice.selection": "Voz seleccionada: {voice}",
   "settings.voice.automaticUses": "El modo automático empieza con {voice}.",
   "settings.voice.courseUnavailable": "No disponible para este curso",

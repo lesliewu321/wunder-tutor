@@ -40,6 +40,26 @@ describe('choices that follow the server', () => {
     expect((await speech.getProvider()).constructor.name).toBe(AzurePronunciationProvider.name);
   });
 
+  it.each(['proxy-stopped', 'html-response'])('recovers cloud voices after %s without restarting the app', async (failure) => {
+    const voices = { azure: true, qwen: true, chirp: true, gemini: true };
+    const request = vi.fn()
+      .mockResolvedValueOnce(failure === 'proxy-stopped'
+        ? new Response(JSON.stringify({ ok: false, azure: false, claude: false, gemini: false }), { headers: { 'content-type': 'application/json' } })
+        : new Response('<html>Vite fallback</html>', { headers: { 'content-type': 'text/html' } }))
+      .mockResolvedValue(new Response(JSON.stringify({ ok: true, authorized: true, azure: true, gemini: true, voiceProviders: voices }), { headers: { 'content-type': 'application/json' } }));
+    vi.stubGlobal('fetch', request);
+    const { apiHealth } = await import('../speech/health');
+    const { voiceConfigured } = await import('../speech/teacherPreference');
+    const unavailable = await apiHealth();
+    expect(unavailable.reached).toBe(false);
+    expect(voiceConfigured('chirp', unavailable)).toBe(false);
+    const restored = await apiHealth();
+    expect(restored.reached).toBe(true);
+    for (const provider of ['azure', 'qwen', 'chirp', 'gemini'] as const) expect(voiceConfigured(provider, restored)).toBe(true);
+    expect(await apiHealth()).toBe(restored);
+    expect(request).toHaveBeenCalledTimes(2);
+  });
+
   it('lets the teacher speak, and the live tutor talk, once the code is saved', async () => {
     const s = server();
     const { voice } = await import('../speech/voice');

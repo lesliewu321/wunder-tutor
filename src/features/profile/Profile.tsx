@@ -14,7 +14,7 @@ import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, goalDetail, goalLabel, liveStreak } from '../../engine/rewards';
 import { LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
-import { apiHealth, getAccessCode, serviceStatus, serviceWords, type ApiHealth, type ServiceStatus } from '../../speech';
+import { refreshHealth, getAccessCode, serviceStatus, serviceWords, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar, IconButton } from '../../ui/kit';
@@ -36,7 +36,7 @@ export function Me() {
   const studyMinutes = Math.round(Object.values(p.pronunciation.days).reduce((n, d) => n + (d.speakingMs ?? 0), 0) / 60000);
   const setCourse = useStore((s) => s.setCourse);
   // Every available course can be selected directly; progress remains attached to its course.
-  const nativeNames: Record<CourseId, string> = { en: 'English', zh: inScript('普通话', p.zhScript), yue: '香港廣東話', ja: '日本語', ko: '한국어', fr: 'Français', es: 'Español' };
+  const nativeNames: Record<CourseId, string> = { en: 'English', zh: inScript('普通话', p.zhScript), yue: '廣東話', ja: '日本語', ko: '한국어', fr: 'Français', es: 'Español' };
   const courseLabel = (id: CourseId) => {
     const translated = t(id === 'en' ? 'common.course.en' : ('settings.me.course.' + id) as Key);
     const native = nativeNames[id];
@@ -105,14 +105,36 @@ export function ParentZone() {
   const show = (useLocation().state as { show?: 'code' | 'connections' } | null)?.show;
   // A live check of the services behind the app: a key can be present and still be refused.
   const [live, setLive] = useState<ServiceStatus | 'checking' | 'failed' | null>(null);
-  const checkConnections = () => { setLive('checking'); void serviceStatus().then((s) => setLive(s ?? 'failed')); };
+  const checkConnections = () => { setLive('checking'); void refreshHealth().then(setServices); void serviceStatus().then((s) => setLive(s ?? 'failed')); };
   const attempts = useStore((s) => s.attempts);
   const [sharing, setSharing] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [making, setMaking] = useState(false);
 
   const refresh = () => void audioRepo.count(`${p.id}/`).then(setRecordings);
-  useEffect(() => { refresh(); void apiHealth().then((h) => { setServices(h); if (h.authorized && (h.azure || h.read)) checkConnections(); }); }, [p.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    refresh();
+    let active = true;
+    const updateServices = () => {
+      void refreshHealth().then((h) => {
+        if (!active) return;
+        setServices(h);
+        if (h.authorized && (h.azure || h.read)) {
+          setLive('checking');
+          void serviceStatus().then((s) => { if (active) setLive(s ?? 'failed'); });
+        }
+      });
+    };
+    updateServices();
+    // Recheck after returning from server setup or reconnecting, so unavailable choices recover in place.
+    window.addEventListener('focus', updateServices);
+    window.addEventListener('online', updateServices);
+    return () => {
+      active = false;
+      window.removeEventListener('focus', updateServices);
+      window.removeEventListener('online', updateServices);
+    };
+  }, [p.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!show || !services) return;

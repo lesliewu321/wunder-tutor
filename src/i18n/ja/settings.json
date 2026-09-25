@@ -170,7 +170,7 @@
   "settings.voice.choiceHint": "この端末に保存されます。利用できない音声には接続やサービスの設定が必要です。",
   "settings.voice.preview": "音声を試聴",
   "settings.voice.playing": "再生中…",
-  "settings.me.course.yue": "広東語（香港）",
+  "settings.me.course.yue": "広東語",
   "settings.voice.selection": "選択中の音声：{voice}",
   "settings.voice.automaticUses": "自動では最初に{voice}を使用します。",
   "settings.voice.courseUnavailable": "このコースでは利用できません",

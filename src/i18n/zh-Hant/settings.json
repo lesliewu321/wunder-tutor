@@ -170,7 +170,7 @@
   "settings.voice.choiceHint": "選擇會儲存在此裝置。未能使用的聲音需要連線或完成服務設定。",
   "settings.voice.preview": "試聽聲音",
   "settings.voice.playing": "播放中…",
-  "settings.me.course.yue": "廣東話（香港）",
+  "settings.me.course.yue": "廣東話",
   "settings.voice.selection": "已選聲音：{voice}",
   "settings.voice.automaticUses": "自動模式會先使用{voice}。",
   "settings.voice.courseUnavailable": "不支援此課程",

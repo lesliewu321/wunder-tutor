@@ -1,8 +1,8 @@
 {
   "id": "hong-kong-cantonese",
   "language": "yue",
-  "title": "Cantonese (HK)",
-  "grownUpTitle": "Cantonese (HK)",
+  "title": "Cantonese",
+  "grownUpTitle": "Cantonese",
   "exercisePrefix": "yuex",
   "items": {
     "yue-greetings-1": {
@@ -700,7 +700,7 @@
     {
       "id": "yue-greetings",
       "title": "Greetings and courtesy",
-      "subtitle": "Cantonese (HK)",
+      "subtitle": "Cantonese",
       "icon": "👋",
       "color": "var(--leaf)",
       "lessons": [
@@ -1227,7 +1227,7 @@
     {
       "id": "yue-numbers",
       "title": "Numbers and time",
-      "subtitle": "Cantonese (HK)",
+      "subtitle": "Cantonese",
       "icon": "🔢",
       "color": "var(--leaf)",
       "lessons": [
@@ -1750,7 +1750,7 @@
     {
       "id": "yue-food",
       "title": "At a Hong Kong café",
-      "subtitle": "Cantonese (HK)",
+      "subtitle": "Cantonese",
       "icon": "🍜",
       "color": "var(--leaf)",
       "lessons": [
@@ -2277,7 +2277,7 @@
     {
       "id": "yue-people",
       "title": "Friends and small talk",
-      "subtitle": "Cantonese (HK)",
+      "subtitle": "Cantonese",
       "icon": "🤝",
       "color": "var(--leaf)",
       "lessons": [
@@ -2800,7 +2800,7 @@
     {
       "id": "yue-out",
       "title": "Getting around Hong Kong",
-      "subtitle": "Cantonese (HK)",
+      "subtitle": "Cantonese",
       "icon": "🚇",
       "color": "var(--leaf)",
       "lessons": [
@@ -3323,7 +3323,7 @@
     {
       "id": "yue-shopping",
       "title": "Shopping and payments",
-      "subtitle": "Cantonese (HK)",
+      "subtitle": "Cantonese",
       "icon": "🛍️",
       "color": "var(--leaf)",
       "lessons": [
@@ -3846,7 +3846,7 @@
     {
       "id": "yue-work",
       "title": "Learning and working together",
-      "subtitle": "Cantonese (HK)",
+      "subtitle": "Cantonese",
       "icon": "📚",
       "color": "var(--leaf)",
       "lessons": [
