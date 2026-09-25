@@ -7,7 +7,7 @@
 
 import http from 'node:http';
 import { readFileSync } from 'node:fs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createApi } from './core.mjs';
@@ -58,7 +58,14 @@ const ttsCache = {
   put: async (key, wav) => { await mkdir(cacheDir, { recursive: true }); await writeFile(join(cacheDir, `${key}.wav`), wav); },
 };
 
-const api = createApi(process.env, { ttsCache });
+/** Consented recordings land in a folder locally (R2 on Cloudflare); the key's slashes become folders. */
+const recordingsDir = (process.env.RECORDINGS_DIR ?? '').trim() || resolve(projectRoot, 'server', '.cache', 'recordings');
+const recordings = {
+  put: async (key, bytes) => { const file = join(recordingsDir, key); await mkdir(dirname(file), { recursive: true }); await writeFile(file, bytes); },
+  delete: async (keys) => { for (const key of keys) await rm(join(recordingsDir, key), { force: true }); },
+};
+
+const api = createApi(process.env, { ttsCache, recordings });
 
 const server = http.createServer(async (req, res) => {
   try {

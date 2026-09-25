@@ -184,7 +184,8 @@ export function createApi(rawEnv, deps = {}) {
   // Families with an account (server/family.mjs). SUPABASE_URL is public; SUPABASE_SECRET_KEY is a secret like the others.
   const families = deps.families ?? (env('SUPABASE_URL') ? createFamilies({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log }) : null);
   // Invite codes and contributed recordings (server/invites.mjs): the same database, the same secret key.
-  const invites = deps.invites ?? (env('SUPABASE_URL') ? createInvites({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log }) : null);
+  // deps.recordings: where contributed audio is kept (R2 on Cloudflare, a folder locally); without it, Supabase Storage as before.
+  const invites = deps.invites ?? (env('SUPABASE_URL') ? createInvites({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log, recordings: deps.recordings ?? null }) : null);
 
   const canDial = deps.canDialWebSocket ?? (Boolean(deps.connectWebSocket) || typeof WebSocket === 'function');
   const status = {
@@ -579,7 +580,9 @@ export function createApi(rawEnv, deps = {}) {
   const allowStatus = createLimiter(30, 60_000);
 
   // ---------------------------------------------------------------- router
-  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read', '/api/redeem']);
+  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read', '/api/redeem', '/api/contributions/forget']);
+  /** Forgetting is cheap to ask for but reads the database: a handful of times per address. */
+  const allowForget = createLimiter(6, 10 * 60_000);
 
   /**
    * The phone apps (Capacitor) run the same web app from inside a WebView, where the page's origin is localhost —
@@ -662,6 +665,18 @@ export function createApi(rawEnv, deps = {}) {
       if (!ROUTES.has(path)) return json(404, { error: 'not_found' });
       if (request.method !== 'POST') return json(405, { error: 'method_not_allowed' });
       if (path === '/api/redeem') return await handleRedeem(request, client);
+      if (path === '/api/contributions/forget') {
+        // "Delete my recordings": everything this device contributed, gone from the store and the table. No code is
+        // needed — the device id is the only handle and forgetting is never harmful — but it is rate-limited.
+        if (!allowForget(client)) throw new HttpError(429, 'rate_limited');
+        let body;
+        try { body = await request.json(); } catch { throw new HttpError(400, 'invalid_json'); }
+        const device = String(body?.device ?? '');
+        if (!/^[A-Za-z0-9_-]{8,64}$/.test(device)) throw new HttpError(400, 'invalid_device');
+        if (!invites?.enabled) return json(200, { deleted: 0 });
+        try { return json(200, { deleted: await invites.forget(device) }); }
+        catch (e) { if (/bad device id/.test(e?.message ?? '')) throw new HttpError(400, 'invalid_device'); log.warn?.(`[contribute] forget failed: ${e?.message ?? e}`); throw new HttpError(502, 'forget_failed'); }
+      }
       // Setup's accent preview plays before the device has a code: those few fixed lines are open to anyone (tts.mjs).
       if (!authorized && !(path === '/api/tts' && await isPreview(request))) throw new HttpError(401, 'access_code_required');
 

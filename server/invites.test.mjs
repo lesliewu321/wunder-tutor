@@ -189,6 +189,40 @@ describe('where a kept recording goes', () => {
     expect(order[1]).toMatch(/rest\/v1\/contributions$/);
   });
 
+  it('puts the audio in the recordings store (R2) when there is one, and the row says so', async () => {
+    const db = fakeDb();
+    const puts = [];
+    const invites = invitesWith(db, { uuid: () => 'id-2', now: () => Date.parse('2026-09-25T02:00:00Z'), recordings: { put: async (key, bytes, type) => { puts.push({ key, size: bytes.length, type }); }, delete: async () => {} } });
+    const path = await invites.contribute({ device: 'device-aaaaaaaa', locale: 'en-US', band: 'junior', reference: 'milk', overall: 80, azure: {}, wav: new Uint8Array(4) });
+    expect(path).toBe('en-US/2026-09-25/id-2.wav');
+    expect(puts).toEqual([{ key: 'en-US/2026-09-25/id-2.wav', size: 4, type: 'audio/wav' }]);
+    expect(db.calls.some((c) => c.url.includes('/storage/v1/'))).toBe(false);
+    const row = JSON.parse(db.calls.find((c) => c.url.endsWith('/rest/v1/contributions')).init.body);
+    expect(row).toMatchObject({ audio_path: 'en-US/2026-09-25/id-2.wav', store: 'r2' });
+  });
+
+  it('forgets a device: R2 keys from the store, older keys from Supabase Storage, then the rows', async () => {
+    const deleted = [];
+    const calls = [];
+    const fetchImpl = async (url, init = {}) => {
+      calls.push({ url: String(url), init });
+      const u = new URL(url);
+      if (u.pathname.endsWith('/rest/v1/contributions') && (init.method ?? 'GET') === 'GET') return jsonRes([{ audio_path: 'en-US/2026-09-25/a.wav', store: 'r2' }, { audio_path: 'zh-CN/2026-09-21/b.wav', store: 'supabase' }]);
+      if (u.pathname.endsWith('/rest/v1/contributions') && init.method === 'DELETE') return new Response(null, { status: 204 });
+      if (u.pathname.endsWith('/storage/v1/object/contributions') && init.method === 'DELETE') return jsonRes([]);
+      return new Response('not faked', { status: 500 });
+    };
+    const invites = createInvites({ url: 'https://db.example', secretKey: 'sb_secret_x', fetchImpl, log: { warn() {} }, recordings: { put: async () => {}, delete: async (keys) => { deleted.push(...keys); } } });
+    expect(await invites.forget('device-aaaaaaaa')).toBe(2);
+    expect(deleted).toEqual(['en-US/2026-09-25/a.wav']);
+    const storageDelete = calls.find((c) => c.url.endsWith('/storage/v1/object/contributions') && c.init.method === 'DELETE');
+    expect(JSON.parse(storageDelete.init.body)).toEqual({ prefixes: ['zh-CN/2026-09-21/b.wav'] });
+    const rowsDelete = calls.find((c) => c.url.includes('/rest/v1/contributions?device=eq.device-aaaaaaaa') && c.init.method === 'DELETE');
+    expect(rowsDelete).toBeTruthy();
+    expect(calls.findIndex((c) => c === rowsDelete)).toBeGreaterThan(calls.findIndex((c) => c === storageDelete));
+    await expect(invites.forget('x')).rejects.toThrow(/bad device id/);
+  });
+
   it('writes no row when the audio did not arrive, so no row ever points at nothing', async () => {
     const db = fakeDb({ storageStatus: 500 });
     await expect(invitesWith(db).contribute({ device: 'device-aaaaaaaa', locale: 'en-US', reference: 'milk', wav: new Uint8Array(4) })).rejects.toThrow(/storage/);

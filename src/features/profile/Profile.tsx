@@ -14,6 +14,7 @@ import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
 import { Button, Sheet, toast, TopBar } from '../../ui/kit';
 import { deleteAccount, useAccount } from '../../account/account';
+import { forgetContributions } from '../../speech/health';
 import { AccountPanel } from './AccountPanel';
 import { InviteCodeForm } from './InviteCodeForm';
 
@@ -156,11 +157,12 @@ export function ParentZone() {
 
   const name = p.name;
   const DANGER: Record<Exclude<Danger, null>, { title: string; body: string; cta: string; run: () => Promise<void> }> = {
-    recordings: { title: t('settings.delete.recordings.title', { name }), body: t('settings.delete.recordings.body'), cta: t('settings.delete.recordings.cta'), run: async () => { const n = await store.deleteRecordings(p.id); toast(tn('settings.delete.recordings.done', n), '🗑️'); refresh(); } },
+    recordings: { title: t('settings.delete.recordings.title', { name }), body: t('settings.delete.recordings.body'), cta: t('settings.delete.recordings.cta'), run: async () => { const n = await store.deleteRecordings(p.id); void forgetContributions(); toast(tn('settings.delete.recordings.done', n), '🗑️'); refresh(); } },
     history: { title: t('settings.delete.history.title'), body: t('settings.delete.history.body', { name }), cta: t('settings.delete.history.cta'), run: async () => { await store.deletePronunciationHistory(p.id); toast(t('settings.delete.history.done'), '🗑️'); refresh(); } },
     profile: { title: t('settings.delete.profile.title', { name }), body: t('settings.delete.profile.body'), cta: t('settings.delete.profile.cta'), run: async () => { await store.deleteProfile(p.id); nav('/', { replace: true }); } },
     everything: { title: t('settings.delete.everything.title'), body: t('settings.delete.everything.body'), cta: t('settings.delete.everything.cta'), run: async () => {
       if (account.status !== 'signed-out' && await deleteAccount()) return toast(t('settings.account.delete.failed'), '⚠️');
+      await forgetContributions();
       await store.deleteEverything();
       nav('/welcome', { replace: true });
     } },

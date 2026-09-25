@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type {
-  Accent, Achievement, AgeBand, Assessment, Attempt, ChildProfile, ConversationRecord, CourseId, Goal, HomeLanguage, Level, ParentSettings, PhonemeId, SpeakItem,
+  Accent, Achievement, AgeBand, Assessment, Attempt, ChildProfile, ConversationRecord, CourseId, Goal, HomeLanguage, Level, ParentSettings, PhonemeId, SpeakItem, TestRecord,
 } from '../domain/types';
 import { audioRepo, stateStorage } from '../data/repository';
 import { applyAssessment, dayKey, emptyProfile } from '../intelligence/profile';
@@ -45,6 +45,8 @@ interface AppState {
   setCourse(course: CourseId): void;
   finishItem(item: SpeakItem, best: number, mastered: boolean, tries: number): void;
   completeLesson(lessonId: string, avgScore: number): LessonOutcome;
+  /** Test mode: the same lesson without the teacher, one go per item. Records the score; the lesson itself stays as it was. */
+  completeTest(lessonId: string, score: number): TestRecord;
   recordConversation(rec: Omit<ConversationRecord, 'id' | 'at'>): Achievement[];
   award(id: string): Achievement | null;
   addXp(amount: number): void;
@@ -55,7 +57,9 @@ interface AppState {
   deleteEverything(): Promise<void>;
 }
 
-const defaultSettings: ParentSettings = { storeRecordings: true, consentedAt: null, demoMic: false, simulate: 'none', theme: 'auto' };
+// contributeRecordings is on by default (Leslie, 2026-09-25: "enable consent by default"); setup shows the switch and a
+// parent can turn it off there or in Settings. A device set up before the switch existed keeps a missing value = no.
+const defaultSettings: ParentSettings = { storeRecordings: true, contributeRecordings: true, consentedAt: null, demoMic: false, simulate: 'none', theme: 'auto' };
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 const MAX_ATTEMPTS = 500;
 const KEEP_AUDIO_PER_ITEM = 3;
@@ -169,6 +173,16 @@ export const useStore = create<AppState>()(
         const granted = grant(next, ids, now);
         set((st) => ({ profiles: { ...st.profiles, [p.id]: granted.profile } }));
         return { stars, xp: XP.lesson, achievements: granted.earned, firstTime: !prev };
+      },
+
+      completeTest(lessonId, score) {
+        const s = get();
+        const p = s.profiles[s.activeId ?? ''];
+        const now = Date.now();
+        const prev = p?.tests?.[lessonId];
+        const rec: TestRecord = { at: now, score, best: Math.max(score, prev?.best ?? 0), taken: (prev?.taken ?? 0) + 1 };
+        if (p) set((st) => ({ profiles: { ...st.profiles, [p.id]: { ...p, tests: { ...p.tests, [lessonId]: rec } } } }));
+        return rec;
       },
 
       recordConversation(rec) {

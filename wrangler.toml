@@ -22,6 +22,12 @@ SUPABASE_URL = "https://xzghsihffoliduqkjvck.supabase.co"
 binding = "TTS_CACHE"
 id = "138ec3dd03034f40ab92a58125cd6b07"
 
+# Consented practice recordings (server/invites.mjs contribute/forget): a private bucket in Asia-Pacific with a 90-day
+# expiry rule (wrangler r2 bucket lifecycle list wunder-tutor-recordings). The row in Supabase says which key.
+[[r2_buckets]]
+binding = "RECORDINGS"
+bucket_name = "wunder-tutor-recordings"
+
 # Calls to Google from a location Google refuses — Hong Kong (and mainland China) — leave through a relay outside it
 # (the `wunder-egress` Worker, egress/): Google's Gemini service answers "User location is not supported" there, and
 # a Function runs at the Cloudflare location nearest the learner. Every other location (Taiwan, Singapore, Japan, …)

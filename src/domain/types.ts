@@ -77,6 +77,8 @@ export interface ZhText {
 }
 
 export type Exercise =
+  | { id: string; type: 'read-choice'; passage: SpeakItem; question: string; questionHant: string; options: SpeakItem[]; answer: SpeakItem; explanation: string; explanationHant: string }
+  | { id: string; type: 'arrange'; item: SpeakItem; chunks: string[]; chunksHant?: string[] }
   | { id: string; type: 'speak'; item: SpeakItem; prompt?: 'text' | 'image' | 'translation' }
   | { id: string; type: 'choose-heard'; answer: SpeakItem; options: SpeakItem[] }
   | { id: string; type: 'minimal-pair'; pair: [SpeakItem, SpeakItem]; answerIndex: 0 | 1; focus: PhonemeId }
@@ -90,6 +92,7 @@ export interface Lesson {
   kind: 'words' | 'phrases' | 'pronunciation' | 'listening' | 'speaking' | 'conversation' | 'review';
   /** Exercises per age band — the same lesson teaches different material to a 6- and a 14-year-old. */
   exercises: Record<ContentBand, Exercise[]>;
+  guide?: { goal: string; goalHant: string; tip: string; tipHant: string; practice: string; practiceHant: string };
 }
 
 export interface Unit {
@@ -186,7 +189,7 @@ export interface Attempt {
   assessment: Assessment;
   /** Key into the audio store; undefined when the parent has turned recording storage off. */
   audioKey?: string;
-  context: 'lesson' | 'lab' | 'practice' | 'onboarding';
+  context: 'lesson' | 'lab' | 'practice' | 'onboarding' | 'test';
 }
 
 // ---------- Pronunciation intelligence ----------
@@ -283,7 +286,11 @@ export interface ChildProfile {
   pronunciation: PronunciationProfile;
   achievements: Achievement[];
   conversations: ConversationRecord[];
+  /** Test mode (the same lesson without the teacher), by lesson id: the last score, the best, how many times. */
+  tests?: Record<string, TestRecord>;
 }
+
+export interface TestRecord { at: number; score: number; best: number; taken: number }
 
 export interface ConversationRecord {
   id: string;
@@ -298,9 +305,10 @@ export interface ParentSettings {
   storeRecordings: boolean;
   /**
    * "Help improve Wunder Tutor": the server keeps practice recordings, with no name, to test and improve how
-   * pronunciation is checked. Ticked by default in setup (Leslie, 2026-09-21) — but only for people who set up after
-   * the box existed and saw it. Anyone who agreed earlier agreed to recordings staying on the device, so a missing
-   * value means NO: nobody is moved onto terms they were never shown.
+   * pronunciation is checked. On by default: ticked in setup (Leslie, 2026-09-21) and in a fresh install's settings
+   * (2026-09-25, "enable consent by default"), always visible on the privacy page with a switch to turn it off. Only a
+   * device set up before the switch existed has no value, and a missing value means NO: nobody is moved onto terms
+   * they were never shown. The copies live in R2 for 90 days at most; deleting recordings or the learner forgets them.
    */
   contributeRecordings?: boolean;
   consentedAt: number | null;

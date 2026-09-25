@@ -20,6 +20,7 @@ header of `migrations/20260920090000_accounts_and_sync.sql` before changing anyt
 | `tests/rls.sql` | Every access rule tried with two made-up families. Always rolls back; the outcome arrives as the error message (`ALL OK`). Run it after every migration. |
 | `archive/` | The earlier 27-table draft, kept for reference. |
 | `src/account/` (app) | `merge.ts` (two devices → one learner), `sync.ts` (the engine, tested with pretend devices), `supabase.ts` (the real server; loaded only with an account), `account.ts` (sign-in, triggers), `pending.ts`. |
+| `contributions` (table) | Since 2026-09-25 the audio of a new row is in Cloudflare R2 (`store = 'r2'`, bucket `wunder-tutor-recordings`, 90-day expiry), not in the `contributions` Storage bucket; rows from before say `store = 'supabase'`. `POST /api/contributions/forget` deletes a device's rows and audio from both. |
 | `server/family.mjs` (API) | Checks the sign-in token (public keys, no secret), reads the family's plan, counts the day's use. |
 
 **Design in one paragraph** (written for family accounts; see the top for what changed). Only the grown-up signs in (a code by email). A learner is ONE document (`learners.state`,

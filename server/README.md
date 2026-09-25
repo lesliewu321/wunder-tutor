@@ -71,6 +71,11 @@ public deployment with no code set fails closed.
   failure is logged as `[read] <code> after N s, photo N KB` (never the content) — see it live with
   `npx wrangler pages deployment tail --project-name wunder-tutor`. The app shows the code in brackets. The image or
   text goes to Google; Wunder Tutor stores neither.
+- `POST /api/contributions/forget` with `{ device }` → `{ deleted }`: everything that device contributed ("keep=1" takes) is
+  deleted — the audio from R2 (bucket `wunder-tutor-recordings`, binding `RECORDINGS`; rows from before 2026-09-25 from
+  the Supabase Storage bucket) and then the rows. No code needed: the device id is the only handle and forgetting is
+  never harmful. 6 requests / 10 min per client. Contributed audio is kept in R2 for 90 days at most (a lifecycle rule
+  on the bucket), locally under `server/.cache/recordings/`.
 - `POST /api/tutor` with `{ scenario:{title,setting,tutorRole,goals[]}, band, history:[{role:"tutor"|"child",text}], pronunciationNotes? }`
   → `{ reply, suggestions (0-2 strings), done }`. Child-safety rules live in the system prompt; emojis are stripped;
   `done` is forced after 8 child turns. Errors: 400 `invalid_json|invalid_scenario|invalid_band|invalid_history`,

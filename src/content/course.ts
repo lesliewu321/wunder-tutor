@@ -5,14 +5,14 @@ import { JA_COURSE, JA_ITEMS } from './ja/course';
 import { buildCourse, type CourseFile } from './load';
 import { inScript } from './zh/script';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
-import enData from '../../content/courses/en.json';
+import enData from '../../astra-lessons/courses/en.json';
 
-// The courses as the app runs them. English and Putonghua are DATA (content/courses/en.json, zh.json), read through
+// The courses as the app runs them. English and Putonghua are DATA (astra-lessons/courses/en.json, zh.json), read through
 // the loader; French and Japanese are still written in TypeScript (fr/course.ts, ja/course.ts) until their turn.
 // Everything below is the same surface it always was: the engine and the screens import from here and never notice
 // where a course came from.
 
-export const EN = buildCourse(enData as unknown as CourseFile, 'content/courses/en.json');
+export const EN = buildCourse(enData as unknown as CourseFile, 'astra-lessons/courses/en.json');
 
 export const COURSE: Course = EN.course;
 export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE, fr: FR_COURSE, ja: JA_COURSE };
@@ -51,7 +51,7 @@ export const ITEM_INDEX: Record<string, SpeakItem> = {};
 for (const l of ALL_LESSONS) {
   for (const band of ['little', 'junior', 'teen'] as const) {
     for (const ex of l.exercises[band]) {
-      const items = ex.type === 'speak' ? [ex.item] : ex.type === 'choose-heard' ? ex.options : ex.type === 'minimal-pair' ? ex.pair : ex.replies;
+      const items = ex.type === 'speak' || ex.type === 'arrange' ? [ex.item] : ex.type === 'read-choice' ? [ex.passage, ...ex.options] : ex.type === 'choose-heard' ? ex.options : ex.type === 'minimal-pair' ? ex.pair : ex.replies;
       for (const it of items) ITEM_INDEX[it.id] = it;
     }
   }

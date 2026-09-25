@@ -15,7 +15,10 @@
 //
 //   * CONTRIBUTIONS. A practice recording already comes to this server to be scored. With the learner's consent the
 //     server keeps that copy instead of discarding it — nothing new leaves the device. It is stored with no name:
-//     the device's random id, age band, home language, what was asked and the scorer's own answer.
+//     the device's random id, age band, home language, what was asked and the scorer's own answer. Since 2026-09-25
+//     the audio goes to the `recordings` store (Cloudflare R2, bucket wunder-tutor-recordings, 90-day expiry) and the
+//     row's `store` says so; rows from before point at the Supabase Storage bucket. forget(device) deletes a device's
+//     contributions from whichever store, then the rows — the app asks when a learner or their recordings are deleted.
 //
 // Both need the project's SECRET key. Without it, invite codes unlock nothing (only the master code does, as before
 // they existed) and nothing is kept.
@@ -26,9 +29,10 @@ const INVITE_SHAPE = /^[A-Z0-9-]{4,32}$/;
 const DEVICE_SHAPE = /^[A-Za-z0-9_-]{8,64}$/;
 
 /**
- * @param {{ url: string, secretKey?: string, fetchImpl?: typeof fetch, log?: Console, now?: () => number, uuid?: () => string }} opts
+ * @param {{ url: string, secretKey?: string, fetchImpl?: typeof fetch, log?: Console, now?: () => number, uuid?: () => string,
+ *   recordings?: { put(key: string, bytes: Uint8Array | ArrayBuffer, contentType: string): Promise<unknown>, delete(keys: string[]): Promise<unknown> } | null }} opts
  */
-export function createInvites({ url, secretKey = '', fetchImpl = fetch, log = console, now = Date.now, uuid = () => crypto.randomUUID() }) {
+export function createInvites({ url, secretKey = '', fetchImpl = fetch, log = console, now = Date.now, uuid = () => crypto.randomUUID(), recordings = null }) {
   const base = url.replace(/\/+$/, '');
   const enabled = Boolean(secretKey);
   // The new `sb_secret_…` keys go in `apikey` alone; the older JWT-style keys also need the Authorization header.
@@ -88,12 +92,16 @@ export function createInvites({ url, secretKey = '', fetchImpl = fetch, log = co
     const id = uuid();
     const day = new Date(now()).toISOString().slice(0, 10);
     const path = `${locale}/${day}/${id}.wav`;
-    const put = await fetchImpl(`${base}/storage/v1/object/contributions/${path}`, {
-      method: 'POST',
-      headers: { ...auth, 'Content-Type': 'audio/wav', 'x-upsert': 'false' },
-      body: wav,
-    });
-    if (!put.ok) throw new Error(`storage ${put.status}`);
+    if (recordings) {
+      await recordings.put(path, wav, 'audio/wav');
+    } else {
+      const put = await fetchImpl(`${base}/storage/v1/object/contributions/${path}`, {
+        method: 'POST',
+        headers: { ...auth, 'Content-Type': 'audio/wav', 'x-upsert': 'false' },
+        body: wav,
+      });
+      if (!put.ok) throw new Error(`storage ${put.status}`);
+    }
     const row = await rest('contributions', {
       method: 'POST',
       headers: { Prefer: 'return=minimal' },
@@ -101,12 +109,36 @@ export function createInvites({ url, secretKey = '', fetchImpl = fetch, log = co
         id, device, locale, band: band || null, home_language: homeLanguage || null,
         reference: String(reference).slice(0, 500),
         overall: Number.isFinite(overall) ? Math.max(0, Math.min(100, Math.round(overall))) : null,
-        azure: azure ?? null, audio_path: path, app_version: appVersion ? String(appVersion).slice(0, 40) : null,
+        azure: azure ?? null, audio_path: path, store: recordings ? 'r2' : 'supabase', app_version: appVersion ? String(appVersion).slice(0, 40) : null,
       }),
     });
     if (!row.ok) throw new Error(`contribution row ${row.status}`);
     return path;
   }
 
-  return { enabled, isValid, redeem, contribute };
+  /**
+   * Forget everything a device contributed: the audio from whichever store holds it, then the rows. The device id
+   * is the only handle — it is the random id the app keeps, known to nobody else. Returns how many rows went.
+   */
+  async function forget(device) {
+    if (!enabled) return 0;
+    if (!DEVICE_SHAPE.test(String(device ?? ''))) throw new Error('bad device id');
+    const q = `contributions?device=eq.${encodeURIComponent(device)}`;
+    const res = await rest(`${q}&select=audio_path,store`);
+    if (!res.ok) throw new Error(`contributions ${res.status}`);
+    const rows = await res.json();
+    if (!rows.length) return 0;
+    const inR2 = rows.filter((r) => r.store === 'r2').map((r) => r.audio_path);
+    const inSupabase = rows.filter((r) => r.store !== 'r2').map((r) => r.audio_path);
+    if (inR2.length) { if (!recordings) throw new Error('no recordings store to delete from'); await recordings.delete(inR2); }
+    if (inSupabase.length) {
+      const del = await fetchImpl(`${base}/storage/v1/object/contributions`, { method: 'DELETE', headers: { ...auth, 'Content-Type': 'application/json' }, body: JSON.stringify({ prefixes: inSupabase }) });
+      if (!del.ok) throw new Error(`storage delete ${del.status}`);
+    }
+    const gone = await rest(q, { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+    if (!gone.ok) throw new Error(`contributions delete ${gone.status}`);
+    return rows.length;
+  }
+
+  return { enabled, isValid, redeem, contribute, forget };
 }

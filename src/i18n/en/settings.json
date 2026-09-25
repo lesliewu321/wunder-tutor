@@ -15,7 +15,6 @@
   "settings.me.goal.title": "Daily goal",
   "settings.me.goal.line": "{xp} XP · {detail}",
   "settings.me.zone.detail": "Account, privacy, recordings and settings",
-
   "settings.learning.title": "{name}’s learning",
   "settings.learning.age": "Age",
   "settings.learning.age.adult": "Adult",
@@ -30,7 +29,6 @@
   "settings.learning.script.hant": "繁體 Traditional",
   "settings.learning.script.hans": "简体 Simplified",
   "settings.learning.home": "Home language",
-
   "settings.voice.title": "Voice & privacy",
   "settings.voice.keep.label": "Keep recordings on this device",
   "settings.voice.keep.detail": "Lets learners replay “before” and “now”. Only the newest 3 per phrase are kept. Off = audio is discarded right after scoring.",
@@ -38,12 +36,11 @@
   "settings.voice.stored.one": "{n} recording stored for {name}.",
   "settings.voice.stored.other": "{n} recordings stored for {name}.",
   "settings.voice.contribute.label": "Help improve Wunder Tutor",
-  "settings.voice.contribute.detail": "The Wunder Tutor team keeps practice recordings, with no name, to test the pronunciation checks on real voices and make them better. Recordings already go to the server to be scored; this keeps them instead of throwing them away. Ask us and we delete them.",
+  "settings.voice.contribute.detail": "The Wunder Tutor team keeps practice recordings, with no name, to test the pronunciation checks on real voices and make them better. Recordings already go to the server to be scored; this keeps them instead of throwing them away. They are kept for 90 days at most, then deleted; deleting the recordings or the learner here deletes them at once.",
   "settings.voice.leave.kept": "Recordings go to the speech service to be scored, and the Wunder Tutor team keeps a copy, with no name, to make the checks better.",
   "settings.voice.leave.scored": "Recordings never leave this device except to be scored by the speech service, which does not keep them — unless you choose to share them below.",
   "settings.voice.leave.never": "Recordings never leave this device — unless you choose to share them below.",
   "settings.voice.teacher": "The teacher’s voice is made from lesson text only — learners’ voices are never sent for that.",
-
   "settings.share.row.title": "Share recordings for testing",
   "settings.share.row.ready": "Help check the app on real voices: make a file you can send to the Wunder Tutor team",
   "settings.share.row.empty": "Nothing to share yet — recordings appear here after speaking practice",
@@ -62,14 +59,13 @@
   "settings.share.saved.one": "Saved {n} recording to a file",
   "settings.share.saved.other": "Saved {n} recordings to a file",
   "settings.share.failed": "Couldn’t make the file on this device",
-
   "settings.delete.recordings": "Delete recordings",
   "settings.delete.history": "Delete pronunciation history",
   "settings.delete.profile": "Delete {name}’s profile",
   "settings.delete.everything": "Delete account & all data",
   "settings.delete.sheet": "Confirm delete",
   "settings.delete.recordings.title": "Delete {name}’s recordings?",
-  "settings.delete.recordings.body": "All saved voice recordings are erased from this device. Scores and progress are kept.",
+  "settings.delete.recordings.body": "All saved voice recordings are erased from this device, and any copies the Wunder Tutor team kept are deleted too. Scores and progress are kept.",
   "settings.delete.recordings.cta": "Delete recordings",
   "settings.delete.recordings.done.one": "{n} recording deleted",
   "settings.delete.recordings.done.other": "{n} recordings deleted",
@@ -83,7 +79,6 @@
   "settings.delete.everything.title": "Delete the whole account?",
   "settings.delete.everything.body": "The learner, recordings, scores and settings are erased from this device. If you are signed in, the account and everything saved in it is erased too. This can’t be undone.",
   "settings.delete.everything.cta": "Delete everything",
-
   "settings.account.title": "Account",
   "settings.account.why.adult": "Sign in to keep your progress, scores and saved pages in your own account: nothing is lost with a phone, and every device shows the same. Voice recordings are never saved to the account.",
   "settings.account.why.child": "Sign in with {name}’s own email address to keep {name}’s progress, scores and saved pages in their own account: nothing is lost with a phone, and every device shows the same. Voice recordings are never saved to the account.",
@@ -124,7 +119,6 @@
   "settings.look.theme.auto": "Match device",
   "settings.look.theme.light": "Light",
   "settings.look.theme.dark": "Dark",
-
   "settings.beta.title": "Invite code",
   "settings.beta.accepted": "Invite code accepted — real pronunciation scoring and the teacher voice are on.",
   "settings.beta.noCodeSet": "This Wunder Tutor server has no invite code set yet, so no code can unlock it.",
@@ -140,7 +134,6 @@
   "settings.beta.invite.full": "All {places} places on this code have been taken. Ask for a new code.",
   "settings.beta.invite.expired": "This code closed on {date}. Ask for a new one.",
   "settings.beta.invite.disabled": "This code has been switched off. Ask for a new one.",
-
   "settings.conn.title": "Connections",
   "settings.conn.scoring": "Pronunciation scoring",
   "settings.conn.reading": "Reading pages",
@@ -148,7 +141,6 @@
   "settings.conn.checking": "Checking…",
   "settings.conn.failed": "Couldn’t check",
   "settings.conn.again": "Check again",
-
   "settings.demo.title": "Demo & diagnostics",
   "settings.demo.mic.label": "Demo microphone",
   "settings.demo.mic.detail": "Simulates speaking so the app can be shown on a device without a mic. Scores are not real.",

@@ -33,12 +33,14 @@ export interface ItemData {
 }
 
 export type ExerciseData =
+  | { type: 'read-choice'; passage: string; question: string; questionHant: string; answer: string; others: string[]; explanation: string; explanationHant: string }
+  | { type: 'arrange'; item: string; chunks: string[]; chunksHant?: string[] }
   | { type: 'speak'; item: string; prompt?: 'text' | 'image' | 'translation' }
   | { type: 'choose-heard'; answer: string; others: string[] }
   | { type: 'minimal-pair'; pair: [string, string]; answer: 0 | 1; focus: PhonemeId }
   | { type: 'dialogue'; line?: string; tutor?: string; picture?: string; replies: string[] };
 
-export interface LessonData { id: string; title: string; icon: string; kind: Lesson['kind']; exercises: Record<ContentBand, ExerciseData[]> }
+export interface LessonData { id: string; title: string; icon: string; kind: Lesson['kind']; exercises: Record<ContentBand, ExerciseData[]>; guide?: Lesson['guide'] }
 export interface UnitData { id: string; title: string; subtitle: string; icon: string; color: string; grownUp?: Unit['grownUp']; locked?: boolean; lessons: LessonData[] }
 
 export interface CourseFile {
@@ -124,6 +126,24 @@ export function buildCourse(data: CourseFile, file = `${data.language}.json`): B
     const used: SpeakItem[] = [];
     let built: Exercise;
     switch (ex.type) {
+      case 'read-choice': {
+        const passage = want(where, ex.passage), answer = want(where, ex.answer);
+        const options = [answer, ...(ex.others ?? []).map((o) => want(where, o))];
+        if (!ex.question?.trim() || !ex.questionHant?.trim() || !ex.explanation?.trim() || !ex.explanationHant?.trim()) throw new ContentError(file, where, 'reading needs a question and explanation in both interface languages');
+        if (options.length < 2 || new Set(options.map((o) => o.text)).size !== options.length) throw new ContentError(file, where, 'reading needs distinct answer options');
+        built = { ...ex, id, passage, answer, options };
+        used.push(passage, ...options);
+        break;
+      }
+      case 'arrange': {
+        const item = want(where, ex.item);
+        const normal = (s: string) => s.replace(/[\s\p{P}]/gu, '').toLowerCase();
+        if (!Array.isArray(ex.chunks) || ex.chunks.length < 2 || ex.chunks.some((c) => !c.trim()) || normal(ex.chunks.join('')) !== normal(item.text)) throw new ContentError(file, where, 'sentence chunks must reconstruct the item');
+        if (item.zh && (!ex.chunksHant || ex.chunksHant.length !== ex.chunks.length || ex.chunksHant.some((c) => !c.trim()) || normal(ex.chunksHant.join('')) !== normal(item.zh.hant))) throw new ContentError(file, where, 'Mandarin chunks need matching Traditional text');
+        built = { ...ex, id, item };
+        used.push(item);
+        break;
+      }
       case 'speak': {
         const item = want(where, ex.item);
         if (ex.prompt && !['text', 'image', 'translation'].includes(ex.prompt)) throw new ContentError(file, where, `unknown prompt ${ex.prompt}`);
@@ -177,7 +197,7 @@ export function buildCourse(data: CourseFile, file = `${data.language}.json`): B
         if (!Array.isArray(list) || !list.length) throw new ContentError(file, where, `has no exercises for ${band}`);
         exercises[band] = list.map((ex, i) => buildExercise(`${where} ${band} #${i + 1}`, ex));
       }
-      return { id: l.id, unitId: u.id, title: l.title, icon: l.icon, kind: l.kind, exercises };
+      return { id: l.id, unitId: u.id, title: l.title, icon: l.icon, kind: l.kind, exercises, ...(l.guide ? { guide: l.guide } : {}) };
     });
     if (u.locked && lessons.length) throw new ContentError(file, `unit ${u.id}`, 'is locked but has lessons');
     const unit: Unit = { id: u.id, title: u.title, subtitle: u.subtitle, icon: u.icon, color: u.color, lessons };

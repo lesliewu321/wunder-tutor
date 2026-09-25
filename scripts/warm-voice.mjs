@@ -35,9 +35,11 @@ if (args.includes('--push')) {
   // Every take on disk that the live cache does not have yet, in batches (a bulk write is capped at 100 MB; a take is
   // 50–300 KB), as the hosted API keys them. What is live already stays as it is: the phones have those takes cached,
   // and a line the live teacher managed must not become the backup's because it did not manage here.
-  const KV = '138ec3dd03034f40ab92a58125cd6b07'; // wunder-tutor-tts-cache (npx wrangler kv namespace list)
+  // --remote on every command: wrangler 4 otherwise talks to a LOCAL simulation of the namespace (found 2026-09-25 —
+  // the 2026-09-23 push of 1,000 takes went there, not to production, which looked like a wrong binding).
+  const KV = '138ec3dd03034f40ab92a58125cd6b07'; // wunder-tutor-tts-cache (npx wrangler kv namespace list --remote)
   const wrangler = (...a) => execFileSync('npx', ['wrangler', ...a], { encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 64e6, stdio: ['ignore', 'pipe', 'inherit'] });
-  const live = new Set(JSON.parse(wrangler('kv', 'key', 'list', '--namespace-id', KV, '--prefix', 'tts:')).map((k) => k.name));
+  const live = new Set(JSON.parse(wrangler('kv', 'key', 'list', '--namespace-id', KV, '--prefix', 'tts:', '--remote')).map((k) => k.name));
   // A line the teacher could not say is two entries: the marker under its key and the reading under `<key>:backup`.
   // On Windows the local server wrote that second file as an alternate data stream of a file named `<key>` — readable
   // by that name, invisible to readdir — so it is read by name here. A marker without its reading is not pushed: live,
@@ -62,7 +64,7 @@ if (args.includes('--push')) {
     if (!batch.length) return;
     const file = join(tmp, `batch-${pushed}.json`);
     writeFileSync(file, JSON.stringify(batch));
-    wrangler('kv', 'bulk', 'put', file, '--namespace-id', KV);
+    wrangler('kv', 'bulk', 'put', file, '--namespace-id', KV, '--remote');
     pushed += batch.length;
     console.log(`  ${pushed}/${entries.length} added to the live cache`);
     batch = []; size = 0;

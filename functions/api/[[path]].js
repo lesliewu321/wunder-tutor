@@ -5,6 +5,7 @@
 // Secrets (uploaded with `npm run keys:push`, never in git): AZURE_SPEECH_KEY, AZURE_SPEECH_REGION, GEMINI_API_KEY;
 // BETA_ACCESS_CODE with `wrangler pages secret put`; optionally ANTHROPIC_API_KEY.
 // Bindings: KV namespace TTS_CACHE — accepted teacher takes, so each phrase is generated once;
+//           R2 bucket RECORDINGS (wunder-tutor-recordings) — consented practice recordings, 90-day expiry;
 //           Durable Object EGRESS (the `wunder-egress` Worker) — where calls to Google leave from.
 import { cleanApiKey, createApi } from '../../server/core.mjs';
 
@@ -84,6 +85,12 @@ const connectWebSocket = (env) => async (url) => {
   return { socket, alreadyOpen: true };
 };
 
+/** Consented recordings in R2: the key is the row's audio_path (locale/day/id.wav). */
+const r2Recordings = (bucket) => ({
+  put: (key, bytes, contentType) => bucket.put(key, bytes, { httpMetadata: { contentType } }),
+  delete: (keys) => bucket.delete(keys),
+});
+
 const kvCache = (kv) => ({
   get: async (key) => { const hit = await kv.get(`tts:${key}`, 'arrayBuffer'); return hit ? new Uint8Array(hit) : null; },
   put: (key, wav) => kv.put(`tts:${key}`, wav),
@@ -96,6 +103,7 @@ export async function onRequest({ request, env, waitUntil }) {
   api ??= createApi(env, {
     connectWebSocket: connectWebSocket(env), canDialWebSocket: true, requireAccessCode: true,
     ttsCache: env.TTS_CACHE ? kvCache(env.TTS_CACHE) : undefined,
+    recordings: env.RECORDINGS ? r2Recordings(env.RECORDINGS) : undefined,
     googleFetch: googleFetch(env), egressInfo: egressInfo(env),
   });
   // waitUntil: a contributed recording is stored after the score has gone back (server/core.mjs keepIfAsked).

@@ -66,6 +66,21 @@ export const deviceId = (): string => {
   }
 };
 
+/**
+ * "Delete my recordings": asks the server to forget every practice recording this device contributed (R2 and the
+ * table). Best effort: a failure is logged, never shown as a broken deletion of the device's own data.
+ */
+export async function forgetContributions(): Promise<number> {
+  try {
+    const res = await fetch(apiUrl('/api/contributions/forget'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ device: deviceId() }) });
+    if (!res.ok) throw new Error(`forget ${res.status}`);
+    return Number((await res.json())?.deleted ?? 0);
+  } catch (e) {
+    console.warn('[contribute] forget', e);
+    return 0;
+  }
+}
+
 export interface InviteAnswer {
   ok: boolean;
   /** 'new' / 'again' / 'master' when accepted; 'full', 'expired', 'disabled', 'unknown' when not. */
