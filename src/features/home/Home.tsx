@@ -49,7 +49,7 @@ export function Home() {
   // Never let simulated scores pass for real ones.
   const practiceMode = api !== null && !api.azure;
   // The Putonghua course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
-  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', fr: 'Français', ja: '日本語 Japanese', ko: '한국어 Korean', es: 'Español' };
+  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', ja: '日本語 Japanese', ko: '한국어 Korean', fr: 'Français', es: 'Español' }; // order (Leslie, 2026-09-25): French after Korean
   // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
   const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
 

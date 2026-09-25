@@ -44,8 +44,8 @@ const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
 /** The courses on offer first, then the ones coming soon (Leslie, 2026-09-22: "list coming soon languages last"). */
 const LEARN: { id: CourseId | 'de'; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
-  { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' },
-  { id: 'ko', label: 'onboarding.languages.learn.ko', ready: true, lang: 'ko' }, { id: 'es', label: 'onboarding.languages.learn.es', ready: true, lang: 'es' },
+  { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' }, { id: 'ko', label: 'onboarding.languages.learn.ko', ready: true, lang: 'ko' },
+  { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'es', label: 'onboarding.languages.learn.es', ready: true, lang: 'es' },
   { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
 ];
 /**

@@ -19,7 +19,7 @@ import { AccountPanel } from './AccountPanel';
 import { InviteCodeForm } from './InviteCodeForm';
 
 const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
-const COURSES: CourseId[] = ['en', 'zh', 'fr', 'ja', 'ko', 'es'];
+const COURSES: CourseId[] = ['en', 'zh', 'ja', 'ko', 'fr', 'es']; // the same order as Home and setup (French after Korean, Leslie 2026-09-25)
 /** A course's name on the Me card: English carries the accent; Putonghua and French keep their own names. */
 const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { zh: 'settings.me.course.zh', fr: 'settings.me.course.fr', ja: 'settings.me.course.ja', ko: 'settings.me.course.ko', es: 'settings.me.course.es' };
 
