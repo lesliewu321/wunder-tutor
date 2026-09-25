@@ -3,6 +3,7 @@ import { tc } from '../i18n';
 
 export const HOME_LANGUAGES: { id: HomeLanguage; label: string; native: string }[] = [
   { id: 'yue', label: 'Cantonese', native: '廣東話' },
+  { id: 'en', label: 'English', native: 'English' },
   { id: 'zh', label: 'Mandarin', native: '普通话' },
   { id: 'es', label: 'Spanish', native: 'Español' },
   { id: 'de', label: 'German', native: 'Deutsch' },

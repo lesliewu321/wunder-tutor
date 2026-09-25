@@ -3,13 +3,19 @@ import type { MouthPose, PhonemeInfo } from '../phonemes';
 
 // The Mandarin "sounds" a Hong Kong child practises: the four tones, and the sound groups Cantonese speakers find
 // hardest in Putonghua. Same shape as the English catalogue so the Lab, drills and progress work unchanged.
+// An English speaker at home (`en`) meets the same list from the other side: the tones are the whole difficulty
+// (English has no lexical tone — the 3rd tone worst, then the 2nd, which sounds like a question), then ü, which English
+// lacks, and the three sibilant sets, which English collapses into its own sh/ch/j and s/ts; n/l is no trouble at all.
 //
 // The wording is the English source. Other App languages translate it in src/i18n/<language>/content.json under
 // `sound.zh:…` (read by `phonemeInfo` in ../phonemes). A translation quotes characters the way they are written here —
 // in Simplified, like the scorer — and `phonemeInfo` shows them in the learner's script, as it does for the English.
 
 const pose = (p: Partial<MouthPose>): MouthPose => ({ open: 0.3, round: 0, spread: 0.2, tongue: 'rest', air: 'none', voiced: true, ...p });
-const yue = (boost: number, heardAs?: PhonemeId): Partial<Record<HomeLanguage, { boost: number; heardAs?: PhonemeId }>> => ({ yue: { boost, heardAs } });
+type L1 = Partial<Record<HomeLanguage, { boost: number; heardAs?: PhonemeId }>>;
+const yue = (boost: number, heardAs?: PhonemeId): L1 => ({ yue: { boost, heardAs } });
+/** Cantonese and English priors side by side: `l1(yue(0.05), 0.2)` — the English boost has no "heard as" because Azure names no substitute for a tone or a vowel it did not hear. */
+const l1 = (cantonese: L1, enBoost: number): L1 => ({ ...cantonese, en: { boost: enBoost } });
 
 export const ZH_SOUNDS: PhonemeInfo[] = [
   {
@@ -23,7 +29,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Start high', 'Stay level', 'Don’t drop at the end'],
     problem: 'Tone 1 should stay high and flat.',
     detail: 'First tone, Chao 55: high and level. Cantonese has high level tones too, but learners often start it too low or let it sag.',
-    difficulty: 0.45, l1: yue(0.05),
+    difficulty: 0.45, l1: l1(yue(0.05), 0.2),
   },
   {
     id: 'zh:t2', label: 'á', name: 'Tone 2 · rising', example: '麻 má', category: 'tone', contour: [3, 3, 3.5, 4.2, 5],
@@ -36,7 +42,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Start in the middle', 'Slide up', 'Finish high'],
     problem: 'Tone 2 should rise all the way up.',
     detail: 'Second tone, Chao 35: a clear rise. It is easily confused with the 3rd tone, which also rises in isolation but starts much lower.',
-    difficulty: 0.55, l1: yue(0.12),
+    difficulty: 0.55, l1: l1(yue(0.12), 0.25),
   },
   {
     id: 'zh:t3', label: 'ǎ', name: 'Tone 3 · low dip', example: '马 mǎ', category: 'tone', contour: [2.5, 1.6, 1.2, 1.6, 3.5],
@@ -49,7 +55,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Start a bit low', 'Go to the very bottom', 'Come up a little at the end'],
     problem: 'Tone 3 needs to go really low.',
     detail: 'Third tone, Chao 214 in isolation, 21 when followed by other syllables, and 35 (like tone 2) before another 3rd tone: 你好 = ní hǎo.',
-    difficulty: 0.65, l1: yue(0.15),
+    difficulty: 0.65, l1: l1(yue(0.15), 0.3),
   },
   {
     id: 'zh:t4', label: 'à', name: 'Tone 4 · falling', example: '大 dà', category: 'tone', contour: [5, 4.4, 3.5, 2.4, 1.2],
@@ -62,7 +68,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Start high', 'Drop fast', 'Land at the bottom'],
     problem: 'Tone 4 should fall from high all the way down.',
     detail: 'Fourth tone, Chao 51: a full, quick fall. Learners often fall only halfway, which can sound like a 1st tone.',
-    difficulty: 0.45, l1: yue(0.05),
+    difficulty: 0.45, l1: l1(yue(0.05), 0.2),
   },
   {
     id: 'zh:sh', label: 'zh ch sh', name: 'Curled-tongue sounds', example: '是 shì', category: 'consonant',
@@ -75,7 +81,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Tongue tip up', 'Curl it back a little', 'Push the air out'],
     problem: 'Curl your tongue back — it sounded like the flat “s”.',
     detail: 'zh, ch, sh and r are retroflex. Cantonese has no retroflex sounds, so they easily become z, c, s (是 → 四, 知 → 资).',
-    difficulty: 0.6, l1: yue(0.25, 'zh:flat'),
+    difficulty: 0.6, l1: l1(yue(0.25, 'zh:flat'), 0.1),
   },
   {
     id: 'zh:s', label: 'z c s', name: 'Flat-tongue sounds', example: '四 sì', category: 'consonant',
@@ -88,7 +94,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Tongue tip flat behind your teeth', 'Teeth nearly together', 'Hiss — no curling'],
     problem: 'Keep your tongue flat — it curled back into “sh”.',
     detail: 'z, c, s are made with a flat tongue tip at the teeth. Learners who have just learned zh/ch/sh sometimes curl everything.',
-    difficulty: 0.4, l1: yue(0.05),
+    difficulty: 0.4, l1: l1(yue(0.05), 0.15),
   },
   {
     id: 'zh:j', label: 'j q x', name: 'Smiley j q x', example: '西 xī', category: 'consonant',
@@ -101,7 +107,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Smile', 'Tongue tip behind your bottom teeth', 'Middle of your tongue up'],
     problem: 'For j, q and x, keep your tongue tip down and smile.',
     detail: 'j, q, x are made with the middle of the tongue. Cantonese speakers often use a z/c/s or a “j” as in “jeep” instead.',
-    difficulty: 0.5, l1: yue(0.15),
+    difficulty: 0.5, l1: l1(yue(0.15), 0.15),
   },
   {
     id: 'zh:ü', label: 'ü', name: 'Round ü', example: '鱼 yú', category: 'vowel',
@@ -114,7 +120,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Say “ee”', 'Keep your tongue still', 'Round your lips'],
     problem: 'For ü, keep your tongue at “ee” but round your lips.',
     detail: 'ü (written u after j, q, x, y) is a rounded “ee”. It slips to “ee” (鱼 → 姨) or “oo” (绿 → 路).',
-    difficulty: 0.5, l1: yue(0.1),
+    difficulty: 0.5, l1: l1(yue(0.1), 0.25),
   },
   {
     id: 'zh:n', label: 'n / l', name: 'N and L', example: '你 nǐ', category: 'consonant',
@@ -127,7 +133,7 @@ export const ZH_SOUNDS: PhonemeInfo[] = [
     steps: ['Tongue tip behind your top teeth', 'n: hum through your nose', 'l: let it flow over the sides'],
     problem: 'Keep n (through your nose) and l (round your tongue) apart.',
     detail: 'Many Hong Kong speakers merge n into l (你 nǐ → lǐ, 男 nán → lán).',
-    difficulty: 0.5, l1: yue(0.2, 'zh:l'),
+    difficulty: 0.5, l1: l1(yue(0.2, 'zh:l'), -0.1),
   },
   {
     // The label's hyphens are non-breaking, so a small tile wraps it as "‑n /" over "‑ng".

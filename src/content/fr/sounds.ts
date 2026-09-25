@@ -18,9 +18,9 @@ import type { MouthPose, PhonemeInfo } from '../phonemes';
 // `sound.<id>.…`, read by `phonemeInfo` in ../phonemes.
 
 const pose = (p: Partial<MouthPose>): MouthPose => ({ open: 0.3, round: 0, spread: 0.2, tongue: 'rest', air: 'none', voiced: true, ...p });
-/** Hong Kong's first language, and the English that every learner here already has. Both push French the same way. */
+/** Hong Kong's first languages, and English — the English every learner here already has, or the home language itself. All three push French the same way. */
 const l1 = (yueBoost: number, heardAs?: PhonemeId): Partial<Record<HomeLanguage, { boost: number; heardAs?: PhonemeId }>> =>
-  ({ yue: { boost: yueBoost, heardAs }, zh: { boost: yueBoost, heardAs } });
+  ({ yue: { boost: yueBoost, heardAs }, zh: { boost: yueBoost, heardAs }, en: { boost: yueBoost, heardAs } });
 
 export const FR_SOUNDS: PhonemeInfo[] = [
   {

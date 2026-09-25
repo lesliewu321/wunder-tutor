@@ -19,8 +19,12 @@ export type Locale = Accent | 'zh-CN' | 'fr-FR' | 'ja-JP';
 export type CourseId = 'en' | 'zh' | 'fr' | 'ja';
 /** Mandarin tone: 1–4, and 5 for the neutral (light) tone. */
 export type Tone = 1 | 2 | 3 | 4 | 5;
-/** 'yue' = Cantonese, 'zh' = Mandarin — their speakers make different mistakes in English, so they are kept apart. */
-export type HomeLanguage = 'yue' | 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'hi' | 'ar' | 'other';
+/**
+ * 'yue' = Cantonese, 'zh' = Mandarin — their speakers make different mistakes in English, so they are kept apart.
+ * 'en' = English at home (an expat family in Hong Kong, an English-speaking adult): the Mandarin, French and Japanese
+ * courses predict an English speaker's trouble sounds from it; on the English course it simply adds no priors.
+ */
+export type HomeLanguage = 'en' | 'yue' | 'es' | 'fr' | 'de' | 'pt' | 'zh' | 'ja' | 'ko' | 'hi' | 'ar' | 'other';
 export type Level = 'new' | 'some' | 'confident';
 /**
  * Why someone is learning. A child's reasons and a grown-up's are not the same four — a 40-year-old is not learning
