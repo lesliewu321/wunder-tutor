@@ -1,5 +1,5 @@
 import { ReminderLink } from '../../notifications/Notifications';
-import { LanguageFlag, flagEmoji } from '../../ui/LanguageFlag';
+import { LanguageFlag } from '../../ui/LanguageFlag';
 import { TeacherVoiceSelect } from './TeacherVoiceSelect';
 import { useEffect, useState } from 'react';
 import { handleFor, makeHandle } from '../../engine/handles';
@@ -204,7 +204,7 @@ export function ParentZone() {
         {/* The app's own wording — never what is being learned. For this device, whoever is learning. */}
         <div className="form-card form-card--gap">
           <label className="select-row"><span><LanguageFlag language={settings.language ?? language()} /> {t('settings.look.language')}</span>
-            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as Language })}>{LANGUAGES.map((l) => <option key={l.id} value={l.id}>{flagEmoji(l.id)} {l.label}</option>)}</select>
+            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as Language })}>{LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}</select>
           </label>
         </div>
         <div className="segmented" role="group" aria-label={t('settings.look.theme')}>
@@ -229,7 +229,7 @@ export function ParentZone() {
             </label>
           )}
           <label className="select-row"><span><LanguageFlag language={p.homeLanguage} /> {t('settings.learning.home')}</span>
-            <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{flagEmoji(l.id)} {homeLanguageLabel(l.id)}</option>)}</select>
+            <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{homeLanguageLabel(l.id)}</option>)}</select>
           </label>
         </div>
       </section>
