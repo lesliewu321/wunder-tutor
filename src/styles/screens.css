@@ -462,3 +462,12 @@
 /* Tutu stays visible during setup at every age. */
 :root[data-band='adult'] .onboard .mascot { display: block; }
 .handover__tutu { width: clamp(190px, 32vh, 280px); height: auto; max-width: 80%; }
+
+/* Voice names and translated labels must fit on narrow settings screens. */
+.teacher-voices .select-row select { min-width: 0; }
+.teacher-voices .account__row { padding-bottom: 8px; }
+.teacher-voices .account__row .btn { white-space: normal; }
+@media (max-width: 540px) {
+  .teacher-voices .select-row { align-items: stretch; flex-direction: column; gap: 6px; padding: 12px 0; }
+  .teacher-voices .select-row select { max-width: 100%; width: 100%; }
+}

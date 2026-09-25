@@ -1,8 +1,24 @@
 # Selectable teacher voices
 
-Settings → Teacher voice provides Automatic, Azure Neural, Qwen, Google Chirp 3 HD, Gemini and This device's voice. The choice is saved on this device and a preview reads a fixed sample in the active course language. Unconfigured cloud services are disabled in the dropdown. Availability reflects configuration and access, not a guarantee that an upstream key has passed a synthesis call.
+Settings → Teacher voice lets a user choose a course language and its primary and backup voices, preview each one, or choose **Use app defaults**. The language selector edits voice settings without switching the active course. User overrides are saved on this device, separately for each course; both English accents share the English setting.
 
-Automatic tries configured Gemini, Azure, Chirp and Qwen voices in that order, then a same-language device voice. For Hong Kong Cantonese it uses Azure, Chirp and Qwen; Gemini is disabled. Provider failures can fall through, while access/account limits stop additional cloud attempts. An explicit selection never silently plays a different provider after failure. Existing pronunciation scoring remains Azure.
+## Owner defaults
+
+Edit the seven rows in **src/speech/teacherVoiceDefaults.ts**, then run the required checks, commit and deploy from a clean checkout. This is the app-wide configuration, not a per-user preference. No extra credentials or server configuration are needed. Provider IDs: azure, qwen, chirp, device; backup may also be none. Keep primary and backup different. Gemini is hidden from learner voice settings; Scan and the internal public onboarding preview retain Gemini.
+
+| Course language | Primary | Backup |
+| --- | --- | --- |
+| English (both accents) | Google Chirp 3 HD | Azure Neural |
+| Putonghua | Qwen | Google Chirp 3 HD |
+| Cantonese | Qwen | Google Chirp 3 HD |
+| Japanese | Google Chirp 3 HD | Azure Neural |
+| Korean | Google Chirp 3 HD | Azure Neural |
+| French | Google Chirp 3 HD | Azure Neural |
+| Spanish | Google Chirp 3 HD | Azure Neural |
+
+A user who has not overridden a language inherits later owner changes after loading the updated app. Reset stores inheritance rather than copying today's values. Saved Gemini preferences inherit the current defaults. Other older explicit whole-device choices remain provider-only overrides until that course is changed or reset; in particular, an old device-only choice never starts sending text to cloud providers.
+
+Playback tries the selected primary, then backup if unavailable or failing, then a matching device voice if available. **No backup** makes the primary the only attempt. Access/account limits stop further cloud attempts. Preview plays only the selected slot and does not silently switch providers. Unconfigured services are disabled in the dropdown; availability reflects configuration and access, not proof of successful synthesis. Existing pronunciation scoring remains Azure.
 
 ## Server configuration
 
@@ -17,7 +33,7 @@ Keys are server-only. The Google Cloud TTS key is separate from the Gemini AI St
 
 For the QwenCloud API Keys page displaying `maas.qwencloudapi.com`, use its **Pay-As-You-Go** key as `DASHSCOPE_API_KEY` in the ignored `.env` and set `QWEN_TTS_REGION=qwencloud`. A Singapore selection is not required for this endpoint; `qwencloud` names the service, not a data-residency guarantee. Both key validation and speech generation use that host. The app adds the speech API path itself; do not paste the OpenAI-compatible or Anthropic-compatible base URL into the region setting. Alibaba Model Studio keys still use `singapore` (`dashscope-intl.aliyuncs.com`) or `beijing` (`dashscope.aliyuncs.com`). There is no automatic fallback between services.
 
-Leslie runs npm run keys:push to validate and upload configured keys from the ignored .env file, then redeploys. The script includes the optional keys and Qwen region. It checks Qwen key access and Google's voice list without paid speech generation; use the in-app preview to check actual synthesis afterwards. No keys are added by this change. On 2026-09-25 the production secret inventory contained Azure and Gemini, but no Qwen or Google Cloud TTS keys.
+Leslie runs npm run keys:push to validate and upload configured keys from the ignored .env file, then redeploys. The script includes the optional keys and Qwen region. It checks Qwen key access and Google's voice list without paid speech generation; use the in-app preview to check actual synthesis afterwards. No keys are added by this change. All four providers were configured at the latest authenticated production check on 2026-09-25.
 
 ## Cache and access
 
@@ -25,7 +41,7 @@ The browser stores generated audio in memory and IndexedDB, keyed by provider/mo
 
 Learner-authored text marked ephemeral is not written to the shared server or process cache. Requests use existing account/invite authorization, per-client rate limits, account usage checks and a generation budget. Alternative providers do not gain Gemini's public onboarding preview exception. Qwen downloads only a validated provider OSS audio URL over HTTPS, without the API key and without following redirects. Only text goes to these TTS APIs; pronunciation recordings still use the existing assessment route.
 
-Provider APIs are mocked in tests; Azure can be tried with existing deployment credentials. Qwen and Chirp require owner configuration before a real synthesis test. Mandarin teacher-tone calibration remains specific to Gemini; do not claim that the new voices have passed the existing calibrated pronunciation gate. Audition them on real devices before changing the default.
+Automated routing tests mock provider APIs. Authenticated production Qwen and Chirp generation for English and Cantonese returned valid WAV audio on 2026-09-25; details are in HANDOFF.md. Mandarin teacher-tone calibration remains specific to Gemini; do not claim that the new voices have passed the existing calibrated pronunciation gate. The table above follows Leslie’s requested defaults; it is not a measured quality ranking.
 
 Official implementation references (checked 2026-09-25):
 - [QwenCloud API keys](https://docs.qwencloud.com/api-reference/preparation/api-key)

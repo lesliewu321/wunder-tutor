@@ -13,7 +13,7 @@ const server = () => {
   vi.stubGlobal('fetch', vi.fn(async () => {
     if (s.offline) throw new TypeError('Failed to fetch');
     const a = s.authorized;
-    return new Response(JSON.stringify({ ok: true, needsCode: true, codeSet: true, authorized: a, azure: a, gemini: a, claude: a, ttsVersion: a ? 'v1' : null }), { headers: { 'content-type': 'application/json' } });
+    return new Response(JSON.stringify({ ok: true, needsCode: true, codeSet: true, authorized: a, azure: a, gemini: a, claude: a, voiceProviders: { chirp: a, azure: a, qwen: a, gemini: a }, ttsVersion: a ? 'v1' : null }), { headers: { 'content-type': 'application/json' } });
   }));
   return s;
 };
@@ -71,7 +71,7 @@ describe('choices that follow the server', () => {
     s.authorized = true;
     const { refreshHealth } = await import('../speech');
     await refreshHealth();
-    expect(await voice.engine()).toBe('gemini');
+    expect(await voice.engine()).toBe('chirp');
     expect((await getTutor(cafe)).constructor.name).toBe('ClaudeTutor');
   });
 

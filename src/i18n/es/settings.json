@@ -184,5 +184,16 @@
   "settings.voice.connectionRequired": "Comprueba la conexión",
   "settings.beta.accountAccess": "Tu cuenta ya tiene acceso a la evaluación de pronunciación y a las voces en línea. No necesitas un código de invitación en este dispositivo.",
   "settings.beta.unchecked": "Este código aún no se ha comprobado. Pulsa el botón para guardar el código y comprobarlo.",
-  "settings.beta.optional": "Si tienes un código de invitación, puedes introducirlo aquí."
+  "settings.beta.optional": "Si tienes un código de invitación, puedes introducirlo aquí.",
+  "settings.voice.course": "Idioma del curso",
+  "settings.voice.primary": "Voz principal",
+  "settings.voice.backup": "Voz de respaldo",
+  "settings.voice.noBackup": "Sin voz de respaldo",
+  "settings.voice.pairHint": "La voz de respaldo se usa si la principal no está disponible o falla. Tus preferencias se guardan por idioma en este dispositivo.",
+  "settings.voice.deviceFallbackHint": "Si ambas voces fallan, se intenta usar una voz del dispositivo en el mismo idioma, si está disponible.",
+  "settings.voice.previewPrimary": "Escuchar voz principal",
+  "settings.voice.previewBackup": "Escuchar voz de respaldo",
+  "settings.voice.resetPair": "Usar valores de la app",
+  "settings.voice.defaultPair": "Se usan los valores de la app.",
+  "settings.voice.customPair": "Se usan tus preferencias guardadas."
 }

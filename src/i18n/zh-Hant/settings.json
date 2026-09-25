@@ -179,5 +179,16 @@
   "settings.voice.connectionRequired": "請檢查連線",
   "settings.beta.accountAccess": "你的帳戶已可使用發音評分和雲端聲音。這部裝置無需再輸入邀請碼。",
   "settings.beta.unchecked": "此邀請碼尚未驗證。請按「儲存邀請碼」進行驗證。",
-  "settings.beta.optional": "如有邀請碼，你可以在此輸入。"
+  "settings.beta.optional": "如有邀請碼，你可以在此輸入。",
+  "settings.voice.course": "課程語言",
+  "settings.voice.primary": "主要聲音",
+  "settings.voice.backup": "後備聲音",
+  "settings.voice.noBackup": "不設後備",
+  "settings.voice.pairHint": "主要聲音無法使用或播放失敗時，會使用後備聲音。你的選擇會按語言儲存在此裝置。",
+  "settings.voice.deviceFallbackHint": "如果兩個聲音都無法播放，會嘗試使用裝置上相同語言的聲音（如有）。",
+  "settings.voice.previewPrimary": "試聽主要聲音",
+  "settings.voice.previewBackup": "試聽後備聲音",
+  "settings.voice.resetPair": "使用應用程式預設",
+  "settings.voice.defaultPair": "正在使用應用程式預設。",
+  "settings.voice.customPair": "正在使用你儲存的選擇。"
 }

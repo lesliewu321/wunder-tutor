@@ -1,4 +1,4 @@
-import { voiceSupports, automaticVoices, selectedVoice, teacherVoiceChoice, voiceConfigured, type CloudVoice } from './teacherPreference';
+import { voiceSupports, selectedVoice, teacherVoiceOrder, teacherVoicePair, hasTeacherVoiceOverride, voiceConfigured, type CloudVoice, type TeacherVoice as VoiceProvider } from './teacherPreference';
 import { createStore, get, set } from 'idb-keyval';
 import type { Accent, Locale, SpeakItem } from '../domain/types';
 import { apiFetch, apiHealth, knownHealth } from './health';
@@ -12,6 +12,8 @@ export interface SpeakOptions {
   /** The course's speech locale, including zh-HK for Hong Kong Cantonese. */
   accent: Locale;
   slow?: boolean;
+  /** Preview one provider without changing preferences or falling through to another. */
+  provider?: VoiceProvider;
   /** Isolated syllables ("rah", "thee") need different handling from words and sentences. */
   kind?: SpeakItem['kind'];
   /** A learner's own text (Say it right): spoken, but not kept in the server's shared cache. */
@@ -271,12 +273,12 @@ class TeacherVoice implements ReferenceVoice {
    * changed (a new invite code, a failed check). Read once at start, the teacher stayed silent after a code was entered
    * in Settings, until the app was closed (see fromHealth).
    */
-  private async ready(): Promise<GeminiTakes | null> {
-    if (teacherVoiceChoice() === 'device') return null;
+  private async ready(locale: Locale = 'en-US'): Promise<GeminiTakes | null> {
+    if (teacherVoicePair(locale).primary === 'device') return null;
     const h = await apiHealth();
-    const provider = selectedVoice(h);
+    const provider = selectedVoice(h, locale);
     if (provider === 'device') return null;
-    if (!voiceConfigured(provider, h)) throw new VoiceError('take', 'voice_not_configured');
+    if (!provider || !voiceConfigured(provider, h)) throw new VoiceError('take', 'voice_not_configured');
     let takes = this.takes.get(provider);
     if (!takes) { takes = new GeminiTakes(provider); this.takes.set(provider, takes); }
     // Preserve existing Gemini cache keys; newly selectable providers get their own namespace.
@@ -290,16 +292,16 @@ class TeacherVoice implements ReferenceVoice {
    * code, "no", which on a phone (no device voice) became "Sound isn't working on this device" (2026-09-22). Before
    * the server has answered at all, the answer is yes: speak() finds out, and says why if it cannot.
    */
-  available(): boolean {
+  available(locale: Locale = 'en-US'): boolean {
     const h = knownHealth();
     if (!h) return true;
-    const provider = selectedVoice(h);
-    return provider === 'device' ? this.web.available() : voiceConfigured(provider, h);
+    const provider = selectedVoice(h, locale);
+    return provider === 'device' ? this.web.available() : !!provider && voiceConfigured(provider, h);
   }
 
   /** Which engine is in use — shown in the Parent Zone. */
-  async engine(): Promise<CloudVoice | 'device' | 'none'> {
-    const takes = await this.ready();
+  async engine(locale: Locale = 'en-US'): Promise<CloudVoice | 'device' | 'none'> {
+    const takes = await this.ready(locale);
     return takes?.provider ?? (this.web.available() ? 'device' : 'none');
   }
 
@@ -307,7 +309,7 @@ class TeacherVoice implements ReferenceVoice {
   prefetch(text: string, opts: SpeakOptions): void {
     // Preview the locale-aware primary without playing or creating a fallback cascade.
     void apiHealth().then(h => {
-      const choice = teacherVoiceChoice(), provider = choice === 'auto' ? automaticVoices(h, opts.accent)[0] : choice;
+      const provider = opts.provider ?? selectedVoice(h, opts.accent);
       if (!provider || provider === 'device' || !voiceSupports(provider, opts.accent) || !voiceConfigured(provider, h)) return;
       let takes = this.takes.get(provider);
       if (!takes) { takes = new GeminiTakes(provider); this.takes.set(provider, takes); }
@@ -318,24 +320,43 @@ class TeacherVoice implements ReferenceVoice {
 
   async speak(text: string, opts: SpeakOptions): Promise<void> {
     this.cancelPending?.();
-    const mine = ++this.seq, choice = teacherVoiceChoice();
+    const mine = ++this.seq, order = opts.provider ? [opts.provider] : teacherVoiceOrder(opts.accent);
     this.web.stop(); pauseCurrent();
     const cancelled = new Promise<void>(resolve => { this.cancelPending = resolve; });
     // A stopped/superseded caller settles immediately; shared downloads may still warm the cache.
-    try { await Promise.race([this.perform(text, opts, mine, choice), cancelled]); }
+    try { await Promise.race([this.perform(text, opts, mine, order), cancelled]); }
     finally { if (mine === this.seq) this.cancelPending = null; }
   }
 
-  private async perform(text: string, opts: SpeakOptions, mine: number, choice: ReturnType<typeof teacherVoiceChoice>): Promise<void> {
-    if (choice === 'device') return this.web.speak(text, opts);
+  private async perform(text: string, opts: SpeakOptions, mine: number, order: VoiceProvider[]): Promise<void> {
+    let refused: VoiceError | null = null;
+    // Device-only settings work immediately offline and never make a cloud speech request.
+    if (order[0] === 'device') {
+      try { return await this.web.speak(text, opts); }
+      catch (e) { refused = e instanceof VoiceError ? e : new VoiceError('playback'); }
+      if (order.length === 1) throw refused;
+      order = order.slice(1);
+    }
     const h = await apiHealth();
     if (mine !== this.seq) return;
-    if (!voiceSupports(choice, opts.accent)) throw new VoiceError('take', 'voice_locale_unavailable');
-    const candidates: CloudVoice[] = choice === 'auto' ? automaticVoices(h, opts.accent) : [choice];
-    if (choice === 'auto' && opts.preview && opts.accent !== 'zh-HK' && !candidates.length) candidates.push('gemini');
-    let refused: VoiceError | null = null;
+    if (opts.provider && !voiceSupports(opts.provider, opts.accent)) throw new VoiceError('take', 'voice_locale_unavailable');
+    const candidates = order.filter(id => voiceSupports(id, opts.accent) && voiceConfigured(id, h));
+    // Only the existing public onboarding line may use Gemini before access is granted.
+    const publicPreview = !opts.provider && !hasTeacherVoiceOverride(opts.accent) && opts.preview && opts.accent !== 'zh-HK'
+      && !candidates.some(id => id !== 'device');
+    if (publicPreview) candidates.unshift('gemini');
+    if (opts.provider && !candidates.length) throw new VoiceError('take', 'voice_not_configured');
+    let cloudBlocked = false;
     for (const provider of candidates) {
-      if (choice !== 'auto' && !voiceConfigured(provider, h)) throw new VoiceError('take', 'voice_not_configured');
+      if (mine !== this.seq) return;
+      if (provider === 'device') {
+        if (this.web.available()) {
+          try { return await this.web.speak(text, opts); }
+          catch (e) { refused ??= e instanceof VoiceError ? e : new VoiceError('playback'); }
+        }
+        continue;
+      }
+      if (cloudBlocked) continue;
       let takes = this.takes.get(provider);
       if (!takes) { takes = new GeminiTakes(provider); this.takes.set(provider, takes); }
       takes.version = provider === 'gemini' ? h.ttsVersion : provider + '/' + (h.voiceVersions?.[provider] ?? h.ttsVersion);
@@ -344,17 +365,13 @@ class TeacherVoice implements ReferenceVoice {
       catch (e) {
         if (mine !== this.seq) return;
         refused = e instanceof VoiceError ? e : new VoiceError('take');
-        // Access and account/budget limits apply to every cloud provider. Do not multiply paid attempts.
-        if (['daily_limit', 'rate_limited', 'tts_budget_exceeded', 'unauthorized', 'http_401', 'http_403'].includes(refused.code ?? '')) break;
+        // Shared access/account limits must not trigger another paid provider request.
+        cloudBlocked = ['daily_limit', 'rate_limited', 'tts_budget_exceeded', 'unauthorized', 'access_code_required', 'http_401', 'http_403'].includes(refused.code ?? '');
         continue;
       }
       if (mine !== this.seq) return;
       try { await playBlob(blob, provider === 'qwen' && opts.slow ? 0.65 : 1); return; }
       catch { if (mine !== this.seq) return; refused = new VoiceError('playback'); }
-    }
-    if (choice === 'auto' && this.web.available()) {
-      try { return await this.web.speak(text, opts); }
-      catch (e) { throw refused ?? (e instanceof VoiceError ? e : new VoiceError('playback')); }
     }
     throw refused ?? new VoiceError('playback');
   }

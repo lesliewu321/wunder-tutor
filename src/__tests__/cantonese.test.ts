@@ -54,7 +54,7 @@ describe('Hong Kong Cantonese integration', () => {
  });
  it('uses Hong Kong voice routes and its flag instead of Mandarin or an English default', () => {
   const h={gemini:true,voiceProviders:{gemini:true,azure:true,chirp:true,qwen:true}} as ApiHealth;
-  expect(automaticVoices(h,'zh-HK')).toEqual(['azure','chirp','qwen']);
+  expect(automaticVoices(h,'zh-HK')).toEqual(['qwen','chirp']);
   expect(voiceSupports('gemini','zh-HK')).toBe(false);
   expect(flagCountry('yue')).toBe('hk'); expect(flagCountry('zh')).toBe('cn');
   expect(flagCountry('en','en-US')).toBe('us'); expect(flagCountry('en','en-GB')).toBe('gb');

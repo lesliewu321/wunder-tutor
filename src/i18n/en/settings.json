@@ -184,5 +184,16 @@
   "settings.voice.connectionRequired": "Check connection",
   "settings.beta.accountAccess": "Your account already has access to pronunciation scoring and cloud voices. No invite code is needed on this device.",
   "settings.beta.unchecked": "This code has not been checked. Choose Save code to check it.",
-  "settings.beta.optional": "You can add an invite code here if you have one."
+  "settings.beta.optional": "You can add an invite code here if you have one.",
+  "settings.voice.course": "Course language",
+  "settings.voice.primary": "Primary voice",
+  "settings.voice.backup": "Backup voice",
+  "settings.voice.noBackup": "No backup",
+  "settings.voice.pairHint": "The backup plays if the primary voice is unavailable or fails. Your overrides are saved per language on this device.",
+  "settings.voice.deviceFallbackHint": "If both voices fail, a matching device voice is tried when available.",
+  "settings.voice.previewPrimary": "Preview primary",
+  "settings.voice.previewBackup": "Preview backup",
+  "settings.voice.resetPair": "Use app defaults",
+  "settings.voice.defaultPair": "Using app defaults.",
+  "settings.voice.customPair": "Using your saved choices."
 }

@@ -32,9 +32,8 @@ export function ChoiceExercise({ ex, onDone, test = false }: { ex: ChoiceEx; onD
   const options = useMemo(() => (ex.type === 'choose-heard' ? shuffle(ex.options, ex.id) : ex.pair), [ex]);
   // A test takes the first pick as the answer: marked right or wrong, no second go, no slow replay to teach it.
   const solved = test ? picked !== null : picked === answer.id;
-  const canHear = voice.available();
-
   const locale = localeOf(answer, profile.accent);
+  const canHear = voice.available(locale);
   const say = async (text: string, slow = false) => {
     setPlaying(true);
     try { await voice.speak(text, { accent: locale, slow }); } catch (e) { toast(await noSoundMessage(profile.band, e), '🔇'); }
