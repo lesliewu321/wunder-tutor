@@ -237,3 +237,26 @@ This update supersedes the communication-pack status and old lesson counts above
 - Temporary QA servers/checkouts cleaned up; Leslie's 5173 server untouched. Unrelated lesson library, README and
   docs/NOTIFICATIONS-PLAN.md changes remain untouched. Implementation details: notifications/README.md. This note
   is committed after deployment and does not change the deployed application commit.
+
+
+## 2026-09-25 — QwenCloud API key setup correction
+
+- Implementation commit: 7207ca4. Pages deployment id: none for this change (not deployed).
+- Leslie's screenshot shows QwenCloud Pay-As-You-Go at maas.qwencloudapi.com, not the Alibaba
+  Model Studio regional setup. QWEN_TTS_REGION=qwencloud now selects that host for both key validation
+  and qwen3-tts-flash speech generation. Existing singapore/beijing settings and the Singapore default remain.
+- Put the QwenCloud Pay-As-You-Go key in the ignored .env as DASHSCOPE_API_KEY and set
+  QWEN_TTS_REGION=qwencloud. Leslie runs npm run keys:push; deployment from a clean tree and an actual
+  Settings -> Teacher voice -> Qwen preview are still required. No secrets were read, changed or uploaded.
+- The shared endpoint allowlist rejects unknown settings; authenticated Qwen requests reject redirects.
+  Endpoint-specific audio caching, the existing OSS download allowlist, and credential-free audio downloads remain.
+  QwenCloud is a service selector, not a statement about data residency. Updated .env.example and
+  server/TEACHER-VOICES.md with official QwenCloud API-key and speech-synthesis references.
+- Focused voice tests: 16 passed (11 new Qwen tests covering endpoint selection, supported locales, slow
+  replay, cache separation, refused keys and unsafe download locations). Provider responses are mocked;
+  this does not establish that this account can synthesize speech or which OSS host its real response uses.
+- Required checks ran in the shared checkout: content:check and i18n:check passed. npm test had 1791 passing,
+  2 skipped and 2 failures in the ongoing Cantonese work (Azure locale list and conversation locale map).
+  typecheck likewise failed on unfinished Cantonese course/test/translation types. These unrelated changes
+  were preserved and excluded from commit 7207ca4, including concurrent edits to teacher-voices.mjs.
+- No deployment, GitHub push, mobile build or dev-server restart. A clean release and live voice preview remain pending.
