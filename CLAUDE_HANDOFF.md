@@ -286,6 +286,11 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   Then ("accompanied by date and language … mid autumn only zh … christmas all my languages", "don't write xmas
   lessons yet"): each event has courses (languages) + days (moving) or every (MM-DD, fixed); Christmas = all six
   courses, every 12-25, lessons {} (hidden until written). Card top line shows the day and the language.
+- **Conversation lines' meanings (commit 1bf66fb, DEPLOYED — Pages deployment 0fcf2047, checked live):** the scenario files
+  sit outside the item index, so the export now walks every scenario too (1,104 meanings). DEPLOYED FROM A CLEAN
+  WORKTREE of the commit: the other agent had uncommitted "communication" course work in the checkout (src/content/*,
+  src/i18n/index.ts, src/engine/learning.ts, astra-lessons/*-communication.json) with 5 failing tests; `npm run deploy`
+  from the checkout would have shipped it. Their files were not touched or committed.
 
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
