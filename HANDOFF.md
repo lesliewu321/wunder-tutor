@@ -1,0 +1,106 @@
+# Wunder Tutor — handoff to astra (2026-09-25)
+
+Written by Claude at the end of session 5 for astra, the agent continuing the work. Start here; the full history, with
+every decision's reasoning, is in `CLAUDE_HANDOFF.md` (long; search it rather than read it end to end).
+
+## What the product is
+
+A pronunciation tutor PWA for children (age bands little 5–7, junior 8–11, teen) and adults, paywalled, Hong Kong
+first but global. Courses: English, Putonghua, Japanese, Korean, French, Spanish (in that order everywhere). A learner
+speaks; Azure scores it (per sound / tone / syllable); Gemini voices the teacher, with Azure TTS as backup.
+
+- Live: https://app.wundertutor.com (Cloudflare Pages project `wunder-tutor`). Marketing site: `site/`.
+- API: Pages Function `functions/api/[[path]].js` → `server/core.mjs` (runs locally via `npm run server`).
+- Data: Supabase project `xzghsihffoliduqkjvck` (Singapore); migrations in `supabase/migrations/`.
+- Recordings (with consent): R2 bucket `wunder-tutor-recordings`. Teacher-voice cache: KV `wunder-tutor-tts-cache`.
+- Google refuses Hong Kong/China: `/api` probes Google directly and only relays through the Tokyo Durable Object
+  (`egress/`) where refused. `/api/status` says which (`egress: …`).
+
+## State right now
+
+- **Live = commit `1bf66fb`** (Pages deployment `0fcf2047`), plus handoff-only commits after it (`d9f4e98`).
+- **Not on GitHub:** local `main` is **112 commits ahead of `origin/main`** (last push 2026-09-20). Everything since
+  lives only in this Dropbox folder. Push only when Leslie says so.
+- **Phone apps:** Android 1.0.7 (code 8) from 2026-09-23. **No APK / AAB / iOS build until Leslie says so** — web only.
+- **Your own uncommitted work is in the checkout:** the "communication" lesson packs (`astra-lessons/*communication*`,
+  `astra-lessons/courses/*-communication.json`, `astra-lessons/i18n/communication.json`) and edits to
+  `src/content/*/course.ts`, `src/content/course.ts`, `src/content/fr/lexicon.ts`, `src/engine/learning.ts`,
+  `src/i18n/index.ts`, `scripts/i18n-check.mjs`, three tests and `package.json`. When last run, 5 tests failed
+  (es/ko "7 lessons" counts, fr lexicon missing ~120 words, two astra-lessons progression tests). Claude did not touch
+  or commit any of it, and deployed from a clean worktree so it would not ship half-done.
+
+## Built in session 5 (all live)
+
+| Area | What | Where |
+| --- | --- | --- |
+| App language | 7 languages: English, 繁體中文, 简体中文, 日本語, 한국어, Français, Español. En + 繁 bundled, others fetched on demand | `src/i18n/` (README there) |
+| 简体中文 | Generated from 繁體中文 (OpenCC hk→cn + HK→mainland words). Never edit zh-Hans by hand | `npm run i18n:hans` |
+| Translations | ja/ko/fr/es are **machine drafts, not native-checked** — incl. consent/privacy text | `src/i18n/<lang>/` |
+| Lesson guides | Keyed by the English line: `tl(english, hant)` | `<lang>/lessons.json` |
+| Item meanings | The grey line under a word, in the App language, for lessons AND conversations; hidden where the App language is the course's own | `<lang>/meanings.json`, `tm()` |
+| Checker | Keys, placeholders, bold, missing meanings | `npm run i18n:export` then `npm run i18n:check` |
+| Home languages | Hindi and Arabic removed completely (old learners → "Another language") | `src/content/translations.ts` |
+| Profile tab | "Me" renamed Profile; Course dropdown at the very top with "Add or remove courses…"; no My progress row | `src/features/profile/Profile.tsx` |
+| Settings | No Courses row. English accent only if learning English; Chinese characters only for Putonghua learners in HK/TW/MO | `src/engine/region.ts` |
+| Putonghua script | **Simplified by default everywhere**; Traditional offered only in HK/TW/MO | setup + store v4 |
+| Lesson map | Scenic map per age band (meadow / mountain trail / contour map), Map/List switch | `src/features/home/LessonMap.tsx` |
+| Lab | Conversation practice moved here from Home | `src/features/lab/Lab.tsx` |
+| Tongue twisters | Off Home; a **bonus round** after finishing a unit; row on Profile for the boards | `bonusTwister()` in `src/content/twisters.ts` |
+| Seasonal lessons | Festival bonus lessons with a Home card showing date + language | `content/seasonal/` (below) |
+
+## Seasonal lessons — how to add one
+
+- Lessons: `content/seasonal/<course>.json` (same format and loader as a course; `npm run content:check` checks it).
+- Calendar: `content/seasonal/events.json`. Each festival has `courses` (which languages it is for), a date —
+  `days` (moving festivals: write every year's date out, never compute) or `every` (`MM-DD`, fixed) — a window
+  (`before` / `after` days) and `lessons` per course.
+- Mid-Autumn: Putonghua only, live now. **Christmas: all six courses, every 12-25, NO lessons yet** — Leslie said
+  "don't write xmas lessons yet". A course without a lesson shows nothing.
+- Add a festival's title/blurb to each `src/i18n/<lang>/content.json` (`season.<id>.title`, `.blurb`).
+
+## Leslie's standing rules
+
+- **Deploy to the web only** (`npm run deploy`). No phone builds until told.
+- **Deploy from a clean tree.** If the checkout has anything uncommitted that isn't ready, deploy from a clean
+  `git worktree` of the commit (link `node_modules`; remove the link with `rmdir`, never a recursive delete).
+- **Never print or ask for secret values** (keys, `BETA_ACCESS_CODE`). Leslie runs `npm run keys:push`.
+- **Don't push to GitHub** unless asked. Don't start/stop Leslie's own dev server on 5173.
+- **Wrangler KV / R2 commands need `--remote`** (wrangler 4 defaults to a local simulation).
+- **Children's voices** (`eval/volunteers`, `eval/contributions`) stay gitignored, never committed.
+- **Leaderboards** show only avatar + random handle ("Brave Otter 42") + two-letter region. Nothing else.
+- **No gates except the paywall** (no grown-ups' gate on course changes).
+- Write for Leslie plainly: what changed, what Leslie will see, what is left. Put commit + deployment id in the handoff.
+
+## Commands
+
+```bash
+npm test                         # vitest (342 tests when clean)
+npm run typecheck
+npm run content:check            # every course + seasonal file
+npm run i18n:export              # writes i18n-source.json (gitignored) — the translators' source
+npm run i18n:check               # every App language against it
+npm run i18n:hans                # regenerate 简体中文 from 繁體中文
+npm run lessons:build            # rebuild astra-lessons/courses/*.json from the authoring data
+npm run dev                      # app; npm run server for the local API on :8787
+npm run deploy                   # build + deploy to Cloudflare Pages (web only)
+```
+
+## Known gotchas
+
+- **Dropbox + Vite:** two quick writes to one file can leave the dev server serving the first ("X is not defined").
+  Re-save the file. Production builds are unaffected.
+- **Git Bash heredocs** mangle backticks and `${}`; write scripts to files (or use an editor) instead.
+- **Windows HK time zone** reports `Asia/Shanghai` on desktops; the HK/TW/MO rule also checks device languages.
+- The course schema rejects a `"_"` comment field in course files (calendar files may have one).
+
+## Open / next
+
+1. Your communication packs: finish, get the 5 failing tests green, `npm run content:check`, commit, deploy.
+2. Native-speaker review of ja/ko/fr/es (consent/privacy text first). `npm run i18n:export` makes the review list.
+3. Japanese, Korean, French, Spanish courses: 1 open unit each (7 lessons) vs 16 units / 112 lessons for English
+   and Putonghua. The `astra-lessons/library` sources are reference only: only French (CC BY 4.0) may be adapted.
+4. Push notifications: not built. Plan in `docs/NOTIFICATIONS-PLAN.md`; `content/seasonal/events.json` is meant
+   to feed festival announcements. Web push first (needs a signing key pair as a secret — Leslie sets it).
+5. Ideas given to Leslie for Snap & say: school dictation (默書) lists, textbook read-aloud, snapped words into
+   review, a weekly parent page, a daily snap challenge. Not built.
+6. Christmas lessons for all six courses — only when Leslie asks.
