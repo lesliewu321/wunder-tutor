@@ -20,6 +20,7 @@ i18n-review.html
 
 # Volunteers' recordings (children's voices) — never commit
 eval/volunteers
+eval/contributions/
 
 # Signing keys and release bundles never go into git (the upload key stays with its owner).
 *.jks

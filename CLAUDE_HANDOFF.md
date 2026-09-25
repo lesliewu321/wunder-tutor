@@ -120,8 +120,9 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   `forgetContributions()` (src/speech/health.ts) as well. **Proven live:** a real kept take → row `store='r2'` →
   `wrangler r2 object get … --remote` downloaded 24,916 bytes → forget → `{deleted:1}` → the object is gone. Locally
   the same round trip with the folder store (the local server needs `SUPABASE_URL` in the environment — it is not
-  in .env — or contributions are simply off there). Tests +2 (invites.test.mjs); 284 pass. Not yet: an eval-side
-  puller for R2 (eval/volunteers.ts still reads the exported files); the 180 Supabase-Storage rows stay where they are.
+  in .env — or contributions are simply off there). Tests +2 (invites.test.mjs); 284 pass. `npm run contributions:pull [-- --limit=200 --locale=zh-CN --since=2026-09-20]` (scripts/contributions-pull.mjs)
+  brings rows + audio from whichever store into `eval/contributions/<device>/` with a manifest.csv to label (gitignored;
+  children's voices). The 180 Supabase-Storage rows stay where they are and the puller reads them too.
 - **THE KV MYSTERY IS SOLVED — wrangler 4 talks to a LOCAL simulation unless `--remote`.** `wrangler r2 object get`
   said "key does not exist" for an object the live Function had just written, and its first lines said "Resource
   location: local — Use --remote". So on 2026-09-23 `warm-voice.mjs --push` wrote its 1,000 takes into a local KV

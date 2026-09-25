@@ -25,7 +25,9 @@
     "app:ios": "npm run build:app && npx cap open ios",
     "codes:new": "node scripts/invite-codes.mjs new",
     "codes:list": "node scripts/invite-codes.mjs list",
-    "codes:off": "node scripts/invite-codes.mjs off"
+    "codes:off": "node scripts/invite-codes.mjs off",
+    "contributions:pull": "node scripts/contributions-pull.mjs",
+    "lessons:build": "node astra-lessons/build.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
