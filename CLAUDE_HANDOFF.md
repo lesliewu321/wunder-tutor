@@ -1,4 +1,36 @@
-# Wunder Tutor — handoff (2026-09-22)
+# Wunder Tutor — handoff (2026-09-25)
+
+## 2026-09-25 (session 5) — the 1M-user plan, the relay only where Google refuses, English as a home language
+
+Leslie asked for the current setup and a plan for 1M users — then said it is **paywalled, ~100% paying**. Given in chat
+(not in this file): the architecture (static app + edge Function + Postgres + speech APIs) stays; what breaks first is
+(1) the single Google relay Durable Object, (2) per-isolate rate limits, (3) one Azure S0 resource (~100 concurrent),
+(4) the fail-open daily counter, (5) manual deploys with no CI/staging/error tracking. With paying users, payments
+(RevenueCat + Stripe, server-authoritative `plans` via webhooks, 7-day trial, paywall in the invite code's slot of
+setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scorings/day (~$19/mo at list) — a cap near
+300 keeps every learner profitable. Not built: any of it.
+
+- **Relay only from locations Google refuses (commit below, NOT deployed):** Leslie: "this should be a special case
+  for hong kong and china … taiwan singapore etc, no need to route to japan". `functions/api/[[path]].js` now probes
+  Google DIRECTLY first, once per isolate (= per Cloudflare location); only a refusal (400 "location is not supported")
+  sends that location to the relays as before, and a hiccup on the direct probe also falls through so no location is
+  left without a way out. The Gemini Live WebSocket follows the same choice. `/api/status` → `egress` now reads
+  `direct TPE` or `google-apac-a NRT (refused: direct HKG)`. **Cannot be verified from here** (every request from
+  Leslie's network enters at HKG): after a deploy, ask someone outside HK (or a VPN exit in TW/SG) to open
+  `/api/status` and expect `direct <colo>`; from HK it must still say the Tokyo relay. wrangler.toml's comment updated.
+- **English as a home language (commit below, NOT deployed):** Leslie: "english is not listed as home language. a
+  major shortfall". `'en'` added to `HomeLanguage` (types.ts), second tile in `HOME_LANGUAGES` (after Cantonese;
+  native = label, so the tile just says "English"; 繁中: 英文). Priors: Mandarin course got `en` boosts in
+  `content/zh/sounds.ts` (tones +0.2/+0.25/+0.3/+0.2, ü +0.25, z c s +0.15, j q x +0.15, zh ch sh +0.1, n/l −0.1);
+  French's `l1()` helper now includes `en` (its own comment already said English pushes French the same way as
+  Cantonese); Japanese needs none (its difficulties are written for English speakers). English course: no priors, as
+  for a native speaker. Nothing stops "English at home" + "learning English" (an adult polishing an accent is
+  plausible); `translationFor` has no `en` entries so those exercises fall back to the picture prompt. Seen in the
+  5199 copy in both interface languages. 261 tests, typecheck clean.
+- Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
+  (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
+  5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
+
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
 
