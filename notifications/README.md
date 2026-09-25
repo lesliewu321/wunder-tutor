@@ -24,6 +24,8 @@ The private wunder-reminders Worker has no public route. One SQLite-backed Remin
 
 A Cloudflare alarm wakes only for the next eligible slot or eventual cleanup. Before contacting the browser push provider, it persists the daily ledger. Ambiguous failures are not retried that day. 404/410 retires the subscription. The push request uses encrypted aes128gcm payloads, a five-minute TTL, low urgency, no redirects, an allowlist of browser push endpoints and a ten-second timeout.
 
+Worker registration and its push-script import use the application build version in their URLs, with updateViaCache set to none. This avoids stale browser imports even when the custom domain overrides Cache-Control headers.
+
 The service worker independently suppresses expired/duplicate/quiet-hour/paused/disabled messages, completed days and foreground windows. It uses persistent IndexedDB state and fixed same-origin navigation. Displayed notifications are silent, replace the previous learning reminder, and contain generic wording only.
 
 Sign-out and profile deletion remove this browser's subscription. Account deletion requests removal for the account's primary recipient too. Offline local opt-out is saved to the service worker; browser unsubscribe is attempted even when the API is unavailable. Cross-device suppression depends on app contact/sync, and a delivery already in flight can race an opt-out. Browser/OS display is not guaranteed by provider acceptance.

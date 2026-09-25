@@ -5,7 +5,7 @@ import { ErrorBoundary } from './ui/ErrorBoundary';
 import { useStore } from './state/store';
 import { startAccount } from './account/account';
 import { isApp } from './platform';
-import { startReminders } from './notifications/client';
+import { registerReminderWorker, startReminders } from './notifications/client';
 import './styles/notifications.css';
 import './styles/tokens.css';
 import './styles/base.css';
@@ -25,5 +25,5 @@ startReminders();
 // Offline app shell — production website only. The phone app already carries every file on the device, and a service
 // worker there would only serve a second, stale copy of them.
 if (import.meta.env.PROD && !isApp && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => void navigator.serviceWorker.register('/sw.js').catch(() => undefined));
+  window.addEventListener('load', () => void registerReminderWorker().catch(() => undefined));
 }

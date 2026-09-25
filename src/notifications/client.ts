@@ -29,12 +29,13 @@ function snapshot(prefs: ReminderPreferences) {
 export function currentPreferences(prefs = useReminders.getState().prefs, follow = useReminders.getState().followTimezone): ReminderPreferences {
   return { ...prefs, locale: language(), timezone: follow ? deviceTimezone() : prefs.timezone };
 }
+export const registerReminderWorker = (): Promise<ServiceWorkerRegistration> => navigator.serviceWorker.register('/sw.js?v=' + encodeURIComponent(__APP_VERSION__), { scope: '/', updateViaCache: 'none' });
 export async function enableReminders(prefs: ReminderPreferences, follow = useReminders.getState().followTimezone): Promise<ReminderStatus> {
   if (support() !== 'supported') throw new Error(support());
   // Permission remains directly in the user's click call stack (Safari requires this).
   const permission = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
   if (permission !== 'granted') throw new Error('denied');
-  const reg = await navigator.serviceWorker.register('/sw.js');
+  const reg = await registerReminderWorker();
   await navigator.serviceWorker.ready;
   const { publicKey } = await request<{ publicKey: string }>({ op: 'key' });
   const key = Uint8Array.from(atob(publicKey.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(publicKey.length / 4) * 4, '=')), c => c.charCodeAt(0));

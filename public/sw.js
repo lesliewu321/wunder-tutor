@@ -1,6 +1,7 @@
 // Minimal offline app shell. Network-first for navigations (so deploys show up immediately),
 // cache-first for hashed build assets. API calls are never cached.
-importScripts('/push.js');
+// Version comes from the application build, including imports when the CDN overrides browser cache headers.
+importScripts('/push.js' + self.location.search);
 const CACHE = 'wunder-shell-v3';
 
 self.addEventListener('install', (e) => {
