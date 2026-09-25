@@ -6,6 +6,7 @@ import { JA_LADDERS } from './ja/course';
 import { KO_LADDERS } from './ko/course';
 import { ES_LADDERS } from './es/course';
 import { type Ladder, type LabStage, LAB_STAGES as STAGES } from './load';
+import { YUE_LADDERS } from './yue/course';
 import { ZH_LADDERS } from './zh/course';
 
 export type { LabStage } from './load';
@@ -18,6 +19,7 @@ export const stageLabel = (stage: LabStage): string => tc(`lab.ladder.${stage}.n
 /** Sound → syllable → word → phrase → sentence ladders for deliberate practice: Mandarin "zh:…", French, Japanese, then English (content/courses/en.json). */
 export const LADDERS: Record<PhonemeId, Ladder> = {
   ...ZH_LADDERS,
+  ...YUE_LADDERS,
   ...FR_LADDERS,
   ...JA_LADDERS,
   ...KO_LADDERS,

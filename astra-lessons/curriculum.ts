@@ -13,7 +13,7 @@ export const FOUNDATION_ORDER: Record<AgeBand, string[]> = {
 const EVERYDAY = ['people', 'town', 'shopping', 'travel', 'out'];
 const APPLIED = ['stories', 'plans', 'work'];
 export type Stage = 1 | 2 | 3;
-export const topicOf = (unitId: string): string => unitId.replace(/^(zh|fr|ja|ko|es)-/, '');
+export const topicOf = (unitId: string): string => unitId.replace(/^(yue|zh|fr|ja|ko|es)-/, '');
 export const stageOf = (unit: Pick<Unit, 'id'>): Stage => APPLIED.includes(topicOf(unit.id)) ? 3 : EVERYDAY.includes(topicOf(unit.id)) ? 2 : 1;
 const STAGES = { 1: '1 · First words and patterns', 2: '2 · Everyday conversations', 3: '3 · Putting it together' };
 export const stageLabel = (unit: Pick<Unit, 'id'>): string => tc('curriculum.stage.' + stageOf(unit), STAGES[stageOf(unit)]);
@@ -45,7 +45,7 @@ export function mergeCurriculum(course: Course, band: AgeBand): Course {
   const earlierWords: Exercise[] = [];
   const units = ordered.map(unit => {
     const lessons = unit.lessons.map(lesson => {
-      const exercises = { ...lesson.exercises, adult: adultExercises(lesson) };
+      const exercises = { ...lesson.exercises, adult: lesson.exercises.adult ?? adultExercises(lesson) };
       // Teens practise project teamwork here; adult workplace dialogues are a separate edition.
       if (topicOf(unit.id) === 'work') exercises.teen = lesson.exercises.junior;
       const selected = band === 'adult' ? exercises.adult : exercises[contentBand(band)];

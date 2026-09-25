@@ -87,7 +87,7 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
     clearTimeout(simTimer.current);
     const j = job.current;
     if (!j) return;
-    if (useStore.getState().settings.demoMic) return assess(simulatedRecording(j.item.ja ? moraCount(j.item.ja.kana) : j.item.ko ? blockCount(j.item.ko.pron) : syllableCount(j.item.text)));
+    if (useStore.getState().settings.demoMic) return assess(simulatedRecording(j.item.ja ? moraCount(j.item.ja.kana) : j.item.ko ? blockCount(j.item.ko.pron) : j.item.yue ? j.item.yue.jyutping.split(' ').length : syllableCount(j.item.text)));
     const rec = recorder.current;
     recorder.current = null;
     if (!rec) return;
@@ -100,7 +100,7 @@ export function useSpeechTake({ micRef, onAssessed, onError }: Options) {
     stopPlayback();
     job.current = { item, attemptIndex };
     // Japanese is counted in beats from its reading: kanji and kana give an English syllable counter nothing to go on.
-    const syllables = item.ja ? moraCount(item.ja.kana) : item.ko ? blockCount(item.ko.pron) : syllableCount(item.text);
+    const syllables = item.ja ? moraCount(item.ja.kana) : item.ko ? blockCount(item.ko.pron) : item.yue ? item.yue.jyutping.split(' ').length : syllableCount(item.text);
     if (settings.demoMic) {
       setPhase('listening');
       // Fake a lively input level so the listening state still reads as "I hear you".

@@ -1,5 +1,6 @@
 import { type AgeBand, type ContentBand, type Course, type CourseId, isGrownUp, type Lesson, type SpeakItem, type Unit } from '../domain/types';
 import { tc } from '../i18n';
+import { YUE_COURSE, YUE_ITEMS } from './yue/course';
 import { FR_COURSE, FR_ITEMS } from './fr/course';
 import { JA_COURSE, JA_ITEMS } from './ja/course';
 import { KO_COURSE, KO_ITEMS } from './ko/course';
@@ -20,7 +21,7 @@ import enData from '../../astra-lessons/courses/en.json';
 export const EN = addCommunicationToBuilt(buildCourse(enData as unknown as CourseFile, 'astra-lessons/courses/en.json'));
 
 export const COURSE: Course = EN.course;
-export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE, fr: FR_COURSE, ja: JA_COURSE, ko: KO_COURSE, es: ES_COURSE };
+export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE, yue: YUE_COURSE, fr: FR_COURSE, ja: JA_COURSE, ko: KO_COURSE, es: ES_COURSE };
 const PATHS = Object.fromEntries(Object.entries(COURSES).map(([id, course]) => [id,
   Object.fromEntries(AGE_BANDS.map(band => [band, mergeCurriculum(course, band)])),
 ])) as Record<CourseId, Record<AgeBand, Course>>;
@@ -46,7 +47,7 @@ export const unitSubtitle = (u: Unit, band: AgeBand): string => {
 };
 export const lessonTitle = (l: Pick<Lesson, 'id' | 'title'>): string => tc(`lesson.${l.id}.title`, l.title);
 
-export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units, ...FR_COURSE.units, ...JA_COURSE.units, ...KO_COURSE.units, ...ES_COURSE.units].flatMap((u) => u.lessons);
+export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units, ...FR_COURSE.units, ...JA_COURSE.units, ...KO_COURSE.units, ...ES_COURSE.units, ...YUE_COURSE.units].flatMap((u) => u.lessons);
 /** A lesson by id: a course lesson, or a seasonal bonus lesson (content/seasonal/, kept out of ALL_LESSONS and progress). */
 export const findLesson = (id: string, band?: AgeBand): Lesson | undefined =>
   (band ? Object.values(PATHS).flatMap(p => p[band].units.flatMap(u => u.lessons)) : ALL_LESSONS).find(l => l.id === id)
@@ -60,13 +61,14 @@ export const lessonsOf = (id: CourseId, band: AgeBand = 'junior'): Lesson[] => c
  */
 export const ITEM_INDEX: Record<string, SpeakItem> = {};
 for (const l of ALL_LESSONS) {
-  for (const band of ['little', 'junior', 'teen'] as const) {
-    for (const ex of l.exercises[band]) {
+  for (const band of ['little', 'junior', 'teen', 'adult'] as const) {
+    for (const ex of l.exercises[band] ?? []) {
       const items = ex.type === 'speak' || ex.type === 'arrange' ? [ex.item] : ex.type === 'read-choice' ? [ex.passage, ...ex.options] : ex.type === 'choose-heard' ? ex.options : ex.type === 'minimal-pair' ? ex.pair : [...(ex.tutor ? [ex.tutor] : []), ...ex.replies];
       for (const it of items) ITEM_INDEX[it.id] = it;
     }
   }
 }
+for (const it of YUE_ITEMS) ITEM_INDEX[it.id] ??= it;
 for (const it of ZH_ITEMS) ITEM_INDEX[it.id] ??= it;
 for (const it of FR_ITEMS) ITEM_INDEX[it.id] ??= it;
 for (const it of JA_ITEMS) ITEM_INDEX[it.id] ??= it;

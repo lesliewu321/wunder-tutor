@@ -300,7 +300,8 @@ describe('Azure\'s voice: the request', () => {
     const { backupSsml, BACKUP_VOICES } = await import('./azure-tts.mjs');
     expect(backupSsml({ text: 'Fish & chips <please>', accent: 'en-GB' })).toContain('<voice name="en-GB-SoniaNeural"><prosody rate="-10%">Fish &amp; chips &lt;please&gt;</prosody>');
     expect(backupSsml({ text: '四是四，十是十。', accent: 'zh-CN', slow: true })).toMatch(/xml:lang="zh-CN".*zh-CN-XiaoxiaoNeural.*rate="-40%">四是四，十是十。/);
-    expect(Object.keys(BACKUP_VOICES).sort()).toEqual(['en-GB', 'en-US', 'es-ES', 'fr-FR', 'ja-JP', 'ko-KR', 'zh-CN']);
+    expect(backupSsml({ text: '唔該。', accent: 'zh-HK' })).toMatch(/xml:lang="zh-HK".*zh-HK-HiuMaanNeural/);
+    expect(Object.keys(BACKUP_VOICES).sort()).toEqual(['en-GB', 'en-US', 'es-ES', 'fr-FR', 'ja-JP', 'ko-KR', 'zh-CN', 'zh-HK']);
   });
 
   it('asks the region\'s voice service for the teacher\'s own format, and reads the WAV that comes back', async () => {

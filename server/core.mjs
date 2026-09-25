@@ -31,7 +31,7 @@ const CLAUDE_TIMEOUT_MS = 20_000;
 // ko-KR and es-ES (2026-09-25): Azure lists both for pronunciation assessment; assumed scored-but-unnamed like fr-FR
 // and ja-JP until probed. The app names Korean sounds from the blocks of its own pronounced form (src/speech/ko) and
 // Spanish ones from spelling (src/content/es/lexicon.ts).
-const LOCALES = new Set(['en-US', 'en-GB', 'zh-CN', 'fr-FR', 'ja-JP', 'ko-KR', 'es-ES']);
+const LOCALES = new Set(['en-US', 'en-GB', 'zh-HK', 'zh-CN', 'fr-FR', 'ja-JP', 'ko-KR', 'es-ES']);
 /** At most this many "likely mistake" re-scorings of one take (each is billed as a scoring). */
 const MAX_ALTS = 5;
 /**

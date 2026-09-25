@@ -30,7 +30,9 @@ export function currentPreferences(prefs = useReminders.getState().prefs, follow
   return { ...prefs, locale: language(), timezone: follow ? deviceTimezone() : prefs.timezone };
 }
 export const registerReminderWorker = (): Promise<ServiceWorkerRegistration> => navigator.serviceWorker.register('/sw.js?v=' + encodeURIComponent(__APP_VERSION__), { scope: '/', updateViaCache: 'none' });
+let consentRevision = 0;
 export async function enableReminders(prefs: ReminderPreferences, follow = useReminders.getState().followTimezone): Promise<ReminderStatus> {
+  const consent = ++consentRevision;
   if (support() !== 'supported') throw new Error(support());
   // Permission remains directly in the user's click call stack (Safari requires this).
   const permission = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
@@ -45,7 +47,12 @@ export async function enableReminders(prefs: ReminderPreferences, follow = useRe
   sub ??= await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key });
   const saved = currentPreferences(prefs, follow);
   try {
+    if (consent !== consentRevision) throw new Error('cancelled');
     const result = await request({ op: 'enable', subscription: sub.toJSON(), prefs: saved, ...snapshot(saved) });
+    if (consent !== consentRevision) {
+      await request({ op: 'disable' }).catch(() => undefined);
+      throw new Error('cancelled');
+    }
     useReminders.getState().set({ enabled: true, offered: true, prefs: saved, followTimezone: follow });
     await swState(false);
     return result;
@@ -56,10 +63,11 @@ export async function saveReminders(prefs: ReminderPreferences, follow = useRemi
   let result: ReminderStatus | null = null;
   if (useReminders.getState().enabled) result = await request({ op: 'update', prefs: saved, ...snapshot(saved) });
   useReminders.getState().set({ prefs: saved, followTimezone: follow });
-  await swState(false);
+  await swState(!useReminders.getState().enabled);
   return result;
 }
 export async function stopReminders(all = false): Promise<void> {
+  consentRevision++;
   const enabled = useReminders.getState().enabled;
   useReminders.getState().set({ enabled: false, offered: true });
   if (typeof navigator === 'undefined') return;

@@ -7,6 +7,7 @@ import { FR_CHECK_ITEMS } from '../../content/fr/course';
 import { JA_CHECK_ITEMS } from '../../content/ja/course';
 import { KO_CHECK_ITEMS } from '../../content/ko/course';
 import { ES_CHECK_ITEMS } from '../../content/es/course';
+import { YUE_CHECK_ITEMS } from '../../content/yue/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { useT } from '../../i18n/useT';
 import { inCourse, labOrder, WEAK_BELOW } from '../../intelligence/profile';
@@ -22,8 +23,8 @@ export function CourseCheck() {
   const { course = 'zh' } = useParams();
   const p = useActiveProfile();
   const patch = useStore((s) => s.patchProfile);
-  const courseId: CourseId = course === 'zh' || course === 'fr' || course === 'ja' || course === 'ko' || course === 'es' ? course : 'en';
-  const items = (courseId === 'zh' ? ZH_CHECK_ITEMS : courseId === 'fr' ? FR_CHECK_ITEMS : courseId === 'ja' ? JA_CHECK_ITEMS : courseId === 'ko' ? KO_CHECK_ITEMS : courseId === 'es' ? ES_CHECK_ITEMS : ASSESSMENT_ITEMS)[contentBand(p.band)];
+  const courseId: CourseId = course === 'yue' || course === 'zh' || course === 'fr' || course === 'ja' || course === 'ko' || course === 'es' ? course : 'en';
+  const items = (courseId === 'yue' ? YUE_CHECK_ITEMS : courseId === 'zh' ? ZH_CHECK_ITEMS : courseId === 'fr' ? FR_CHECK_ITEMS : courseId === 'ja' ? JA_CHECK_ITEMS : courseId === 'ko' ? KO_CHECK_ITEMS : courseId === 'es' ? ES_CHECK_ITEMS : ASSESSMENT_ITEMS)[contentBand(p.band)];
   const [index, setIndex] = useState(0);
   const [done, setDone] = useState(false);
 

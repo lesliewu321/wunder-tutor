@@ -32,7 +32,9 @@
     "contributions:pull": "node scripts/contributions-pull.mjs",
     "lessons:build": "node astra-lessons/build.mjs",
     "lessons:communication": "vite-node astra-lessons/build-communication.ts",
-    "lessons:curriculum": "node astra-lessons/build-curriculum.mjs && node astra-lessons/export-curriculum.mjs"
+    "lessons:curriculum": "node astra-lessons/build-curriculum.mjs && node astra-lessons/export-curriculum.mjs",
+    "test:gauntlet": "vitest run gauntlet",
+    "lessons:cantonese": "node astra-lessons/hk-cantonese/build.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

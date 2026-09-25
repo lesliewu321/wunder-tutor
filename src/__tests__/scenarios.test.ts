@@ -11,7 +11,7 @@ const linesOf = (s: Scenario): SpeakItem[] => [
   ...s.turns.flatMap((t) => BANDS.flatMap((b) => [t.tutor[b], ...t.replies[b]])),
   ...BANDS.map((b) => s.closing[b]),
 ];
-const LANG: Record<CourseId, SpeakItem['lang']> = { en: undefined, zh: 'zh-CN', fr: 'fr-FR', ja: 'ja-JP', ko: 'ko-KR', es: 'es-ES' };
+const LANG: Record<CourseId, SpeakItem['lang']> = { yue: 'zh-HK', en: undefined, zh: 'zh-CN', fr: 'fr-FR', ja: 'ja-JP', ko: 'ko-KR', es: 'es-ES' };
 
 describe('conversations follow the course being learned', () => {
   it('gives every course its own three scenes', () => {

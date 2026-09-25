@@ -7,6 +7,7 @@ import { startAccount } from './account/account';
 import { isApp } from './platform';
 import { registerReminderWorker, startReminders } from './notifications/client';
 import './styles/notifications.css';
+import './styles/languages.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/speak.css';

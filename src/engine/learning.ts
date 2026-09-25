@@ -59,11 +59,11 @@ export const drillFor = (sound: PhonemeId, skipText?: string): Exercise[] => {
 
 export const isDrill = (ex: Exercise): boolean => ex.id.startsWith('drill-');
 
-const LANG_COURSE: Record<string, CourseId> = { 'zh-CN': 'zh', 'fr-FR': 'fr', 'ja-JP': 'ja', 'ko-KR': 'ko', 'es-ES': 'es' };
+const LANG_COURSE: Record<string, CourseId> = { 'zh-HK': 'yue', 'zh-CN': 'zh', 'fr-FR': 'fr', 'ja-JP': 'ja', 'ko-KR': 'ko', 'es-ES': 'es' };
 /** The course a practice item belongs to: its language says so, and English items carry none. */
 export const itemCourse = (item: Pick<SpeakItem, 'lang'>): CourseId => (item.lang ? LANG_COURSE[item.lang] : 'en');
 /** The course a unit belongs to, from its id (zh-food, fr-cafe, ja-food; English units have no prefix). */
-export const unitCourse = (unitId: string): CourseId => (/^(zh|fr|ja|ko|es)-/.exec(unitId)?.[1] as CourseId | undefined) ?? 'en';
+export const unitCourse = (unitId: string): CourseId => (/^(yue|zh|fr|ja|ko|es)-/.exec(unitId)?.[1] as CourseId | undefined) ?? 'en';
 
 /**
  * Review lessons are personal: what's due for repetition plus a word for each weak sound — from this lesson's course

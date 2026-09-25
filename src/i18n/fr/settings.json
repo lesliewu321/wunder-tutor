@@ -174,5 +174,10 @@
   "settings.voice.unavailable": "indisponible",
   "settings.voice.choiceHint": "Choix enregistré sur cet appareil. Les voix indisponibles nécessitent une connexion ou la configuration du service.",
   "settings.voice.preview": "Écouter la voix",
-  "settings.voice.playing": "Lecture…"
+  "settings.voice.playing": "Lecture…",
+  "settings.me.course.yue": "Cantonais de Hong Kong",
+  "settings.voice.selection": "Voix sélectionnée : {voice}",
+  "settings.voice.automaticUses": "Le mode automatique commence par {voice}.",
+  "settings.voice.courseUnavailable": "Indisponible pour ce cours",
+  "settings.update.reload": "Charger la dernière version web"
 }

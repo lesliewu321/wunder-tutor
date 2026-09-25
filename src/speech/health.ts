@@ -182,6 +182,7 @@ export const fromHealth = <T>(choose: (h: ApiHealth) => T): (() => Promise<T>) =
  */
 export const soundProblem = (now: ApiHealth, hasCode: boolean, band: AgeBand, reason?: 'take' | 'playback', code?: string): string => {
   // The server's own word for it, when it gave one: a day's listening used up, or a busy moment, is not about the line.
+  if (code === 'voice_locale_unavailable' || code === 'device_language_unavailable') return t('common.noSound.language');
   if (code === 'daily_limit') return t('common.noSound.dayUsed');
   if (code === 'rate_limited' || code === 'tts_budget_exceeded') return t('common.noSound.busy');
   // The teacher refusing one line says nothing about the code, the connection or the phone: it is about the line.

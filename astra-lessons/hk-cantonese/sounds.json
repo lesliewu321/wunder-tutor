@@ -1,0 +1,68 @@
+[
+  {
+    "id": "yue:tones",
+    "label": "1 · 2 · 3 · 4 · 5 · 6",
+    "example": "詩 si1",
+    "category": "tone",
+    "names": [
+      "Six Cantonese tones",
+      "廣東話六聲",
+      "広東語の六つの声調",
+      "광둥어의 여섯 성조",
+      "Les six tons cantonais",
+      "Los seis tonos del cantonés"
+    ],
+    "tips": [
+      "Compare si1, si2, si3, si4, si5 and si6. Copy the pitch, not just the letters.",
+      "比較 si1、si2、si3、si4、si5、si6。跟着音高練習，不要只看字母。",
+      "si1、si2、si3、si4、si5、si6を聞き比べ、文字だけでなく声の高さもまねしましょう。",
+      "si1부터 si6까지 비교하고 글자뿐 아니라 음높이도 따라 하세요.",
+      "Comparez si1 à si6. Imitez la hauteur de voix, pas seulement les lettres.",
+      "Compara si1, si2, si3, si4, si5 y si6. Imita el tono, no solo las letras."
+    ]
+  },
+  {
+    "id": "yue:stops",
+    "label": "-p · -t · -k",
+    "example": "八 baat3",
+    "category": "consonant",
+    "names": [
+      "Short stop endings",
+      "短促塞音韻尾",
+      "短い閉鎖音の語末",
+      "짧은 폐쇄음 받침",
+      "Finales occlusives brèves",
+      "Finales oclusivas breves"
+    ],
+    "tips": [
+      "End -p, -t and -k with a short closure. Do not add a vowel after the final consonant.",
+      "-p、-t、-k 結尾要短促閉塞，後面不要加元音。",
+      "語末の-p、-t、-kを短く閉じ、後ろに母音を足さないようにしましょう。",
+      "끝의 -p, -t, -k를 짧게 막고 뒤에 모음을 붙이지 마세요.",
+      "Terminez -p, -t et -k par une fermeture brève, sans ajouter de voyelle.",
+      "Cierra brevemente las terminaciones -p, -t y -k, sin añadir una vocal."
+    ]
+  },
+  {
+    "id": "yue:ng",
+    "label": "ng",
+    "example": "我 ngo5",
+    "category": "consonant",
+    "names": [
+      "Initial ng",
+      "ng 聲母",
+      "語頭のng",
+      "첫소리 ng",
+      "Le ng initial",
+      "La ng inicial"
+    ],
+    "tips": [
+      "Start ngo5 with a gentle nasal ng. Keep your lips relaxed and let the sound resonate through your nose.",
+      "ngo5 以輕柔的鼻音 ng 開始，嘴唇放鬆，讓聲音在鼻腔共鳴。",
+      "ngo5を柔らかい鼻音ngで始め、唇を緩めて鼻に響かせましょう。",
+      "ngo5를 부드러운 비음 ng로 시작하고 입술의 힘을 빼고 코로 울리세요.",
+      "Commencez ngo5 par un ng nasal doux, les lèvres détendues.",
+      "Empieza ngo5 con una ng nasal suave, relajando los labios."
+    ]
+  }
+]

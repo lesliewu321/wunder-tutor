@@ -174,5 +174,10 @@
   "settings.voice.unavailable": "unavailable",
   "settings.voice.choiceHint": "Saved on this device. Unavailable voices need a connection or service setup.",
   "settings.voice.preview": "Preview voice",
-  "settings.voice.playing": "Playing…"
+  "settings.voice.playing": "Playing…",
+  "settings.me.course.yue": "Hong Kong Cantonese",
+  "settings.voice.selection": "Selected voice: {voice}",
+  "settings.voice.automaticUses": "Automatic starts with {voice}.",
+  "settings.voice.courseUnavailable": "Unavailable for this course",
+  "settings.update.reload": "Get latest web version"
 }

@@ -46,6 +46,7 @@ const errorType = (t?: string): WordErrorType => {
  * and the feedback layer falls back to word-level advice rather than naming the wrong sound.
  */
 const namePhonemes = (word: string, scored: PhonemeScore[], locale: Locale): PhonemeScore[] => {
+  if (locale === 'zh-HK') return scored.map(p => ({ ...p, phoneme: '', heardAs: undefined }));
   if (!scored.length || scored.some((p) => p.phoneme)) return scored;
   // French is the same gap as British English — scores arrive, names do not — so it is named the same way, from its
   // own lexicon (src/content/fr/lexicon.ts). A word neither lexicon knows yields no candidates and stays unnamed.

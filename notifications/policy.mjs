@@ -1,6 +1,6 @@
 export const DAY = 86_400_000;
 export const LANGS = ['en', 'zh-Hant', 'zh-Hans', 'ja', 'ko', 'fr', 'es'];
-export const COURSES = ['en', 'zh', 'ja', 'ko', 'fr', 'es'];
+export const COURSES = ['en', 'zh', 'yue', 'ja', 'ko', 'fr', 'es'];
 const clock = /^([01]\d|2[0-3]):[0-5]\d$/;
 const date = /^\d{4}-\d{2}-\d{2}$/;
 const formatters = new Map();
@@ -24,7 +24,7 @@ export function quietAt(time, start, end) { return start === end || (start < end
 export function preferences(raw) {
   if (!raw || !Array.isArray(raw.days) || !raw.days.length || raw.days.length > 7 || !raw.days.every(n => Number.isInteger(n) && n >= 0 && n <= 6)
     || !clock.test(raw.time) || !clock.test(raw.quietStart) || !clock.test(raw.quietEnd) || !validTimezone(raw.timezone)
-    || !LANGS.includes(raw.locale) || !Array.isArray(raw.courses) || !raw.courses.length || raw.courses.length > 6 || !raw.courses.every(c => COURSES.includes(c))) throw new Error('invalid_preferences');
+    || !LANGS.includes(raw.locale) || !Array.isArray(raw.courses) || !raw.courses.length || raw.courses.length > COURSES.length || !raw.courses.every(c => COURSES.includes(c))) throw new Error('invalid_preferences');
   return { days: [...new Set(raw.days)].sort(), time: raw.time, quietStart: raw.quietStart, quietEnd: raw.quietEnd,
     timezone: raw.timezone, locale: raw.locale, courses: [...new Set(raw.courses)], weekly: raw.weekly === true,
     pauseUntil: Number.isFinite(raw.pauseUntil) ? Math.min(Date.now() + 31 * DAY, Math.max(0, raw.pauseUntil)) : 0,
@@ -41,6 +41,8 @@ export function wallTimes(day, time, timezone) {
   return [...offsets].map(o => wall - o).filter(at => { const p = localParts(at, timezone); return p.day === day && p.time === time; }).sort((a, b) => a - b);
 }
 export function nextSlot(p, after) {
+  // Time inputs are temporarily empty while edited; keep the settings preview safe.
+  if (!p || !clock.test(p.time) || !clock.test(p.quietStart) || !clock.test(p.quietEnd) || !validTimezone(p.timezone) || !Number.isFinite(after)) return null;
   const start = localParts(after, p.timezone).day;
   for (let i = 0; i < 9; i++) {
     const day = addDays(start, i);

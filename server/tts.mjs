@@ -424,6 +424,7 @@ export function createTts({ apiKey, model = DEFAULT_LIVE_MODEL, voiceName = DEFA
     if (!text) throw new TtsError('missing_text', 400);
     if (text.length > MAX_TTS_CHARS) throw new TtsError('text_too_long', 400);
     const locale = input.locale ?? input.accent;
+    if (locale === 'zh-HK') throw new TtsError('voice_locale_unavailable', 400);
     const zh = locale === 'zh-CN';
     const ja = locale === 'ja-JP';
     const ko = locale === 'ko-KR';

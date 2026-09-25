@@ -1,0 +1,4469 @@
+{
+  "id": "hong-kong-cantonese",
+  "language": "yue",
+  "title": "Hong Kong Cantonese",
+  "grownUpTitle": "Hong Kong Cantonese",
+  "exercisePrefix": "yuex",
+  "items": {
+    "yue-greetings-1": {
+      "text": "你好！",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "nei5 hou2"
+      },
+      "meaning": "Hello!",
+      "kind": "word",
+      "picture": "👋"
+    },
+    "yue-greetings-2": {
+      "text": "早晨！",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "zou2 san4"
+      },
+      "meaning": "Good morning!",
+      "kind": "word",
+      "picture": "👋"
+    },
+    "yue-greetings-3": {
+      "text": "唔該。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "m4 goi1"
+      },
+      "meaning": "Thank you for your help.",
+      "kind": "word",
+      "picture": "👋"
+    },
+    "yue-greetings-4": {
+      "text": "多謝。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "do1 ze6"
+      },
+      "meaning": "Thank you for the gift.",
+      "kind": "word",
+      "picture": "👋"
+    },
+    "yue-greetings-5": {
+      "text": "我叫小明。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 giu3 siu2 ming4"
+      },
+      "meaning": "My name is Ming.",
+      "kind": "phrase",
+      "picture": "👋"
+    },
+    "yue-greetings-6": {
+      "text": "我學緊廣東話。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 hok6 gan2 gwong2 dung1 waa2"
+      },
+      "meaning": "I am learning Cantonese.",
+      "kind": "phrase",
+      "picture": "👋"
+    },
+    "yue-greetings-7": {
+      "text": "唔好意思。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "m4 hou2 ji3 si1"
+      },
+      "meaning": "Excuse me.",
+      "kind": "phrase",
+      "picture": "👋"
+    },
+    "yue-greetings-8": {
+      "text": "你叫咩名？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "nei5 giu3 me1 meng2"
+      },
+      "meaning": "What is your name?",
+      "kind": "phrase",
+      "picture": "👋"
+    },
+    "yue-numbers-1": {
+      "text": "一",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "jat1"
+      },
+      "meaning": "one",
+      "kind": "word",
+      "picture": "🔢"
+    },
+    "yue-numbers-2": {
+      "text": "兩",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "loeng5"
+      },
+      "meaning": "two (before a measure word)",
+      "kind": "word",
+      "picture": "🔢"
+    },
+    "yue-numbers-3": {
+      "text": "三",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "saam1"
+      },
+      "meaning": "three",
+      "kind": "word",
+      "picture": "🔢"
+    },
+    "yue-numbers-4": {
+      "text": "十",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "sap6"
+      },
+      "meaning": "ten",
+      "kind": "word",
+      "picture": "🔢"
+    },
+    "yue-numbers-5": {
+      "text": "我要兩張飛。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 jiu3 loeng5 zoeng1 fei1"
+      },
+      "meaning": "I would like two tickets.",
+      "kind": "phrase",
+      "picture": "🔢"
+    },
+    "yue-numbers-6": {
+      "text": "而家三點。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ji4 gaa1 saam1 dim2"
+      },
+      "meaning": "It is three o’clock now.",
+      "kind": "phrase",
+      "picture": "🔢"
+    },
+    "yue-numbers-7": {
+      "text": "聽日見！",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ting1 jat6 gin3"
+      },
+      "meaning": "See you tomorrow!",
+      "kind": "phrase",
+      "picture": "🔢"
+    },
+    "yue-numbers-8": {
+      "text": "而家幾點？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ji4 gaa1 gei2 dim2"
+      },
+      "meaning": "What time is it now?",
+      "kind": "phrase",
+      "picture": "🔢"
+    },
+    "yue-food-1": {
+      "text": "水",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "seoi2"
+      },
+      "meaning": "water",
+      "kind": "word",
+      "picture": "🍜"
+    },
+    "yue-food-2": {
+      "text": "茶",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "caa4"
+      },
+      "meaning": "tea",
+      "kind": "word",
+      "picture": "🍜"
+    },
+    "yue-food-3": {
+      "text": "飯",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "faan6"
+      },
+      "meaning": "rice",
+      "kind": "word",
+      "picture": "🍜"
+    },
+    "yue-food-4": {
+      "text": "菠蘿包",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "bo1 lo4 baau1"
+      },
+      "meaning": "pineapple bun",
+      "kind": "word",
+      "picture": "🍜"
+    },
+    "yue-food-5": {
+      "text": "唔該，一杯茶。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "m4 goi1 jat1 bui1 caa4"
+      },
+      "meaning": "A cup of tea, please.",
+      "kind": "phrase",
+      "picture": "🍜"
+    },
+    "yue-food-6": {
+      "text": "我要一個菠蘿包。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 jiu3 jat1 go3 bo1 lo4 baau1"
+      },
+      "meaning": "I would like a pineapple bun.",
+      "kind": "phrase",
+      "picture": "🍜"
+    },
+    "yue-food-7": {
+      "text": "唔該，唔要冰。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "m4 goi1 m4 jiu3 bing1"
+      },
+      "meaning": "No ice, please.",
+      "kind": "phrase",
+      "picture": "🍜"
+    },
+    "yue-food-8": {
+      "text": "你想食啲咩？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "nei5 soeng2 sik6 di1 me1"
+      },
+      "meaning": "What would you like to eat?",
+      "kind": "phrase",
+      "picture": "🍜"
+    },
+    "yue-people-1": {
+      "text": "朋友",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "pang4 jau5"
+      },
+      "meaning": "friend",
+      "kind": "word",
+      "picture": "🤝"
+    },
+    "yue-people-2": {
+      "text": "學校",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "hok6 haau6"
+      },
+      "meaning": "school",
+      "kind": "word",
+      "picture": "🤝"
+    },
+    "yue-people-3": {
+      "text": "足球",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "zuk1 kau4"
+      },
+      "meaning": "football",
+      "kind": "word",
+      "picture": "🤝"
+    },
+    "yue-people-4": {
+      "text": "開心",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "hoi1 sam1"
+      },
+      "meaning": "happy",
+      "kind": "word",
+      "picture": "🤝"
+    },
+    "yue-people-5": {
+      "text": "我鍾意踢波。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 zung1 ji3 tek3 bo1"
+      },
+      "meaning": "I like playing football.",
+      "kind": "phrase",
+      "picture": "🤝"
+    },
+    "yue-people-6": {
+      "text": "一齊玩啦！",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "jat1 cai4 waan2 laa1"
+      },
+      "meaning": "Let’s play together!",
+      "kind": "phrase",
+      "picture": "🤝"
+    },
+    "yue-people-7": {
+      "text": "好高興識到你。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "hou2 gou1 hing3 sik1 dou2 nei5"
+      },
+      "meaning": "Nice to meet you.",
+      "kind": "phrase",
+      "picture": "🤝"
+    },
+    "yue-people-8": {
+      "text": "你鍾意做啲咩？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "nei5 zung1 ji3 zou6 di1 me1"
+      },
+      "meaning": "What do you like doing?",
+      "kind": "phrase",
+      "picture": "🤝"
+    },
+    "yue-out-1": {
+      "text": "港鐵",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "gong2 tit3"
+      },
+      "meaning": "MTR (Hong Kong’s railway)",
+      "kind": "word",
+      "picture": "🚇"
+    },
+    "yue-out-2": {
+      "text": "巴士",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "baa1 si2"
+      },
+      "meaning": "bus",
+      "kind": "word",
+      "picture": "🚇"
+    },
+    "yue-out-3": {
+      "text": "車站",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ce1 zaam6"
+      },
+      "meaning": "station",
+      "kind": "word",
+      "picture": "🚇"
+    },
+    "yue-out-4": {
+      "text": "廁所",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ci3 so2"
+      },
+      "meaning": "toilet",
+      "kind": "word",
+      "picture": "🚇"
+    },
+    "yue-out-5": {
+      "text": "唔該，港鐵站喺邊？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "m4 goi1 gong2 tit3 zaam6 hai2 bin1"
+      },
+      "meaning": "Excuse me, where is the MTR station?",
+      "kind": "phrase",
+      "picture": "🚇"
+    },
+    "yue-out-6": {
+      "text": "行前少少，轉左。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "haang4 cin4 siu2 siu2 zyun3 zo2"
+      },
+      "meaning": "Walk a little further and turn left.",
+      "kind": "phrase",
+      "picture": "🚇"
+    },
+    "yue-out-7": {
+      "text": "喺呢度落車。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "hai2 ni1 dou6 lok6 ce1"
+      },
+      "meaning": "Get off here.",
+      "kind": "phrase",
+      "picture": "🚇"
+    },
+    "yue-out-8": {
+      "text": "你想去邊？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "nei5 soeng2 heoi3 bin1"
+      },
+      "meaning": "Where would you like to go?",
+      "kind": "phrase",
+      "picture": "🚇"
+    },
+    "yue-out-9": {
+      "text": "我想去港鐵站。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 soeng2 heoi3 gong2 tit3 zaam6"
+      },
+      "meaning": "I would like to go to the MTR station.",
+      "kind": "phrase",
+      "picture": "🚇"
+    },
+    "yue-shopping-1": {
+      "text": "蚊",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "man1"
+      },
+      "meaning": "dollar (spoken Cantonese)",
+      "kind": "word",
+      "picture": "🛍️"
+    },
+    "yue-shopping-2": {
+      "text": "現金",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "jin6 gam1"
+      },
+      "meaning": "cash",
+      "kind": "word",
+      "picture": "🛍️"
+    },
+    "yue-shopping-3": {
+      "text": "八達通",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "baat3 daat6 tung1"
+      },
+      "meaning": "Octopus card",
+      "kind": "word",
+      "picture": "🛍️"
+    },
+    "yue-shopping-4": {
+      "text": "袋",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "doi2"
+      },
+      "meaning": "bag",
+      "kind": "word",
+      "picture": "🛍️"
+    },
+    "yue-shopping-5": {
+      "text": "呢個幾多錢？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ni1 go3 gei2 do1 cin2"
+      },
+      "meaning": "How much is this?",
+      "kind": "phrase",
+      "picture": "🛍️"
+    },
+    "yue-shopping-6": {
+      "text": "呢個十蚊。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ni1 go3 sap6 man1"
+      },
+      "meaning": "This costs ten dollars.",
+      "kind": "phrase",
+      "picture": "🛍️"
+    },
+    "yue-shopping-7": {
+      "text": "唔使袋，唔該。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "m4 sai2 doi2 m4 goi1"
+      },
+      "meaning": "No bag needed, thank you.",
+      "kind": "phrase",
+      "picture": "🛍️"
+    },
+    "yue-shopping-8": {
+      "text": "可唔可以用八達通？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ho2 m4 ho2 ji5 jung6 baat3 daat6 tung1"
+      },
+      "meaning": "Can I pay with Octopus?",
+      "kind": "phrase",
+      "picture": "🛍️"
+    },
+    "yue-shopping-9": {
+      "text": "可以。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ho2 ji5"
+      },
+      "meaning": "Yes, you can.",
+      "kind": "word",
+      "picture": "🛍️"
+    },
+    "yue-work-1": {
+      "text": "書",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "syu1"
+      },
+      "meaning": "book",
+      "kind": "word",
+      "picture": "📚"
+    },
+    "yue-work-2": {
+      "text": "筆",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "bat1"
+      },
+      "meaning": "pen",
+      "kind": "word",
+      "picture": "📚"
+    },
+    "yue-work-3": {
+      "text": "幫手",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "bong1 sau2"
+      },
+      "meaning": "help",
+      "kind": "word",
+      "picture": "📚"
+    },
+    "yue-work-4": {
+      "text": "做完",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "zou6 jyun4"
+      },
+      "meaning": "finished",
+      "kind": "word",
+      "picture": "📚"
+    },
+    "yue-work-5": {
+      "text": "我哋一齊做。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 dei6 jat1 cai4 zou6"
+      },
+      "meaning": "Let’s do it together.",
+      "kind": "phrase",
+      "picture": "📚"
+    },
+    "yue-work-6": {
+      "text": "唔該，可唔可以講慢啲？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "m4 goi1 ho2 m4 ho2 ji5 gong2 maan6 di1"
+      },
+      "meaning": "Could you speak more slowly, please?",
+      "kind": "phrase",
+      "picture": "📚"
+    },
+    "yue-work-7": {
+      "text": "我做呢一部分。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 zou6 ni1 jat1 bou6 fan6"
+      },
+      "meaning": "I will do this part.",
+      "kind": "phrase",
+      "picture": "📚"
+    },
+    "yue-work-8": {
+      "text": "你可唔可以幫手？",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "nei5 ho2 m4 ho2 ji5 bong1 sau2"
+      },
+      "meaning": "Can you help?",
+      "kind": "phrase",
+      "picture": "📚"
+    },
+    "yue-work-9": {
+      "text": "我哋聽日開會。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5 dei6 ting1 jat6 hoi1 wui6"
+      },
+      "meaning": "We have a meeting tomorrow.",
+      "kind": "phrase",
+      "picture": "📚"
+    },
+    "yue-work-10": {
+      "text": "好，我講慢啲。",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "hou2 ngo5 gong2 maan6 di1"
+      },
+      "meaning": "OK, I will speak more slowly.",
+      "kind": "phrase",
+      "picture": "📚"
+    },
+    "yue-tone1": {
+      "text": "詩",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "si1"
+      },
+      "meaning": "poem",
+      "kind": "word"
+    },
+    "yue-tone2": {
+      "text": "史",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "si2"
+      },
+      "meaning": "history",
+      "kind": "word"
+    },
+    "yue-tone3": {
+      "text": "試",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "si3"
+      },
+      "meaning": "try",
+      "kind": "word"
+    },
+    "yue-tone4": {
+      "text": "時",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "si4"
+      },
+      "meaning": "time",
+      "kind": "word"
+    },
+    "yue-tone5": {
+      "text": "市",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "si5"
+      },
+      "meaning": "market",
+      "kind": "word"
+    },
+    "yue-tone6": {
+      "text": "事",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "si6"
+      },
+      "meaning": "matter",
+      "kind": "word"
+    },
+    "yue-eight": {
+      "text": "八",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "baat3"
+      },
+      "meaning": "eight",
+      "kind": "word"
+    },
+    "yue-hundred": {
+      "text": "百",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "baak3"
+      },
+      "meaning": "hundred",
+      "kind": "word"
+    },
+    "yue-cow": {
+      "text": "牛",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngau4"
+      },
+      "meaning": "cow",
+      "kind": "word"
+    },
+    "yue-i": {
+      "text": "我",
+      "lang": "zh-HK",
+      "yue": {
+        "jyutping": "ngo5"
+      },
+      "meaning": "I",
+      "kind": "word"
+    }
+  },
+  "units": [
+    {
+      "id": "yue-greetings",
+      "title": "Greetings and courtesy",
+      "subtitle": "Hong Kong Cantonese",
+      "icon": "👋",
+      "color": "var(--leaf)",
+      "lessons": [
+        {
+          "id": "yue-greetings-1",
+          "title": "Greetings and courtesy · Words",
+          "icon": "👋",
+          "kind": "words",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-1",
+                "others": [
+                  "yue-greetings-2"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-4"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-2",
+                "others": [
+                  "yue-greetings-3"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-2",
+                "others": [
+                  "yue-greetings-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-5"
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-2",
+                "others": [
+                  "yue-greetings-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-greetings-2",
+          "title": "Greetings and courtesy · Useful phrases",
+          "icon": "👋",
+          "kind": "phrases",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-4"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-5"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-3",
+                "others": [
+                  "yue-greetings-4"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-7"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-5",
+                "chunks": [
+                  "我叫",
+                  "小明。"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-6",
+                "chunks": [
+                  "我學",
+                  "緊廣東話。"
+                ]
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-6",
+                "chunks": [
+                  "我學",
+                  "緊廣東話。"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-greetings-3",
+          "title": "Greetings and courtesy · Conversation",
+          "icon": "👋",
+          "kind": "conversation",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-1",
+                "replies": [
+                  "yue-greetings-1",
+                  "yue-greetings-2"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-greetings-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-1",
+                "replies": [
+                  "yue-greetings-1",
+                  "yue-greetings-2"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-7"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-1",
+                "replies": [
+                  "yue-greetings-1",
+                  "yue-greetings-2"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-5",
+                "chunks": [
+                  "我叫",
+                  "小明。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-7"
+              }
+            ],
+            "adult": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-1",
+                "replies": [
+                  "yue-greetings-1",
+                  "yue-greetings-2"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-5",
+                "chunks": [
+                  "我叫",
+                  "小明。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-7"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-greetings-4",
+          "title": "Greetings and courtesy · Review and apply",
+          "icon": "👋",
+          "kind": "review",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-1",
+                "others": [
+                  "yue-greetings-2"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-3",
+                "others": [
+                  "yue-greetings-4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-greetings-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-3",
+                "others": [
+                  "yue-greetings-4"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "yue-greetings-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-greetings-5",
+                "others": [
+                  "yue-greetings-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-6",
+                "chunks": [
+                  "我學",
+                  "緊廣東話。"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "yue-greetings-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-greetings-5",
+                "others": [
+                  "yue-greetings-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-6",
+                "chunks": [
+                  "我學",
+                  "緊廣東話。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-6",
+                "others": [
+                  "yue-greetings-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "adult": [
+              {
+                "type": "read-choice",
+                "passage": "yue-greetings-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-greetings-5",
+                "others": [
+                  "yue-greetings-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-greetings-6",
+                "chunks": [
+                  "我學",
+                  "緊廣東話。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-greetings-6",
+                "others": [
+                  "yue-greetings-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-greetings-8",
+                "replies": [
+                  "yue-greetings-5"
+                ],
+                "picture": "👋"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "yue-numbers",
+      "title": "Numbers and time",
+      "subtitle": "Hong Kong Cantonese",
+      "icon": "🔢",
+      "color": "var(--leaf)",
+      "lessons": [
+        {
+          "id": "yue-numbers-1",
+          "title": "Numbers and time · Words",
+          "icon": "🔢",
+          "kind": "words",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-1",
+                "others": [
+                  "yue-numbers-2"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-4"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-2",
+                "others": [
+                  "yue-numbers-3"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-2",
+                "others": [
+                  "yue-numbers-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-5"
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-2",
+                "others": [
+                  "yue-numbers-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-numbers-2",
+          "title": "Numbers and time · Useful phrases",
+          "icon": "🔢",
+          "kind": "phrases",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-4"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-5"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-3",
+                "others": [
+                  "yue-numbers-4"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-7"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-5",
+                "chunks": [
+                  "我要",
+                  "兩張飛。"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-6",
+                "chunks": [
+                  "而家",
+                  "三點。"
+                ]
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-6",
+                "chunks": [
+                  "而家",
+                  "三點。"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-numbers-3",
+          "title": "Numbers and time · Conversation",
+          "icon": "🔢",
+          "kind": "conversation",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-7",
+                "replies": [
+                  "yue-numbers-7"
+                ],
+                "picture": "🔢"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-numbers-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-7",
+                "replies": [
+                  "yue-numbers-7"
+                ],
+                "picture": "🔢"
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-7"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-7",
+                "replies": [
+                  "yue-numbers-7"
+                ],
+                "picture": "🔢"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-5",
+                "chunks": [
+                  "我要",
+                  "兩張飛。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-7"
+              }
+            ],
+            "adult": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-7",
+                "replies": [
+                  "yue-numbers-7"
+                ],
+                "picture": "🔢"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-5",
+                "chunks": [
+                  "我要",
+                  "兩張飛。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-7"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-numbers-4",
+          "title": "Numbers and time · Review and apply",
+          "icon": "🔢",
+          "kind": "review",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-1",
+                "others": [
+                  "yue-numbers-2"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-3",
+                "others": [
+                  "yue-numbers-4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-numbers-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-3",
+                "others": [
+                  "yue-numbers-4"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "yue-numbers-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-numbers-6",
+                "others": [
+                  "yue-numbers-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-6",
+                "chunks": [
+                  "而家",
+                  "三點。"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "yue-numbers-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-numbers-6",
+                "others": [
+                  "yue-numbers-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-6",
+                "chunks": [
+                  "而家",
+                  "三點。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-6",
+                "others": [
+                  "yue-numbers-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              }
+            ],
+            "adult": [
+              {
+                "type": "read-choice",
+                "passage": "yue-numbers-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-numbers-6",
+                "others": [
+                  "yue-numbers-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-numbers-6",
+                "chunks": [
+                  "而家",
+                  "三點。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-numbers-6",
+                "others": [
+                  "yue-numbers-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-numbers-8",
+                "replies": [
+                  "yue-numbers-6"
+                ],
+                "picture": "🔢"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "yue-food",
+      "title": "At a Hong Kong café",
+      "subtitle": "Hong Kong Cantonese",
+      "icon": "🍜",
+      "color": "var(--leaf)",
+      "lessons": [
+        {
+          "id": "yue-food-1",
+          "title": "At a Hong Kong café · Words",
+          "icon": "🍜",
+          "kind": "words",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-food-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-1",
+                "others": [
+                  "yue-food-2"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-4"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-food-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-2",
+                "others": [
+                  "yue-food-3"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-food-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-2",
+                "others": [
+                  "yue-food-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-5"
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-food-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-2",
+                "others": [
+                  "yue-food-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-food-2",
+          "title": "At a Hong Kong café · Useful phrases",
+          "icon": "🍜",
+          "kind": "phrases",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-food-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-4"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-5"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-3",
+                "others": [
+                  "yue-food-4"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-food-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-7"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-5",
+                "chunks": [
+                  "唔該",
+                  "，一杯茶。"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-food-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-6",
+                "chunks": [
+                  "我要",
+                  "一個菠蘿包。"
+                ]
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-food-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-6",
+                "chunks": [
+                  "我要",
+                  "一個菠蘿包。"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-food-3",
+          "title": "At a Hong Kong café · Conversation",
+          "icon": "🍜",
+          "kind": "conversation",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-food-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-4",
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-food-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-4",
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-7"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-4",
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-5",
+                "chunks": [
+                  "唔該",
+                  "，一杯茶。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-7"
+              }
+            ],
+            "adult": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-4",
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-5",
+                "chunks": [
+                  "唔該",
+                  "，一杯茶。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-7"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-food-4",
+          "title": "At a Hong Kong café · Review and apply",
+          "icon": "🍜",
+          "kind": "review",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-1",
+                "others": [
+                  "yue-food-2"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-3",
+                "others": [
+                  "yue-food-4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-food-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-3",
+                "others": [
+                  "yue-food-4"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "yue-food-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-food-6",
+                "others": [
+                  "yue-food-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-6",
+                "chunks": [
+                  "我要",
+                  "一個菠蘿包。"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "yue-food-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-food-6",
+                "others": [
+                  "yue-food-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-6",
+                "chunks": [
+                  "我要",
+                  "一個菠蘿包。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-6",
+                "others": [
+                  "yue-food-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              }
+            ],
+            "adult": [
+              {
+                "type": "read-choice",
+                "passage": "yue-food-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-food-6",
+                "others": [
+                  "yue-food-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-food-6",
+                "chunks": [
+                  "我要",
+                  "一個菠蘿包。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-food-6",
+                "others": [
+                  "yue-food-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-food-8",
+                "replies": [
+                  "yue-food-6"
+                ],
+                "picture": "🍜"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "yue-people",
+      "title": "Friends and small talk",
+      "subtitle": "Hong Kong Cantonese",
+      "icon": "🤝",
+      "color": "var(--leaf)",
+      "lessons": [
+        {
+          "id": "yue-people-1",
+          "title": "Friends and small talk · Words",
+          "icon": "🤝",
+          "kind": "words",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-people-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-1",
+                "others": [
+                  "yue-people-2"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-4"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-people-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-2",
+                "others": [
+                  "yue-people-3"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-people-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-2",
+                "others": [
+                  "yue-people-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-5"
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-people-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-2",
+                "others": [
+                  "yue-people-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-people-2",
+          "title": "Friends and small talk · Useful phrases",
+          "icon": "🤝",
+          "kind": "phrases",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-people-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-4"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-5"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-3",
+                "others": [
+                  "yue-people-4"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-people-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-7"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-5",
+                "chunks": [
+                  "我鍾",
+                  "意踢波。"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-people-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-6",
+                "chunks": [
+                  "一齊",
+                  "玩啦！"
+                ]
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-people-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-6",
+                "chunks": [
+                  "一齊",
+                  "玩啦！"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-people-3",
+          "title": "Friends and small talk · Conversation",
+          "icon": "🤝",
+          "kind": "conversation",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-people-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-7",
+                "replies": [
+                  "yue-people-7"
+                ],
+                "picture": "🤝"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-people-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-7",
+                "replies": [
+                  "yue-people-7"
+                ],
+                "picture": "🤝"
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-7"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-7",
+                "replies": [
+                  "yue-people-7"
+                ],
+                "picture": "🤝"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-5",
+                "chunks": [
+                  "我鍾",
+                  "意踢波。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-7"
+              }
+            ],
+            "adult": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-7",
+                "replies": [
+                  "yue-people-7"
+                ],
+                "picture": "🤝"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-5",
+                "chunks": [
+                  "我鍾",
+                  "意踢波。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-7"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-people-4",
+          "title": "Friends and small talk · Review and apply",
+          "icon": "🤝",
+          "kind": "review",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-1",
+                "others": [
+                  "yue-people-2"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-3",
+                "others": [
+                  "yue-people-4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-people-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-3",
+                "others": [
+                  "yue-people-4"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "yue-people-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-people-5",
+                "others": [
+                  "yue-people-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-6",
+                "chunks": [
+                  "一齊",
+                  "玩啦！"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "yue-people-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-people-5",
+                "others": [
+                  "yue-people-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-6",
+                "chunks": [
+                  "一齊",
+                  "玩啦！"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-6",
+                "others": [
+                  "yue-people-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              }
+            ],
+            "adult": [
+              {
+                "type": "read-choice",
+                "passage": "yue-people-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-people-5",
+                "others": [
+                  "yue-people-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-people-6",
+                "chunks": [
+                  "一齊",
+                  "玩啦！"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-people-6",
+                "others": [
+                  "yue-people-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-people-8",
+                "replies": [
+                  "yue-people-5"
+                ],
+                "picture": "🤝"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "yue-out",
+      "title": "Getting around Hong Kong",
+      "subtitle": "Hong Kong Cantonese",
+      "icon": "🚇",
+      "color": "var(--leaf)",
+      "lessons": [
+        {
+          "id": "yue-out-1",
+          "title": "Getting around Hong Kong · Words",
+          "icon": "🚇",
+          "kind": "words",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-out-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-1",
+                "others": [
+                  "yue-out-2"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-4"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-out-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-2",
+                "others": [
+                  "yue-out-3"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-out-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-2",
+                "others": [
+                  "yue-out-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-5"
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-out-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-2",
+                "others": [
+                  "yue-out-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-out-2",
+          "title": "Getting around Hong Kong · Useful phrases",
+          "icon": "🚇",
+          "kind": "phrases",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-out-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-4"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-5"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-3",
+                "others": [
+                  "yue-out-4"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-out-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-7"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-5",
+                "chunks": [
+                  "唔該",
+                  "，港鐵站喺邊？"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-out-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-6",
+                "chunks": [
+                  "行前",
+                  "少少，轉左。"
+                ]
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-out-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-6",
+                "chunks": [
+                  "行前",
+                  "少少，轉左。"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-out-3",
+          "title": "Getting around Hong Kong · Conversation",
+          "icon": "🚇",
+          "kind": "conversation",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-out-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-5",
+                "replies": [
+                  "yue-out-6"
+                ],
+                "picture": "🚇"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-out-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-5",
+                "replies": [
+                  "yue-out-6"
+                ],
+                "picture": "🚇"
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-7"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-5",
+                "replies": [
+                  "yue-out-6"
+                ],
+                "picture": "🚇"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-5",
+                "chunks": [
+                  "唔該",
+                  "，港鐵站喺邊？"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-7"
+              }
+            ],
+            "adult": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-5",
+                "replies": [
+                  "yue-out-6"
+                ],
+                "picture": "🚇"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-5",
+                "chunks": [
+                  "唔該",
+                  "，港鐵站喺邊？"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-7"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-out-4",
+          "title": "Getting around Hong Kong · Review and apply",
+          "icon": "🚇",
+          "kind": "review",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-1",
+                "others": [
+                  "yue-out-2"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-3",
+                "others": [
+                  "yue-out-4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-out-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-3",
+                "others": [
+                  "yue-out-4"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "yue-out-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-out-9",
+                "others": [
+                  "yue-out-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-6",
+                "chunks": [
+                  "行前",
+                  "少少，轉左。"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "yue-out-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-out-9",
+                "others": [
+                  "yue-out-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-6",
+                "chunks": [
+                  "行前",
+                  "少少，轉左。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-6",
+                "others": [
+                  "yue-out-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              }
+            ],
+            "adult": [
+              {
+                "type": "read-choice",
+                "passage": "yue-out-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-out-9",
+                "others": [
+                  "yue-out-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-out-6",
+                "chunks": [
+                  "行前",
+                  "少少，轉左。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-out-6",
+                "others": [
+                  "yue-out-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-out-8",
+                "replies": [
+                  "yue-out-9"
+                ],
+                "picture": "🚇"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "yue-shopping",
+      "title": "Shopping and payments",
+      "subtitle": "Hong Kong Cantonese",
+      "icon": "🛍️",
+      "color": "var(--leaf)",
+      "lessons": [
+        {
+          "id": "yue-shopping-1",
+          "title": "Shopping and payments · Words",
+          "icon": "🛍️",
+          "kind": "words",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-1",
+                "others": [
+                  "yue-shopping-2"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-4"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-2",
+                "others": [
+                  "yue-shopping-3"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-2",
+                "others": [
+                  "yue-shopping-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-2",
+                "others": [
+                  "yue-shopping-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-shopping-2",
+          "title": "Shopping and payments · Useful phrases",
+          "icon": "🛍️",
+          "kind": "phrases",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-4"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-3",
+                "others": [
+                  "yue-shopping-4"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-7"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-5",
+                "chunks": [
+                  "呢個",
+                  "幾多錢？"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-6",
+                "chunks": [
+                  "呢個",
+                  "十蚊。"
+                ]
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-6",
+                "chunks": [
+                  "呢個",
+                  "十蚊。"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-shopping-3",
+          "title": "Shopping and payments · Conversation",
+          "icon": "🛍️",
+          "kind": "conversation",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-8",
+                "replies": [
+                  "yue-shopping-9"
+                ],
+                "picture": "🛍️"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-8",
+                "replies": [
+                  "yue-shopping-9"
+                ],
+                "picture": "🛍️"
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-7"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-8",
+                "replies": [
+                  "yue-shopping-9"
+                ],
+                "picture": "🛍️"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-5",
+                "chunks": [
+                  "呢個",
+                  "幾多錢？"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-7"
+              }
+            ],
+            "adult": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-8",
+                "replies": [
+                  "yue-shopping-9"
+                ],
+                "picture": "🛍️"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-5",
+                "chunks": [
+                  "呢個",
+                  "幾多錢？"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-7"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-shopping-4",
+          "title": "Shopping and payments · Review and apply",
+          "icon": "🛍️",
+          "kind": "review",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-1",
+                "others": [
+                  "yue-shopping-2"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-3",
+                "others": [
+                  "yue-shopping-4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-shopping-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-3",
+                "others": [
+                  "yue-shopping-4"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "yue-shopping-5",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-shopping-6",
+                "others": [
+                  "yue-shopping-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-6",
+                "chunks": [
+                  "呢個",
+                  "十蚊。"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "yue-shopping-5",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-shopping-6",
+                "others": [
+                  "yue-shopping-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-6",
+                "chunks": [
+                  "呢個",
+                  "十蚊。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-6",
+                "others": [
+                  "yue-shopping-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              }
+            ],
+            "adult": [
+              {
+                "type": "read-choice",
+                "passage": "yue-shopping-5",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-shopping-6",
+                "others": [
+                  "yue-shopping-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-shopping-6",
+                "chunks": [
+                  "呢個",
+                  "十蚊。"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-shopping-6",
+                "others": [
+                  "yue-shopping-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-shopping-5",
+                "replies": [
+                  "yue-shopping-6"
+                ],
+                "picture": "🛍️"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "yue-work",
+      "title": "Learning and working together",
+      "subtitle": "Hong Kong Cantonese",
+      "icon": "📚",
+      "color": "var(--leaf)",
+      "lessons": [
+        {
+          "id": "yue-work-1",
+          "title": "Learning and working together · Words",
+          "icon": "📚",
+          "kind": "words",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-work-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-1",
+                "others": [
+                  "yue-work-2"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-4"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-work-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-2",
+                "others": [
+                  "yue-work-3"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-work-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-2",
+                "others": [
+                  "yue-work-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-5"
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-work-1"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-2"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-2",
+                "others": [
+                  "yue-work-3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-work-2",
+          "title": "Learning and working together · Useful phrases",
+          "icon": "📚",
+          "kind": "phrases",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-work-3"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-4"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-5"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-3",
+                "others": [
+                  "yue-work-4"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-work-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-7"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-5",
+                "chunks": [
+                  "我哋",
+                  "一齊做。"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "yue-work-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-6",
+                "chunks": [
+                  "唔該",
+                  "，可唔可以講慢啲？"
+                ]
+              }
+            ],
+            "adult": [
+              {
+                "type": "speak",
+                "item": "yue-work-5"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-6"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-8"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-6",
+                "chunks": [
+                  "唔該",
+                  "，可唔可以講慢啲？"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-9"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-work-3",
+          "title": "Learning and working together · Conversation",
+          "icon": "📚",
+          "kind": "conversation",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "yue-work-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-6",
+                "replies": [
+                  "yue-work-10"
+                ],
+                "picture": "📚"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "yue-work-8"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-6",
+                "replies": [
+                  "yue-work-10"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-7"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-6",
+                "replies": [
+                  "yue-work-10"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-5",
+                "chunks": [
+                  "我哋",
+                  "一齊做。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-7"
+              }
+            ],
+            "adult": [
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-6",
+                "replies": [
+                  "yue-work-10"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-5",
+                "chunks": [
+                  "我哋",
+                  "一齊做。"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-7"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-9"
+              }
+            ]
+          }
+        },
+        {
+          "id": "yue-work-4",
+          "title": "Learning and working together · Review and apply",
+          "icon": "📚",
+          "kind": "review",
+          "guide": {
+            "goal": "Use these phrases in a Hong Kong Cantonese role-play.",
+            "goalHant": "用這些短句練習香港廣東話角色扮演。",
+            "tip": "Listen to each syllable and follow its Jyutping tone number.",
+            "tipHant": "留意每個音節，跟着粵拼聲調數字練習。",
+            "practice": "Take turns asking and answering. Try again without looking at the meaning.",
+            "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-1",
+                "others": [
+                  "yue-work-2"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-3",
+                "others": [
+                  "yue-work-4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-5"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-3",
+                "others": [
+                  "yue-work-4"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "yue-work-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-work-5",
+                "others": [
+                  "yue-work-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-6",
+                "chunks": [
+                  "唔該",
+                  "，可唔可以講慢啲？"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "yue-work-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-work-5",
+                "others": [
+                  "yue-work-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-6",
+                "chunks": [
+                  "唔該",
+                  "，可唔可以講慢啲？"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-6",
+                "others": [
+                  "yue-work-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              }
+            ],
+            "adult": [
+              {
+                "type": "read-choice",
+                "passage": "yue-work-8",
+                "question": "Which reply answers this question?",
+                "questionHant": "哪句回覆回答了這個問題？",
+                "answer": "yue-work-5",
+                "others": [
+                  "yue-work-1"
+                ],
+                "explanation": "Listen for what the speaker asks, then choose a matching reply.",
+                "explanationHant": "留意對方問甚麼，再選合適的回覆。"
+              },
+              {
+                "type": "arrange",
+                "item": "yue-work-6",
+                "chunks": [
+                  "唔該",
+                  "，可唔可以講慢啲？"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "yue-work-6",
+                "others": [
+                  "yue-work-7"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "yue-work-8",
+                "replies": [
+                  "yue-work-5",
+                  "yue-work-7"
+                ],
+                "picture": "📚"
+              },
+              {
+                "type": "speak",
+                "item": "yue-work-9"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "check": {
+    "little": [
+      "yue-greetings-1",
+      "yue-food-1",
+      "yue-tone1"
+    ],
+    "junior": [
+      "yue-greetings-5",
+      "yue-food-5",
+      "yue-tone2"
+    ],
+    "teen": [
+      "yue-greetings-6",
+      "yue-out-5",
+      "yue-work-6"
+    ]
+  },
+  "lab": {
+    "sounds": [
+      "yue:tones",
+      "yue:stops",
+      "yue:ng"
+    ],
+    "ladders": {
+      "yue:tones": {
+        "syllables": [
+          "yue-tone1",
+          "yue-tone2",
+          "yue-tone3",
+          "yue-tone4",
+          "yue-tone5",
+          "yue-tone6"
+        ],
+        "words": [
+          "yue-people-1",
+          "yue-people-4"
+        ],
+        "phrases": [
+          "yue-greetings-5"
+        ],
+        "sentence": [
+          "yue-greetings-6"
+        ]
+      },
+      "yue:stops": {
+        "syllables": [
+          "yue-eight",
+          "yue-hundred",
+          "yue-numbers-4"
+        ],
+        "words": [
+          "yue-out-1",
+          "yue-work-2"
+        ],
+        "phrases": [
+          "yue-food-5"
+        ],
+        "sentence": [
+          "yue-food-6"
+        ]
+      },
+      "yue:ng": {
+        "syllables": [
+          "yue-i",
+          "yue-cow"
+        ],
+        "words": [
+          "yue-cow",
+          "yue-i"
+        ],
+        "phrases": [
+          "yue-greetings-5"
+        ],
+        "sentence": [
+          "yue-work-7"
+        ]
+      }
+    }
+  }
+}

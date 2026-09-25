@@ -49,5 +49,6 @@
   "common.noSound.line": "El profe no puede decir esta frase con suficiente claridad para enseñarla. Todo lo demás funciona: prueba con la siguiente.",
   "common.noSound.dayUsed": "Ya se ha agotado la escucha de hoy en esta cuenta. La voz del profe vuelve mañana.",
   "common.noSound.busy": "La voz del profe está muy ocupada ahora mismo. Vuelve a intentarlo en un minuto.",
-  "common.noSound.device": "El sonido no funciona en este dispositivo ahora mismo"
+  "common.noSound.device": "El sonido no funciona en este dispositivo ahora mismo",
+  "common.noSound.language": "Esta voz no admite el idioma del curso. Elige Automático u otra voz disponible en los ajustes."
 }

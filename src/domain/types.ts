@@ -15,8 +15,8 @@ export const settingsName = (band: AgeBand): string => t(band === 'adult' ? 'com
 /** The English accent a child is taught. */
 export type Accent = 'en-US' | 'en-GB';
 /** What a piece of speech is scored and spoken as: English in the child's accent, or the language of another course. */
-export type Locale = Accent | 'zh-CN' | 'fr-FR' | 'ja-JP' | 'ko-KR' | 'es-ES';
-export type CourseId = 'en' | 'zh' | 'fr' | 'ja' | 'ko' | 'es';
+export type Locale = Accent | 'zh-HK' | 'zh-CN' | 'fr-FR' | 'ja-JP' | 'ko-KR' | 'es-ES';
+export type CourseId = 'yue' | 'en' | 'zh' | 'fr' | 'ja' | 'ko' | 'es';
 /** Mandarin tone: 1–4, and 5 for the neutral (light) tone. */
 export type Tone = 1 | 2 | 3 | 4 | 5;
 /**
@@ -51,9 +51,11 @@ export interface SpeakItem {
   /** Spoken form for the reference voice when it differs from the text (e.g. isolated sounds). */
   say?: string;
   /** Mandarin, French, Japanese, Korean and Spanish items carry their own language; everything else is English in the learner's accent. */
-  lang?: 'zh-CN' | 'fr-FR' | 'ja-JP' | 'ko-KR' | 'es-ES';
+  lang?: 'zh-HK' | 'zh-CN' | 'fr-FR' | 'ja-JP' | 'ko-KR' | 'es-ES';
   /** Mandarin items: `text` is Simplified (what the scorer is sent); this adds what the child reads. */
   zh?: ZhText;
+  /** Hong Kong Cantonese stays in Traditional characters; Jyutping tones are 1–6. */
+  yue?: { jyutping: string };
   /** Japanese items: `text` is the line as written (kanji and kana, what the scorer is sent); this adds how it is read. */
   ja?: JaText;
   /** Korean items: `text` is the line as written (what the scorer is sent); this adds how it is said. */

@@ -49,5 +49,6 @@
   "common.noSound.line": "Le professeur n’arrive pas à dire celle-ci assez clairement pour l’enseigner. Tout le reste fonctionne : passe à la suivante.",
   "common.noSound.dayUsed": "L’écoute du jour est épuisée sur ce compte. La voix du professeur revient demain.",
   "common.noSound.busy": "La voix du professeur est très occupée en ce moment. Réessaie dans une minute.",
-  "common.noSound.device": "Le son ne fonctionne pas sur cet appareil pour le moment"
+  "common.noSound.device": "Le son ne fonctionne pas sur cet appareil pour le moment",
+  "common.noSound.language": "Cette voix ne prend pas en charge la langue du cours. Choisissez le mode automatique ou une autre voix disponible dans les paramètres."
 }

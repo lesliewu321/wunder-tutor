@@ -1,3 +1,4 @@
+import { LanguageFlag } from '../ui/LanguageFlag';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DAY, localParts, nextSlot, quietAt, validTimezone, type ReminderPreferences } from '../../notifications/policy.mjs';
@@ -59,7 +60,9 @@ export function Notifications() {
   const recent = p.achievements.filter(a => a.earnedAt >= now - 7 * DAY).slice(-3).reverse();
   useEffect(() => { void request({ op: 'status' }).then(setStatus).catch(() => undefined); }, []);
   const patch = (value: Partial<ReminderPreferences>) => { setPrefs(old => ({ ...old, ...value })); setMessage(null); };
-  const validate = () => prefs.days.length && prefs.courses.length && validTimezone(prefs.timezone) && !quietAt(prefs.time, prefs.quietStart, prefs.quietEnd);
+  const validate = () => prefs.days.length && prefs.courses.length && validTimezone(prefs.timezone)
+    && [prefs.time, prefs.quietStart, prefs.quietEnd].every(time => /^([01]\d|2[0-3]):[0-5]\d$/.test(time))
+    && !quietAt(prefs.time, prefs.quietStart, prefs.quietEnd);
   const run = async (action: () => Promise<void>) => {
     setBusy(true); setMessage(null);
     try { await action(); }
@@ -108,7 +111,7 @@ export function Notifications() {
         <label className="switch-row"><input type="checkbox" checked={follow} onChange={e => { setFollow(e.target.checked); if (e.target.checked) patch({ timezone: deviceTimezone() }); }} /><span className="switch" aria-hidden /><span>{t('notify.follow')}</span></label>
         <label className="select-row"><span>{t('notify.timezone')}</span><input value={prefs.timezone} disabled={follow} onChange={e => patch({ timezone: e.target.value })} /></label>
       </div>
-      <fieldset className="form-card"><legend>{t('notify.courses')}</legend><div className="notification-courses">{courses.map(course => <label key={course}><input type="checkbox" checked={prefs.courses.includes(course)} onChange={e => patch({ courses: e.target.checked ? [...prefs.courses, course] : prefs.courses.filter(c => c !== course) })} />{t(course === 'en' ? 'common.course.en' : ('settings.me.course.' + course) as Key)}</label>)}</div></fieldset>
+      <fieldset className="form-card"><legend>{t('notify.courses')}</legend><div className="notification-courses">{courses.map(course => <label key={course}><input type="checkbox" checked={prefs.courses.includes(course)} onChange={e => patch({ courses: e.target.checked ? [...prefs.courses, course] : prefs.courses.filter(c => c !== course) })} /><LanguageFlag language={course} accent={p.accent} />{t(course === 'en' ? 'common.course.en' : ('settings.me.course.' + course) as Key)}</label>)}</div></fieldset>
       <label className="switch-row switch-row--card"><input type="checkbox" checked={prefs.weekly} onChange={e => patch({ weekly: e.target.checked })} /><span className="switch" aria-hidden /><span><b>{t('notify.weekly')}</b><small>{t('notify.weeklyDetail')}</small></span></label>
       {preview && <p className="fineprint">{t('notify.next', { time: new Date(preview).toLocaleString(dateLocale(), { timeZone: prefs.timezone, weekday: 'short', hour: '2-digit', minute: '2-digit' }) })}</p>}
       {message && <p className="notification-message" role="status">{t(message)}</p>}

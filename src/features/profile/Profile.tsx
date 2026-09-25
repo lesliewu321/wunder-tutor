@@ -1,4 +1,5 @@
 import { ReminderLink } from '../../notifications/Notifications';
+import { LanguageFlag, flagEmoji } from '../../ui/LanguageFlag';
 import { TeacherVoiceSelect } from './TeacherVoiceSelect';
 import { useEffect, useState } from 'react';
 import { handleFor, makeHandle } from '../../engine/handles';
@@ -26,9 +27,9 @@ import { InviteCodeForm } from './InviteCodeForm';
 /** The Course list's last entry: not a course, it opens the list of courses to tick. */
 const MANAGE = '__manage';
 const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
-const COURSES: CourseId[] = ['en', 'zh', 'ja', 'ko', 'fr', 'es']; // the same order as Home and setup (French after Korean, Leslie 2026-09-25)
+const COURSES: CourseId[] = ['en', 'zh', 'yue', 'ja', 'ko', 'fr', 'es']; // the same order as Home and setup (French after Korean, Leslie 2026-09-25)
 /** A course's name on the Me card: English carries the accent; Putonghua and French keep their own names. */
-const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { zh: 'settings.me.course.zh', fr: 'settings.me.course.fr', ja: 'settings.me.course.ja', ko: 'settings.me.course.ko', es: 'settings.me.course.es' };
+const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { yue: 'settings.me.course.yue', zh: 'settings.me.course.zh', fr: 'settings.me.course.fr', ja: 'settings.me.course.ja', ko: 'settings.me.course.ko', es: 'settings.me.course.es' };
 
 /**
  * The courses row, looking like the dropdowns around it (Leslie, 2026-09-21). It opens a list to tick rather than being
@@ -42,10 +43,10 @@ function CourseSheet({ p, open, setOpen }: { p: ChildProfile; open: boolean; set
   const [keep, setKeep] = useState(false);
   useEffect(() => { if (open) setKeep(false); }, [open]);
   // Putonghua keeps its own name, in the learner's characters (written in Simplified here); French and Japanese theirs.
-  const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : c === 'ja' ? '日本語' : c === 'ko' ? '한국어' : c === 'es' ? 'Español' : 'Français');
-  const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'fr' ? 'fr' : c === 'ja' ? 'ja' : c === 'ko' ? 'ko' : c === 'es' ? 'es' : undefined);
+  const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : c === 'yue' ? '香港廣東話' : c === 'ja' ? '日本語' : c === 'ko' ? '한국어' : c === 'es' ? 'Español' : 'Français');
+  const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'yue' ? 'yue-HK' : c === 'fr' ? 'fr' : c === 'ja' ? 'ja' : c === 'ko' ? 'ko' : c === 'es' ? 'es' : undefined);
   // In the list, what the course's own name may not tell the grown-up reading it.
-  const gloss = (c: CourseId) => (c === 'fr' || c === 'ja' || c === 'ko' || c === 'es' || (c === 'zh' && !isChinese()) ? t(COURSE_LABEL[c]) : null);
+  const gloss = (c: CourseId) => (c === 'yue' || c === 'fr' || c === 'ja' || c === 'ko' || c === 'es' || (c === 'zh' && !isChinese()) ? t(COURSE_LABEL[c]) : null);
   const toggle = (c: CourseId) => {
     const on = p.learning.includes(c);
     if (on && p.learning.length === 1) { setKeep(true); return; }
@@ -65,7 +66,7 @@ function CourseSheet({ p, open, setOpen }: { p: ChildProfile; open: boolean; set
               const more = gloss(c);
               return (
                 <button key={c} type="button" className={`tile ${on ? 'is-on' : ''}`} aria-pressed={on} onClick={() => toggle(c)}>
-                  <span><b lang={lang(c)}>{name(c)}</b>{more && <small>{more}</small>}</span>
+                  <span><LanguageFlag language={c} accent={p.accent} /> <b lang={lang(c)}>{name(c)}</b>{more && <small>{more}</small>}</span>
                   <span className="tile__tick" aria-hidden>{on && <Icon name="check" size={18} />}</span>
                 </button>
               );
@@ -104,7 +105,7 @@ export function Me() {
   // Switching between the learner's own courses — the ones a grown-up chose in Settings (Leslie, 2026-09-21: "even if I
   // select only 2 languages in settings, all 4 appear in front page"); moved here from Home (2026-09-25). The Putonghua
   // course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
-  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', ja: '日本語 Japanese', ko: '한국어 Korean', fr: 'Français', es: 'Español' }; // order (Leslie, 2026-09-25): French after Korean
+  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', yue: '香港廣東話 · ' + t('settings.me.course.yue'), ja: '日本語 Japanese', ko: '한국어 Korean', fr: 'Français', es: 'Español' }; // order (Leslie, 2026-09-25): French after Korean
   // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
   const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
   const [managing, setManaging] = useState(false);
@@ -114,9 +115,9 @@ export function Me() {
       <TopBar title={t('settings.me.title')} right={<IconButton className="settings-cog" icon="cog" label={settingsName(p.band)} onClick={() => nav('/parents')} />} />
       {/* The course, at the very top (Leslie, 2026-09-25). Its list ends with adding or removing courses — the one place
           for that now; Settings no longer has a Courses row. */}
-      <label className="course-pick"><span>{t('home.course.aria')}</span>
+      <label className="course-pick"><span><LanguageFlag language={p.course} accent={p.accent} /> {t('home.course.aria')}</span>
         <select value={p.course} onChange={(e) => { if (e.target.value === MANAGE) setManaging(true); else setCourse(e.target.value as CourseId); }}>
-          {myCourses.map((id) => <option key={id} value={id}>{inScript(courseLabel[id], p.zhScript)}</option>)}
+          {myCourses.map((id) => <option key={id} value={id}>{flagEmoji(id, p.accent)} {inScript(courseLabel[id], p.zhScript)}</option>)}
           <option value={MANAGE}>{t('settings.learning.courses.manage')}</option>
         </select>
       </label>
@@ -250,8 +251,8 @@ export function ParentZone() {
         <h2 className="section-title">{t('settings.look.title')}</h2>
         {/* The app's own wording — never what is being learned. For this device, whoever is learning. */}
         <div className="form-card form-card--gap">
-          <label className="select-row"><span>{t('settings.look.language')}</span>
-            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as Language })}>{LANGUAGES.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}</select>
+          <label className="select-row"><span><LanguageFlag language={settings.language ?? language()} /> {t('settings.look.language')}</span>
+            <select value={language()} onChange={(e) => setSettings({ language: e.target.value as Language })}>{LANGUAGES.map((l) => <option key={l.id} value={l.id}>{flagEmoji(l.id)} {l.label}</option>)}</select>
           </label>
         </div>
         <div className="segmented" role="group" aria-label={t('settings.look.theme')}>
@@ -275,10 +276,15 @@ export function ParentZone() {
               <select value={p.zhScript} onChange={(e) => patch(p.id, { zhScript: e.target.value as 'hant' | 'hans' })}><option value="hans">{t('settings.learning.script.hans')}</option><option value="hant">{t('settings.learning.script.hant')}</option></select>
             </label>
           )}
-          <label className="select-row"><span>{t('settings.learning.home')}</span>
-            <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{homeLanguageLabel(l.id)}</option>)}</select>
+          <label className="select-row"><span><LanguageFlag language={p.homeLanguage} /> {t('settings.learning.home')}</span>
+            <select value={p.homeLanguage} onChange={(e) => patch(p.id, { homeLanguage: e.target.value as typeof p.homeLanguage })}>{HOME_LANGUAGES.map((l) => <option key={l.id} value={l.id}>{flagEmoji(l.id)} {homeLanguageLabel(l.id)}</option>)}</select>
           </label>
         </div>
+      </section>
+
+      <section id="teacher-voice">
+        <h2 className="section-title">{t('settings.demo.voice')}</h2>
+        <div className="form-card"><TeacherVoiceSelect services={services} /></div>
       </section>
 
       <section>
@@ -339,9 +345,9 @@ export function ParentZone() {
             </select>
           </label>
           <div className="select-row"><span>{t('settings.demo.scoring')}</span><b>{services == null ? '…' : t(services.azure ? 'settings.demo.scoring.azure' : 'settings.demo.scoring.builtIn')}</b></div>
-          <TeacherVoiceSelect services={services} />
           <div className="select-row"><span>{t('settings.demo.tutor')}</span><b>{services == null ? '…' : t(services.claude ? 'settings.demo.tutor.claude' : 'settings.demo.tutor.scripted')}</b></div>
           <div className="select-row"><span>{t('settings.demo.version')}</span><b>{__APP_VERSION__}</b></div>
+          <Button variant="ghost" onClick={() => { window.location.assign('/parents?update=' + Date.now()); }}>{t('settings.update.reload')}</Button>
         </div>
       </section>
 

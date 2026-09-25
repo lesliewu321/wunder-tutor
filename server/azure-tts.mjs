@@ -14,6 +14,7 @@
 export const BACKUP_VOICES = {
   'en-US': 'en-US-AvaNeural',
   'en-GB': 'en-GB-SoniaNeural',
+  'zh-HK': 'zh-HK-HiuMaanNeural',
   'zh-CN': 'zh-CN-XiaoxiaoNeural',
   'fr-FR': 'fr-FR-DeniseNeural',
   'ja-JP': 'ja-JP-NanamiNeural',

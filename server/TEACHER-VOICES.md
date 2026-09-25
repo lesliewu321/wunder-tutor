@@ -2,14 +2,14 @@
 
 Settings → Teacher voice provides Automatic, Azure Neural, Qwen, Google Chirp 3 HD, Gemini and This device's voice. The choice is saved on this device and a preview reads a fixed sample in the active course language. Unconfigured cloud services are disabled in the dropdown. Availability reflects configuration and access, not a guarantee that an upstream key has passed a synthesis call.
 
-Automatic keeps Gemini first, then uses Azure if Gemini is unconfigured, then the device. An explicit selection never silently plays a different provider after failure. Existing pronunciation scoring remains Azure.
+Automatic tries configured Gemini, Azure, Chirp and Qwen voices in that order, then a same-language device voice. For Hong Kong Cantonese it uses Azure, Chirp and Qwen; Gemini is disabled. Provider failures can fall through, while access/account limits stop additional cloud attempts. An explicit selection never silently plays a different provider after failure. Existing pronunciation scoring remains Azure.
 
 ## Server configuration
 
 | Choice | Configuration | Default voice |
 | --- | --- | --- |
 | Azure Neural | AZURE_SPEECH_KEY + AZURE_SPEECH_REGION | Existing per-language neural voices in azure-tts.mjs |
-| Qwen | DASHSCOPE_API_KEY; QWEN_TTS_REGION = qwencloud, singapore (default) or beijing | qwen3-tts-flash / Cherry |
+| Qwen | DASHSCOPE_API_KEY; QWEN_TTS_REGION = qwencloud, singapore (default) or beijing | qwen3-tts-flash / Cherry; Kiki for Hong Kong Cantonese |
 | Google Chirp 3 HD | GOOGLE_CLOUD_TTS_API_KEY, with Cloud Text-to-Speech enabled and billing configured | Aoede, selected by language |
 | Gemini | Existing GEMINI_API_KEY and optional model/voice overrides | Existing Gemini teacher |
 

@@ -29,7 +29,8 @@
         "fr",
         "ja",
         "ko",
-        "es"
+        "es",
+        "yue"
       ]
     },
     "title": {
@@ -182,7 +183,8 @@
             "fr-FR",
             "ja-JP",
             "ko-KR",
-            "es-ES"
+            "es-ES",
+            "zh-HK"
           ],
           "description": "Omitted for English, which is said in the learner's accent."
         },
@@ -260,6 +262,19 @@
             "romaja": {
               "type": "string",
               "description": "Revised Romanization, by hand (it does not show tensification): tteokbokki."
+            }
+          }
+        },
+        "yue": {
+          "type": "object",
+          "required": [
+            "jyutping"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "jyutping": {
+              "type": "string",
+              "pattern": "^[a-z]+[1-6]( [a-z]+[1-6])*$"
             }
           }
         }
@@ -372,6 +387,9 @@
               "$ref": "#/definitions/exercises"
             },
             "teen": {
+              "$ref": "#/definitions/exercises"
+            },
+            "adult": {
               "$ref": "#/definitions/exercises"
             }
           }

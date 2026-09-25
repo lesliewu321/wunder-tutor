@@ -5,6 +5,7 @@ import { FR_SOUNDS } from './fr/sounds';
 import { JA_SOUNDS } from './ja/sounds';
 import { KO_SOUNDS } from './ko/sounds';
 import { ES_SOUNDS } from './es/sounds';
+import { YUE_SOUNDS } from './yue/sounds';
 import { ZH_SOUNDS } from './zh/sounds';
 import { inScript } from './zh/script';
 
@@ -332,6 +333,7 @@ const CANTONESE: Record<PhonemeId, { boost: number; heardAs?: PhonemeId }> = {
 export const PHONEMES: Record<PhonemeId, PhonemeInfo> = Object.fromEntries([
   ...[...list, ...easyConsonants.map(fromEasy('consonant')), ...vowels.map(fromEasy('vowel'))]
     .map((p) => [p.id, CANTONESE[p.id] ? { ...p, l1: { ...p.l1, yue: CANTONESE[p.id] } } : p] as const),
+  ...YUE_SOUNDS.map((p) => [p.id, p] as const),
   ...ZH_SOUNDS.map((p) => [p.id, p] as const),
   // French ids are plain IPA and none of them is an English one, so no namespace is needed (see fr/sounds.ts).
   ...FR_SOUNDS.map((p) => [p.id, p] as const),
@@ -351,7 +353,7 @@ const FR_IDS = new Set<PhonemeId>(FR_SOUNDS.map((p) => p.id));
 
 /** The language a sound's example is spoken in: a French or Japanese sound's example is a French or Japanese word. */
 export const soundLocale = (id: PhonemeId, accent: Accent): Locale =>
-  isZhSound(id) ? 'zh-CN' : isJaSound(id) ? 'ja-JP' : isKoSound(id) ? 'ko-KR' : isEsSound(id) ? 'es-ES' : FR_IDS.has(id) ? 'fr-FR' : accent;
+  id.startsWith('yue:') ? 'zh-HK' : isZhSound(id) ? 'zh-CN' : isJaSound(id) ? 'ja-JP' : isKoSound(id) ? 'ko-KR' : isEsSound(id) ? 'es-ES' : FR_IDS.has(id) ? 'fr-FR' : accent;
 
 /**
  * A sound's guide as the learner reads it — a copy, worked out when asked for, so it follows the App language and the

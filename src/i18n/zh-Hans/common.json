@@ -49,5 +49,6 @@
   "common.noSound.line": "这一句导师未能读得够清楚，所以不作示范。其他部分仍可照常练习，试试下一句。",
   "common.noSound.dayUsed": "这个账户今天的聆听次数已用完，导师的声音明天会回来。",
   "common.noSound.busy": "导师的声音现在非常繁忙，请一分钟后再试。",
-  "common.noSound.device": "这部装置目前无法播放声音"
+  "common.noSound.device": "这部装置目前无法播放声音",
+  "common.noSound.language": "这个声音不支援此课程语言。请在设定中选择自动或其他可用的老师声音。"
 }

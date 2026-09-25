@@ -1,3 +1,4 @@
+import type { Locale } from '../domain/types';
 import type { ApiHealth } from './health';
 export const TEACHER_VOICES = ['auto', 'azure', 'qwen', 'chirp', 'gemini', 'device'] as const;
 export type TeacherVoiceChoice = typeof TEACHER_VOICES[number];
@@ -16,7 +17,10 @@ export function setTeacherVoiceChoice(choice: TeacherVoiceChoice): void {
 }
 export const voiceConfigured = (id: TeacherVoiceChoice, h: ApiHealth | null): boolean =>
   id === 'auto' || id === 'device' || !!(h?.voiceProviders?.[id] ?? (id === 'gemini' && h?.gemini));
+export const voiceSupports = (id: TeacherVoiceChoice, locale: Locale): boolean => locale !== 'zh-HK' || id !== 'gemini';
+export const automaticVoices = (h: ApiHealth, locale?: Locale): CloudVoice[] =>
+  (locale === 'zh-HK' ? ['azure', 'chirp', 'qwen'] as const : ['gemini', 'azure', 'chirp', 'qwen'] as const).filter(id => voiceConfigured(id, h));
 export function selectedVoice(h: ApiHealth): Exclude<TeacherVoiceChoice, 'auto'> {
   const choice = teacherVoiceChoice();
-  return choice !== 'auto' ? choice : h.gemini ? 'gemini' : h.voiceProviders?.azure ? 'azure' : 'device';
+  return choice !== 'auto' ? choice : automaticVoices(h)[0] ?? 'device';
 }

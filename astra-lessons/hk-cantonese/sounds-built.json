@@ -1,0 +1,74 @@
+[
+  {
+    "id": "yue:tones",
+    "label": "1 · 2 · 3 · 4 · 5 · 6",
+    "example": "詩 si1",
+    "category": "tone",
+    "name": "Six Cantonese tones",
+    "tip": {
+      "junior": "Compare si1, si2, si3, si4, si5 and si6. Copy the pitch, not just the letters."
+    },
+    "steps": [
+      "Compare si1, si2, si3, si4, si5 and si6. Copy the pitch, not just the letters."
+    ],
+    "problem": "Compare si1, si2, si3, si4, si5 and si6. Copy the pitch, not just the letters.",
+    "detail": "Compare si1, si2, si3, si4, si5 and si6. Copy the pitch, not just the letters.",
+    "difficulty": 0.5,
+    "pose": {
+      "open": 0.3,
+      "round": 0,
+      "spread": 0.2,
+      "tongue": "rest",
+      "air": "none",
+      "voiced": true
+    }
+  },
+  {
+    "id": "yue:stops",
+    "label": "-p · -t · -k",
+    "example": "八 baat3",
+    "category": "consonant",
+    "name": "Short stop endings",
+    "tip": {
+      "junior": "End -p, -t and -k with a short closure. Do not add a vowel after the final consonant."
+    },
+    "steps": [
+      "End -p, -t and -k with a short closure. Do not add a vowel after the final consonant."
+    ],
+    "problem": "End -p, -t and -k with a short closure. Do not add a vowel after the final consonant.",
+    "detail": "End -p, -t and -k with a short closure. Do not add a vowel after the final consonant.",
+    "difficulty": 0.5,
+    "pose": {
+      "open": 0.3,
+      "round": 0,
+      "spread": 0.2,
+      "tongue": "rest",
+      "air": "none",
+      "voiced": true
+    }
+  },
+  {
+    "id": "yue:ng",
+    "label": "ng",
+    "example": "我 ngo5",
+    "category": "consonant",
+    "name": "Initial ng",
+    "tip": {
+      "junior": "Start ngo5 with a gentle nasal ng. Keep your lips relaxed and let the sound resonate through your nose."
+    },
+    "steps": [
+      "Start ngo5 with a gentle nasal ng. Keep your lips relaxed and let the sound resonate through your nose."
+    ],
+    "problem": "Start ngo5 with a gentle nasal ng. Keep your lips relaxed and let the sound resonate through your nose.",
+    "detail": "Start ngo5 with a gentle nasal ng. Keep your lips relaxed and let the sound resonate through your nose.",
+    "difficulty": 0.5,
+    "pose": {
+      "open": 0.3,
+      "round": 0,
+      "spread": 0.2,
+      "tongue": "rest",
+      "air": "nose",
+      "voiced": true
+    }
+  }
+]

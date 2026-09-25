@@ -1,3 +1,4 @@
+import { LanguageFlag, flagEmoji } from '../../ui/LanguageFlag';
 import { useEffect, useRef, useState } from 'react';
 import { readsTraditional } from '../../engine/region';
 import { DAILY_GOALS, goalDetail } from '../../engine/rewards';
@@ -10,6 +11,7 @@ import { FR_CHECK_ITEMS } from '../../content/fr/course';
 import { JA_CHECK_ITEMS } from '../../content/ja/course';
 import { KO_CHECK_ITEMS } from '../../content/ko/course';
 import { ES_CHECK_ITEMS } from '../../content/es/course';
+import { YUE_CHECK_ITEMS } from '../../content/yue/course';
 import { ZH_CHECK_ITEMS } from '../../content/zh/course';
 import { LANGUAGES, language, type Key } from '../../i18n';
 import { useBack } from '../../back';
@@ -46,6 +48,7 @@ const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
 /** The courses on offer first, then the ones coming soon (Leslie, 2026-09-22: "list coming soon languages last"). */
 const LEARN: { id: CourseId | 'de'; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
+  { id: 'yue', label: 'settings.me.course.yue', ready: true, lang: 'yue-HK' },
   { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' }, { id: 'ko', label: 'onboarding.languages.learn.ko', ready: true, lang: 'ko' },
   { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'es', label: 'onboarding.languages.learn.es', ready: true, lang: 'es' },
   { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
@@ -144,7 +147,7 @@ export function Onboarding() {
   const firstCourse: CourseId = learning[0] ?? 'en';
   const checkItems = () => {
     const band = contentBand(useStore.getState().profiles[useStore.getState().activeId ?? '']?.band ?? 'junior');
-    return (firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : firstCourse === 'ja' ? JA_CHECK_ITEMS : firstCourse === 'ko' ? KO_CHECK_ITEMS : firstCourse === 'es' ? ES_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
+    return (firstCourse === 'yue' ? YUE_CHECK_ITEMS : firstCourse === 'zh' ? ZH_CHECK_ITEMS : firstCourse === 'fr' ? FR_CHECK_ITEMS : firstCourse === 'ja' ? JA_CHECK_ITEMS : firstCourse === 'ko' ? KO_CHECK_ITEMS : firstCourse === 'es' ? ES_CHECK_ITEMS : ASSESSMENT_ITEMS)[band];
   };
   // The check's first takes are fetched while the grown-up signs in and hands over (a hard line can take the server ten
   // seconds), and the next one while the child says this one: Listen is instant, instead of a wait that looks like no sound.
@@ -250,7 +253,7 @@ export function Onboarding() {
           <label className="lang-pick" aria-label={t('onboarding.language.aria')}>
             <Icon name="globe" size={18} />
             <select value={language()} onChange={(e) => setSettings({ language: e.target.value as typeof LANGUAGES[number]['id'] })}>
-              {LANGUAGES.map((l) => <option key={l.id} value={l.id} lang={l.htmlLang}>{l.label}</option>)}
+              {LANGUAGES.map((l) => <option key={l.id} value={l.id} lang={l.htmlLang}>{flagEmoji(l.id)} {l.label}</option>)}
             </select>
           </label>
         )}
@@ -285,7 +288,7 @@ export function Onboarding() {
             const on = l.ready && learning.includes(l.id as CourseId);
             return (
               <button key={l.id} type="button" className={`chip ${on ? 'is-on' : ''}`} disabled={!l.ready} aria-pressed={on} onClick={() => l.ready && pickCourse(l.id as CourseId)}>
-                <span lang={l.lang}>{t(l.label)}</span>{!l.ready && <small> · {t('onboarding.languages.soon')}</small>}
+                <LanguageFlag language={l.id} accent={accent} /><span lang={l.lang}>{t(l.label)}</span>{!l.ready && <small> · {t('onboarding.languages.soon')}</small>}
               </button>
             );
           })}</div>
@@ -293,7 +296,7 @@ export function Onboarding() {
           <h2 className="field-label">{t('onboarding.languages.home')}</h2>
           <div className="grid-2">{HOME_LANGUAGES.map((l) => (
             <button key={l.id} type="button" className={`tile ${home === l.id ? 'is-on' : ''}`} onClick={() => setHome(l.id)} aria-pressed={home === l.id}>
-              <span><b lang={l.id === 'other' ? undefined : l.id}>{l.native || homeLanguageLabel(l.id)}</b>{homeLanguageLabel(l.id) !== l.native && <small>{homeLanguageLabel(l.id)}</small>}</span>
+              <span><LanguageFlag language={l.id} /> <b lang={l.id === 'other' ? undefined : l.id}>{l.native || homeLanguageLabel(l.id)}</b>{homeLanguageLabel(l.id) !== l.native && <small>{homeLanguageLabel(l.id)}</small>}</span>
             </button>
           ))}</div>
         </>,

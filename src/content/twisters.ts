@@ -24,7 +24,7 @@ export const TWISTERS: Twister[] = ALL_TWISTERS.filter((t) => t.proven);
 
 /** The twisters of one language, shortest first. */
 /** The twisters are written per scorer locale; English ones are en-US lines said in the learner's own accent. */
-export const COURSE_LOCALE: Record<CourseId, Locale> = { en: 'en-US', zh: 'zh-CN', fr: 'fr-FR', ja: 'ja-JP', ko: 'ko-KR', es: 'es-ES' };
+export const COURSE_LOCALE: Record<CourseId, Locale> = { en: 'en-US', yue: 'zh-HK', zh: 'zh-CN', fr: 'fr-FR', ja: 'ja-JP', ko: 'ko-KR', es: 'es-ES' };
 
 /** A learner's best passing time per twister, kept on this device. */
 export interface TwisterBest { ms: number; score: number; tries: number }

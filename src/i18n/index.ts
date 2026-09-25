@@ -30,6 +30,7 @@ import zhContentCourse from './zh-Hant/content-course.json';
 import astraContent from '../../astra-lessons/i18n/zh-Hant.json';
 import curriculumCatalogs from '../../astra-lessons/i18n/curriculum.json';
 import type { SpeakItem } from '../domain/types';
+import cantoneseCatalogs from '../../astra-lessons/i18n/cantonese.json';
 import communicationCatalogs from '../../astra-lessons/i18n/communication.json';
 import zhFeedback from './zh-Hant/feedback.json';
 import zhHome from './zh-Hant/home.json';
@@ -70,7 +71,7 @@ const LESSONS: Partial<Record<Language, Catalog>> = { en: {} };
 /** What practice items mean, keyed by the English meaning in the course data (`tm`). Fetched for every language. */
 const MEANINGS: Partial<Record<Language, Catalog>> = { en: {} };
 // Lesson-pack translations stay next to their authored material.
-for (const source of [communicationCatalogs, curriculumCatalogs]) for (const [locale, pack] of Object.entries(source)) {
+for (const source of [communicationCatalogs, curriculumCatalogs, cantoneseCatalogs]) for (const [locale, pack] of Object.entries(source)) {
   const l = locale as Language;
   CONTENT[l] = { ...CONTENT[l], ...pack.content };
   LESSONS[l] = { ...LESSONS[l], ...pack.lessons };

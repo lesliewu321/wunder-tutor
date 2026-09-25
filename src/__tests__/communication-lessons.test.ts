@@ -6,9 +6,9 @@ import { sameSentence, courseLessons, lessonUnlocked } from '../engine/curriculu
 import { buildReview, itemCourse } from '../engine/learning';
 import { emptyProfile } from '../intelligence/profile';
 import { frFullyKnown } from '../content/fr/course';
-import type { ChildProfile, CourseId, Exercise, SpeakItem } from '../domain/types';
+import type { ChildProfile, Exercise, SpeakItem } from '../domain/types';
 
-const langs: CourseId[] = ['en','zh','ja','ko','fr','es'];
+const langs = ['en','zh','ja','ko','fr','es'] as const;
 const bands = ['little','junior','teen'] as const;
 const items = (ex: Exercise): SpeakItem[] => ex.type === 'speak' || ex.type === 'arrange' ? [ex.item]
   : ex.type === 'read-choice' ? [ex.passage, ...ex.options]

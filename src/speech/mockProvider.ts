@@ -53,7 +53,9 @@ export class MockPronunciationProvider implements PronunciationProvider {
 
     // French is scored with French sounds: the English lexicon turned croissant into an English r ("closer to /w/").
     // Japanese is one line of beats, each named by the sound it is taught as (or unnamed), as the real scorer's are.
-    const words = ctx.locale === 'ja-JP' && ctx.ja
+    const words = ctx.locale === 'zh-HK'
+      ? [...referenceText].filter(c => /\p{Script=Han}/u.test(c)).map(c => ({ word: c, key: c, syllables: [{ text: c, phonemes: [''] }] }))
+      : ctx.locale === 'ja-JP' && ctx.ja
       ? [{ word: referenceText, key: referenceText, syllables: morae(ctx.ja.kana).map((m) => ({ text: m.kana, phonemes: [m.unit ?? ''] })) }]
       : ctx.locale === 'ko-KR' && ctx.ko
         ? [{ word: referenceText, key: referenceText, syllables: blocks(ctx.ko.pron).map((b) => ({ text: b.block, phonemes: [b.unit ?? ''] })) }]

@@ -23,7 +23,7 @@ export function LiteracyExercise({ ex, onDone, test = false }: { ex: Literacy; o
   const item = ex.type === 'arrange' ? ex.item : ex.passage;
   const chunks = ex.type === 'arrange' ? (p.zhScript === 'hant' ? ex.chunksHant ?? ex.chunks : ex.chunks) : [];
   const target = p.zhScript === 'hant' ? item.zh?.hant ?? item.text : item.text;
-  const sentence = picked.map((i) => chunks[i]).join(item.zh ? '' : ' ');
+  const sentence = picked.map((i) => chunks[i]).join(item.zh || item.yue ? '' : ' ');
   const hear = () => void voice.speak(item.text, { accent: localeOf(item, p.accent), kind: item.kind }).catch(async (e) => toast(await noSoundMessage(p.band, e), '🔇'));
   // "The evidence is in sentence N: …" — one template per App language; the sentence is the passage's own, in the language
   // being learned and in the learner's script. (The English lines of the two courses read the same, the English

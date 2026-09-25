@@ -1,0 +1,431 @@
+[
+  {
+    "id": "yue-greetings",
+    "course": "yue",
+    "title": "Greetings and courtesy",
+    "icon": "👋",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Greetings and courtesy"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-greetings-8",
+          "junior": "yue-greetings-8",
+          "teen": "yue-greetings-8"
+        },
+        "replies": {
+          "little": [
+            "yue-greetings-5"
+          ],
+          "junior": [
+            "yue-greetings-5"
+          ],
+          "teen": [
+            "yue-greetings-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-greetings-1",
+          "junior": "yue-greetings-1",
+          "teen": "yue-greetings-1"
+        },
+        "replies": {
+          "little": [
+            "yue-greetings-1",
+            "yue-greetings-2"
+          ],
+          "junior": [
+            "yue-greetings-1",
+            "yue-greetings-2"
+          ],
+          "teen": [
+            "yue-greetings-1",
+            "yue-greetings-2"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-greetings-4",
+      "junior": "yue-greetings-4",
+      "teen": "yue-greetings-4"
+    }
+  },
+  {
+    "id": "yue-numbers",
+    "course": "yue",
+    "title": "Numbers and time",
+    "icon": "🔢",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Numbers and time"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-numbers-8",
+          "junior": "yue-numbers-8",
+          "teen": "yue-numbers-8"
+        },
+        "replies": {
+          "little": [
+            "yue-numbers-6"
+          ],
+          "junior": [
+            "yue-numbers-6"
+          ],
+          "teen": [
+            "yue-numbers-6"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-numbers-7",
+          "junior": "yue-numbers-7",
+          "teen": "yue-numbers-7"
+        },
+        "replies": {
+          "little": [
+            "yue-numbers-7"
+          ],
+          "junior": [
+            "yue-numbers-7"
+          ],
+          "teen": [
+            "yue-numbers-7"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-greetings-4",
+      "junior": "yue-greetings-4",
+      "teen": "yue-greetings-4"
+    }
+  },
+  {
+    "id": "yue-food",
+    "course": "yue",
+    "title": "At a Hong Kong café",
+    "icon": "🍜",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "At a Hong Kong café"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-food-8",
+          "junior": "yue-food-8",
+          "teen": "yue-food-8"
+        },
+        "replies": {
+          "little": [
+            "yue-food-6"
+          ],
+          "junior": [
+            "yue-food-6"
+          ],
+          "teen": [
+            "yue-food-6"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-food-8",
+          "junior": "yue-food-8",
+          "teen": "yue-food-8"
+        },
+        "replies": {
+          "little": [
+            "yue-food-4",
+            "yue-food-6"
+          ],
+          "junior": [
+            "yue-food-4",
+            "yue-food-6"
+          ],
+          "teen": [
+            "yue-food-4",
+            "yue-food-6"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-greetings-4",
+      "junior": "yue-greetings-4",
+      "teen": "yue-greetings-4"
+    }
+  },
+  {
+    "id": "yue-people",
+    "course": "yue",
+    "title": "Friends and small talk",
+    "icon": "🤝",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Friends and small talk"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-people-8",
+          "junior": "yue-people-8",
+          "teen": "yue-people-8"
+        },
+        "replies": {
+          "little": [
+            "yue-people-5"
+          ],
+          "junior": [
+            "yue-people-5"
+          ],
+          "teen": [
+            "yue-people-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-people-7",
+          "junior": "yue-people-7",
+          "teen": "yue-people-7"
+        },
+        "replies": {
+          "little": [
+            "yue-people-7"
+          ],
+          "junior": [
+            "yue-people-7"
+          ],
+          "teen": [
+            "yue-people-7"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-greetings-4",
+      "junior": "yue-greetings-4",
+      "teen": "yue-greetings-4"
+    }
+  },
+  {
+    "id": "yue-out",
+    "course": "yue",
+    "title": "Getting around Hong Kong",
+    "icon": "🚇",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Getting around Hong Kong"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-out-8",
+          "junior": "yue-out-8",
+          "teen": "yue-out-8"
+        },
+        "replies": {
+          "little": [
+            "yue-out-9"
+          ],
+          "junior": [
+            "yue-out-9"
+          ],
+          "teen": [
+            "yue-out-9"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-out-5",
+          "junior": "yue-out-5",
+          "teen": "yue-out-5"
+        },
+        "replies": {
+          "little": [
+            "yue-out-6"
+          ],
+          "junior": [
+            "yue-out-6"
+          ],
+          "teen": [
+            "yue-out-6"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-greetings-4",
+      "junior": "yue-greetings-4",
+      "teen": "yue-greetings-4"
+    }
+  },
+  {
+    "id": "yue-shopping",
+    "course": "yue",
+    "title": "Shopping and payments",
+    "icon": "🛍️",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Shopping and payments"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-shopping-5",
+          "junior": "yue-shopping-5",
+          "teen": "yue-shopping-5"
+        },
+        "replies": {
+          "little": [
+            "yue-shopping-6"
+          ],
+          "junior": [
+            "yue-shopping-6"
+          ],
+          "teen": [
+            "yue-shopping-6"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-shopping-8",
+          "junior": "yue-shopping-8",
+          "teen": "yue-shopping-8"
+        },
+        "replies": {
+          "little": [
+            "yue-shopping-9"
+          ],
+          "junior": [
+            "yue-shopping-9"
+          ],
+          "teen": [
+            "yue-shopping-9"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-greetings-4",
+      "junior": "yue-greetings-4",
+      "teen": "yue-greetings-4"
+    }
+  },
+  {
+    "id": "yue-work",
+    "course": "yue",
+    "title": "Learning and working together",
+    "icon": "📚",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
+      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Learning and working together"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-work-8",
+          "junior": "yue-work-8",
+          "teen": "yue-work-8"
+        },
+        "replies": {
+          "little": [
+            "yue-work-5",
+            "yue-work-7"
+          ],
+          "junior": [
+            "yue-work-5",
+            "yue-work-7"
+          ],
+          "teen": [
+            "yue-work-5",
+            "yue-work-7"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-work-6",
+          "junior": "yue-work-6",
+          "teen": "yue-work-6"
+        },
+        "replies": {
+          "little": [
+            "yue-work-10"
+          ],
+          "junior": [
+            "yue-work-10"
+          ],
+          "teen": [
+            "yue-work-10"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-greetings-4",
+      "junior": "yue-greetings-4",
+      "teen": "yue-greetings-4"
+    }
+  }
+]

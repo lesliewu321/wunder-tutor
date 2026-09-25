@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Key } from '../../i18n';
+import { ItemText } from '../../ui/ItemText';
 import { KoText } from '../../ui/KoText';
 import { isGrownUp, type AgeBand, type Assessment, type Attempt, type HomeLanguage, type PhonemeId, type SpeakItem } from '../../domain/types';
 import { phonemeInfo } from '../../content/phonemes';
@@ -203,7 +204,7 @@ export function SpeakExercise({ item, prompt = 'text', context, onDone, continue
                     {shown[i] ?? w.word}
                   </button>
                 ))
-                : item.ja ? <JaText item={{ text: item.text, ja: item.ja }} band={band} /> : item.ko ? <KoText item={{ text: item.text, ko: item.ko }} band={band} /> : item.text}
+                : item.yue ? <ItemText item={item} band={band} script={profile.zhScript} /> : item.ja ? <JaText item={{ text: item.text, ja: item.ja }} band={band} /> : item.ko ? <KoText item={{ text: item.text, ko: item.ko }} band={band} /> : item.text}
             </p>
           )}
           {revealed && !test && itemMeaning(item) && phase !== 'result' && <p className="prompt__meaning">{itemMeaning(item)}</p>}

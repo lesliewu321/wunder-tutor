@@ -1,0 +1,3 @@
+.language-flag { display:inline-block; object-fit:cover; vertical-align:middle; border-radius:3px; box-shadow:0 0 0 1px #18234418; flex-shrink:0; margin-inline-end:.35rem; }
+.yue-text { display:inline-flex; flex-direction:column; align-items:inherit; gap:.3rem; }
+.yue-text__reading { font-size:.55em; font-weight:500; line-height:1.6; color:var(--ink-soft); letter-spacing:.015em; }

@@ -1,0 +1,83 @@
+import fs from 'node:fs';
+import * as OpenCC from 'opencc-js';
+const hans=OpenCC.Converter({from:'hk',to:'cn'});
+const {topics}=JSON.parse(fs.readFileSync(new URL('./source.json',import.meta.url),'utf8'));
+const langs=['en','zh-Hant','ja','ko','fr','es'];
+const packs=Object.fromEntries([...langs,'zh-Hans'].map(l=>[l,{content:{},lessons:{},meanings:{}}]));
+function add(part,key,values){langs.forEach((l,i)=>packs[l][part][key]=values[i]);packs['zh-Hans'][part][key]=hans(values[1]);}
+const courseNames=['Hong Kong Cantonese','香港廣東話','香港広東語','홍콩 광둥어','Cantonais de Hong Kong','Cantonés de Hong Kong'];
+const labels=[['Words','詞語','単語','단어','Mots','Palabras'],['Useful phrases','實用短句','便利なフレーズ','유용한 표현','Expressions utiles','Frases útiles'],['Conversation','對話','会話','대화','Conversation','Conversación'],['Review and apply','複習與應用','復習と応用','복습과 활용','Révision et mise en pratique','Repaso y práctica']];
+const guide=[
+['Use these phrases in a Hong Kong Cantonese role-play.','用這些短句練習香港廣東話角色扮演。','これらの表現で香港広東語のロールプレイをしましょう。','이 표현으로 홍콩 광둥어 역할극을 연습하세요.','Utilisez ces phrases dans un jeu de rôle en cantonais de Hong Kong.','Usa estas frases en un juego de rol en cantonés de Hong Kong.'],
+['Listen to each syllable and follow its Jyutping tone number.','留意每個音節，跟着粵拼聲調數字練習。','各音節を聞き、粤拼の声調番号に合わせましょう。','각 음절을 듣고 월병의 성조 숫자를 따라 하세요.','Écoutez chaque syllabe et suivez son chiffre de ton en jyutping.','Escucha cada sílaba y sigue su número de tono en jyutping.'],
+['Take turns asking and answering. Try again without looking at the meaning.','輪流提問和回答，再試一次，不看意思提示。','交代で質問と返答をし、次は意味を見ずに試しましょう。','번갈아 묻고 답한 뒤 뜻을 보지 않고 다시 해 보세요.','Posez les questions et répondez à tour de rôle, puis essayez sans regarder le sens.','Turnaos para preguntar y responder. Después, intentadlo sin mirar el significado.']];
+guide.forEach(v=>add('lessons',v[0],v));
+const question=['Which reply answers this question?','哪句回覆回答了這個問題？','この質問への答えはどれですか？','이 질문에 맞는 답은 무엇인가요?','Quelle réponse répond à cette question ?','¿Qué respuesta contesta esta pregunta?'];
+const explanation=['Listen for what the speaker asks, then choose a matching reply.','留意對方問甚麼，再選合適的回覆。','何を聞かれているか確認し、合う返答を選びましょう。','상대가 무엇을 묻는지 듣고 알맞은 답을 고르세요.','Repérez ce que demande la personne, puis choisissez une réponse adaptée.','Fíjate en lo que pregunta la persona y elige una respuesta adecuada.'];
+add('lessons',question[0],question);add('lessons',explanation[0],explanation);
+const data={id:'hong-kong-cantonese',language:'yue',title:courseNames[0],grownUpTitle:courseNames[0],exercisePrefix:'yuex',items:{},units:[],check:{little:[],junior:[],teen:[]},lab:{sounds:['yue:tones','yue:stops','yue:ng'],ladders:{}}};
+add('content','course.'+data.id+'.title',courseNames);add('content','course.'+data.id+'.title.adult',courseNames);
+const scenarios=[];
+for(const topic of topics){
+ const ids=topic.rows.map((row,i)=>{
+  const [text,jyutping,...meanings]=row,id='yue-'+topic.id+'-'+(i+1);
+  data.items[id]={text,lang:'zh-HK',yue:{jyutping},meaning:meanings[0],kind:text.length<4?'word':'phrase',picture:topic.icon};
+  add('meanings',meanings[0],meanings);return id;
+ });
+ const speak=i=>({type:'speak',item:ids[i]});
+ const heard=(i,j)=>({type:'choose-heard',answer:ids[i],others:[ids[j]]});
+ const talk=(n)=>{const [i,replies]=topic.turns[n];return{type:'dialogue',tutor:ids[i],replies:replies.map(j=>ids[j]),picture:topic.icon};};
+ const arrange=i=>({type:'arrange',item:ids[i],chunks:[topic.rows[i][0].slice(0,2),topic.rows[i][0].slice(2)]});
+ const [prompt,replies]=topic.turns[0];
+ const read={type:'read-choice',passage:ids[prompt],question:question[0],questionHant:question[1],answer:ids[replies[0]],others:[ids[0]],explanation:explanation[0],explanationHant:explanation[1]};
+ const unit={id:'yue-'+topic.id,title:topic.names[0],subtitle:courseNames[0],icon:topic.icon,color:'var(--leaf)',lessons:[]};
+ add('content','unit.'+unit.id+'.title',topic.names);add('content','unit.'+unit.id+'.subtitle',courseNames);
+ for(let i=0;i<4;i++){
+  const id=unit.id+'-'+(i+1),titles=topic.names.map((n,j)=>n+' · '+labels[i][j]);
+  add('content','lesson.'+id+'.title',titles);
+  const little=i===0?[speak(0),speak(1),speak(2),heard(0,1),speak(3)]:i===1?[speak(2),speak(3),speak(4),heard(2,3)]:i===2?[speak(prompt),talk(0),talk(1)]:[heard(0,1),heard(2,3),speak(4),talk(0)];
+  const junior=i===0?[speak(0),speak(1),speak(2),speak(3),heard(1,2)]:i===1?[speak(4),speak(5),speak(6),arrange(4)]:i===2?[speak(prompt),talk(0),talk(1),speak(6)]:[heard(2,3),read,arrange(5),talk(0)];
+  const teen=i===0?[...junior,speak(4)]:i===1?[speak(4),speak(5),speak(6),speak(prompt),arrange(5)]:i===2?[talk(0),talk(1),arrange(4),speak(6)]:[read,arrange(5),heard(5,6),talk(0)];
+  const adult=[...teen]; if(topic.id==='work'&&i>0)adult.push(speak(8));
+  unit.lessons.push({id,title:titles[0],icon:topic.icon,kind:['words','phrases','conversation','review'][i],guide:{goal:guide[0][0],goalHant:guide[0][1],tip:guide[1][0],tipHant:guide[1][1],practice:guide[2][0],practiceHant:guide[2][1]},exercises:{little,junior,teen,adult}});
+ }
+ data.units.push(unit);
+ const by=v=>({little:v,junior:v,teen:v});
+ const scenario={id:'yue-'+topic.id,course:'yue',title:topic.names[0],icon:topic.icon,color:'var(--leaf)',blurb:by(guide[0][0]),setting:'A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.',tutorRole:'a helpful practice partner',goals:[topic.names[0]],turns:topic.turns.map(([i,rs])=>({tutor:by(ids[i]),replies:by(rs.map(j=>ids[j]))})),closing:by('yue-greetings-4')};
+ scenarios.push(scenario);
+ add('content','scenario.'+scenario.id+'.title',topic.names);
+ for(const band of ['little','junior','teen'])add('content','scenario.'+scenario.id+'.blurb.'+band,guide[0]);
+}
+const extra=[
+['tone1','詩','si1',['poem','詩','詩','시','poème','poema']],
+['tone2','史','si2',['history','歷史','歴史','역사','histoire','historia']],
+['tone3','試','si3',['try','嘗試','試す','시도하다','essayer','intentar']],
+['tone4','時','si4',['time','時間','時間','시간','temps','tiempo']],
+['tone5','市','si5',['market','市場','市場','시장','marché','mercado']],
+['tone6','事','si6',['matter','事情','事柄','일','affaire','asunto']],
+['eight','八','baat3',['eight','八','八','여덟','huit','ocho']],
+['hundred','百','baak3',['hundred','百','百','백','cent','cien']],
+['cow','牛','ngau4',['cow','牛','牛','소','vache','vaca']],
+['i','我','ngo5',['I','我','私','나','je','yo']]
+];
+for(const[id,text,jyutping,meanings]of extra){data.items['yue-'+id]={text,lang:'zh-HK',yue:{jyutping},meaning:meanings[0],kind:'word'};add('meanings',meanings[0],meanings);}
+data.check={little:['yue-greetings-1','yue-food-1','yue-tone1'],junior:['yue-greetings-5','yue-food-5','yue-tone2'],teen:['yue-greetings-6','yue-out-5','yue-work-6']};
+data.lab.ladders={
+ 'yue:tones':{syllables:extra.slice(0,6).map(r=>'yue-'+r[0]),words:['yue-people-1','yue-people-4'],phrases:['yue-greetings-5'],sentence:['yue-greetings-6']},
+ 'yue:stops':{syllables:['yue-eight','yue-hundred','yue-numbers-4'],words:['yue-out-1','yue-work-2'],phrases:['yue-food-5'],sentence:['yue-food-6']},
+ 'yue:ng':{syllables:['yue-i','yue-cow'],words:['yue-cow','yue-i'],phrases:['yue-greetings-5'],sentence:['yue-work-7']}
+};
+fs.mkdirSync('astra-lessons/courses',{recursive:true});fs.writeFileSync('astra-lessons/courses/yue.json',JSON.stringify(data,null,2)+'\n');
+fs.writeFileSync('astra-lessons/hk-cantonese/scenarios.json',JSON.stringify(scenarios,null,2)+'\n');
+
+const soundRows=JSON.parse(fs.readFileSync(new URL('./sounds.json',import.meta.url),'utf8'));
+const sounds=soundRows.map(s=>{
+ const info={id:s.id,label:s.label,example:s.example,category:s.category,name:s.names[0],tip:{junior:s.tips[0]},steps:[s.tips[0]],problem:s.tips[0],detail:s.tips[0],difficulty:.5,pose:{open:.3,round:0,spread:.2,tongue:'rest',air:s.id==='yue:ng'?'nose':'none',voiced:true}};
+ add('content','sound.'+s.id+'.name',s.names);
+ for(const field of ['tip.junior','step.1','problem','detail'])add('content','sound.'+s.id+'.'+field,s.tips);
+ return info;
+});
+fs.writeFileSync('astra-lessons/hk-cantonese/sounds-built.json',JSON.stringify(sounds,null,2)+'\n');
+
+fs.writeFileSync('astra-lessons/i18n/cantonese.json',JSON.stringify(packs,null,2)+'\n');
+console.log('Built '+data.units.length+' units, '+data.units.flatMap(u=>u.lessons).length+' lessons, '+Object.keys(data.items).length+' items, '+scenarios.length+' conversations, seven app-language catalogs.');

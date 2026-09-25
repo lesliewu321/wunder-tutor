@@ -28,6 +28,7 @@ export interface ItemData {
   focus?: PhonemeId[];
   lang?: SpeakItem['lang'];
   zh?: SpeakItem['zh'];
+  yue?: SpeakItem['yue'];
   ja?: SpeakItem['ja'];
   ko?: SpeakItem['ko'];
   translations?: Partial<Record<HomeLanguage, string>>;
@@ -41,7 +42,7 @@ export type ExerciseData =
   | { type: 'minimal-pair'; pair: [string, string]; answer: 0 | 1; focus: PhonemeId }
   | { type: 'dialogue'; line?: string; tutor?: string; picture?: string; replies: string[] };
 
-export interface LessonData { id: string; title: string; icon: string; kind: Lesson['kind']; exercises: Record<ContentBand, ExerciseData[]>; guide?: Lesson['guide'] }
+export interface LessonData { id: string; title: string; icon: string; kind: Lesson['kind']; exercises: Record<ContentBand, ExerciseData[]> & Partial<Record<'adult', ExerciseData[]>>; guide?: Lesson['guide'] }
 export interface UnitData { id: string; title: string; subtitle: string; icon: string; color: string; grownUp?: Unit['grownUp']; locked?: boolean; lessons: LessonData[] }
 
 export interface CourseFile {
@@ -92,7 +93,7 @@ function buildItem(file: string, id: string, d: ItemData): SpeakItem {
     if (it.id !== id) throw new ContentError(file, where, `its pinyin says its id should be ${it.id}`);
     return { ...it, ...(d.say ? { say: d.say } : {}), ...(d.kind ? { kind: d.kind } : {}), ...(d.translations ? { translations: d.translations } : {}) };
   }
-  if (HAN.test(d.text) && d.lang !== 'ja-JP') throw new ContentError(file, where, 'has Chinese characters but no lang');
+  if (HAN.test(d.text) && d.lang !== 'ja-JP' && d.lang !== 'zh-HK') throw new ContentError(file, where, 'has Chinese characters but no lang');
   if (/[가-힣]/.test(d.text) && d.lang !== 'ko-KR') throw new ContentError(file, where, 'has hangul but is not lang ko-KR');
   const it: SpeakItem = { id, text: d.text, kind: d.kind ?? kindOfText(d.text) };
   if (d.say) it.say = d.say;
@@ -101,6 +102,10 @@ function buildItem(file: string, id: string, d: ItemData): SpeakItem {
   if (d.focus?.length) it.focus = d.focus;
   if (d.lang) it.lang = d.lang;
   if (d.ja) it.ja = d.ja;
+  if (d.lang === 'zh-HK') {
+    if (!d.yue?.jyutping || !/^[a-z]+[1-6](?: [a-z]+[1-6])*$/.test(d.yue.jyutping) || d.yue.jyutping.split(' ').length !== [...d.text].filter(c => HAN.test(c)).length) throw new ContentError(file, where, 'needs one Jyutping syllable (tone 1–6) per Cantonese character');
+    it.yue = d.yue;
+  }
   if (d.lang === 'ko-KR') {
     if (!d.ko?.pron || !d.ko.romaja) throw new ContentError(file, where, 'is Korean (lang ko-KR) but has no ko { pron, romaja }');
     if (!/[가-힣]/.test(d.text) || !/[가-힣]/.test(d.ko.pron)) throw new ContentError(file, where, 'a Korean item and its pronounced form are written in hangul');
@@ -198,11 +203,15 @@ export function buildCourse(data: CourseFile, file = `${data.language}.json`): B
       if (!l.id || !l.title || !l.kind) throw new ContentError(file, where, 'needs id, title and kind');
       if (seenLessons.has(l.id)) throw new ContentError(file, where, 'appears twice');
       seenLessons.add(l.id);
-      const exercises = {} as Record<ContentBand, Exercise[]>;
+      const exercises = {} as Lesson['exercises'];
       for (const band of BANDS) {
         const list = l.exercises?.[band];
         if (!Array.isArray(list) || !list.length) throw new ContentError(file, where, `has no exercises for ${band}`);
         exercises[band] = list.map((ex, i) => buildExercise(`${where} ${band} #${i + 1}`, ex));
+      }
+      if (l.exercises.adult) {
+        if (!l.exercises.adult.length) throw new ContentError(file, where, 'adult exercises must not be empty');
+        exercises.adult = l.exercises.adult.map((ex, i) => buildExercise(`${where} adult #${i + 1}`, ex));
       }
       return { id: l.id, unitId: u.id, title: l.title, icon: l.icon, kind: l.kind, exercises, ...(l.guide ? { guide: l.guide } : {}) };
     });

@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { BACKUP_VOICES, readWav } from './azure-tts.mjs';
 import { MAX_TTS_CHARS, pcmToWav, TtsError } from './tts.mjs';
 import { qwenHost as resolveQwenHost } from './qwen-endpoint.mjs';
-const LANGUAGES = { 'en-US': 'English', 'en-GB': 'English', 'zh-CN': 'Chinese', 'ja-JP': 'Japanese', 'ko-KR': 'Korean', 'fr-FR': 'French', 'es-ES': 'Spanish' };
+const LANGUAGES = { 'en-US': 'English', 'en-GB': 'English', 'zh-CN': 'Chinese', 'zh-HK': 'Auto', 'ja-JP': 'Japanese', 'ko-KR': 'Korean', 'fr-FR': 'French', 'es-ES': 'Spanish' };
 const MAX_AUDIO = 8 * 1024 * 1024;
 async function audioBytes(response) {
   if (!response.ok) throw new TtsError('voice_audio_failed');
@@ -18,7 +18,7 @@ async function audioBytes(response) {
 export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapore', chirpKey = '', cache, fetchImpl = fetch, maxGenerationsPerWindow = 120, windowMs = 600000 }) {
   const qwenHost = resolveQwenHost(qwenRegion);
   const providers = { azure: !!azure, qwen: !!qwenKey && !!qwenHost, chirp: !!chirpKey };
-  const versions = { azure: 'azure-neural-v1/' + Object.values(BACKUP_VOICES).join(','), qwen: 'qwen3-tts-flash/Cherry/' + qwenRegion, chirp: 'chirp3-hd/Aoede' };
+  const versions = { azure: 'azure-neural-v1/' + Object.values(BACKUP_VOICES).join(','), qwen: 'qwen3-tts-flash/Cherry-Kiki/' + qwenRegion, chirp: 'chirp3-hd/Aoede' };
   const inflight = new Map(); const memory = new Map();
   let start = Date.now(), generated = 0;
   async function generate(provider, req) {
@@ -29,7 +29,7 @@ export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapo
     const signal = AbortSignal.timeout(25000);
     let wav;
     if (provider === 'chirp') {
-      const locale = req.accent === 'zh-CN' ? 'cmn-CN' : req.accent;
+      const locale = req.accent === 'zh-CN' ? 'cmn-CN' : req.accent === 'zh-HK' ? 'yue-HK' : req.accent;
       const res = await fetchImpl('https://texttospeech.googleapis.com/v1/text:synthesize', {
         method: 'POST', signal, headers: { 'Content-Type': 'application/json', 'x-goog-api-key': chirpKey },
         body: JSON.stringify({ input: { text: req.text }, voice: { languageCode: locale, name: locale + '-Chirp3-HD-Aoede' }, audioConfig: { audioEncoding: 'LINEAR16', sampleRateHertz: 24000, speakingRate: req.slow ? 0.65 : 1 } }),
@@ -41,7 +41,7 @@ export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapo
     } else {
       const res = await fetchImpl('https://' + qwenHost + '/api/v1/services/aigc/multimodal-generation/generation', {
         method: 'POST', signal, redirect: 'error', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + qwenKey },
-        body: JSON.stringify({ model: 'qwen3-tts-flash', input: { text: req.text, voice: 'Cherry', language_type: LANGUAGES[req.accent] } }),
+        body: JSON.stringify({ model: 'qwen3-tts-flash', input: { text: req.text, voice: req.accent === 'zh-HK' ? 'Kiki' : 'Cherry', language_type: LANGUAGES[req.accent] } }),
       });
       if (!res.ok) throw new TtsError('qwen_unavailable', res.status === 429 ? 429 : 502);
       const data = await res.json();
@@ -68,7 +68,8 @@ export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapo
     const result = (wav, cached) => ({ wav, cached, voice: provider });
     // Learner-authored text is never persisted in a shared or process cache.
     if (input.ephemeral) return result(await generate(provider, req), false);
-    const hit = memory.get(key) ?? await cache?.get(key);
+    let hit = memory.get(key);
+    try { hit ??= await cache?.get(key); } catch { /* Cache outage must not silence a configured voice. */ }
     if (hit) return result(hit, true);
     if (!inflight.has(key)) inflight.set(key, (async () => {
       const wav = await generate(provider, req);

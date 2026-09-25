@@ -1,15 +1,15 @@
-import { selectedVoice, teacherVoiceChoice, voiceConfigured, type CloudVoice } from './teacherPreference';
+import { voiceSupports, automaticVoices, selectedVoice, teacherVoiceChoice, voiceConfigured, type CloudVoice } from './teacherPreference';
 import { createStore, get, set } from 'idb-keyval';
 import type { Accent, Locale, SpeakItem } from '../domain/types';
 import { apiFetch, apiHealth, knownHealth } from './health';
 import { VoiceError } from './types';
 import { teacherToneOk } from './zh/teacherCheck';
 
-/** Mandarin items always speak Mandarin; everything else is English in the child's accent. */
+/** Course items retain their own language; English uses the learner's selected accent. */
 export const localeOf = (item: Pick<SpeakItem, 'lang'> | undefined | null, accent: Accent): Locale => item?.lang ?? accent;
 
 export interface SpeakOptions {
-  /** The language to speak in: the child's English accent, or 'zh-CN' for Mandarin. */
+  /** The course's speech locale, including zh-HK for Hong Kong Cantonese. */
   accent: Locale;
   slow?: boolean;
   /** Isolated syllables ("rah", "thee") need different handling from words and sentences. */
@@ -39,6 +39,7 @@ const PREFERRED = [/natural/i, /neural/i, /google/i, /samantha|daniel|karen|sere
 
 class WebSpeechVoice implements ReferenceVoice {
   private voices: SpeechSynthesisVoice[] = [];
+  private finish: (() => void) | null = null;
 
   constructor() {
     if (!this.available()) return;
@@ -55,9 +56,9 @@ class WebSpeechVoice implements ReferenceVoice {
     const norm = (l: string) => l.replace('_', '-').toLowerCase();
     const exact = this.voices.filter((v) => norm(v.lang) === accent.toLowerCase());
     // Mandarin must never fall back to a Cantonese (zh-HK) or Taiwanese voice, nor to English.
-    // Then any voice of the same language (fr-CA for fr-FR, es-MX for es-ES), and only then English.
-    const sameLanguage = accent === 'zh-CN' ? this.voices.filter((v) => /^(zh-cn|cmn)/.test(norm(v.lang))) : this.voices.filter((v) => norm(v.lang).startsWith(accent.slice(0, 2).toLowerCase()));
-    const pool = exact.length ? exact : sameLanguage.length ? sameLanguage : this.voices.filter((v) => norm(v.lang).startsWith('en'));
+    // Other courses may use another regional voice of the same language.
+    const sameLanguage = accent === 'zh-HK' ? this.voices.filter((v) => /^(zh-hk|yue-hk)$/.test(norm(v.lang))) : accent === 'zh-CN' ? this.voices.filter((v) => /^(zh-cn|cmn)/.test(norm(v.lang))) : this.voices.filter((v) => norm(v.lang).startsWith(accent.slice(0, 2).toLowerCase()));
+    const pool = exact.length ? exact : sameLanguage;
     for (const re of PREFERRED) { const v = pool.find((x) => re.test(x.name)); if (v) return v; }
     return pool[0];
   }
@@ -65,24 +66,28 @@ class WebSpeechVoice implements ReferenceVoice {
   speak(text: string, { accent, slow }: SpeakOptions): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.available()) return reject(new Error('playback-unavailable'));
-      speechSynthesis.cancel();
+      this.stop();
       const u = new SpeechSynthesisUtterance(text);
       const voice = this.pick(accent);
-      if (voice) u.voice = voice;
+      if (!voice) return reject(new VoiceError('playback', 'device_language_unavailable'));
+      u.voice = voice;
       u.lang = voice?.lang ?? accent;
       u.rate = slow ? 0.55 : 0.92;
       u.pitch = 1.05;
       // Some engines never fire onend (or fire nothing at all when no voice is installed):
-      // resolve on a generous timer so the UI can never get stuck in a "playing" state.
-      const guard = window.setTimeout(done, 1500 + text.length * (slow ? 190 : 110));
-      function done() { clearTimeout(guard); resolve(); }
+      // reject on a generous timer so a silent engine does not report successful playback.
+      const guard = window.setTimeout(() => { finish(new VoiceError('playback')); speechSynthesis.cancel(); }, 3000 + text.length * (slow ? 220 : 130));
+      const finish = (err?: Error) => { clearTimeout(guard); if (this.finish === done) this.finish = null; err ? reject(err) : resolve(); };
+      const done = () => finish();
+      this.finish = done;
       u.onend = done;
-      u.onerror = (e) => { clearTimeout(guard); e.error === 'interrupted' || e.error === 'canceled' ? resolve() : reject(new Error('playback-unavailable')); };
-      speechSynthesis.speak(u);
+      u.onerror = (e) => finish(e.error === 'interrupted' || e.error === 'canceled' ? undefined : new VoiceError('playback'));
+      try { speechSynthesis.speak(u); } catch { finish(new VoiceError('playback')); }
     });
   }
 
   stop(): void {
+    this.finish?.(); this.finish = null;
     if (this.available()) speechSynthesis.cancel();
   }
 }
@@ -137,7 +142,9 @@ export const playBlob = (blob: Blob, rate = 1): Promise<void> =>
     pauseCurrent();
     const el = element();
     const url = URL.createObjectURL(blob);
-    const mine = { url, end: (err?: Error) => (err ? reject(err) : resolve()) };
+    // A stalled media engine must release the UI; stopped takes also clear this timer.
+    const guard = setTimeout(() => { end(new VoiceError('playback')); el.pause(); }, 120000);
+    const mine = { url, end: (err?: Error) => { clearTimeout(guard); err ? reject(err) : resolve(); } };
     playing = mine;
     const end = (err?: Error) => { if (playing !== mine) return; playing = null; URL.revokeObjectURL(url); mine.end(err); };
     el.onended = () => end();
@@ -255,6 +262,7 @@ class TeacherVoice implements ReferenceVoice {
   private takes = new Map<CloudVoice, GeminiTakes>();
   /** Bumped by stop() and by every new speak(), so a slow download can't start talking over something newer. */
   private seq = 0;
+  private cancelPending: (() => void) | null = null;
 
   constructor() { void this.ready().catch(() => undefined); }
 
@@ -264,6 +272,7 @@ class TeacherVoice implements ReferenceVoice {
    * in Settings, until the app was closed (see fromHealth).
    */
   private async ready(): Promise<GeminiTakes | null> {
+    if (teacherVoiceChoice() === 'device') return null;
     const h = await apiHealth();
     const provider = selectedVoice(h);
     if (provider === 'device') return null;
@@ -296,49 +305,62 @@ class TeacherVoice implements ReferenceVoice {
 
   /** Warm the cache for something the learner is about to hear. */
   prefetch(text: string, opts: SpeakOptions): void {
-    void this.ready().then(takes => takes?.fetch(text, opts)).catch(() => undefined);
+    // Preview the locale-aware primary without playing or creating a fallback cascade.
+    void apiHealth().then(h => {
+      const choice = teacherVoiceChoice(), provider = choice === 'auto' ? automaticVoices(h, opts.accent)[0] : choice;
+      if (!provider || provider === 'device' || !voiceSupports(provider, opts.accent) || !voiceConfigured(provider, h)) return;
+      let takes = this.takes.get(provider);
+      if (!takes) { takes = new GeminiTakes(provider); this.takes.set(provider, takes); }
+      takes.version = provider === 'gemini' ? h.ttsVersion : provider + '/' + (h.voiceVersions?.[provider] ?? h.ttsVersion);
+      return takes.fetch(text, opts);
+    }).catch(() => undefined);
   }
 
   async speak(text: string, opts: SpeakOptions): Promise<void> {
-    const mine = ++this.seq;
-    this.web.stop();
-    pauseCurrent();
-    let takes: GeminiTakes | null = null;
-    try { takes = await this.ready(); } catch (e) { if (teacherVoiceChoice() !== 'auto') throw e; }
+    this.cancelPending?.();
+    const mine = ++this.seq, choice = teacherVoiceChoice();
+    this.web.stop(); pauseCurrent();
+    const cancelled = new Promise<void>(resolve => { this.cancelPending = resolve; });
+    // A stopped/superseded caller settles immediately; shared downloads may still warm the cache.
+    try { await Promise.race([this.perform(text, opts, mine, choice), cancelled]); }
+    finally { if (mine === this.seq) this.cancelPending = null; }
+  }
+
+  private async perform(text: string, opts: SpeakOptions, mine: number, choice: ReturnType<typeof teacherVoiceChoice>): Promise<void> {
+    if (choice === 'device') return this.web.speak(text, opts);
+    const h = await apiHealth();
     if (mine !== this.seq) return;
-    // Which half failed matters to the learner. On the web a failure quietly became the device voice and nobody had
-    // to know; in the phone app there is no device voice (Android's WebView has no speechSynthesis), so whatever
-    // went wrong is what they are told — and "your device has no sound" is a lie when the truth is that the teacher
-    // could not say this particular line. 四是四，十是十。 is exactly that case: the server scores its own take and
-    // will not serve one that is not clean enough, and for the hardest tongue twister it never gets one.
+    if (!voiceSupports(choice, opts.accent)) throw new VoiceError('take', 'voice_locale_unavailable');
+    const candidates: CloudVoice[] = choice === 'auto' ? automaticVoices(h, opts.accent) : [choice];
+    if (choice === 'auto' && opts.preview && opts.accent !== 'zh-HK' && !candidates.length) candidates.push('gemini');
     let refused: VoiceError | null = null;
-    // Setup's accent preview plays before the device has a code: the server serves those few lines to anyone.
-    if (!takes && opts.preview && teacherVoiceChoice() === 'auto') {
-      takes = this.takes.get('gemini') ?? new GeminiTakes('gemini');
-      this.takes.set('gemini', takes);
-    }
-    if (takes) {
-      let blob: Blob | undefined;
-      try {
-        blob = await takes.fetch(text, opts);
-      } catch (e) {                                       // the take was never made, or was judged not good enough
+    for (const provider of candidates) {
+      if (choice !== 'auto' && !voiceConfigured(provider, h)) throw new VoiceError('take', 'voice_not_configured');
+      let takes = this.takes.get(provider);
+      if (!takes) { takes = new GeminiTakes(provider); this.takes.set(provider, takes); }
+      takes.version = provider === 'gemini' ? h.ttsVersion : provider + '/' + (h.voiceVersions?.[provider] ?? h.ttsVersion);
+      let blob: Blob;
+      try { blob = await takes.fetch(text, opts); }
+      catch (e) {
+        if (mine !== this.seq) return;
         refused = e instanceof VoiceError ? e : new VoiceError('take');
+        // Access and account/budget limits apply to every cloud provider. Do not multiply paid attempts.
+        if (['daily_limit', 'rate_limited', 'tts_budget_exceeded', 'unauthorized', 'http_401', 'http_403'].includes(refused.code ?? '')) break;
+        continue;
       }
       if (mine !== this.seq) return;
-      if (blob) {
-        try {
-          return await playBlob(blob, takes.provider === 'qwen' && opts.slow ? 0.65 : 1);
-        } catch {
-          if (mine !== this.seq) return;                  // a real playback fault: the device, or the audio itself
-        }
-      }
+      try { await playBlob(blob, provider === 'qwen' && opts.slow ? 0.65 : 1); return; }
+      catch { if (mine !== this.seq) return; refused = new VoiceError('playback'); }
     }
-    if (takes && teacherVoiceChoice() !== 'auto') throw refused ?? new VoiceError('playback');
-    if (this.web.available()) return this.web.speak(text, opts);
+    if (choice === 'auto' && this.web.available()) {
+      try { return await this.web.speak(text, opts); }
+      catch (e) { throw refused ?? (e instanceof VoiceError ? e : new VoiceError('playback')); }
+    }
     throw refused ?? new VoiceError('playback');
   }
 
   stop(): void {
+    this.cancelPending?.(); this.cancelPending = null;
     this.seq += 1;
     this.web.stop();
     pauseCurrent();

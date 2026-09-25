@@ -49,5 +49,6 @@
   "common.noSound.line": "The teacher can’t say this one clearly enough to teach from. Everything else still works — try the next one.",
   "common.noSound.dayUsed": "Today’s listening on this account is used up. The teacher’s voice is back tomorrow.",
   "common.noSound.busy": "The teacher’s voice is very busy right now. Try again in a minute.",
-  "common.noSound.device": "Sound isn’t working on this device right now"
+  "common.noSound.device": "Sound isn’t working on this device right now",
+  "common.noSound.language": "This voice cannot speak this course language. Choose Automatic or another available teacher voice in Settings."
 }

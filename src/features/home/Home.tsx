@@ -1,3 +1,4 @@
+import { LanguageFlag } from '../../ui/LanguageFlag';
 import { WeeklyChallenge } from '../../notifications/Notifications';
 import { ageGuidance, stageLabel } from '../../../astra-lessons/curriculum';
 import { useEffect, useState } from 'react';
@@ -99,7 +100,7 @@ export function Home() {
       <div className="home__main">
       <section className="hero" style={{ ['--hero' as string]: unit.color }}>
         <div className="hero__text">
-          <span className="hero__unit">{t('home.hero.unit', { course: courseTitle(COURSE, p.band), n: COURSE.units.indexOf(unit) + 1 })}</span>
+          <span className="hero__unit"><LanguageFlag language={p.course} accent={p.accent} /> {t('home.hero.unit', { course: courseTitle(COURSE, p.band), n: COURSE.units.indexOf(unit) + 1 })}</span>
           <h1>{unitTitle(unit, p.band)}</h1>
           <p>{showTest && dueTest ? rich(t('home.hero.test', { title: `${dueTest.icon} ${lessonTitle(dueTest)}` })) : next ? rich(t('home.hero.next', { title: `${next.icon} ${lessonTitle(next)}` })) : due ? tn('home.hero.due', due) : t('home.hero.finished')}</p>
           <div className="hero__progress"><ProgressBar value={doneCount / ids.length} tone="sun" /><span>{doneCount}/{ids.length}</span></div>

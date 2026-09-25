@@ -1,0 +1,803 @@
+{
+  "topics": [
+    {
+      "id": "greetings",
+      "icon": "👋",
+      "names": [
+        "Greetings and courtesy",
+        "打招呼與禮貌",
+        "あいさつと礼儀",
+        "인사와 예절",
+        "Salutations et politesse",
+        "Saludos y cortesía"
+      ],
+      "rows": [
+        [
+          "你好！",
+          "nei5 hou2",
+          "Hello!",
+          "你好！",
+          "こんにちは！",
+          "안녕하세요!",
+          "Bonjour !",
+          "¡Hola!"
+        ],
+        [
+          "早晨！",
+          "zou2 san4",
+          "Good morning!",
+          "早安！",
+          "おはようございます！",
+          "좋은 아침이에요!",
+          "Bonjour !",
+          "¡Buenos días!"
+        ],
+        [
+          "唔該。",
+          "m4 goi1",
+          "Thank you for your help.",
+          "謝謝你的幫忙。",
+          "手伝ってくれてありがとう。",
+          "도와주셔서 감사합니다.",
+          "Merci pour votre aide.",
+          "Gracias por tu ayuda."
+        ],
+        [
+          "多謝。",
+          "do1 ze6",
+          "Thank you for the gift.",
+          "謝謝你的禮物。",
+          "プレゼントをありがとう。",
+          "선물 감사합니다.",
+          "Merci pour le cadeau.",
+          "Gracias por el regalo."
+        ],
+        [
+          "我叫小明。",
+          "ngo5 giu3 siu2 ming4",
+          "My name is Ming.",
+          "我叫小明。",
+          "私の名前はミンです。",
+          "제 이름은 밍이에요.",
+          "Je m’appelle Ming.",
+          "Me llamo Ming."
+        ],
+        [
+          "我學緊廣東話。",
+          "ngo5 hok6 gan2 gwong2 dung1 waa2",
+          "I am learning Cantonese.",
+          "我正在學廣東話。",
+          "広東語を勉強しています。",
+          "광둥어를 배우고 있어요.",
+          "J’apprends le cantonais.",
+          "Estoy aprendiendo cantonés."
+        ],
+        [
+          "唔好意思。",
+          "m4 hou2 ji3 si1",
+          "Excuse me.",
+          "不好意思。",
+          "すみません。",
+          "실례합니다.",
+          "Excusez-moi.",
+          "Disculpe."
+        ],
+        [
+          "你叫咩名？",
+          "nei5 giu3 me1 meng2",
+          "What is your name?",
+          "你叫甚麼名字？",
+          "お名前は何ですか？",
+          "이름이 뭐예요?",
+          "Comment vous appelez-vous ?",
+          "¿Cómo te llamas?"
+        ]
+      ],
+      "turns": [
+        [
+          7,
+          [
+            4
+          ]
+        ],
+        [
+          0,
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "numbers",
+      "icon": "🔢",
+      "names": [
+        "Numbers and time",
+        "數字與時間",
+        "数字と時間",
+        "숫자와 시간",
+        "Nombres et heures",
+        "Números y horas"
+      ],
+      "rows": [
+        [
+          "一",
+          "jat1",
+          "one",
+          "一",
+          "一",
+          "하나",
+          "un",
+          "uno"
+        ],
+        [
+          "兩",
+          "loeng5",
+          "two (before a measure word)",
+          "兩（量詞前）",
+          "二つ（助数詞の前）",
+          "둘 (양사 앞)",
+          "deux (devant un classificateur)",
+          "dos (ante un clasificador)"
+        ],
+        [
+          "三",
+          "saam1",
+          "three",
+          "三",
+          "三",
+          "셋",
+          "trois",
+          "tres"
+        ],
+        [
+          "十",
+          "sap6",
+          "ten",
+          "十",
+          "十",
+          "열",
+          "dix",
+          "diez"
+        ],
+        [
+          "我要兩張飛。",
+          "ngo5 jiu3 loeng5 zoeng1 fei1",
+          "I would like two tickets.",
+          "我要兩張票。",
+          "チケットを二枚ください。",
+          "표 두 장 주세요.",
+          "Je voudrais deux billets.",
+          "Quisiera dos entradas."
+        ],
+        [
+          "而家三點。",
+          "ji4 gaa1 saam1 dim2",
+          "It is three o’clock now.",
+          "現在三點。",
+          "今は三時です。",
+          "지금은 세 시예요.",
+          "Il est trois heures.",
+          "Ahora son las tres."
+        ],
+        [
+          "聽日見！",
+          "ting1 jat6 gin3",
+          "See you tomorrow!",
+          "明天見！",
+          "また明日！",
+          "내일 봐요!",
+          "À demain !",
+          "¡Hasta mañana!"
+        ],
+        [
+          "而家幾點？",
+          "ji4 gaa1 gei2 dim2",
+          "What time is it now?",
+          "現在幾點？",
+          "今何時ですか？",
+          "지금 몇 시예요?",
+          "Quelle heure est-il ?",
+          "¿Qué hora es ahora?"
+        ]
+      ],
+      "turns": [
+        [
+          7,
+          [
+            5
+          ]
+        ],
+        [
+          6,
+          [
+            6
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "food",
+      "icon": "🍜",
+      "names": [
+        "At a Hong Kong café",
+        "在茶餐廳",
+        "香港の茶餐廳で",
+        "홍콩 차찬텡에서",
+        "Au café hongkongais",
+        "En una cafetería de Hong Kong"
+      ],
+      "rows": [
+        [
+          "水",
+          "seoi2",
+          "water",
+          "水",
+          "水",
+          "물",
+          "eau",
+          "agua"
+        ],
+        [
+          "茶",
+          "caa4",
+          "tea",
+          "茶",
+          "お茶",
+          "차",
+          "thé",
+          "té"
+        ],
+        [
+          "飯",
+          "faan6",
+          "rice",
+          "飯",
+          "ご飯",
+          "밥",
+          "riz",
+          "arroz"
+        ],
+        [
+          "菠蘿包",
+          "bo1 lo4 baau1",
+          "pineapple bun",
+          "菠蘿包",
+          "パイナップルパン",
+          "파인애플 번",
+          "brioche ananas",
+          "bollo de piña"
+        ],
+        [
+          "唔該，一杯茶。",
+          "m4 goi1 jat1 bui1 caa4",
+          "A cup of tea, please.",
+          "請給我一杯茶。",
+          "お茶を一杯ください。",
+          "차 한 잔 주세요.",
+          "Une tasse de thé, s’il vous plaît.",
+          "Una taza de té, por favor."
+        ],
+        [
+          "我要一個菠蘿包。",
+          "ngo5 jiu3 jat1 go3 bo1 lo4 baau1",
+          "I would like a pineapple bun.",
+          "我要一個菠蘿包。",
+          "パイナップルパンを一つください。",
+          "파인애플 번 하나 주세요.",
+          "Je voudrais une brioche ananas.",
+          "Quisiera un bollo de piña."
+        ],
+        [
+          "唔該，唔要冰。",
+          "m4 goi1 m4 jiu3 bing1",
+          "No ice, please.",
+          "請不要加冰。",
+          "氷なしでお願いします。",
+          "얼음은 빼 주세요.",
+          "Sans glaçons, s’il vous plaît.",
+          "Sin hielo, por favor."
+        ],
+        [
+          "你想食啲咩？",
+          "nei5 soeng2 sik6 di1 me1",
+          "What would you like to eat?",
+          "你想吃甚麼？",
+          "何を食べたいですか？",
+          "무엇을 드시겠어요?",
+          "Que voudriez-vous manger ?",
+          "¿Qué te gustaría comer?"
+        ]
+      ],
+      "turns": [
+        [
+          7,
+          [
+            5
+          ]
+        ],
+        [
+          7,
+          [
+            3,
+            5
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "people",
+      "icon": "🤝",
+      "names": [
+        "Friends and small talk",
+        "朋友與閒談",
+        "友達との会話",
+        "친구와 일상 대화",
+        "Amis et petites conversations",
+        "Amigos y charlas"
+      ],
+      "rows": [
+        [
+          "朋友",
+          "pang4 jau5",
+          "friend",
+          "朋友",
+          "友達",
+          "친구",
+          "ami",
+          "amigo"
+        ],
+        [
+          "學校",
+          "hok6 haau6",
+          "school",
+          "學校",
+          "学校",
+          "학교",
+          "école",
+          "escuela"
+        ],
+        [
+          "足球",
+          "zuk1 kau4",
+          "football",
+          "足球",
+          "サッカー",
+          "축구",
+          "football",
+          "fútbol"
+        ],
+        [
+          "開心",
+          "hoi1 sam1",
+          "happy",
+          "開心",
+          "うれしい",
+          "기쁘다",
+          "heureux",
+          "feliz"
+        ],
+        [
+          "我鍾意踢波。",
+          "ngo5 zung1 ji3 tek3 bo1",
+          "I like playing football.",
+          "我喜歡踢足球。",
+          "サッカーをするのが好きです。",
+          "축구하는 것을 좋아해요.",
+          "J’aime jouer au football.",
+          "Me gusta jugar al fútbol."
+        ],
+        [
+          "一齊玩啦！",
+          "jat1 cai4 waan2 laa1",
+          "Let’s play together!",
+          "一起玩吧！",
+          "一緒に遊ぼう！",
+          "같이 놀아요!",
+          "Jouons ensemble !",
+          "¡Vamos a jugar juntos!"
+        ],
+        [
+          "好高興識到你。",
+          "hou2 gou1 hing3 sik1 dou2 nei5",
+          "Nice to meet you.",
+          "很高興認識你。",
+          "お会いできてうれしいです。",
+          "만나서 반가워요.",
+          "Ravi de vous rencontrer.",
+          "Encantado de conocerte."
+        ],
+        [
+          "你鍾意做啲咩？",
+          "nei5 zung1 ji3 zou6 di1 me1",
+          "What do you like doing?",
+          "你喜歡做甚麼？",
+          "何をするのが好きですか？",
+          "무엇을 하는 것을 좋아해요?",
+          "Qu’aimez-vous faire ?",
+          "¿Qué te gusta hacer?"
+        ]
+      ],
+      "turns": [
+        [
+          7,
+          [
+            4
+          ]
+        ],
+        [
+          6,
+          [
+            6
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "out",
+      "icon": "🚇",
+      "names": [
+        "Getting around Hong Kong",
+        "香港出行",
+        "香港での移動",
+        "홍콩에서 길 찾기",
+        "Se déplacer à Hong Kong",
+        "Moverse por Hong Kong"
+      ],
+      "rows": [
+        [
+          "港鐵",
+          "gong2 tit3",
+          "MTR (Hong Kong’s railway)",
+          "港鐵",
+          "香港のMTR",
+          "홍콩 MTR",
+          "MTR (métro de Hong Kong)",
+          "MTR (metro de Hong Kong)"
+        ],
+        [
+          "巴士",
+          "baa1 si2",
+          "bus",
+          "巴士",
+          "バス",
+          "버스",
+          "bus",
+          "autobús"
+        ],
+        [
+          "車站",
+          "ce1 zaam6",
+          "station",
+          "車站",
+          "駅",
+          "역",
+          "station",
+          "estación"
+        ],
+        [
+          "廁所",
+          "ci3 so2",
+          "toilet",
+          "廁所",
+          "トイレ",
+          "화장실",
+          "toilettes",
+          "baño"
+        ],
+        [
+          "唔該，港鐵站喺邊？",
+          "m4 goi1 gong2 tit3 zaam6 hai2 bin1",
+          "Excuse me, where is the MTR station?",
+          "請問港鐵站在哪裏？",
+          "すみません、MTRの駅はどこですか？",
+          "실례합니다, MTR역이 어디예요?",
+          "Excusez-moi, où est la station de MTR ?",
+          "Disculpe, ¿dónde está la estación de MTR?"
+        ],
+        [
+          "行前少少，轉左。",
+          "haang4 cin4 siu2 siu2 zyun3 zo2",
+          "Walk a little further and turn left.",
+          "往前走一點，然後左轉。",
+          "少し先まで歩いて左に曲がってください。",
+          "조금 더 가서 왼쪽으로 도세요.",
+          "Avancez un peu, puis tournez à gauche.",
+          "Camina un poco más y gira a la izquierda."
+        ],
+        [
+          "喺呢度落車。",
+          "hai2 ni1 dou6 lok6 ce1",
+          "Get off here.",
+          "在這裏下車。",
+          "ここで降りてください。",
+          "여기서 내리세요.",
+          "Descendez ici.",
+          "Baja aquí."
+        ],
+        [
+          "你想去邊？",
+          "nei5 soeng2 heoi3 bin1",
+          "Where would you like to go?",
+          "你想去哪裏？",
+          "どこへ行きたいですか？",
+          "어디에 가고 싶어요?",
+          "Où voulez-vous aller ?",
+          "¿Adónde quieres ir?"
+        ],
+        [
+          "我想去港鐵站。",
+          "ngo5 soeng2 heoi3 gong2 tit3 zaam6",
+          "I would like to go to the MTR station.",
+          "我想去港鐵站。",
+          "MTRの駅へ行きたいです。",
+          "MTR역에 가고 싶어요.",
+          "Je voudrais aller à la station de MTR.",
+          "Quisiera ir a la estación de MTR."
+        ]
+      ],
+      "turns": [
+        [
+          7,
+          [
+            8
+          ]
+        ],
+        [
+          4,
+          [
+            5
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "shopping",
+      "icon": "🛍️",
+      "names": [
+        "Shopping and payments",
+        "購物與付款",
+        "買い物と支払い",
+        "쇼핑과 결제",
+        "Achats et paiements",
+        "Compras y pagos"
+      ],
+      "rows": [
+        [
+          "蚊",
+          "man1",
+          "dollar (spoken Cantonese)",
+          "元（廣東話口語）",
+          "ドル（広東語の口語）",
+          "달러 (광둥어 구어)",
+          "dollar (cantonais parlé)",
+          "dólar (cantonés hablado)"
+        ],
+        [
+          "現金",
+          "jin6 gam1",
+          "cash",
+          "現金",
+          "現金",
+          "현금",
+          "espèces",
+          "efectivo"
+        ],
+        [
+          "八達通",
+          "baat3 daat6 tung1",
+          "Octopus card",
+          "八達通卡",
+          "オクトパスカード",
+          "옥토퍼스 카드",
+          "carte Octopus",
+          "tarjeta Octopus"
+        ],
+        [
+          "袋",
+          "doi2",
+          "bag",
+          "袋",
+          "袋",
+          "봉투",
+          "sac",
+          "bolsa"
+        ],
+        [
+          "呢個幾多錢？",
+          "ni1 go3 gei2 do1 cin2",
+          "How much is this?",
+          "這個多少錢？",
+          "これはいくらですか？",
+          "이것은 얼마예요?",
+          "Combien coûte ceci ?",
+          "¿Cuánto cuesta esto?"
+        ],
+        [
+          "呢個十蚊。",
+          "ni1 go3 sap6 man1",
+          "This costs ten dollars.",
+          "這個十元。",
+          "これは十ドルです。",
+          "이것은 십 달러예요.",
+          "Cela coûte dix dollars.",
+          "Esto cuesta diez dólares."
+        ],
+        [
+          "唔使袋，唔該。",
+          "m4 sai2 doi2 m4 goi1",
+          "No bag needed, thank you.",
+          "不用袋子，謝謝。",
+          "袋は要りません、ありがとう。",
+          "봉투는 필요 없어요. 감사합니다.",
+          "Pas de sac, merci.",
+          "No necesito bolsa, gracias."
+        ],
+        [
+          "可唔可以用八達通？",
+          "ho2 m4 ho2 ji5 jung6 baat3 daat6 tung1",
+          "Can I pay with Octopus?",
+          "可以用八達通付款嗎？",
+          "オクトパスで払えますか？",
+          "옥토퍼스로 결제할 수 있나요?",
+          "Puis-je payer avec Octopus ?",
+          "¿Puedo pagar con Octopus?"
+        ],
+        [
+          "可以。",
+          "ho2 ji5",
+          "Yes, you can.",
+          "可以。",
+          "はい、できます。",
+          "네, 가능해요.",
+          "Oui, vous pouvez.",
+          "Sí, puedes."
+        ]
+      ],
+      "turns": [
+        [
+          4,
+          [
+            5
+          ]
+        ],
+        [
+          7,
+          [
+            8
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "work",
+      "icon": "📚",
+      "names": [
+        "Learning and working together",
+        "學習與合作",
+        "学びと協力",
+        "학습과 협력",
+        "Apprendre et coopérer",
+        "Aprender y colaborar"
+      ],
+      "rows": [
+        [
+          "書",
+          "syu1",
+          "book",
+          "書",
+          "本",
+          "책",
+          "livre",
+          "libro"
+        ],
+        [
+          "筆",
+          "bat1",
+          "pen",
+          "筆",
+          "ペン",
+          "펜",
+          "stylo",
+          "bolígrafo"
+        ],
+        [
+          "幫手",
+          "bong1 sau2",
+          "help",
+          "幫忙",
+          "手伝う",
+          "돕다",
+          "aider",
+          "ayudar"
+        ],
+        [
+          "做完",
+          "zou6 jyun4",
+          "finished",
+          "完成",
+          "終わった",
+          "끝내다",
+          "terminé",
+          "terminado"
+        ],
+        [
+          "我哋一齊做。",
+          "ngo5 dei6 jat1 cai4 zou6",
+          "Let’s do it together.",
+          "我們一起做。",
+          "一緒にやりましょう。",
+          "같이 해요.",
+          "Faisons-le ensemble.",
+          "Hagámoslo juntos."
+        ],
+        [
+          "唔該，可唔可以講慢啲？",
+          "m4 goi1 ho2 m4 ho2 ji5 gong2 maan6 di1",
+          "Could you speak more slowly, please?",
+          "可以請你說慢一點嗎？",
+          "もう少しゆっくり話していただけますか？",
+          "조금 천천히 말씀해 주시겠어요?",
+          "Pourriez-vous parler plus lentement ?",
+          "¿Podría hablar más despacio, por favor?"
+        ],
+        [
+          "我做呢一部分。",
+          "ngo5 zou6 ni1 jat1 bou6 fan6",
+          "I will do this part.",
+          "我來做這一部分。",
+          "この部分は私がやります。",
+          "이 부분은 제가 할게요.",
+          "Je vais faire cette partie.",
+          "Yo haré esta parte."
+        ],
+        [
+          "你可唔可以幫手？",
+          "nei5 ho2 m4 ho2 ji5 bong1 sau2",
+          "Can you help?",
+          "你可以幫忙嗎？",
+          "手伝ってもらえますか？",
+          "도와줄 수 있어요?",
+          "Pouvez-vous aider ?",
+          "¿Puedes ayudar?"
+        ],
+        [
+          "我哋聽日開會。",
+          "ngo5 dei6 ting1 jat6 hoi1 wui6",
+          "We have a meeting tomorrow.",
+          "我們明天開會。",
+          "明日は会議があります。",
+          "우리는 내일 회의가 있어요.",
+          "Nous avons une réunion demain.",
+          "Tenemos una reunión mañana."
+        ],
+        [
+          "好，我講慢啲。",
+          "hou2 ngo5 gong2 maan6 di1",
+          "OK, I will speak more slowly.",
+          "好的，我會說慢一點。",
+          "はい、もっとゆっくり話します。",
+          "네, 더 천천히 말할게요.",
+          "D’accord, je parlerai plus lentement.",
+          "De acuerdo, hablaré más despacio."
+        ]
+      ],
+      "turns": [
+        [
+          7,
+          [
+            4,
+            6
+          ]
+        ],
+        [
+          5,
+          [
+            9
+          ]
+        ]
+      ]
+    }
+  ]
+}
