@@ -270,6 +270,11 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   report Asia/Hong_Kong. The server knows the country (request.cf.country) if a stronger signal is ever needed.
   Then ("when user choose to learn eng offer this choice"): the Add or remove courses sheet shows setup's two accent
   cards (US/UK, with the voice preview) whenever English is ticked. DEPLOYED with it.
+- **Item meanings in the App language (commit a68d2d4, DEPLOYED — Pages deployment 724d8f68):** the grey line under a
+  practice word (Leslie: "this should be translated to app language for all courses"). 767 meanings → <lang>/meanings.json
+  keyed by the English meaning; tm(meaning, itemLang); hidden where the App language is the course's own. Machine
+  drafts like the rest. Dev-server gotcha: two quick writes to one file can leave Vite serving the first ("tm is not
+  defined"); re-saving the file fixes it — the build was never affected.
 
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
