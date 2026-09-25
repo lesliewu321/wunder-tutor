@@ -157,8 +157,24 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   es-ES-ElviraNeural. DB: contributions.locale now allows ja-JP, ko-KR, es-ES, es-MX (it refused ja-JP before — a real
   bug the map found). Content (items, 7 lessons × 3 bands, check, ladders, 3 scenarios each, zh-Hant titles and sound
   texts) was authored by two subagents from a written spec; tests `ko.test.ts`, `es.test.ts`, `ko-es-models.test.ts`.
-  **Never measured against live ko-KR / es-ES scoring** — probe first (eval/probe.mjs) before trusting a named sound;
-  the courses ship as "scored", and the Lab and feedback stay word-level wherever the alignment finds no fit.
+  **Probed live on the local server (teacher takes):** Azure returns `Success` for ko-KR and es-ES with `AccuracyScore`
+  per word, per phoneme (unnamed) and per syllable (and prosody for Spanish); the teacher scores 100; the counts match
+  the models — 물 3/1, 주세요 5/3, perro 4/2, Quiero 5/2 — and 안녕하세요 came back as 9 sounds with NO syllables,
+  which showed Azure merges a doubled consonant across blocks (n+n): `phoneCandidates` offers that merge now (exactly
+  one 9-sound fit). Not yet measured on mistakes or real learners; feedback stays word-level where nothing fits.
+  **Run in the 5199 copy:** es-food-1 (queso, scored by the mock), ko-food-1 (김치 with romaja under it; the demo take
+  scored 66 and the card named the 받침 sound with its tip and "Show me how"). 302 tests, typecheck clean,
+  `content:check` ok (ko 92 items / es 118). **Committed** (2f88589 Korean and Spanish courses; 23c33ca test mode +
+  the course agent's UI work as found) and **DEPLOYED ~04:50 UTC (Pages 13c85bce)** — Leslie's "upload to webapp for
+  testing" standing for the day. Voices: `warm-voice --only=ko-KR,es-ES` was running (407 lines); push with
+  `--push` after it finishes (the script now passes `--remote`).
+  - From the authoring agents, for Leslie's or a native speaker's eye: Korean pronounced forms chosen where the
+    standard allows two (맛있게 [마싣께], 김밥 [김빱], 계란 kept as 계, 갈 시간 [갈 씨간], 초콜릿 [초콜릳]; ㅎ kept after
+    ㄴ/ㅁ); the tutor line "맛있어요?" became "음식 맛있어요?" so it does not share an id with the learner's "맛있어요.";
+    Spanish `kind`: one-word lines like "Gracias." are `word` (as `esKind` derives); the tap-r ladder starts from
+    tra/dre/pro (a bare "ra" is a trill by rule); the Chinese translations of both courses are the agents' own —
+    review the sound tips ("打舌的 rr", "吉拿棒"; scenario "El Café Sol" → 陽光咖啡室; lesson 6 in Korean is 在咖啡店
+    though the scene is a 분식집).
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
