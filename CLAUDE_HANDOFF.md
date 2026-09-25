@@ -213,6 +213,23 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
+- **Lesson map (2026-09-25, commit dab0064, DEPLOYED — Pages deployment 31ccfd57, bundle index-Feu9ieJR.js, live,
+  checked):** Leslie liked SuperChinese's lessons overview, then: "can be scrolled", "make it interesting, not just
+  zigzag", "course alternative", "do not copy exactly, make it compatible with our current theme", "background should
+  be different per age group?". Built: `src/features/home/LessonMap.tsx` draws the unit's lessons as round nodes on a
+  meandering trail (irregular x positions `XS`, uneven gaps `STEPS`, one cubic path through every centre to a finish
+  flag with the unit's icon), from the app's own tokens — no SuperChinese colours. **Scene per band** (`sceneFor`):
+  little = meadow (sky → cream, rolling leaf hills, a lake with a sailing boat, sun, 🌳🌸🦋… beside the trail); junior =
+  trail (lilac → sun-soft, far peaks, wooded slopes, a canoe, 🌲⛰️🏕️…); teen/adult = route (surface → lilac, faint
+  contour lines, no emoji, a still Tutu). Tutu (happy, bobbing) waits beside the next lesson and replaces that node's
+  scenery; the sun is an HTML element because the stretched SVG (`preserveAspectRatio="none"`) turns circles into
+  ovals. It is in the page flow, so the page scrolls it. **The list stays as the alternative:** Home's Learn/Test row
+  now ends in a Map/List segmented switch (`.seg`, new `map`/`list` icons; strings `home.path.view.*`), map by
+  default, remembered per learner in `wunder-tutor/path-view/<id>`; both views render from one `MapNode[]` model
+  (state done/current/open/locked + stars | score | tick/play mark), in Learn and Test mode. Checked in the 5199 copy at
+  375 px for all three bands, the list, and Test mode; labels all fit (max right edge 346 px), nothing overflows
+  horizontally. 315 tests pass; typecheck clean. The other agent's `astra-lessons/library/` (1.2 GB, untracked) was
+  left out of the commit — theirs to commit. Not pushed to GitHub; no phone build.
 
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
