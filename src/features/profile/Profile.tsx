@@ -5,93 +5,25 @@ import { useEffect, useState } from 'react';
 import { handleFor, makeHandle } from '../../engine/handles';
 import { readsTraditional } from '../../engine/region';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { settingsName, type Accent, type AgeBand, type ChildProfile, type CourseId, type ParentSettings } from '../../domain/types';
+import { settingsName, type Accent, type AgeBand, type CourseId, type ParentSettings } from '../../domain/types';
 import { audioRepo } from '../../data/repository';
 import { buildRecordingExport, consentText } from '../../data/exportRecordings';
 import { blobToWav16k } from '../../speech/recorder';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
-import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, goalDetail, goalLabel, liveStreak } from '../../engine/rewards';
-import { isChinese, LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
+import { LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
 import { apiHealth, getAccessCode, serviceStatus, serviceWords, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
-import { ACCENT_PREVIEW_LINE, voice } from '../../speech/voice';
 import { Button, Sheet, toast, TopBar, IconButton } from '../../ui/kit';
 import { deleteAccount, useAccount } from '../../account/account';
 import { forgetContributions } from '../../speech/health';
 import { AccountPanel } from './AccountPanel';
 import { InviteCodeForm } from './InviteCodeForm';
 
-/** The Course list's last entry: not a course, it opens the list of courses to tick. */
-const MANAGE = '__manage';
 const BAND_LABEL: Record<AgeBand, Key> = { little: 'settings.me.band.little', junior: 'settings.me.band.junior', teen: 'settings.me.band.teen', adult: 'settings.me.band.adult' };
-const COURSES: CourseId[] = ['en', 'zh', 'yue', 'ja', 'ko', 'fr', 'es']; // the same order as Home and setup (French after Korean, Leslie 2026-09-25)
-/** A course's name on the Me card: English carries the accent; Putonghua and French keep their own names. */
-const COURSE_LABEL: Record<Exclude<CourseId, 'en'>, Key> = { yue: 'settings.me.course.yue', zh: 'settings.me.course.zh', fr: 'settings.me.course.fr', ja: 'settings.me.course.ja', ko: 'settings.me.course.ko', es: 'settings.me.course.es' };
-
-/**
- * The courses row, looking like the dropdowns around it (Leslie, 2026-09-21). It opens a list to tick rather than being
- * a native <select>: a learner can take more than one course, and a <select> picks one. Changes apply as they are
- * ticked, like the other rows; the last course left cannot be unticked.
- */
-function CourseSheet({ p, open, setOpen }: { p: ChildProfile; open: boolean; setOpen: (open: boolean) => void }) {
-  const { t } = useT();
-  const patch = useStore((s) => s.patchProfile);
-  // Said after trying to untick the only course left, until the next change.
-  const [keep, setKeep] = useState(false);
-  useEffect(() => { if (open) setKeep(false); }, [open]);
-  // Putonghua keeps its own name, in the learner's characters (written in Simplified here); French and Japanese theirs.
-  const name = (c: CourseId) => (c === 'en' ? t('common.course.en') : c === 'zh' ? inScript('普通话', p.zhScript) : c === 'yue' ? '香港廣東話' : c === 'ja' ? '日本語' : c === 'ko' ? '한국어' : c === 'es' ? 'Español' : 'Français');
-  const lang = (c: CourseId) => (c === 'zh' ? (p.zhScript === 'hans' ? 'zh-Hans' : 'zh-Hant') : c === 'yue' ? 'yue-HK' : c === 'fr' ? 'fr' : c === 'ja' ? 'ja' : c === 'ko' ? 'ko' : c === 'es' ? 'es' : undefined);
-  // In the list, what the course's own name may not tell the grown-up reading it.
-  const gloss = (c: CourseId) => (c === 'yue' || c === 'fr' || c === 'ja' || c === 'ko' || c === 'es' || (c === 'zh' && !isChinese()) ? t(COURSE_LABEL[c]) : null);
-  const toggle = (c: CourseId) => {
-    const on = p.learning.includes(c);
-    if (on && p.learning.length === 1) { setKeep(true); return; }
-    setKeep(false);
-    const learning = on ? p.learning.filter((x) => x !== c) : [...p.learning, c];
-    patch(p.id, { learning, course: learning.includes(p.course) ? p.course : learning[0] });
-  };
-  const title = t('settings.learning.courses.title', { name: p.name });
-  return (
-    <>
-      <Sheet open={open} onClose={() => setOpen(false)} label={title}>
-        <div className="course-sheet">
-          <h2>{title}</h2>
-          <div className="course-sheet__list">
-            {COURSES.map((c) => {
-              const on = p.learning.includes(c);
-              const more = gloss(c);
-              return (
-                <button key={c} type="button" className={`tile ${on ? 'is-on' : ''}`} aria-pressed={on} onClick={() => toggle(c)}>
-                  <span><LanguageFlag language={c} accent={p.accent} /> <b lang={lang(c)}>{name(c)}</b>{more && <small>{more}</small>}</span>
-                  <span className="tile__tick" aria-hidden>{on && <Icon name="check" size={18} />}</span>
-                </button>
-              );
-            })}
-          </div>
-          <p className={keep ? 'course-sheet__keep' : undefined} role="status">{t(keep ? 'settings.learning.courses.keep' : 'settings.learning.courses.hint')}</p>
-          {/* English comes with its accent (Leslie, 2026-09-25: "when user choose to learn eng offer this choice"): the same
-              two cards as setup, each playing the teacher's voice in that accent. */}
-          {p.learning.includes('en') && (
-            <div className="course-sheet__accent" role="group" aria-label={t('settings.learning.accent')}>
-              <h3>{t('settings.learning.accent')}</h3>
-              {([['en-US', 'onboarding.accent.us.badge', 'onboarding.accent.us.title', 'onboarding.accent.us.detail'], ['en-GB', 'onboarding.accent.uk.badge', 'onboarding.accent.uk.title', 'onboarding.accent.uk.detail']] as const).map(([accent, badge, title, detail]) => (
-                <button key={accent} type="button" className={`tile tile--wide ${p.accent === accent ? 'is-on' : ''}`} aria-pressed={p.accent === accent}
-                  onClick={() => { patch(p.id, { accent }); void voice.speak(ACCENT_PREVIEW_LINE, { accent, preview: true }).catch(() => undefined); }}>
-                  <span className="code-badge">{t(badge)}</span><span><b>{t(title)}</b><small>{t(detail)}</small></span><span className="tile__aside" aria-hidden>🔈</span>
-                </button>
-              ))}
-            </div>
-          )}
-          <Button size="lg" block onClick={() => setOpen(false)}>{t('common.done')}</Button>
-        </div>
-      </Sheet>
-    </>
-  );
-}
+const COURSES: CourseId[] = ['en', 'zh', 'yue', 'ja', 'ko', 'fr', 'es'];
 
 export function Me() {
   const nav = useNavigate();
@@ -102,26 +34,18 @@ export function Me() {
   // Minutes spent speaking out loud, over every day on record.
   const studyMinutes = Math.round(Object.values(p.pronunciation.days).reduce((n, d) => n + (d.speakingMs ?? 0), 0) / 60000);
   const setCourse = useStore((s) => s.setCourse);
-  // Switching between the learner's own courses — the ones a grown-up chose in Settings (Leslie, 2026-09-21: "even if I
-  // select only 2 languages in settings, all 4 appear in front page"); moved here from Home (2026-09-25). The Putonghua
-  // course keeps its own name beside the English one: written in Simplified, shown in the learner's script.
-  const courseLabel: Record<CourseId, string> = { en: t('common.course.en'), zh: '普通话 Putonghua', yue: '香港廣東話 · ' + t('settings.me.course.yue'), ja: '日本語 Japanese', ko: '한국어 Korean', fr: 'Français', es: 'Español' }; // order (Leslie, 2026-09-25): French after Korean
-  // In the same order everywhere; the course on screen is always among them, even if the list was changed elsewhere.
-  const myCourses = (Object.keys(courseLabel) as CourseId[]).filter((c) => p.learning.includes(c) || c === p.course);
-  const [managing, setManaging] = useState(false);
+  // Every available course can be selected directly; progress remains attached to its course.
+  const courseLabel = (id: CourseId) => t(id === 'en' ? 'common.course.en' : ('settings.me.course.' + id) as Key);
 
   return (
     <div className="screen me">
       <TopBar title={t('settings.me.title')} right={<IconButton className="settings-cog" icon="cog" label={settingsName(p.band)} onClick={() => nav('/parents')} />} />
-      {/* The course, at the very top (Leslie, 2026-09-25). Its list ends with adding or removing courses — the one place
-          for that now; Settings no longer has a Courses row. */}
+      {/* One active course, selected from the full available list. */}
       <label className="course-pick"><span><LanguageFlag language={p.course} accent={p.accent} /> {t('home.course.aria')}</span>
-        <select value={p.course} onChange={(e) => { if (e.target.value === MANAGE) setManaging(true); else setCourse(e.target.value as CourseId); }}>
-          {myCourses.map((id) => <option key={id} value={id}>{flagEmoji(id, p.accent)} {inScript(courseLabel[id], p.zhScript)}</option>)}
-          <option value={MANAGE}>{t('settings.learning.courses.manage')}</option>
+        <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
+          {COURSES.map((id) => <option key={id} value={id}>{flagEmoji(id, p.accent)} {courseLabel(id)}</option>)}
         </select>
       </label>
-      <CourseSheet p={p} open={managing} setOpen={setManaging} />
       <section className="me__card">
         <div className="me__avatar">{p.avatar}</div>
         <h2>{p.name}</h2>

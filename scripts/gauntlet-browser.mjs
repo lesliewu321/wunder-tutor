@@ -47,6 +47,10 @@ try{
    if(path==='/speak')assert(await page.locator('.scenario-list li').count()===7,'Cantonese scenes '+locale);
   }
  }
+ await navigate('/me');
+ assert(await page.locator('.me .course-pick option').count()===7,'all seven courses must be listed directly');
+ assert(!await page.locator('.me .course-pick select').evaluate(e=>e.multiple),'course picker must select only one');
+ for(const course of ['en','zh','yue','ja','ko','fr','es']){await page.locator('.me .course-pick select').selectOption(course);assert(await page.evaluate(()=>window.__store.getState().profiles[window.__store.getState().activeId].course)===course,'course switch '+course);}
  await page.evaluate(async()=>{const i=await import('/src/i18n/index.ts');await i.loadLanguage('en');const s=window.__store.getState();s.setSettings({language:'en'});s.patchProfile(s.activeId,{band:'adult',course:'yue'});});
  await navigate('/parents');
  const select=page.locator('#teacher-voice select');

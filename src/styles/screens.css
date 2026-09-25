@@ -458,3 +458,7 @@
 /* The day and the language each stay on one line (普通話 must not break). */
 .season-card__text small i { font-style: normal; white-space: nowrap; }
 .season-card__go { position: relative; z-index: 1; flex: none; padding: 8px 12px; border-radius: 999px; background: var(--coral); color: #fff; font-weight: 800; font-size: 0.86rem; }
+
+/* Tutu stays visible during setup at every age. */
+:root[data-band='adult'] .onboard .mascot { display: block; }
+.handover__tutu { width: clamp(190px, 32vh, 280px); height: auto; max-width: 80%; }

@@ -45,13 +45,12 @@ const GOALS_ADULT: { id: Goal; icon: string; title: Key }[] = [
   { id: 'work', icon: '💼', title: 'onboarding.level.goal.work' }, { id: 'travel', icon: '✈️', title: 'onboarding.level.goal.travel' },
   { id: 'everyday', icon: '🛒', title: 'onboarding.level.goal.everyday' }, { id: 'fun', icon: '🎮', title: 'onboarding.level.goal.fun' },
 ];
-/** The courses on offer first, then the ones coming soon (Leslie, 2026-09-22: "list coming soon languages last"). */
-const LEARN: { id: CourseId | 'de'; label: Key; ready: boolean; lang?: string }[] = [
+/** Available courses: one selection now, any other course later from Profile. */
+const LEARN: { id: CourseId; label: Key; ready: boolean; lang?: string }[] = [
   { id: 'en', label: 'common.course.en', ready: true }, { id: 'zh', label: 'onboarding.languages.learn.zh', ready: true, lang: 'zh-Hant' },
   { id: 'yue', label: 'settings.me.course.yue', ready: true, lang: 'yue-HK' },
   { id: 'ja', label: 'onboarding.languages.learn.ja', ready: true, lang: 'ja' }, { id: 'ko', label: 'onboarding.languages.learn.ko', ready: true, lang: 'ko' },
   { id: 'fr', label: 'onboarding.languages.learn.fr', ready: true, lang: 'fr' }, { id: 'es', label: 'onboarding.languages.learn.es', ready: true, lang: 'es' },
-  { id: 'de', label: 'onboarding.languages.learn.de', ready: false },
 ];
 /**
  * Who a sentence is about: the grown-up themself, the child by nickname, or "your child" before a nickname is typed.
@@ -261,7 +260,7 @@ export function Onboarding() {
             of both. Once a child's age is chosen, everything after speaks to a parent ("I'm the parent or guardian",
             "the Parent Zone"), so the badge says so too — two words for one person read as two different people. */}
         {opts.grownUp && !adult && <span className="tag tag--primary">{t(age === null ? 'onboarding.grownUps' : 'onboarding.parents')}</span>}
-        {opts.mascot && <Mascot mood={opts.mascot} size={step === 'welcome' ? 168 : 96} />}
+        {opts.mascot && <Mascot mood={opts.mascot} size={step === 'welcome' ? 200 : 128} />}
         {opts.title && <h1 className="onboard__title">{opts.title}</h1>}
         {opts.sub && <p className="onboard__sub">{opts.sub}</p>}
         {body}
@@ -397,7 +396,7 @@ export function Onboarding() {
               The two choices after it are preferences, both changeable later in Settings. */}
           <label className="switch-row"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span className="switch" aria-hidden /><span>{t(adult ? 'onboarding.consent.agree.adult' : 'onboarding.consent.agree.child')}</span></label>
           <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>{t('onboarding.consent.keep')}</span></label>
-          <label className="switch-row switch-row--card"><input type="checkbox" checked={contribute} onChange={(e) => setContribute(e.target.checked)} /><span className="switch" aria-hidden /><span><b>{t('settings.voice.contribute.label')}</b><small>{t('onboarding.consent.contribute.detail')}</small></span></label>
+          <label className="switch-row"><input type="checkbox" checked={contribute} onChange={(e) => setContribute(e.target.checked)} /><span className="switch" aria-hidden /><span><b>{t('settings.voice.contribute.label')}</b><small>{t('onboarding.consent.contribute.detail')}</small></span></label>
         </>,
         <Button size="lg" block disabled={!agreed} icon="mic" onClick={() => void create()}>{t('onboarding.consent.allow')}</Button>,
         { grownUp: true, title: t('onboarding.consent.title'), sub: t(adult ? 'onboarding.consent.sub.adult' : 'onboarding.consent.sub.child') },
@@ -447,14 +446,14 @@ export function Onboarding() {
 
     case 'ready':
       // The same page for every age: what the check is for, and that it may be skipped. A child is handed the device
-      // here, so the first words are for the grown-up and the buddy is on the page.
+      // here; Tutu is the prominent listening guide for every age.
       return shell(
-        <div className="handover"><div className="handover__avatar">{avatar}</div></div>,
+        <div className="handover"><Mascot mood="listening" size={240} className="handover__tutu" /></div>,
         <>
           <Button size="lg" variant="coral" block onClick={next}>{t('onboarding.ready.go')}</Button>
           <Button variant="ghost" block onClick={() => go('plan')}>{t('onboarding.ready.skip')}</Button>
         </>,
-        { mascot: 'cheer', title: t('onboarding.ready.title'), sub: adult ? t('onboarding.ready.sub') : t('onboarding.ready.sub.child', { name: name.trim() || t('onboarding.defaultName.child') }) },
+        { title: t('onboarding.ready.title'), sub: adult ? t('onboarding.ready.sub') : t('onboarding.ready.sub.child', { name: name.trim() || t('onboarding.defaultName.child') }) },
       );
 
     case 'check': {
