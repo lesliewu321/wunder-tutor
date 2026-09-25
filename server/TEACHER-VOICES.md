@@ -16,7 +16,7 @@ Edit the seven rows in **src/speech/teacherVoiceDefaults.ts**, then run the requ
 | French | Google Chirp 3 HD | Azure Neural |
 | Spanish | Google Chirp 3 HD | Azure Neural |
 
-A user who has not overridden a language inherits later owner changes after loading the updated app. Reset stores inheritance rather than copying today's values. Saved Gemini preferences inherit the current defaults. Other older explicit whole-device choices remain provider-only overrides until that course is changed or reset; in particular, an old device-only choice never starts sending text to cloud providers.
+A user who has not overridden a language inherits later owner changes after loading the updated app. Reset stores inheritance rather than copying today's values. Old whole-device cloud selections (including Qwen) inherit the per-course defaults; they are not treated as overrides for every language. Explicit per-course selections are preserved, including No backup. An old device-only choice remains device-only until that course is changed or reset, so it never starts sending text to cloud providers unexpectedly.
 
 Playback tries the selected primary, then backup if unavailable or failing, then a matching device voice if available. **No backup** makes the primary the only attempt. Access/account limits stop further cloud attempts. Preview plays only the selected slot and does not silently switch providers. Unconfigured services are disabled in the dropdown; availability reflects configuration and access, not proof of successful synthesis. Existing pronunciation scoring remains Azure.
 

@@ -36,14 +36,14 @@ describe('per-course teacher voice preferences', () => {
       expect(hasTeacherVoiceOverride('en-US')).toBe(false);
     } finally { TEACHER_VOICE_DEFAULTS.en = original; }
   });
-  it('preserves legacy explicit choices, especially device-only, until a course is reset', () => {
+  it('preserves the legacy device-only opt-out until a course is reset', () => {
     expect(isTeacherVoice('chirp')).toBe(true); expect(isTeacherVoice('unknown')).toBe(false);
     setTeacherVoiceChoice('device'); expect(teacherVoiceChoice()).toBe('device');
     expect(teacherVoiceOrder('zh-HK')).toEqual(['device']);
     resetTeacherVoicePair('zh-HK');
     expect(teacherVoiceOrder('zh-HK')).toEqual(['qwen', 'chirp', 'device']);
     expect(teacherVoiceOrder('en-US')).toEqual(['device']);
-    setTeacherVoiceChoice('qwen'); expect(teacherVoiceOrder('en-US')).toEqual(['qwen']);
+
   });
   it('skips an unavailable primary but never mutates the saved selection', () => {
     const h = { gemini: true, voiceProviders: { azure: true, qwen: false, chirp: true } } as ApiHealth;
@@ -62,6 +62,28 @@ describe('per-course teacher voice preferences', () => {
     storage.set(KEY, JSON.stringify({ en: { primary: 'bogus', backup: 'chirp' }, yue: { primary: 'gemini', backup: 'azure' }, fr: { primary: 'azure', backup: 'none' } }));
     expect(teacherVoicePair('zh-HK')).toEqual(recommendedVoicePair('zh-HK'));
     expect(teacherVoicePair('fr-FR')).toEqual({ primary: 'azure', backup: 'none' });
+  });
+  it.each(['azure', 'qwen', 'chirp'] as const)('old global %s does not override any course default', legacy => {
+    storage.set('wunder-tutor/teacher-voice', legacy);
+    const locales: Locale[] = ['en-US', 'en-GB', 'zh-CN', 'zh-HK', 'ja-JP', 'ko-KR', 'fr-FR', 'es-ES'];
+    for (const locale of locales) {
+      expect(teacherVoicePair(locale)).toEqual(recommendedVoicePair(locale));
+      expect(hasTeacherVoiceOverride(locale)).toBe(false);
+    }
+    expect(teacherVoiceOrder('en-US')).toEqual(['chirp', 'azure', 'device']);
+    expect(teacherVoiceOrder('zh-CN')).toEqual(['qwen', 'chirp', 'device']);
+    expect(teacherVoiceOrder('zh-HK')).toEqual(['qwen', 'chirp', 'device']);
+  });
+  it('retains an explicit per-language Qwen override and no-backup choice beside an old global preference', () => {
+    storage.set('wunder-tutor/teacher-voice', 'qwen');
+    storage.set(KEY, JSON.stringify({ en: { primary: 'qwen', backup: 'none' }, yue: null }));
+    expect(teacherVoicePair('en-US')).toEqual({ primary: 'qwen', backup: 'none' });
+    expect(hasTeacherVoiceOverride('en-US')).toBe(true);
+    expect(teacherVoicePair('zh-CN')).toEqual({ primary: 'qwen', backup: 'chirp' });
+    expect(teacherVoicePair('zh-HK')).toEqual({ primary: 'qwen', backup: 'chirp' });
+    resetTeacherVoicePair('en-US');
+    expect(teacherVoicePair('en-US')).toEqual({ primary: 'chirp', backup: 'azure' });
+    expect(hasTeacherVoiceOverride('en-US')).toBe(false);
   });
   it('keeps settings during a session when storage is unavailable', () => {
     teacherVoicePair('en-US');

@@ -104,13 +104,13 @@ describe('the teacher’s voice on a phone', () => {
     const { calls } = server({ voices: { azure: true, qwen: true, chirp: true, gemini: true } });
     audio();
     const { voice } = await import('../speech/voice');
-    const { setTeacherVoiceChoice } = await import('../speech/teacherPreference');
+    const { setTeacherVoicePair } = await import('../speech/teacherPreference');
     for (const provider of ['azure', 'qwen', 'chirp', 'azure'] as const) {
-      setTeacherVoiceChoice(provider);
-      expect(await voice.engine()).toBe(provider);
+      setTeacherVoicePair('zh-CN', { primary: provider, backup: 'none' });
+      expect(await voice.engine('zh-CN')).toBe(provider);
       await voice.speak('你好', { accent: 'zh-CN' });
     }
-    setTeacherVoiceChoice('qwen');
+    setTeacherVoicePair('zh-CN', { primary: 'qwen', backup: 'none' });
     await Promise.all([voice.speak('你好', { accent: 'zh-CN', slow: true }), voice.speak('你好', { accent: 'zh-CN', slow: true })]);
     expect(calls.map(c => c.provider)).toEqual(['azure', 'qwen', 'chirp']);
   });

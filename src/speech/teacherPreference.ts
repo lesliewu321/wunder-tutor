@@ -23,7 +23,7 @@ export const voiceSupports = (id: TeacherVoiceChoice, locale: Locale): boolean =
 export const voiceConfigured = (id: TeacherVoiceChoice, h: ApiHealth | null): boolean =>
   id === 'auto' || id === 'device' || !!(h?.voiceProviders?.[id] ?? (id === 'gemini' && h?.gemini));
 
-/** Existing whole-device choices remain overrides until each course is changed or reset. */
+/** Read the old whole-device preference only to preserve an explicit device-only opt-out. */
 export function teacherVoiceChoice(): TeacherVoiceChoice {
   try { const saved = localStorage.getItem(KEY); return isTeacherVoice(saved) ? saved : 'auto'; } catch { return memory; }
 }
@@ -55,19 +55,18 @@ function savedPairs(): SavedPairs {
   pairsMemory = clean;
   return pairsMemory;
 }
-function legacyPair(locale: Locale): VoicePair | undefined {
-  const legacy = teacherVoiceChoice();
-  if (legacy === 'auto' || !voiceSupports(legacy, locale)) return;
-  // Keep an explicit old choice provider-only, especially a deliberate device-only choice.
-  return { primary: legacy, backup: 'none' };
+function legacyDevicePair(): VoicePair | undefined {
+  // A cloud choice predating per-course settings must not override every language's defaults.
+  // Preserve device-only as an opt-out from sending text to cloud services until explicitly reset.
+  return teacherVoiceChoice() === 'device' ? { primary: 'device', backup: 'none' } : undefined;
 }
 export function hasTeacherVoiceOverride(locale: Locale): boolean {
   const saved = savedPairs()[voiceCourse(locale)];
-  return saved === undefined ? !!legacyPair(locale) : saved !== null;
+  return saved === undefined ? !!legacyDevicePair() : saved !== null;
 }
 export function teacherVoicePair(locale: Locale): VoicePair {
   const saved = savedPairs()[voiceCourse(locale)];
-  return saved ? { ...saved } : saved === null ? recommendedVoicePair(locale) : legacyPair(locale) ?? recommendedVoicePair(locale);
+  return saved ? { ...saved } : saved === null ? recommendedVoicePair(locale) : legacyDevicePair() ?? recommendedVoicePair(locale);
 }
 function persistPair(locale: Locale, pair: VoicePair | null): void {
   pairsMemory = { ...savedPairs(), [voiceCourse(locale)]: pair && { ...pair } };
