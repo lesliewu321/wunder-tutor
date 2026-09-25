@@ -65,7 +65,7 @@ export function CameraHost() {
           const nothing = readingProblem(reading, kid);
           if (nothing) return { text: nothing };
           tellIfFull(addPage(p.id, reading).dropped);
-          nav('/book', { replace: true }); // the Snap & say tab takes the camera's place in the history
+          nav('/book', { replace: true }); // the Notebook tab takes the camera's place in the history
           return null;
         } catch (e) {
           if (signal.aborted || (e instanceof ReadError && e.code === 'cancelled')) return null;

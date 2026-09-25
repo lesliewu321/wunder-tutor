@@ -3,7 +3,7 @@ import type { Reading } from '../../speech/read';
 
 // "My book": every page a learner photographed (or typed), newest first, with their best score for each sentence.
 // Kept on this device for each learner, so the pages are still there tomorrow; never uploaded. One page is "open": the
-// one the Snap & say tab shows in full and /say?s=N practises. (Each page has its own id and `changed` time, so that
+// one the Notebook tab shows in full and /say?s=N practises. (Each page has its own id and `changed` time, so that
 // pages can travel with the learner once families have accounts.)
 
 export interface BookPage { id: string; reading: Reading; best: Record<number, number>; at: number; changed: number }
@@ -115,7 +115,7 @@ export function forgetBook(profileId: string): void {
 
 export interface Book {
   pages: BookPage[];
-  /** The open page: shown in full on the Snap & say tab, practised by /say. */
+  /** The open page: shown in full on the Notebook tab, practised by /say. */
   page: BookPage | null;
   addPage: (reading: Reading) => { page: BookPage; dropped: BookPage | null };
   openPage: (id: string) => void;

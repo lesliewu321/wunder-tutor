@@ -118,9 +118,8 @@ small { font-size: 0.8em; font-weight: 600; color: var(--ink-soft); display: blo
 }
 .nav__item { display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--ink-faint); text-decoration: none; font-size: 0.72rem; font-weight: 800; padding: 6px 0; border-radius: 14px; transition: color 0.15s; }
 .nav__item.is-active { color: var(--primary); }
-.nav__item.is-active .nav__icon { transform: translateY(-1px) scale(1.08); }
-.nav__icon { display: grid; place-items: center; transition: transform 0.25s var(--ease-spring); }
-/* Five labels in a 320 px bar: "Snap & say" is the long one — it stays on one line, a little smaller on narrow phones. */
+.nav__icon { display: grid; place-items: center; width: 24px; height: 24px; }
+/* Keep all five translated labels on one line, a little smaller on narrow phones. */
 .nav__label { white-space: nowrap; }
 @media (max-width: 360px) { .nav__item { font-size: 0.66rem; } }
 
