@@ -15,7 +15,7 @@ try{for(const locale of ['en','zh-Hant','zh-Hans','ja','ko','fr','es']){
   await nav(path,sel);if(!await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1))throw Error(locale+path+' overflow '+width);report.screens.push({locale,path,width});
   if(path==='/me'&&width===320)await page.screenshot({path:'.wrangler/gauntlet-final-profile-'+locale+'.png'});
  }}
- await nav('/speak','.practice');await page.locator('.scenario-list li button').first().click();await page.locator('.convo').waitFor();await page.locator('.toast').filter({hasText:copy['common.noSound.line']}).first().waitFor();report.failuresShown.push(locale+'/conversation');
+ await nav('/speak','.practice');await page.locator('.scenario-list li button').first().click();await page.locator('.convo').waitFor();await page.locator('.toast').filter({hasText:copy['common.noSound.line']}).first().waitFor();report.failuresShown.push(locale+'/conversation');await page.locator('.toast').first().waitFor({state:'hidden',timeout:10000});
  await nav('/lesson/yue-greetings-1','.lesson-guide');await page.locator('.lesson-guide button').last().click();await page.locator('.lesson').waitFor();await page.locator('.toast').filter({hasText:copy['common.noSound.line']}).first().waitFor();report.failuresShown.push(locale+'/lesson');
  await context.close();console.log(locale+' mobile layouts and teacher failure feedback passed');
 }if(report.errors.length)throw Error(report.errors.join('\n'));report.ok=true;}catch(e){report.error=e.stack;throw e}finally{await browser.close();fs.writeFileSync('.wrangler/final-ui-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify({ok:report.ok,screens:report.screens.length,failuresShown:report.failuresShown.length,error:report.error}));}

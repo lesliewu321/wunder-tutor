@@ -372,3 +372,40 @@ This update supersedes the communication-pack status and old lesson counts above
 - npm run deploy ran from clean committed .wrangler/cantonese-routing-release. No secrets read/uploaded,
   GitHub push, mobile build or change to port 5173. Temporary release checkout removed after verification.
   Concurrent course-naming, health, source-library and HANDOFF changes preserved.
+
+
+## 2026-09-25 — Full-app gauntlet, translation corrections and Android 1.0.8
+
+- User explicitly authorized GitHub push, web deployment, APK and Android bundle builds. Release application
+  commit e237776 (audit fixes 602c568 and a24a7ef) includes committed main through 8e00f7c, including fefdd38
+  teacher-default migration. Built/deployed from clean .wrangler/full-app-gauntlet, branch codex/full-app-gauntlet.
+- Pages production deployment: ff0cd171-ba51-4cdd-b7ed-94165c366ad5. Live https://app.wundertutor.com;
+  immutable release https://ff0cd171.wunder-tutor.pages.dev. HTML/main JS/CSS hashes match the build.
+- Fixed Cantonese thank-you context (唔該 services/help or please; 多謝 gifts/compliments), missing English
+  conversation and Lab translations, little-learner conversation meanings, script conversion of Japanese and
+  quoted Cantonese guidance, and the hardcoded profile minute unit. Expanded seasonal/Lab/Traditional checks.
+- Prevented duplicate onboarding profiles during pending microphone permission. Teacher errors are no longer
+  swallowed in conversation, drill, dialogue, onboarding preview or spoken-tip handlers. Silence is rejected
+  before playback/cache success; corrupt server cache entries regenerate; provider timeouts/network errors
+  are controlled failures. Configured primary/backup choices and deliberate no-backup choices are respected.
+- Required checks passed: npm test 2089 passed / 2 optional exporter skips, typecheck, content:check, i18n:check.
+  Existing unused Mandarin item and large JS bundle warnings remain.
+- Browser evidence: 196 complete onboarding permutations, 196 home permutations, 49 completed lesson test
+  journeys with persisted results, 49 conversations, Notebook save/delete in seven interfaces, 112 settled
+  mobile layouts at 320/390px, and translated failure feedback in all seven interfaces. Account/microphone
+  flows were fixtures; no real signup/email was sent and no children's recordings were used.
+- Live production: all 24 Azure/Chirp/Qwen × eight-locale samples had nonzero PCM and completed browser audio
+  playback. All eight synthetic pronunciation assessments returned scores; typed EN/ZH and a synthetic photo
+  read passed. The app pipeline completed eight primary and eight forced-failure backup runs with live audio.
+  Three initial Qwen 500s were transient; retries and the complete post-release pass passed.
+- Android 1.0.8, versionCode 9: APK and AAB built. APK signature verified (v2); com.wundertutor.app, min SDK24,
+  target36. Both packages contain e237776 and the production API. No Android hardware was attached.
+  APK is a signed test build; AAB remains unsigned for the owner to sign with the upload key before Play upload.
+  No Play Store submission or iOS build was made; generated worktree paths were restored after cap sync.
+- Artifacts/checksums: .wrangler/releases/1.0.8 in the main workspace; also uploaded to a GitHub draft release
+  https://github.com/lesliewu321/wunder-tutor/releases/tag/untagged-36cceb5f5464cf1d3e86 .
+  GitHub main and codex/full-app-gauntlet contain the source. Detailed coverage: docs/QA-2026-09-25.md.
+- Concurrent unfinished access-gating/library work in the shared main checkout was preserved and excluded.
+  The shared checkout's branch was not advanced across those edits. Before its next app release, integrate
+  origin/main or codex/full-app-gauntlet and rerun gates so these audited fixes are preserved. This release's
+  worktree is retained for evidence; original dev servers on 5173/8787 were not stopped.
