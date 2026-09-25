@@ -14,6 +14,7 @@ import { rich, useT } from '../../i18n/useT';
 import { apiHealth, getAccessCode, serviceStatus, serviceWords, type ApiHealth, type ServiceStatus } from '../../speech';
 import { bandForAge, useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
+import { ACCENT_PREVIEW_LINE, voice } from '../../speech/voice';
 import { Button, Sheet, toast, TopBar, IconButton } from '../../ui/kit';
 import { deleteAccount, useAccount } from '../../account/account';
 import { forgetContributions } from '../../speech/health';
@@ -69,6 +70,19 @@ function CourseSheet({ p, open, setOpen }: { p: ChildProfile; open: boolean; set
             })}
           </div>
           <p className={keep ? 'course-sheet__keep' : undefined} role="status">{t(keep ? 'settings.learning.courses.keep' : 'settings.learning.courses.hint')}</p>
+          {/* English comes with its accent (Leslie, 2026-09-25: "when user choose to learn eng offer this choice"): the same
+              two cards as setup, each playing the teacher's voice in that accent. */}
+          {p.learning.includes('en') && (
+            <div className="course-sheet__accent" role="group" aria-label={t('settings.learning.accent')}>
+              <h3>{t('settings.learning.accent')}</h3>
+              {([['en-US', 'onboarding.accent.us.badge', 'onboarding.accent.us.title', 'onboarding.accent.us.detail'], ['en-GB', 'onboarding.accent.uk.badge', 'onboarding.accent.uk.title', 'onboarding.accent.uk.detail']] as const).map(([accent, badge, title, detail]) => (
+                <button key={accent} type="button" className={`tile tile--wide ${p.accent === accent ? 'is-on' : ''}`} aria-pressed={p.accent === accent}
+                  onClick={() => { patch(p.id, { accent }); void voice.speak(ACCENT_PREVIEW_LINE, { accent, preview: true }).catch(() => undefined); }}>
+                  <span className="code-badge">{t(badge)}</span><span><b>{t(title)}</b><small>{t(detail)}</small></span><span className="tile__aside" aria-hidden>🔈</span>
+                </button>
+              ))}
+            </div>
+          )}
           <Button size="lg" block onClick={() => setOpen(false)}>{t('common.done')}</Button>
         </div>
       </Sheet>

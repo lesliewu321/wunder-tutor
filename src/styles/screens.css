@@ -320,6 +320,8 @@
 .type-sheet p, .course-sheet p { color: var(--ink-soft); line-height: 1.45; margin: 0; }
 .course-sheet__list { display: flex; flex-direction: column; gap: 10px; }
 .course-sheet .course-sheet__keep { color: var(--weak); font-weight: 800; }
+.course-sheet__accent { display: flex; flex-direction: column; gap: 10px; }
+.course-sheet__accent h3 { font-size: 1.05rem; margin: 4px 0 0; }
 .tile__tick { flex: none; margin-left: auto; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; color: #fff; }
 .tile.is-on .tile__tick { background: var(--primary); border-color: var(--primary); }
 
