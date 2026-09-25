@@ -39,8 +39,10 @@ export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapo
       if (typeof data.audioContent !== 'string' || data.audioContent.length > MAX_AUDIO * 1.4) throw new TtsError('voice_no_audio');
       wav = Buffer.from(data.audioContent, 'base64');
     } else {
+      // Workers rejects redirect:'error'. Manual mode plus the non-2xx checks below
+      // rejects redirects without following them or forwarding the API credential.
       const res = await fetchImpl('https://' + qwenHost + '/api/v1/services/aigc/multimodal-generation/generation', {
-        method: 'POST', signal, redirect: 'error', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + qwenKey },
+        method: 'POST', signal, redirect: 'manual', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + qwenKey },
         body: JSON.stringify({ model: 'qwen3-tts-flash', input: { text: req.text, voice: req.accent === 'zh-HK' ? 'Kiki' : 'Cherry', language_type: LANGUAGES[req.accent] } }),
       });
       if (!res.ok) throw new TtsError('qwen_unavailable', res.status === 429 ? 429 : 502);
@@ -49,7 +51,7 @@ export function createTeacherVoices({ azure, qwenKey = '', qwenRegion = 'singapo
       // Only the provider's signed OSS audio URL is fetched; never forward API credentials or follow redirects.
       if (!/^dashscope[-a-z0-9]*\.oss[-a-z0-9]*\.aliyuncs\.com$/.test(url.hostname) || !['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.port) throw new TtsError('voice_audio_url');
       url.protocol = 'https:';
-      wav = await audioBytes(await fetchImpl(url.toString(), { signal, redirect: 'error' }));
+      wav = await audioBytes(await fetchImpl(url.toString(), { signal, redirect: 'manual' }));
     }
     const out = readWav(wav);
     if (!out.pcm.length) throw new TtsError('voice_no_audio');

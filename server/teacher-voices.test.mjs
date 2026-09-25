@@ -48,7 +48,7 @@ describe('selected teacher voices', () => {
     expect(JSON.parse(fetchImpl.mock.calls[0][1].body).input.language_type).toBe('Japanese');
     expect(fetchImpl.mock.calls[1][0]).toMatch(/^https:/);
     expect(fetchImpl.mock.calls[1][1].headers).toBeUndefined();
-    expect(fetchImpl.mock.calls[1][1].redirect).toBe('error');
+    expect(fetchImpl.mock.calls[1][1].redirect).toBe('manual');
     const unsafe = createTeacherVoices({ qwenKey: 'test', fetchImpl: async () => Response.json({ output: { audio: { url: 'https://private.example/a.wav' } } }) });
     await expect(unsafe.speak({ ...req, provider: 'qwen' })).rejects.toMatchObject({ code: 'voice_audio_url' });
   });

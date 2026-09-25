@@ -12,7 +12,7 @@ describe('gauntlet: real provider adapters with controlled upstreams', () => {
       const fetchImpl = vi.fn(async (url, init) => {
         if (url.includes('googleapis.com')) { const b = JSON.parse(init.body); const code = accent === 'zh-CN' ? 'cmn-CN' : accent === 'zh-HK' ? 'yue-HK' : accent; expect(b.voice.name).toBe(code + '-Chirp3-HD-Aoede'); expect(b.input.text).toBe(samples[accent]); expect(b.audioConfig.speakingRate).toBe(slow ? .65 : 1); return Response.json({ audioContent: wav.toString('base64') }); }
         if (url.includes('/generation')) { expect(url).toContain(region === 'qwencloud' ? 'https://maas.qwencloudapi.com/' : region === 'beijing' ? 'https://dashscope.aliyuncs.com/' : 'https://dashscope-intl.aliyuncs.com/'); const b = JSON.parse(init.body); expect(b.input.language_type).toBe(langs[accent]); expect(b.input.voice).toBe(accent === 'zh-HK' ? 'Kiki' : 'Cherry'); expect(b.input.text).toBe(samples[accent]); return Response.json({ output: { audio: { url: 'https://dashscope-result-sg.oss-ap-southeast-1.aliyuncs.com/test.wav' } } }); }
-        expect(init.headers).toBeUndefined(); expect(init.redirect).toBe('error'); return new Response(wav);
+        expect(init.headers).toBeUndefined(); expect(init.redirect).toBe('manual'); return new Response(wav);
       });
       const cache = new Map();
       const s = createTeacherVoices({ azure, chirpKey: 'fixture', qwenKey: 'fixture', qwenRegion: region, fetchImpl, cache: { get: async k => cache.get(k), put: async (k,v) => cache.set(k,v) } });

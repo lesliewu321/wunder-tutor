@@ -33,12 +33,12 @@ describe('Qwen service selection', () => {
     expect(fetchImpl).toHaveBeenCalledTimes(2);
     const [url, init] = fetchImpl.mock.calls[0];
     expect(url).toBe('https://maas.qwencloudapi.com/api/v1/services/aigc/multimodal-generation/generation');
-    expect(init.redirect).toBe('error');
+    expect(init.redirect).toBe('manual');
     expect(init.headers.Authorization).toBe('Bearer fixture');
     expect(JSON.parse(init.body)).toEqual({ model: 'qwen3-tts-flash', input: { text: req.text, voice: 'Cherry', language_type: language } });
     expect(fetchImpl.mock.calls[1][0]).toBe(audioUrl);
     expect(fetchImpl.mock.calls[1][1].headers).toBeUndefined();
-    expect(fetchImpl.mock.calls[1][1].redirect).toBe('error');
+    expect(fetchImpl.mock.calls[1][1].redirect).toBe('manual');
   });
 
   it('keeps QwenCloud and regional audio separate in the shared cache', async () => {
@@ -61,6 +61,27 @@ describe('Qwen service selection', () => {
     await expect(service.speak(req)).rejects.toMatchObject({ code: 'qwen_unavailable' });
     expect(fetchImpl).toHaveBeenCalledTimes(1);
     expect(fetchImpl.mock.calls[0][0]).toContain('https://maas.qwencloudapi.com/');
+  });
+
+  it.each([301, 302, 303, 307, 308])('rejects a %s generation redirect without forwarding the key', async status => {
+    const fetchImpl = vi.fn(async () => new Response(null, { status, headers: { Location: 'https://untrusted.example/collect' } }));
+    const service = createTeacherVoices({ qwenKey: 'fixture', qwenRegion: 'qwencloud', fetchImpl });
+    await expect(service.speak(req)).rejects.toMatchObject({ code: 'qwen_unavailable' });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(fetchImpl.mock.calls[0][0]).toContain('https://maas.qwencloudapi.com/');
+    expect(fetchImpl.mock.calls[0][1].redirect).toBe('manual');
+  });
+
+  it.each([301, 302, 303, 307, 308])('rejects a %s audio redirect without fetching its destination', async status => {
+    const fetchImpl = vi.fn(async url => url.endsWith('/generation')
+      ? Response.json({ output: { audio: { url: audioUrl } } })
+      : new Response(null, { status, headers: { Location: 'https://untrusted.example/audio.wav' } }));
+    const service = createTeacherVoices({ qwenKey: 'fixture', qwenRegion: 'qwencloud', fetchImpl });
+    await expect(service.speak(req)).rejects.toMatchObject({ code: 'voice_audio_failed' });
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(fetchImpl.mock.calls[1][0]).toBe(audioUrl);
+    expect(fetchImpl.mock.calls[1][1].redirect).toBe('manual');
+    expect(fetchImpl.mock.calls[1][1].headers).toBeUndefined();
   });
 
   it('rejects untrusted audio locations returned by QwenCloud before fetching them', async () => {
