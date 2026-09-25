@@ -11,7 +11,7 @@ section[id] { scroll-margin-top: 100px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 18px; padding: 16px 25px; border-radius: 14px; background: #6444df; color: white; font-weight: 800; font-size: 16px; line-height: 1.5; transition: transform .18s, box-shadow .18s; box-shadow: 0 4px 0 #4c30b4; }
 .button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #4c30b4; }
 .button-small { font-size: 14px; padding: 10px 18px; border-radius: 11px; }
-.button-coral { background: #e44b40; box-shadow: 0 4px 0 #b83227; }
+.button-coral { background: #cc3f34; box-shadow: 0 4px 0 #b83227; }
 .button-coral:hover { box-shadow: 0 6px 0 #b83227; }
 .text-link { display: inline-flex; gap: 12px; align-items: center; font-weight: 800; color: #593bc9; text-decoration: underline; text-underline-offset: 5px; }
 .skip-link { position: fixed; top: -100px; left: 20px; z-index: 100; padding: 12px 20px; background: white; border-radius: 12px; }
