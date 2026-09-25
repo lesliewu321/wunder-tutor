@@ -5,7 +5,7 @@ const {topics}=JSON.parse(fs.readFileSync(new URL('./source.json',import.meta.ur
 const langs=['en','zh-Hant','ja','ko','fr','es'];
 const packs=Object.fromEntries([...langs,'zh-Hans'].map(l=>[l,{content:{},lessons:{},meanings:{}}]));
 function add(part,key,values){langs.forEach((l,i)=>packs[l][part][key]=values[i]);packs['zh-Hans'][part][key]=hans(values[1]);}
-const courseNames=['Hong Kong Cantonese','香港廣東話','香港広東語','홍콩 광둥어','Cantonais de Hong Kong','Cantonés de Hong Kong'];
+const courseNames=['Cantonese (HK)','廣東話（香港）','広東語（香港）','광둥어 (홍콩)','Cantonais (HK)','Cantonés (HK)'];
 const labels=[['Words','詞語','単語','단어','Mots','Palabras'],['Useful phrases','實用短句','便利なフレーズ','유용한 표현','Expressions utiles','Frases útiles'],['Conversation','對話','会話','대화','Conversation','Conversación'],['Review and apply','複習與應用','復習と応用','복습과 활용','Révision et mise en pratique','Repaso y práctica']];
 const guide=[
 ['Use these phrases in a Hong Kong Cantonese role-play.','用這些短句練習香港廣東話角色扮演。','これらの表現で香港広東語のロールプレイをしましょう。','이 표현으로 홍콩 광둥어 역할극을 연습하세요.','Utilisez ces phrases dans un jeu de rôle en cantonais de Hong Kong.','Usa estas frases en un juego de rol en cantonés de Hong Kong.'],
