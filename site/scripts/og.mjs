@@ -16,11 +16,11 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   ${pip}
   <text x="80" y="150" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="34" fill="#6c4df5">WUNDER TUTOR</text>
   <text font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="70" fill="#2b2140">
-    <tspan x="80" y="270">Your child speaks.</tspan>
-    <tspan x="80" y="356" fill="#6c4df5">Pip shows exactly</tspan>
-    <tspan x="80" y="442" fill="#6c4df5">which sound to fix.</tspan>
+    <tspan x="80" y="270">Find your voice.</tspan>
+    <tspan x="80" y="356" fill="#6c4df5">One sound</tspan>
+    <tspan x="80" y="442" fill="#6c4df5">at a time.</tspan>
   </text>
-  <text x="80" y="530" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="32" fill="#6b6280">English pronunciation tutor · ages 5–17</text>
+  <text x="80" y="530" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="32" fill="#6b6280">7 languages · Kids, teens &amp; adults</text>
 </svg>`;
 await sharp(Buffer.from(svg)).png().toFile(new URL('../public/og.png', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
 console.log('public/og.png written');

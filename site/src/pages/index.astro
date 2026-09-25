@@ -1,179 +1,57 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Pip from '@/components/Pip.astro';
-import PhoneDemo from '@/components/PhoneDemo.tsx';
-import AgeTabs from '@/components/AgeTabs.tsx';
-import Faq, { FAQ } from '@/components/Faq.tsx';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import Screenshot from '@/components/Screenshot.astro';
 import { SITE } from '@/lib/site';
-
+import { facts, courseNotes, screens, FAQ } from '@/lib/content';
+const schema = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'SoftwareApplication', name: SITE.name, url: SITE.appUrl, applicationCategory: 'EducationalApplication', operatingSystem: 'Web browser', description: SITE.description, inLanguage: facts.languages.map(l => l.id), screenshot: screens.map(s => SITE.url + '/screenshots/' + s.id + '.webp'), featureList: ['Pronunciation practice in seven languages', 'Age-adapted lessons', 'Pronunciation Lab', 'Guided conversations', 'English and Mandarin reading practice', 'Optional practice reminders'] },
+  { '@type': 'FAQPage', mainEntity: FAQ.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+] };
 const steps = [
-  { n: 1, icon: '👂', title: 'Listen', text: 'A clear teacher voice says the word or sentence — at normal speed, or slowly.' },
-  { n: 2, icon: '🎤', title: 'Speak', text: 'One big button. Tap it, say it, and it stops by itself when your child finishes.' },
-  { n: 3, icon: '🎯', title: 'See', text: 'One score, and the exact word that slipped lights up straight away.' },
-  { n: 4, icon: '👅', title: 'Fix', text: 'Tutu names the sound, says what happened, and shows what to do with your mouth.' },
-  { n: 5, icon: '📈', title: 'Retry', text: 'One tap to try again. Before and after, side by side — hear both, see the jump.' },
+  { n: '01', title: 'Hear it clearly', text: 'Listen to a word or sentence. Slow it down when you need a little more time.' },
+  { n: '02', title: 'Give it a try', text: 'Tap the microphone and speak. With scoring access, get feedback on your pronunciation.' },
+  { n: '03', title: 'Practise the next step', text: 'Retry the phrase, work on a sound in the Lab, or come back for a review.' },
 ];
-
-const features = [
-  { icon: '🔬', tone: 'bg-secondary', title: 'Feedback on the exact sound', text: '“Your ‘th’ sounded closer to ‘t’.” Not “try again” — the precise sound, in words a child understands.' },
-  { icon: '👄', tone: 'bg-accent', title: 'A mouth that shows how', text: 'An animated guide for lips, tongue, teeth, airflow and voice — for the sounds that simply don’t exist in your home language.' },
-  { icon: '🧠', tone: 'bg-sun-soft', title: 'Tutu remembers', text: 'Sounds that keep tripping your child up come back — in reviews, in a daily two-minute focus, and in a quick drill when they’re needed.' },
-  { icon: '🪜', tone: 'bg-leaf-soft', title: 'The Pronunciation Lab', text: 'Climb a ladder for each tricky sound: syllables → words → phrases → a full sentence. Weakest sounds first.' },
-  { icon: '💬', tone: 'bg-sky-soft', title: 'Speak with Tutu', text: 'Order at a café, visit the zoo, make a new friend. The chat keeps flowing, and the pronunciation tips wait until the end.' },
-  { icon: '⏱️', tone: 'bg-muted', title: 'Three to seven minutes', text: 'Short lessons, gentle streaks and personal bests. Progress is rewarded — difficulty is never punished.' },
-];
-
-const privacy = [
-  { icon: '🎙️', title: 'The mic is on only while the button is red', text: 'Your child taps to start. It stops by itself, and the microphone is released after every single try.' },
-  { icon: '📱', title: 'Replay recordings stay on the device', text: 'They let your child hear “before” and “now”. Scores are stored separately from voice. Switch recordings off whenever you like.' },
-  { icon: '🙈', title: 'Nicknames only', text: 'No real name, no email for your child, no photos, no free-text chat with strangers — there are no strangers.' },
-  { icon: '🚫', title: 'No ads. No trackers.', text: 'Nothing is sold, and there is no advertising or third-party analytics in the app or on this site.' },
-  { icon: '🗑️', title: 'You hold the delete button', text: 'In the Parent Zone you can delete recordings, the pronunciation history, a profile, or everything — instantly.' },
-  { icon: '🔎', title: 'Plain about who processes what', text: 'Short voice clips go to Microsoft Azure to be scored. Only lesson text goes to Google to make the teacher’s voice. That’s the whole list.' },
-];
-
-const faqSchema = {
-  '@context': 'https://schema.org', '@type': 'FAQPage',
-  mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
-};
+const bands = [{ name: 'Little', ages: '5–7', text: 'Picture-led prompts, simple words and a playful learning companion.', symbol: '✿' }, { name: 'Junior', ages: '8–11', text: 'Everyday topics, short sentences and a colourful lesson map.', symbol: '✦' }, { name: 'Teen', ages: '12–17', text: 'School, friendships and practical conversations, with a calmer presentation.', symbol: '↗' }, { name: 'Adult', ages: '18+', text: 'Everyday life, travel and work, with foundations to revisit along the way.', symbol: '◎' }];
 ---
 <Base>
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
-
-  <!-- Hero -->
-  <section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-b from-secondary to-transparent blur-3xl" aria-hidden="true"></div>
-    <div class="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-12 md:grid-cols-[1.1fr_0.9fr] md:pb-24 md:pt-20">
-      <div>
-        <Badge className="mb-5 rounded-full bg-sun-soft px-3 py-1 text-[0.8rem] font-extrabold text-[#8a5a00] hover:bg-sun-soft">Beta · English for ages 5–17</Badge>
-        <h1 class="text-[2.6rem] leading-[1.05] md:text-6xl">
-          Your child speaks.<br />
-          <span class="text-primary">Tutu shows exactly which sound to fix.</span>
-        </h1>
-        <p class="mt-5 max-w-xl text-lg text-muted-foreground md:text-xl">
-          Wunder Tutor is a pronunciation-first English tutor. Say it, see the sound that slipped, learn how to fix it, try again — and <b class="text-foreground">hear the difference</b>.
-        </p>
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a href={SITE.appUrl} class="inline-flex h-14 items-center gap-2 rounded-2xl bg-coral px-7 font-display text-lg font-extrabold text-white shadow-[0_4px_0_var(--coral-deep)] transition hover:brightness-105 active:translate-y-1 active:shadow-none">
-            Try the beta — free
-          </a>
-          <a href="#how" class="inline-flex h-14 items-center rounded-2xl border-2 border-border bg-white px-6 font-display text-lg font-extrabold text-primary transition hover:bg-secondary">See how it works</a>
-        </div>
-        <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold text-muted-foreground">
-          <li>✓ Nothing to install</li><li>✓ Phone, tablet or laptop</li><li>✓ No ads, no trackers</li>
-        </ul>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(schema).replace(/</g, '\u003c')} />
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> Seven languages. Every kind of learner.</p>
+        <h1>Pronunciation practice.<br /><span>A little more confidence.</span></h1>
+        <p class="hero-lead">Find your voice with Wunder Tutor. Listen, speak and work on the sounds that need another try — with lessons that grow from childhood to adult life.</p>
+        <div class="actions"><a class="button button-coral" href={SITE.appUrl}>Start practising <span aria-hidden="true">↗</span></a><a class="text-link" href="#screenshots">Take a look inside <span aria-hidden="true">↓</span></a></div>
+        <p class="hero-note">In your browser · Phone, tablet or computer</p>
+        <p class="access-note">Beta access: real scoring, cloud voices and photo reading need an invite code or an account with access. <a href="#faq">How access works</a></p>
       </div>
-      <PhoneDemo client:load />
-    </div>
-  </section>
-
-  <!-- The difference -->
-  <section class="border-y border-border bg-white">
-    <div class="mx-auto grid max-w-6xl gap-6 px-5 py-14 md:grid-cols-2 md:gap-10">
-      <div class="rounded-3xl bg-muted p-7">
-        <p class="text-sm font-extrabold uppercase tracking-wider text-muted-foreground">Most apps</p>
-        <p class="mt-2 font-display text-2xl font-extrabold text-muted-foreground">“Good job!” <span class="font-sans text-base font-bold">or</span> “Try again.”</p>
-        <p class="mt-3 text-muted-foreground">They check whether speech recognition <i>understood</i> the word. Being understood isn’t the same as saying it well — and “try again” doesn’t tell a child what to change.</p>
-      </div>
-      <div class="rounded-3xl bg-secondary p-7 ring-2 ring-primary/20">
-        <p class="text-sm font-extrabold uppercase tracking-wider text-primary">Wunder Tutor</p>
-        <p class="mt-2 font-display text-2xl font-extrabold">“Your <span class="text-primary">th</span> sounded closer to <span class="text-primary">t</span>.”</p>
-        <p class="mt-3 text-foreground/80">Then the fix, in one sentence: <i>put the tip of your tongue lightly between your teeth and blow.</i> Then a retry — and a score that moves because the sound did.</p>
+      <div class="hero-visual" aria-label="Actual Wunder Tutor app screens">
+        <div class="hero-halo" aria-hidden="true"></div>
+        <div class="hero-home"><Screenshot id="learn" alt={screens[0].alt} eager sizes="(max-width: 639px) 180px, 235px" /></div>
+        <div class="hero-lesson"><Screenshot id="english-lesson" alt={screens[1].alt} eager sizes="(max-width: 639px) 215px, 265px" /></div>
+        <div class="screenshot-tag"><span aria-hidden="true">✦</span> A real look inside the app</div>
       </div>
     </div>
   </section>
-
-  <!-- How it works -->
-  <section id="how" class="scroll-mt-20">
-    <div class="mx-auto max-w-6xl px-5 py-20">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-4xl md:text-5xl">One loop. Every word.</h2>
-        <p class="mt-4 text-lg text-muted-foreground">Listen → speak → see → fix → retry. It takes less than a minute, and it’s the whole product.</p>
-      </div>
-      <ol class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {steps.map((s) => (
-          <li class="relative rounded-3xl bg-card p-6 shadow-sm ring-1 ring-border">
-            <span class="absolute -top-3 left-5 grid size-7 place-items-center rounded-full bg-primary font-display text-sm font-extrabold text-white">{s.n}</span>
-            <div class="text-4xl" aria-hidden="true">{s.icon}</div>
-            <h3 class="mt-3 text-xl">{s.title}</h3>
-            <p class="mt-1.5 text-[0.95rem] leading-relaxed text-muted-foreground">{s.text}</p>
-          </li>
-        ))}
-      </ol>
+  <div class="stats-strip"><dl class="wrap stats"><div><dt>Language courses</dt><dd>{facts.courses.length}</dd></div><div><dt>Course lessons</dt><dd>{facts.totalLessons}</dd></div><div><dt>Age groups</dt><dd>4</dd></div><div><dt>App languages</dt><dd>{facts.languages.length}</dd></div></dl></div>
+  <section id="courses" class="section wrap">
+    <div class="section-heading"><div><p class="eyebrow">Choose your language</p><h2>A world of things to say.</h2></div><p>Start with familiar words. Move into everyday situations. Switch courses from your Profile as your interests grow.</p></div>
+    <div class="course-grid">
+      {facts.courses.map(c => <article class={'course-card course-' + c.id}><p class="course-native" lang={c.id === 'zh' ? 'zh-Hans' : c.id}>{courseNotes[c.id].native}</p><h3>{c.name}</h3><p>{courseNotes[c.id].note}</p><span class="course-count">{c.lessons} lessons · {c.conversations} conversations</span></article>)}
+      <aside class="language-card"><Pip size={62} /><h3>Learn in your own words.</h3><p>Choose your app language separately from your course.</p><p class="language-list">{facts.languages.map(l => l.label).join(' · ')}</p></aside>
     </div>
+    <p class="section-note">Lesson totals count each course lesson once; age-adapted versions and seasonal bonuses are not counted as extra lessons. Course depth varies by language.</p>
   </section>
-
-  <!-- Features -->
-  <section class="bg-white">
-    <div class="mx-auto max-w-6xl px-5 py-20">
-      <h2 class="max-w-2xl text-4xl md:text-5xl">Built around speaking — not tapping.</h2>
-      <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {features.map((f) => (
-          <Card className="rounded-3xl border-border shadow-none">
-            <CardContent className="p-7">
-              <div class={`grid size-14 place-items-center rounded-2xl text-3xl ${f.tone}`} aria-hidden="true">{f.icon}</div>
-              <h3 class="mt-4 text-xl">{f.title}</h3>
-              <p class="mt-2 leading-relaxed text-muted-foreground">{f.text}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+  <section id="how" class="how-section"><div class="wrap section"><p class="eyebrow">Small steps, spoken out loud</p><h2>Hear it. Try it. Keep going.</h2><div class="step-grid">{steps.map(s => <article><span class="step-number">{s.n}</span><h3>{s.title}</h3><p>{s.text}</p></article>)}</div><p class="section-note">Lessons also include listening choices, reading and sentence-building activities. Available feedback depends on the course and exercise.</p></div></section>
+  <section id="screenshots" class="section wrap">
+    <div class="section-heading"><div><p class="eyebrow">Inside Wunder Tutor</p><h2>Meet your practice space.</h2></div><p>Real app screens, from your first word to a sound you want to get right. Select a screen to see it at full size.</p></div>
+    <div class="screen-grid">{screens.map(s => <figure class="screen-card"><a class="screen-image" href={'/screenshots/' + s.id + '.webp'} target="_blank" rel="noopener" aria-label={'View full-size ' + s.label + ' screenshot (opens in a new tab)'}><Screenshot id={s.id} alt={s.alt} /></a><figcaption><p class="eyebrow">{s.label}</p><h3>{s.title}</h3><p>{s.text}</p></figcaption></figure>)}</div>
+    <p class="section-note">Captured from the running local app on 25 September 2026 using a fictional learner. No real learner recordings, photos or scores are shown. Notebook uses original sample text.</p>
   </section>
-
-  <!-- Ages -->
-  <section id="ages" class="scroll-mt-20">
-    <div class="mx-auto max-w-5xl px-5 py-20">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-4xl md:text-5xl">A six-year-old and a fourteen-year-old are not the same learner.</h2>
-        <p class="mt-4 text-lg text-muted-foreground">Tell Tutu your child’s age and the words, the look, the reading level — even how feedback is delivered — change to fit.</p>
-      </div>
-      <div class="mt-10"><AgeTabs client:visible /></div>
-    </div>
-  </section>
-
-  <!-- Parents -->
-  <section id="parents" class="scroll-mt-20 bg-foreground text-background">
-    <div class="mx-auto max-w-6xl px-5 py-20">
-      <div class="max-w-2xl">
-        <p class="text-sm font-extrabold uppercase tracking-wider text-sun">For parents</p>
-        <h2 class="mt-2 text-4xl md:text-5xl">A child’s voice is sensitive. We treat it that way.</h2>
-        <p class="mt-4 text-lg text-background/75">You set the app up, you give consent for the microphone, and everything that matters sits behind a grown-ups-only Parent Zone.</p>
-      </div>
-      <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {privacy.map((p) => (
-          <div class="rounded-3xl bg-white/[0.07] p-6 ring-1 ring-white/10">
-            <div class="text-3xl" aria-hidden="true">{p.icon}</div>
-            <h3 class="mt-3 text-lg text-background">{p.title}</h3>
-            <p class="mt-1.5 text-[0.95rem] leading-relaxed text-background/70">{p.text}</p>
-          </div>
-        ))}
-      </div>
-      <p class="mt-8 text-sm text-background/60">The details are in our <a href="/privacy" class="font-extrabold text-sun underline underline-offset-4">privacy notice</a>, written to be read.</p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="scroll-mt-20">
-    <div class="mx-auto max-w-3xl px-5 py-20">
-      <h2 class="text-center text-4xl md:text-5xl">Questions parents ask</h2>
-      <div class="mt-8"><Faq client:visible /></div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="px-5 pb-20">
-    <div class="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary via-[#8a5cf6] to-[#b06af0] px-6 py-14 text-center text-white md:py-20">
-      <div class="pointer-events-none absolute -right-16 -top-20 size-72 rounded-full bg-white/10" aria-hidden="true"></div>
-      <div class="relative mx-auto flex max-w-2xl flex-col items-center">
-        <Pip size={104} cheer />
-        <h2 class="mt-4 text-4xl md:text-5xl">Five minutes. One tricky sound. Better by bedtime.</h2>
-        <p class="mt-4 text-lg text-white/85">Open the beta on any device with a microphone. Setup takes a grown-up about a minute.</p>
-        <a href={SITE.appUrl} class="mt-8 inline-flex h-14 items-center rounded-2xl bg-coral px-8 font-display text-lg font-extrabold text-white shadow-[0_4px_0_var(--coral-deep)] transition hover:brightness-105 active:translate-y-1 active:shadow-none">Try the beta — free</a>
-        <p class="mt-4 text-sm text-white/70">Real pronunciation scoring is switched on with a beta access code — <a class="font-extrabold underline underline-offset-4" href={`mailto:${SITE.email}?subject=Wunder%20Tutor%20beta%20access`}>ask us for one</a>. Without it the app runs in practice mode.</p>
-      </div>
-    </div>
-  </section>
+  <section id="ages" class="ages-section"><div class="wrap section"><div class="section-heading"><div><p class="eyebrow">Room to grow</p><h2>Made for your stage of life.</h2></div><p>Four age groups shape the lesson wording, situations and look of the app. Pick the one that fits you or your child.</p></div><div class="age-grid">{bands.map(b => <article><span class="age-symbol" aria-hidden="true">{b.symbol}</span><p class="eyebrow">Ages {b.ages}</p><h3>{b.name}</h3><p>{b.text}</p></article>)}</div></div></section>
+  <section id="privacy" class="section wrap"><div class="privacy-panel"><div><p class="eyebrow">Your voice. Your choices.</p><h2>Know what you’re sharing.</h2><p>Voice and learning data deserve clear explanations. Review the recording choices during setup and change them in Settings.</p><a href="/privacy" class="text-link">Read the privacy notice <span aria-hidden="true">↗</span></a></div><ul><li><b>Recording controls</b><span>Keep replay audio on your device, turn it off or delete it. Scoring sends clips to Azure.</span></li><li><b>A visible contribution choice</b><span>“Help improve Wunder Tutor” starts enabled for new setups. Turn it off if you don’t want the team to retain practice clips for up to 90 days.</span></li><li><b>Optional account sync</b><span>Sync progress and saved text when signed in. Photos and replay audio aren’t part of account sync.</span></li></ul></div></section>
+  <section id="faq" class="faq-section"><div class="wrap section faq-layout"><div class="faq-heading"><p class="eyebrow">A few helpful answers</p><h2>Before you say hello.</h2><p>Languages, access, devices and the details of daily practice.</p><Pip size={110} cheer /></div><div class="faq-list">{FAQ.map((f, i) => <details name="faq" id={'faq-' + (i + 1)}><summary>{f.q}<span aria-hidden="true">+</span></summary><div class="faq-answer"><p>{f.a}</p>{i === 11 && <a href="/privacy" class="text-link">Read the full privacy notice</a>}</div></details>)}</div></div></section>
+  <section class="wrap final-section"><div class="final-cta"><p class="eyebrow">Your next word is waiting</p><h2>Make a little time<br />for your voice.</h2><a class="button button-coral" href={SITE.appUrl}>Open Wunder Tutor <span aria-hidden="true">↗</span></a><p>Start in your browser. Explore at your own pace.</p></div></section>
 </Base>

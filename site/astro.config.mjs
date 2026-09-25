@@ -6,5 +6,10 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://wundertutor.com',
   integrations: [react(), sitemap()],
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    // Keep worktree builds out of the shared node_modules dependency cache.
+    cacheDir: '.astro/vite',
+    optimizeDeps: { noDiscovery: true, include: [] },
+  },
 });

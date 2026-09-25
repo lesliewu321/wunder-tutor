@@ -23,10 +23,10 @@ afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); vi.resetModules(); 
 
 describe('gauntlet: teacher voice configuration matrix', () => {
   it.each(Array.from({ length: 16 }, (_, i) => i))('all provider choices with availability mask %i', async mask => {
-    const { selectedVoice, setTeacherVoiceChoice } = await import('../speech/teacherPreference');
+    const { selectedVoice, setTeacherVoiceChoice, setTeacherVoicePair } = await import('../speech/teacherPreference');
     setTeacherVoiceChoice('auto');
     expect(selectedVoice(health(mask))).toBe(mask & 4 ? 'chirp' : mask & 2 ? 'azure' : 'device');
-    for (const choice of ['azure', 'qwen', 'chirp', 'device'] as const) { setTeacherVoiceChoice(choice); expect(selectedVoice(health(mask))).toBe(choice === 'device' || health(mask).voiceProviders?.[choice] ? choice : undefined); }
+    for (const choice of ['azure', 'qwen', 'chirp', 'device'] as const) { setTeacherVoicePair('en-US', { primary: choice, backup: 'none' }); expect(selectedVoice(health(mask))).toBe(choice === 'device' || health(mask).voiceProviders?.[choice] ? choice : undefined); }
   });
   it.each(locales.flatMap(accent => providers.filter(p => accent !== 'zh-HK' || p !== 'gemini').flatMap(provider => [false, true].map(slow => ({ accent, provider, slow })))))('$provider / $accent / slow=$slow coalesces rapid taps and replays its own cache', async ({ accent, provider, slow }) => {
     const s = await setup();
@@ -44,7 +44,7 @@ describe('gauntlet: teacher voice configuration matrix', () => {
   it.each(['azure', 'qwen', 'chirp'] as const)('explicit %s keeps identity on failure; retry can recover', async provider => {
     let fail = true;
     const s = await setup(15, async () => fail ? Response.json({ error: 'provider_unavailable' }, { status: 502 }) : wav());
-    s.pref.setTeacherVoiceChoice(provider);
+    s.pref.setTeacherVoicePair('en-US', { primary: provider, backup: 'none' });
     await expect(s.voice.speak('sample', { accent: 'en-US' })).rejects.toMatchObject({ reason: 'take' });
     fail = false; await s.voice.speak('sample', { accent: 'en-US' });
     expect(s.calls.map(c => c.provider)).toEqual([provider, provider]);
@@ -55,7 +55,9 @@ describe('gauntlet: teacher voice configuration matrix', () => {
     expect(s.calls).toHaveLength(1);
   });
   it.each(['azure', 'chirp', 'qwen'] as const)('%s caches the same Chinese text separately in Cantonese and Putonghua', async provider => {
-    const s = await setup(); s.pref.setTeacherVoiceChoice(provider);
+    const s = await setup();
+    s.pref.setTeacherVoicePair('zh-CN', { primary: provider, backup: 'none' });
+    s.pref.setTeacherVoicePair('zh-HK', { primary: provider, backup: 'none' });
     await s.voice.speak('你好！', { accent: 'zh-CN', provider });
     await s.voice.speak('你好！', { accent: 'zh-HK', provider });
     await s.voice.speak('你好！', { accent: 'zh-CN' });
