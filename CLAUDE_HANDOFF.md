@@ -199,6 +199,17 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   test row was then deleted from the live table. Tests: server/twisters.test.mjs (+6), src/__tests__/twisters.test.ts
   (+5); 315 pass. Not done: a twister's teacher take is not gated per language for LEARNERS (the scorer's known
   weakness on Mandarin sequences remains), no per-age filtering of twisters, no anti-cheat beyond "a pass, 200 ms+".
+- **After Leslie's SuperChinese screenshots (2026-09-25 evening), all DEPLOYED:** (1) the App language is a dropdown at the
+  top right of the welcome screen (`.lang-pick`, a globe icon); (2) setup has a "How long each day?" page after the
+  level page — 5/10/15/20 min tiles from `DAILY_GOALS` (now four: Easy 30 XP, Steady 60, Super 100, Champion 150, each
+  with `minutes`), "We recommend" on 10 for a child and 15 for an adult, written to `dailyGoalXp` at creation; (3) the
+  Me tab: study time (minutes spoken, from `pronunciation.days`), longest streak, streak, level + XP under them, the
+  four goal tiles (2×2), rows to Progress and Tongue twisters, and Settings & privacy behind a **cog at the top right**
+  (the old shield row is gone); (4) leaderboards show a **random name** — `engine/handles.ts` makes "Brave Otter 42"
+  once per learner (`profile.handle`, merged across devices), Settings shows "On the boards as **…**" with "New name";
+  the real nickname never leaves the device. Naming of the three language ideas made consistent at Leslie's request:
+  **App language** (介面語言), **Home language** (家庭語言; setup asks "Home language: at home we speak"), **Course(s)**
+  (課程; setup's chip row is "Course"). Seen in the 5199 copy: welcome dropdown, the time page with the badge, the Me tab.
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
