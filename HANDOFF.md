@@ -130,3 +130,19 @@ This update supersedes the communication-pack status and old lesson counts above
   pre-existing Vite timestamp file. They were preserved and excluded from deployment. No GitHub push or mobile build.
 - This release record and the published flag are committed after deployment; the deployed application commit is
   the one above, not the later documentation-only commit.
+
+
+## 2026-09-25 — Correct-answer sound released
+
+- Deployed commit: a620025. Pages production deployment: 039d9b40-ac7e-4b9f-84e5-24c9f839e1a2
+  (https://039d9b40.wunder-tutor.pages.dev), live at https://app.wundertutor.com.
+- Correct listening choices, minimal pairs and reading choices now play an original 0.34-second two-note chime,
+  in practice and test modes across all courses. Wrong answers and repeated taps after answering do not chime.
+- The sound is generated locally with Web Audio, requires no API/download, follows device volume and fails quietly
+  if audio is unavailable. There is currently no separate sound-effects setting.
+- npm test: 356 passed, 1 optional export test skipped in the clean release checkout. npm run typecheck,
+  npm run content:check and npm run i18n:check passed. Production build passed with the existing chunk-size warning.
+- Headless Edge verified all three choice types in both modes, correct/incorrect clicks and duplicate-answer taps,
+  with no page errors. Actual sound output has not been auditioned on a physical phone.
+- Deployed from a clean detached worktree; production HTML and JavaScript match the built bundle.
+  Unrelated local files preserved; no GitHub push or mobile build.
