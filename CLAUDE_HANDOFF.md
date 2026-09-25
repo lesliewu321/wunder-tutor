@@ -268,6 +268,8 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   moves learners outside HK/TW/MO to Simplified. Caveat: Windows' "Beijing, Chongqing, Hong Kong" time zone reports
   Asia/Shanghai, so a HK desktop is recognised by its device language (en-HK/zh-HK) or 繁體中文 App language; phones
   report Asia/Hong_Kong. The server knows the country (request.cf.country) if a stronger signal is ever needed.
+  Then ("when user choose to learn eng offer this choice"): the Add or remove courses sheet shows setup's two accent
+  cards (US/UK, with the voice preview) whenever English is ticked. DEPLOYED with it.
 
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
