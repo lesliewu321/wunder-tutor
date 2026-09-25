@@ -139,5 +139,8 @@
   "home.read.setup.needsCode": "阅读页面需要邀请码。",
   "home.read.setup.broken": "阅读页面的功能暂时未能使用：{state}（Google）。这是 Wunder Tutor 服务器的设置问题，与你的相机无关。",
   "home.units.browse": "浏览单元",
-  "home.units.progress": "已完成 {done}／{total} 课"
+  "home.units.progress": "已完成 {done}／{total} 课",
+  "home.season.tag": "节日特别课",
+  "home.season.go": "开始",
+  "home.season.again": "再玩一次"
 }

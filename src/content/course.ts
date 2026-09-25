@@ -7,6 +7,7 @@ import { ES_COURSE, ES_ITEMS } from './es/course';
 import { buildCourse, type CourseFile } from './load';
 import { inScript } from './zh/script';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
+import { SEASONAL_ITEMS, SEASONAL_LESSONS } from './seasonal';
 import enData from '../../astra-lessons/courses/en.json';
 
 // The courses as the app runs them. English and Putonghua are DATA (astra-lessons/courses/en.json, zh.json), read through
@@ -41,7 +42,8 @@ export const unitSubtitle = (u: Unit, band: AgeBand): string => {
 export const lessonTitle = (l: Pick<Lesson, 'id' | 'title'>): string => tc(`lesson.${l.id}.title`, l.title);
 
 export const ALL_LESSONS: Lesson[] = [...COURSE.units, ...ZH_COURSE.units, ...FR_COURSE.units, ...JA_COURSE.units, ...KO_COURSE.units, ...ES_COURSE.units].flatMap((u) => u.lessons);
-export const findLesson = (id: string): Lesson | undefined => ALL_LESSONS.find((l) => l.id === id);
+/** A lesson by id: a course lesson, or a seasonal bonus lesson (content/seasonal/, kept out of ALL_LESSONS and progress). */
+export const findLesson = (id: string): Lesson | undefined => ALL_LESSONS.find((l) => l.id === id) ?? SEASONAL_LESSONS.find((l) => l.id === id);
 export const lessonsOf = (id: CourseId): Lesson[] => courseFor(id).units.flatMap((u) => u.lessons);
 
 /**
@@ -63,6 +65,7 @@ for (const it of FR_ITEMS) ITEM_INDEX[it.id] ??= it;
 for (const it of JA_ITEMS) ITEM_INDEX[it.id] ??= it;
 for (const it of KO_ITEMS) ITEM_INDEX[it.id] ??= it;
 for (const it of ES_ITEMS) ITEM_INDEX[it.id] ??= it;
+for (const it of SEASONAL_ITEMS) ITEM_INDEX[it.id] ??= it;
 
 /** Onboarding speaking check: short, covers the classic trouble sounds (w, r, θ, æ, v, ɪ). */
 export const ASSESSMENT_ITEMS: Record<ContentBand, SpeakItem[]> = EN.check;

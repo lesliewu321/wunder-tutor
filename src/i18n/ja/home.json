@@ -139,5 +139,8 @@
   "home.read.setup.needsCode": "ページを読むには招待コードが必要です。",
   "home.read.setup.broken": "ページの読み取りがまだ動きません：{state}（Google）。カメラではなく、Wunder Tutorサーバーの設定の問題です。",
   "home.units.browse": "ユニットを見る",
-  "home.units.progress": "{total}レッスン中{done}レッスン完了"
+  "home.units.progress": "{total}レッスン中{done}レッスン完了",
+  "home.season.tag": "季節のボーナスレッスン",
+  "home.season.go": "はじめる",
+  "home.season.again": "もう一度"
 }

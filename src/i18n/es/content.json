@@ -1288,5 +1288,8 @@
   "badge.unit-ko-food.name": "Campeón de la comida en coreano",
   "badge.unit-ko-food.detail": "Has terminado todas las lecciones de la unidad de comida en coreano.",
   "badge.unit-es-food.name": "Campeón de la comida en español",
-  "badge.unit-es-food.detail": "Has terminado todas las lecciones de la unidad de comida en español."
+  "badge.unit-es-food.detail": "Has terminado todas las lecciones de la unidad de comida en español.",
+  "season.mid-autumn.title": "Festival del Medio Otoño",
+  "season.mid-autumn.blurb": "Pasteles de luna, farolillos y luna llena: dilo en chino mandarín.",
+  "lesson.zh-season-mid-autumn-1.title": "Festival del Medio Otoño"
 }

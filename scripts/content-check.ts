@@ -50,7 +50,7 @@ function validate(value: unknown, schema: Schema, path: string, out: string[]): 
   }
 }
 
-const files = process.argv.slice(2).length ? process.argv.slice(2) : ['content/courses', 'astra-lessons/courses'].flatMap((dir) => readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => join(dir, f)));
+const files = process.argv.slice(2).length ? process.argv.slice(2) : ['content/courses', 'astra-lessons/courses', 'content/seasonal'].flatMap((dir) => readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'events.json').map((f) => join(dir, f)));
 let bad = 0;
 for (const file of files) {
   const errors: string[] = [];

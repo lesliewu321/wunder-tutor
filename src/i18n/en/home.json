@@ -142,5 +142,8 @@
   "home.read.setup.needsCode": "Reading pages needs the invite code.",
   "home.read.setup.broken": "Reading pages isn’t working yet: {state} (Google). It’s a setup problem on the Wunder Tutor server, not your camera.",
   "home.units.browse": "Explore units",
-  "home.units.progress": "{done} of {total} lessons completed"
+  "home.units.progress": "{done} of {total} lessons completed",
+  "home.season.tag": "Festival bonus",
+  "home.season.go": "Start",
+  "home.season.again": "Play again"
 }

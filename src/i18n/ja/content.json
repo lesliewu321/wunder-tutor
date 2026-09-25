@@ -1288,5 +1288,8 @@
   "badge.unit-ko-food.name": "韓国語の食べものチャンピオン",
   "badge.unit-ko-food.detail": "韓国語の食べものユニットのレッスンをぜんぶおえました。",
   "badge.unit-es-food.name": "スペイン語の食べものチャンピオン",
-  "badge.unit-es-food.detail": "スペイン語の食べものユニットのレッスンをぜんぶおえました。"
+  "badge.unit-es-food.detail": "スペイン語の食べものユニットのレッスンをぜんぶおえました。",
+  "season.mid-autumn.title": "中秋節",
+  "season.mid-autumn.blurb": "月餅、ちょうちん、満月。中国語で言ってみましょう。",
+  "lesson.zh-season-mid-autumn-1.title": "中秋節"
 }

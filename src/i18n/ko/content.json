@@ -1288,5 +1288,8 @@
   "badge.unit-ko-food.name": "한국어 음식 챔피언",
   "badge.unit-ko-food.detail": "한국어 음식 단원의 레슨을 모두 마쳤어요.",
   "badge.unit-es-food.name": "스페인어 음식 챔피언",
-  "badge.unit-es-food.detail": "스페인어 음식 단원의 레슨을 모두 마쳤어요."
+  "badge.unit-es-food.detail": "스페인어 음식 단원의 레슨을 모두 마쳤어요.",
+  "season.mid-autumn.title": "중추절",
+  "season.mid-autumn.blurb": "월병, 등불, 보름달 — 중국어로 말해 봐요.",
+  "lesson.zh-season-mid-autumn-1.title": "중추절"
 }

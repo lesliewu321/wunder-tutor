@@ -1,0 +1,74 @@
+{
+  "id": "zh-seasonal",
+  "language": "zh",
+  "title": "Festivals",
+  "exercisePrefix": "zfx",
+  "items": {
+    "zh-zhong1-qiu1-jie2": { "text": "中秋节", "picture": "🏮", "meaning": "the Mid-Autumn Festival", "kind": "word", "focus": ["zh:sh", "zh:t1"], "lang": "zh-CN", "zh": { "hant": "中秋節", "py": "zhong1 qiu1 jie2" } },
+    "zh-yue4-bing3": { "text": "月饼", "picture": "🥮", "meaning": "mooncake", "kind": "word", "focus": ["zh:ü", "zh:t4"], "lang": "zh-CN", "zh": { "hant": "月餅", "py": "yue4 bing3" } },
+    "zh-yue4-liang5": { "text": "月亮", "picture": "🌕", "meaning": "the moon", "kind": "word", "focus": ["zh:ü", "zh:l"], "lang": "zh-CN", "zh": { "hant": "月亮", "py": "yue4 liang5" } },
+    "zh-deng1-long5": { "text": "灯笼", "picture": "🏮", "meaning": "lantern", "kind": "word", "focus": ["zh:-ng", "zh:l"], "lang": "zh-CN", "zh": { "hant": "燈籠", "py": "deng1 long5" } },
+    "zh-yu4-tu4": { "text": "玉兔", "picture": "🐇", "meaning": "the Jade Rabbit, who lives on the moon", "kind": "word", "focus": ["zh:ü", "zh:t4"], "lang": "zh-CN", "zh": { "hant": "玉兔", "py": "yu4 tu4" } },
+    "zh-shang3-yue4": { "text": "赏月", "picture": "🌕", "meaning": "to admire the full moon", "kind": "word", "focus": ["zh:sh", "zh:t3"], "lang": "zh-CN", "zh": { "hant": "賞月", "py": "shang3 yue4" } },
+    "zh-tuan2-yuan2": { "text": "团圆", "picture": "👨‍👩‍👧‍👦", "meaning": "the family together again", "kind": "word", "focus": ["zh:t2"], "lang": "zh-CN", "zh": { "hant": "團圓", "py": "tuan2 yuan2" } },
+    "zh-zhong1-qiu1-jie2-kuai4-le4-s": { "text": "中秋节快乐！", "picture": "🥮", "meaning": "Happy Mid-Autumn Festival!", "kind": "sentence", "focus": ["zh:t1", "zh:t4"], "lang": "zh-CN", "zh": { "hant": "中秋節快樂！", "py": "zhong1 qiu1 jie2 kuai4 le4" } },
+    "zh-jin1-wan3-de5-yue4-liang5-hen3-yuan2-s": { "text": "今晚的月亮很圆。", "picture": "🌕", "meaning": "The moon is very round tonight.", "kind": "sentence", "focus": ["zh:j", "zh:t3"], "lang": "zh-CN", "zh": { "hant": "今晚的月亮很圓。", "py": "jin1 wan3 de5 yue4 liang5 hen3 yuan2" } },
+    "zh-wo3-xi3-huan5-chi1-yue4-bing3-s": { "text": "我喜欢吃月饼。", "picture": "🥮", "meaning": "I like eating mooncakes.", "kind": "sentence", "focus": ["zh:t3", "zh:ü"], "lang": "zh-CN", "zh": { "hant": "我喜歡吃月餅。", "py": "wo3 xi3 huan5 chi1 yue4 bing3" } },
+    "zh-wo3-men5-yi1-qi3-shang3-yue4-ba5-s": { "text": "我们一起赏月吧！", "picture": "🌕", "meaning": "Let’s admire the moon together!", "kind": "sentence", "focus": ["zh:sh", "zh:t3"], "lang": "zh-CN", "zh": { "hant": "我們一起賞月吧！", "py": "wo3 men5 yi1 qi3 shang3 yue4 ba5" } },
+    "zh-ni3-xi3-huan5-shen2-me5-kou3-wei4-de5-yue4-bing3-s": { "text": "你喜欢什么口味的月饼？", "picture": "🥮", "meaning": "Which mooncake flavour do you like?", "kind": "sentence", "focus": ["zh:sh", "zh:t3"], "lang": "zh-CN", "zh": { "hant": "你喜歡什麼口味的月餅？", "py": "ni3 xi3 huan5 shen2 me5 kou3 wei4 de5 yue4 bing3" } },
+    "zh-wo3-xi3-huan5-lian2-rong2-yue4-bing3-s": { "text": "我喜欢莲蓉月饼。", "picture": "🥮", "meaning": "I like lotus seed paste mooncakes.", "kind": "sentence", "focus": ["zh:l", "zh:t2"], "lang": "zh-CN", "zh": { "hant": "我喜歡蓮蓉月餅。", "py": "wo3 xi3 huan5 lian2 rong2 yue4 bing3" } },
+    "zh-wo3-xi3-huan5-dan4-huang2-yue4-bing3-s": { "text": "我喜欢蛋黄月饼。", "picture": "🥚", "meaning": "I like mooncakes with egg yolk.", "kind": "sentence", "focus": ["zh:t4", "zh:t2"], "lang": "zh-CN", "zh": { "hant": "我喜歡蛋黃月餅。", "py": "wo3 xi3 huan5 dan4 huang2 yue4 bing3" } },
+    "zh-chang2-e2-zhu4-zai4-yue4-liang5-shang4-s": { "text": "嫦娥住在月亮上。", "picture": "🌕", "meaning": "Chang’e lives on the moon.", "kind": "sentence", "focus": ["zh:sh", "zh:t2"], "lang": "zh-CN", "zh": { "hant": "嫦娥住在月亮上。", "py": "chang2 e2 zhu4 zai4 yue4 liang5 shang4" } },
+    "zh-zhong1-qiu1-jie2-yi1-jia1-ren2-yi1-qi3-shang3-yue4-s": { "text": "中秋节一家人一起赏月。", "picture": "👨‍👩‍👧‍👦", "meaning": "At Mid-Autumn, the whole family admires the moon together.", "kind": "sentence", "focus": ["zh:j", "zh:sh"], "lang": "zh-CN", "zh": { "hant": "中秋節一家人一起賞月。", "py": "zhong1 qiu1 jie2 yi1 jia1 ren2 yi1 qi3 shang3 yue4" } }
+  },
+  "units": [
+    {
+      "id": "zh-season-mid-autumn",
+      "title": "Mid-Autumn Festival 中秋节",
+      "subtitle": "Mooncakes, lanterns and the full moon",
+      "icon": "🥮",
+      "color": "var(--sun)",
+      "lessons": [
+        {
+          "id": "zh-season-mid-autumn-1",
+          "title": "Mid-Autumn Festival",
+          "icon": "🥮",
+          "kind": "phrases",
+          "exercises": {
+            "little": [
+              { "type": "speak", "item": "zh-yue4-bing3" },
+              { "type": "speak", "item": "zh-yue4-liang5" },
+              { "type": "choose-heard", "answer": "zh-deng1-long5", "others": ["zh-yue4-bing3", "zh-yue4-liang5"] },
+              { "type": "speak", "item": "zh-deng1-long5" },
+              { "type": "speak", "item": "zh-yu4-tu4" },
+              { "type": "speak", "item": "zh-zhong1-qiu1-jie2-kuai4-le4-s" }
+            ],
+            "junior": [
+              { "type": "speak", "item": "zh-zhong1-qiu1-jie2" },
+              { "type": "speak", "item": "zh-yue4-bing3" },
+              { "type": "speak", "item": "zh-deng1-long5" },
+              { "type": "choose-heard", "answer": "zh-shang3-yue4", "others": ["zh-tuan2-yuan2", "zh-yue4-liang5"] },
+              { "type": "speak", "item": "zh-zhong1-qiu1-jie2-kuai4-le4-s" },
+              { "type": "speak", "item": "zh-wo3-xi3-huan5-chi1-yue4-bing3-s" },
+              { "type": "dialogue", "tutor": "zh-ni3-xi3-huan5-shen2-me5-kou3-wei4-de5-yue4-bing3-s", "picture": "🥮", "replies": ["zh-wo3-xi3-huan5-lian2-rong2-yue4-bing3-s", "zh-wo3-xi3-huan5-dan4-huang2-yue4-bing3-s"] },
+              { "type": "speak", "item": "zh-jin1-wan3-de5-yue4-liang5-hen3-yuan2-s" }
+            ],
+            "teen": [
+              { "type": "speak", "item": "zh-zhong1-qiu1-jie2" },
+              { "type": "speak", "item": "zh-tuan2-yuan2" },
+              { "type": "speak", "item": "zh-shang3-yue4" },
+              { "type": "choose-heard", "answer": "zh-jin1-wan3-de5-yue4-liang5-hen3-yuan2-s", "others": ["zh-wo3-men5-yi1-qi3-shang3-yue4-ba5-s", "zh-wo3-xi3-huan5-chi1-yue4-bing3-s"] },
+              { "type": "speak", "item": "zh-wo3-men5-yi1-qi3-shang3-yue4-ba5-s" },
+              { "type": "arrange", "item": "zh-wo3-men5-yi1-qi3-shang3-yue4-ba5-s", "chunks": ["我们", "一起", "赏月", "吧！"], "chunksHant": ["我們", "一起", "賞月", "吧！"] },
+              { "type": "dialogue", "tutor": "zh-ni3-xi3-huan5-shen2-me5-kou3-wei4-de5-yue4-bing3-s", "picture": "🥮", "replies": ["zh-wo3-xi3-huan5-lian2-rong2-yue4-bing3-s", "zh-wo3-xi3-huan5-dan4-huang2-yue4-bing3-s"] },
+              { "type": "speak", "item": "zh-chang2-e2-zhu4-zai4-yue4-liang5-shang4-s" },
+              { "type": "speak", "item": "zh-zhong1-qiu1-jie2-yi1-jia1-ren2-yi1-qi3-shang3-yue4-s" }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "check": { "little": ["zh-yue4-bing3"], "junior": ["zh-yue4-bing3"], "teen": ["zh-yue4-bing3"] },
+  "lab": { "ladders": {} }
+}

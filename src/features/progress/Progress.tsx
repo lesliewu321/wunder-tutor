@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ALL_LESSONS, lessonTitle } from '../../content/course';
+import { ALL_LESSONS, findLesson, lessonTitle } from '../../content/course';
 import { LADDERS } from '../../content/lab';
 import { isLongLabel, phonemeInfo } from '../../content/phonemes';
 import { ACHIEVEMENT_CATALOGUE, badgeDetail, badgeName, liveStreak } from '../../engine/rewards';
@@ -102,7 +102,7 @@ export function Progress() {
         <section>
           <h2 className="section-title">{t('progress.tests.title')}</h2>
           <ul className="bests">{Object.entries(p.tests ?? {}).sort((a, b) => b[1].at - a[1].at).map(([id, r]) => {
-            const lesson = ALL_LESSONS.find((l) => l.id === id);
+            const lesson = findLesson(id);
             return <li key={id}><span>{lesson ? lessonTitle(lesson) : id}<small className="fineprint"> · {t('progress.tests.taken', { n: r.taken })}</small></span><b className={`score-text score-text--${tier(r.best)}`}>{r.best}</b></li>;
           })}</ul>
         </section>

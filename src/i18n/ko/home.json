@@ -139,5 +139,8 @@
   "home.read.setup.needsCode": "페이지를 읽으려면 초대 코드가 필요해요.",
   "home.read.setup.broken": "아직 페이지 읽기가 작동하지 않아요: {state} (Google). 카메라 문제가 아니라 Wunder Tutor 서버의 설정 문제예요.",
   "home.units.browse": "단원 둘러보기",
-  "home.units.progress": "레슨 {total}개 중 {done}개 완료"
+  "home.units.progress": "레슨 {total}개 중 {done}개 완료",
+  "home.season.tag": "명절 보너스 레슨",
+  "home.season.go": "시작",
+  "home.season.again": "다시 하기"
 }

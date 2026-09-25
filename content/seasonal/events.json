@@ -1,0 +1,15 @@
+{
+  "_": "The seasonal calendar (Leslie, 2026-09-25): when each festival's bonus lesson is offered, and to learners of which course. Lunar festivals move, so every year's date is written out — add the next years here, never compute them. A lesson is offered from `before` days ahead of the day to `after` days after it, on the learner's own calendar. This file is also what a future push-notification sender reads to announce a festival (docs/NOTIFICATIONS-PLAN.md: content announcements, opt-in).",
+  "events": [
+    {
+      "id": "mid-autumn",
+      "icon": "🥮",
+      "title": "Mid-Autumn Festival",
+      "blurb": "Mooncakes, lanterns and the full moon — say it in Putonghua.",
+      "lessons": { "zh": "zh-season-mid-autumn-1" },
+      "days": ["2026-09-25", "2027-09-15", "2028-10-03", "2029-09-22", "2030-09-12"],
+      "before": 10,
+      "after": 4
+    }
+  ]
+}

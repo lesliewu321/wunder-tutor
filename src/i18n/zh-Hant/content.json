@@ -753,5 +753,8 @@
   "badge.unit-ko-food.name": "韓文食物冠軍",
   "badge.unit-ko-food.detail": "你完成了韓文食物單元的每一課。",
   "badge.unit-es-food.name": "西班牙文食物冠軍",
-  "badge.unit-es-food.detail": "你完成了西班牙文食物單元的每一課。"
+  "badge.unit-es-food.detail": "你完成了西班牙文食物單元的每一課。",
+  "season.mid-autumn.title": "中秋節",
+  "season.mid-autumn.blurb": "月餅、燈籠和圓月——用普通話說出來。",
+  "lesson.zh-season-mid-autumn-1.title": "中秋節"
 }

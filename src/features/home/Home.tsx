@@ -9,7 +9,8 @@ import { dueItems, itemCourse, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
 import { focusSound, weakSoundsIn } from '../../intelligence/profile';
 import { testDue } from '../../engine/testing';
-import { useActiveProfile } from '../../state/store';
+import { useActiveProfile, useStore } from '../../state/store';
+import { activeSeasons } from '../../content/seasonal';
 import type { CourseId } from '../../domain/types';
 import type { Key } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
@@ -18,9 +19,12 @@ import { Button, ProgressBar } from '../../ui/kit';
 import { Mascot } from '../../ui/Mascot';
 
 export function Home() {
-  const { t, tn } = useT();
+  const { t, tn, tc } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
+  const setCourse = useStore((s) => s.setCourse);
+  // Festival bonus lessons on now for this learner's courses (content/seasonal/events.json).
+  const seasons = activeSeasons(new Date(), p.learning);
   const COURSE = courseFor(p.course);
   const unit = currentUnit(COURSE, p.lessonsCompleted);
   const lessons = courseLessons(COURSE);
@@ -102,6 +106,20 @@ export function Home() {
           ? <Button variant="coral" size="lg" block onClick={() => nav(`/lesson/${dueTest.id}?mode=test`)}>{t('home.hero.takeTest')}</Button>
           : <Button variant="coral" size="lg" block onClick={() => nav(`/lesson/${next?.id ?? review.id}`)}>{t(doneCount === 0 ? 'home.hero.start' : next ? 'home.hero.continue' : 'home.hero.review')}</Button>}
       </section>
+
+      {/* A festival's bonus lesson while it is on (Leslie, 2026-09-25: "push lessons for chinese learners" at Mid-Autumn).
+          It opens in its own course, switching to it if the learner was on another. */}
+      {seasons.map(({ event, course, lesson }) => (
+        <button key={event.id} type="button" className="season-card" onClick={() => { if (p.course !== course) setCourse(course); nav(`/lesson/${lesson.id}`); }}>
+          <span className="season-card__icon" aria-hidden>{event.icon}</span>
+          <span className="season-card__text">
+            <small>{t('home.season.tag')}</small>
+            <b>{tc(`season.${event.id}.title`, event.title)}</b>
+            <span>{tc(`season.${event.id}.blurb`, event.blurb)}</span>
+          </span>
+          <span className="season-card__go">{t(p.lessonsCompleted[lesson.id] ? 'home.season.again' : 'home.season.go')}</span>
+        </button>
+      ))}
 
       <button type="button" className="focus-card" onClick={() => nav(`/lab/${encodeURIComponent(focus)}`)}>
         <span className="focus-card__sound" data-long={isLongLabel(focusInfo.label) || undefined}>{focusInfo.label}</span>

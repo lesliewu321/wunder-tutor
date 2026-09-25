@@ -142,5 +142,8 @@
   "home.read.setup.needsCode": "La lecture des pages a besoin du code d’invitation.",
   "home.read.setup.broken": "La lecture des pages ne fonctionne pas encore : {state} (Google). C’est un problème de configuration sur le serveur Wunder Tutor, pas ton appareil photo.",
   "home.units.browse": "Explorer les unités",
-  "home.units.progress": "{done} leçons terminées sur {total}"
+  "home.units.progress": "{done} leçons terminées sur {total}",
+  "home.season.tag": "Leçon bonus de fête",
+  "home.season.go": "Commencer",
+  "home.season.again": "Rejouer"
 }

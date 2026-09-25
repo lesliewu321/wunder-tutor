@@ -8,9 +8,10 @@ import { LAB_STAGES, stageLabel } from '../src/content/lab';
 import { PHONEMES, phonemeInfo, soundLabel, tipFor } from '../src/content/phonemes';
 import { SCENARIOS, scenarioBlurb, scenarioTitle } from '../src/content/scenarios';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../src/content/translations';
+import { SEASON_EVENTS, SEASONAL_LESSONS } from '../src/content/seasonal';
 import { ZH_SOUNDS } from '../src/content/zh/sounds';
 import { ACHIEVEMENT_CATALOGUE, achievement, badgeDetail, badgeName, DAILY_GOALS, goalDetail, goalLabel } from '../src/engine/rewards';
-import { catalogs, en, noteContent, setLanguage } from '../src/i18n';
+import { catalogs, en, noteContent, setLanguage, tc } from '../src/i18n';
 import type { AgeBand } from '../src/domain/types';
 
 const BANDS: AgeBand[] = ['little', 'junior', 'teen', 'adult'];
@@ -78,6 +79,9 @@ describe.skipIf(!process.env.I18N_EXPORT)('i18n review export', () => {
     for (const g of DAILY_GOALS) { quiet(() => goalLabel(g)); quiet(() => goalDetail(g)); }
     for (const s of SCENARIOS) { quiet(() => scenarioTitle(s)); for (const b of BANDS) quiet(() => scenarioBlurb(s, b)); }
     for (const l of HOME_LANGUAGES) quiet(() => homeLanguageLabel(l.id));
+    // Festival bonus lessons: the Home card and the lesson title.
+    for (const e of SEASON_EVENTS) { quiet(() => tc(`season.${e.id}.title`, e.title)); quiet(() => tc(`season.${e.id}.blurb`, e.blurb)); }
+    for (const l of SEASONAL_LESSONS) quiet(() => lessonTitle(l));
     noteContent(false);
     // The sound badges share one line each, filled with the sound: the template, not the example it was noted with.
     seen.set('badge.sound.name', 'Sound mastered: {name}');
