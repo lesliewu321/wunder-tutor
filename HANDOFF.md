@@ -187,3 +187,53 @@ This update supersedes the communication-pack status and old lesson counts above
 - Existing unused Mandarin item and bundle-size warnings remain. Shared README/source-library/notification files
   are preserved and excluded from the release. No GitHub push or mobile build. The temporary release checkout is
   removed after verification to avoid duplicate Vitest discovery; Leslie's port 5173 server is untouched.
+
+
+## 2026-09-25 — Gentle reminders and weekly rewards released
+
+- Final deployed application commit: 8ee3733 (implementation bac16a8; versioned-worker cache correction 8ee3733).
+- Pages production deployment: d404fa95-2332-4c3a-b806-db3e17a2fe28.
+  Live: https://app.wundertutor.com ; release: https://d404fa95.wunder-tutor.pages.dev.
+- Private scheduler Worker: wunder-reminders, version bfe14595-a836-4165-83e7-f28b24620e3b, deployed from bac16a8
+  (scheduler code unchanged in final commit). No public route. Pages accesses ReminderRecipient through REMINDERS.
+- Home bell, Profile and Settings open Reminders & rewards. A single optional inline offer appears after the first
+  lesson; no permission prompt at launch or onboarding. Reminders start OFF and need an explicit Enable action.
+- Default Monday/Wednesday/Friday 18:00, quiet hours 20:00–08:00, editable days/time/timezone/course scope. At most
+  one proactive attempt per recipient/day across courses, and at least 20 hours across timezone changes. Due review
+  replaces ordinary practice; optional Sunday summary replaces that day's reminder and requires activity that week.
+- Completed lesson/test/conversation or daily XP goal suppresses that day's reminder. Foreground activity suppresses
+  delivery. Skip today, pause seven days, resume and turn off controls; reminders stop after seven days away. Stale
+  queued pushes expire after five minutes. Registrations/signing keys are removed after 30 days without contact.
+- In-app three-day weekly challenge, calendar stamps, weekly saved XP and recent earned badges. No loss threats,
+  rank pressure, repeated inactivity nags or push achievement spam. A bounded completion log preserves repeat-session
+  practice dates across account merges. Legacy XP dates retain their original device calendar date.
+- All seven app languages include UI and generic push copy. No names, scores or audio on lock screens. The settings
+  explain server storage of push subscription, schedule, course choices and recent practice dates. Native review of
+  translations is still pending. Signed-in accounts designate one device; a secondary signed-in device can suppress
+  reminders with its activity. Offline cross-device activity cannot suppress delivery until it contacts the service.
+- Signing keys are generated once inside the recipient's private SQLite-backed Durable Object, never sent to the
+  browser except for the public key. No new secret upload is required. No Supabase schema change, email service,
+  mobile plugin/build or GitHub push. Existing account lifecycle reused, reviewed against Supabase sign-out guidance.
+- Server access checks, endpoint allowlist, encrypted Web Push, short TTL, persistent deduplication before delivery,
+  no same-day retries after ambiguous failures, automatic removal on 404/410. Sign-out/profile deletion unsubscribe
+  this browser; account deletion also requests recipient removal. Already in-flight delivery can race an opt-out.
+- Production's custom domain overrides Cache-Control for static workers to max-age=14400. The final correction
+  versions both worker and push-script URLs with the app build and sets updateViaCache=none; live browser verified.
+- Verification: npm test 402 passed, two optional exporters skipped in normal suite; i18n exporter ran separately.
+  npm run typecheck, content:check, i18n:export and i18n:check passed in the clean final release checkout. Edge QA
+  passed opt-in-only setup, schedule validation, enable/skip/pause/resume/disable, permission-denied state, completed
+  day stamps, all seven languages, 390px layout and safe push click destinations. Real IndexedDB tests confirmed
+  duplicate/stale/disabled suppression. Local Cloudflare runtime verified SQLite, alarm scheduling, key generation,
+  VAPID signing and encrypted payload generation (local compatibility override 2026-08-08 for installed workerd).
+- Live/deployment HTML, JS and both worker files match the built release. API rejects unauthenticated notification
+  requests. Live mobile UI and versioned worker registration passed. Main JS SHA256:
+  9de0c0616c0cecdf2633c3a950ffadf365b4998453ebd52059a3b93d5162c1ea.
+- Real external push delivery on physical iPhone/Android/desktop devices is NOT proven by these checks. Browser
+  subscription was mocked in UI QA; crypto/runtime were tested separately. iPhone/iPad require Home Screen install.
+  Production authenticated registration was not exercised because no local production access code was present.
+- Deployment ran from clean detached .wrangler/notification-release. Existing unused Mandarin item / large-bundle
+  warnings remain; dynamic/static import warning is benign (intentional lifecycle imports, not intended splitting).
+  Existing React Router audit advisories are unchanged; the new Web Push dependency has no production audit findings.
+- Temporary QA servers/checkouts cleaned up; Leslie's 5173 server untouched. Unrelated lesson library, README and
+  docs/NOTIFICATIONS-PLAN.md changes remain untouched. Implementation details: notifications/README.md. This note
+  is committed after deployment and does not change the deployed application commit.
