@@ -324,3 +324,22 @@ This update supersedes the communication-pack status and old lesson counts above
 - Deployed only from the clean committed checkout. Existing unused Mandarin-item and large-bundle warnings remain.
   Temporary QA server and release checkout cleaned up; port 5173 untouched. Unrelated source-library files and
   the concurrent Azure test note preserved. No GitHub push or mobile build. This is a handoff-only follow-up commit.
+
+
+## 2026-09-25 — Bilingual names in the existing course dropdown
+
+- Deployed commit: 3d44ad4. Pages deployment: 13db5743-0742-490f-ab0a-e19414b55ae3.
+  Live: https://app.wundertutor.com ; release: https://13db5743.wunder-tutor.pages.dev.
+- Kept the native single-choice dropdown, flags and all seven available courses. Labels now put the native
+  name first, followed by the app-language translation: 日本語 · Japanese, 한국어 · Korean, Français · French.
+  Identical names appear once. Putonghua's native characters follow the learner's script; Cantonese stays Traditional.
+- Only Profile.tsx changed. npm test passed (1835 tests, two optional exporter skips), typecheck, content:check
+  and i18n:check passed. Existing unused Mandarin-item and large-bundle warnings remain.
+- Production-build browser QA passed seven app languages, seven selections each, the exact English bilingual
+  labels, single selection and 390px fit with no page errors. APIs/font CDN were fixtures. Local Vite preview
+  stalled, so the built release was checked directly. Ignored screenshot: .wrangler/bilingual-dropdown.png.
+- Deployed with npm run deploy from clean detached .wrangler/bilingual-release. Deployment and live HTML/JS match;
+  main JS SHA256: 233018b243c2891f90ab409c2537a77f0a90683dc549f75a80abe396dff36fbf.
+- Temporary release checkout/junction and this task's QA server cleaned up. Port 5173 untouched. No keys,
+  mobile build or GitHub push. Concurrent HANDOFF/source-library changes and subsequent commit 79716ce
+  (Cantonese naming) are preserved; that subsequent commit was not part of this deployment.
