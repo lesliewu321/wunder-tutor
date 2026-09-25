@@ -2,7 +2,7 @@
 
 ## 2026-09-25 (session 5) — the 1M-user plan, the relay only where Google refuses, English as a home language
 
-### DEPLOYED 2026-09-25 ~02:45 UTC (Leslie: "upload to webapp for testing. do not make apk or ios") — commit a5591c4, Pages deployment 9c5fff03, bundle index-DL6lv_Dd.js
+### DEPLOYED 2026-09-25 ~02:45 UTC (Leslie: "upload to webapp for testing. do not make apk or ios") — commit a5591c4, Pages deployment 9c5fff03; then ~02:55 with the camera icon — commit c1badd6, deployment 6a7fff7a, bundle index-BgFNhFZf.js (live, checked)
 
 - Everything since 9a05fb3 is now live on app.wundertutor.com: reinstall handling, the one-language setup and its
   pages, the relay rule, English at home, the Snap & say tab. **No APK / AAB / iOS build was made** — Leslie said not
