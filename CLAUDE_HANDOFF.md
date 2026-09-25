@@ -127,7 +127,12 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   location: local — Use --remote". So on 2026-09-23 `warm-voice.mjs --push` wrote its 1,000 takes into a local KV
   simulation under .wrangler/, not into production: the live namespace has 308 keys (the live server's own cache),
   the local one 1,000. The bindings were right all along. `scripts/warm-voice.mjs` now passes `--remote` on both
-  its commands; the push has NOT been re-run yet (see the voice-cache paragraph of 2026-09-23 for the rules).
+  its commands, and the push was re-run to the REAL namespace at ~04:25 UTC: "308 takes live already; 757 to add … 757
+  takes added" — the live namespace now holds 1,065 keys, and 妈妈骑马 / Voilà ! Bon appétit ! / the hot-chocolate
+  line come back as `X-Tts-Cache: hit` in 0.4–1.1 s on app.wundertutor.com. The 1,000-key local simulation under
+  .wrangler/ is harmless. Slow takes are still not warmed.
+- Azure's pronunciation-assessment locale list (docs repo, read 2026-09-25) includes **ko-KR, es-ES and es-MX**; the
+  table names locales only, so expect scores without phoneme names, as for fr-FR and ja-JP.
 - **Korean and Spanish requested** (Leslie, mid-turn: "add korean and spanish to app") — after R2. A search agent is
   mapping every touchpoint of a course language (types, content, engine, speech, server locale lists, i18n, evals,
   the contributions.locale CHECK constraint) as this is written; the plan and the work come next.
