@@ -31,7 +31,7 @@
       "yue": {
         "jyutping": "m4 goi1"
       },
-      "meaning": "Thank you for your help.",
+      "meaning": "Thank you (for help or a service).",
       "kind": "word",
       "picture": "👋"
     },
@@ -41,7 +41,7 @@
       "yue": {
         "jyutping": "do1 ze6"
       },
-      "meaning": "Thank you for the gift.",
+      "meaning": "Thank you (e.g. for a gift or compliment).",
       "kind": "word",
       "picture": "👋"
     },
@@ -2466,8 +2466,8 @@
           "guide": {
             "goal": "Name the key words and recognise them by listening.",
             "goalHant": "說出關鍵詞，並聽音辨認。",
-            "tip": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
-            "tipHant": "得到幫忙或服務用「唔該」，收到禮物用「多謝」；問名字用「咩名」。",
+            "tip": "Use 唔該 to thank someone for help or service, or to say please. Use 多謝 for gifts or compliments. Ask a name with 咩名.",
+            "tipHant": "感謝幫忙或服務用「唔該」，提出請求時也可用作「請」；收到禮物或稱讚用「多謝」。問名字用「咩名」。",
             "practice": "Listen to each syllable and follow its Jyutping tone number.",
             "practiceHant": "留意每個音節，跟着粵拼聲調數字練習。"
           },
@@ -2590,8 +2590,8 @@
           "guide": {
             "goal": "Build useful sentences with this Cantonese pattern.",
             "goalHant": "用這個廣東話句式組成實用句子。",
-            "tip": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
-            "tipHant": "得到幫忙或服務用「唔該」，收到禮物用「多謝」；問名字用「咩名」。",
+            "tip": "Use 唔該 to thank someone for help or service, or to say please. Use 多謝 for gifts or compliments. Ask a name with 咩名.",
+            "tipHant": "感謝幫忙或服務用「唔該」，提出請求時也可用作「請」；收到禮物或稱讚用「多謝」。問名字用「咩名」。",
             "practice": "Take turns asking and answering. Try again without looking at the meaning.",
             "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
           },
@@ -2708,8 +2708,8 @@
           "guide": {
             "goal": "Ask and answer in a short Cantonese conversation.",
             "goalHant": "用廣東話進行簡短問答。",
-            "tip": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
-            "tipHant": "得到幫忙或服務用「唔該」，收到禮物用「多謝」；問名字用「咩名」。",
+            "tip": "Use 唔該 to thank someone for help or service, or to say please. Use 多謝 for gifts or compliments. Ask a name with 咩名.",
+            "tipHant": "感謝幫忙或服務用「唔該」，提出請求時也可用作「請」；收到禮物或稱讚用「多謝」。問名字用「咩名」。",
             "practice": "Take turns asking and answering. Try again without looking at the meaning.",
             "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
           },
@@ -2854,8 +2854,8 @@
           "guide": {
             "goal": "Combine listening, reading and speaking to solve the situation.",
             "goalHant": "結合聆聽、閱讀與說話，完成情境任務。",
-            "tip": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
-            "tipHant": "得到幫忙或服務用「唔該」，收到禮物用「多謝」；問名字用「咩名」。",
+            "tip": "Use 唔該 to thank someone for help or service, or to say please. Use 多謝 for gifts or compliments. Ask a name with 咩名.",
+            "tipHant": "感謝幫忙或服務用「唔該」，提出請求時也可用作「請」；收到禮物或稱讚用「多謝」。問名字用「咩名」。",
             "practice": "Take turns asking and answering. Try again without looking at the meaning.",
             "practiceHant": "輪流提問和回答，再試一次，不看意思提示。"
           },

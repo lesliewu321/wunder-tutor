@@ -1,6 +1,5 @@
 import fs from 'node:fs';
-import * as OpenCC from 'opencc-js';
-const hans=OpenCC.Converter({from:'hk',to:'cn'});
+import { toSimplified as hans } from '../../scripts/i18n-hans-lib.mjs';
 import { extension } from './extension.mjs';
 import { applications } from './applications.mjs';
 import { guidance, order } from './guidance.mjs';
@@ -9,7 +8,7 @@ const {topics: original}=JSON.parse(fs.readFileSync(new URL('./source.json',impo
 const topics=[...original.map(t=>({...t,...guidance[t.id]})),...extension,...applications].sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
 const langs=['en','zh-Hant','ja','ko','fr','es'];
 const packs=Object.fromEntries([...langs,'zh-Hans'].map(l=>[l,{content:{},lessons:{},meanings:{}}]));
-function add(part,key,values){if(values.length!==langs.length||values.some(v=>typeof v!=='string'||!v.trim()))throw new Error('Incomplete translations: '+key);langs.forEach((l,i)=>packs[l][part][key]=values[i]);packs['zh-Hans'][part][key]=hans(values[1]);}
+function add(part,key,values){if(values.length!==langs.length||values.some(v=>typeof v!=='string'||!v.trim()))throw new Error('Incomplete translations: '+key);langs.forEach((l,i)=>packs[l][part][key]=values[i]);packs['zh-Hans'][part][key]=hans(values[1],{preserveQuotes:part==='lessons'});}
 const courseNames=['Cantonese','廣東話','広東語','광둥어','Cantonais','Cantonés'];
 const labels=[['Words','詞語','単語','단어','Mots','Palabras'],['Useful phrases','實用短句','便利なフレーズ','유용한 표현','Expressions utiles','Frases útiles'],['Conversation','對話','会話','대화','Conversation','Conversación'],['Review and apply','複習與應用','復習と応用','복습과 활용','Révision et mise en pratique','Repaso y práctica']];
 const guide=[

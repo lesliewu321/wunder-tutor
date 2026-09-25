@@ -49,7 +49,7 @@
   "notify.private": "锁定画面通知不含学员姓名、分数或录音，并使用程序语言。",
   "notify.autoPause": "连续七日未开启程序，提醒便会停止；再次开启会更新时间表。退出登录会关闭此装置的提醒。",
   "notify.install": "在 iPhone 或 iPad，请先从 Safari 的分享选单将 Wunder Tutor 加入主画面，再从主画面开启以启用提醒。",
-  "notify.unsupported": "此浏览器或程序不支援网页提醒，但仍可查看每周进度和奖励。",
+  "notify.unsupported": "此浏览器或程序不支持网页提醒，但仍可查看每周进度和奖励。",
   "notify.denied": "通知已被封锁。可在浏览器的网站设置或系统通知设置中允许，再返回此页。",
   "notify.auth": "请在设置中登录或输入使用码，以连接提醒服务。",
   "notify.unavailable": "网页提醒尚未连接，仍可保存时间表。",

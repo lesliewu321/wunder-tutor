@@ -7,7 +7,7 @@ import { findScenario, scenarioBlurb, scenariosFor, scenarioTitle } from '../../
 import type { ZhScript } from '../../content/zh/script';
 import { badgeName } from '../../engine/rewards';
 import { useBack } from '../../back';
-import { language, tm } from '../../i18n';
+import { language, itemMeaning } from '../../i18n';
 import { useT } from '../../i18n/useT';
 import type { SpeechErrorCode } from '../../speech';
 import { localeOf, stopPlayback, voice } from '../../speech/voice';
@@ -61,11 +61,11 @@ type Line =
  * A line in its own language: characters with pinyin for Putonghua, and — past the picture-book age — what a line in
  * another language means, as the lessons show it.
  */
-function LineText({ it, band, script }: { it: SpeakItem; band: AgeBand; script: ZhScript }) {
+export function LineText({ it, band, script }: { it: SpeakItem; band: AgeBand; script: ZhScript }) {
   return (
     <span className="line-text">
       <ItemText item={it} band={band} script={script} />
-      {it.lang && tm(it.meaning, it.lang) && band !== 'little' && <small className="bubble__meaning">{tm(it.meaning, it.lang)}</small>}
+      {itemMeaning(it) && <small className="bubble__meaning">{itemMeaning(it)}</small>}
     </span>
   );
 }

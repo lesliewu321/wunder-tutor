@@ -110,6 +110,8 @@ export function Onboarding() {
   // Ticked by default (Leslie's decision, 2026-09-21). It is shown, and it can be unticked here or in Settings later.
   const [contribute, setContribute] = useState(true);
   const [agreed, setAgreed] = useState(false);
+  const creating = useRef(false);
+  const [creatingProfile, setCreatingProfile] = useState(false);
   const [checkIndex, setCheckIndex] = useState(0);
   // The speaking check was done (not skipped): the plan says it is based on what Tutu heard.
   const [checked, setChecked] = useState(false);
@@ -196,6 +198,10 @@ export function Onboarding() {
   const progress = Math.max(0, order.indexOf(step)) / (order.length - 1);
 
   const create = async () => {
+    if (creating.current) return;
+    creating.current = true;
+    setCreatingProfile(true);
+    try {
     setSettings({ storeRecordings: keepRecordings, contributeRecordings: contribute, consentedAt: Date.now() });
     // Ask for the microphone now, with the grown-up present, so a child never meets a permission prompt alone.
     if (micSupported()) {
@@ -208,6 +214,7 @@ export function Onboarding() {
       dailyGoalXp: DAILY_GOALS.find((g) => g.minutes === minutes)?.xp,
     });
     next();
+    } finally { creating.current = false; setCreatingProfile(false); }
   };
 
   // The account already had a learner, and it is the one continuing: the learner typed a minute ago is let go (it was
@@ -398,7 +405,7 @@ export function Onboarding() {
           <label className="switch-row"><input type="checkbox" checked={keepRecordings} onChange={(e) => setKeepRecordings(e.target.checked)} /><span className="switch" aria-hidden /><span>{t('onboarding.consent.keep')}</span></label>
           <label className="switch-row"><input type="checkbox" checked={contribute} onChange={(e) => setContribute(e.target.checked)} /><span className="switch" aria-hidden /><span><b>{t('settings.voice.contribute.label')}</b><small>{t('onboarding.consent.contribute.detail')}</small></span></label>
         </>,
-        <Button size="lg" block disabled={!agreed} icon="mic" onClick={() => void create()}>{t('onboarding.consent.allow')}</Button>,
+        <Button size="lg" block disabled={!agreed || creatingProfile} icon="mic" onClick={() => void create()}>{t('onboarding.consent.allow')}</Button>,
         { grownUp: true, title: t('onboarding.consent.title'), sub: t(adult ? 'onboarding.consent.sub.adult' : 'onboarding.consent.sub.child') },
       );
 

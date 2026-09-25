@@ -1,6 +1,6 @@
 import type { Accent, AgeBand, HomeLanguage, Locale, PhonemeId } from '../domain/types';
 import { EN } from './course';
-import { tc } from '../i18n';
+import { language, tc } from '../i18n';
 import { FR_SOUNDS } from './fr/sounds';
 import { JA_SOUNDS } from './ja/sounds';
 import { KO_SOUNDS } from './ko/sounds';
@@ -375,7 +375,10 @@ export const phonemeInfo = (id: PhonemeId): PhonemeInfo => {
   };
   const key = known ? `sound.${id}` : 'sound.unknown';
   const shown = (text: string): string => (isZhSound(id) ? inScript(text) : text);
-  const say = (field: string, english: string): string => shown(tc(`${key}.${field}`, english));
+  const say = (field: string, english: string): string => {
+    const translated = tc(`${key}.${field}`, english);
+    return language() === 'en' ? shown(translated) : translated;
+  };
   return {
     ...info, name: say('name', info.name), example: shown(info.example), problem: say('problem', info.problem), detail: say('detail', info.detail),
     steps: info.steps.map((x, i) => say(`step.${i + 1}`, x)),

@@ -5,7 +5,7 @@ import { AGE_BANDS, ageGuidance, stageLabel as curriculumStageLabel } from '../a
 import { writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { COURSES, courseTitle, ITEM_INDEX, lessonTitle, unitSubtitle, unitTitle } from '../src/content/course';
-import { LAB_STAGES, stageLabel } from '../src/content/lab';
+import { LAB_STAGES, LADDERS, stageLabel } from '../src/content/lab';
 import { PHONEMES, phonemeInfo, soundLabel, tipFor } from '../src/content/phonemes';
 import { SCENARIOS, scenarioBlurb, scenarioTitle } from '../src/content/scenarios';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../src/content/translations';
@@ -28,6 +28,7 @@ const lessonPhrases = (): Record<string, string> => {
     Object.values(r).forEach(walk);
   };
   walk(Object.values(COURSES));
+  walk(SEASONAL_LESSONS);
   return out;
 };
 /**
@@ -46,8 +47,7 @@ const itemMeanings = (): Record<string, { items: string[]; langs: string[] }> =>
     Object.values(r).forEach(walk);
   };
   walk(SCENARIOS.map((sc) => [sc.turns, sc.closing]));
-  // Standalone scenario scripts keep their existing meaning scope; course lessons include every spoken line.
-  lines.splice(0, lines.length, ...lines.filter(it => it.meaning));
+  walk(LADDERS);
   walk(Object.values(COURSES));
   for (const course of Object.values(COURSES)) for (const unit of course.units) for (const lesson of unit.lessons)
     for (const list of Object.values(lesson.exercises)) for (const ex of list)

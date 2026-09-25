@@ -6,9 +6,9 @@
     "icon": "👋",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
-      "junior": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
-      "teen": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名."
+      "little": "Use 唔該 to thank someone for help or service, or to say please. Use 多謝 for gifts or compliments. Ask a name with 咩名.",
+      "junior": "Use 唔該 to thank someone for help or service, or to say please. Use 多謝 for gifts or compliments. Ask a name with 咩名.",
+      "teen": "Use 唔該 to thank someone for help or service, or to say please. Use 多謝 for gifts or compliments. Ask a name with 咩名."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",

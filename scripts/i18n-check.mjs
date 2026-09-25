@@ -38,10 +38,10 @@ for (const l of langs) {
       try { compare(l, f, read(`src/i18n/en/${f}`), read(file), { optionalOne: NO_ONE.has(l) }); } catch (e) { say(l, f, 'not valid JSON', [String(e.message)]); }
     }
   }
-  if ((!only || only === 'content') && l !== 'zh-Hant') {
+  if (!only || only === 'content') {
     const file = `src/i18n/${l}/content.json`;
     if (!existsSync(file)) say(l, 'content.json', 'file missing', [file]);
-    else try { compare(l, 'content.json', source.content, { ...read(file), ...packFor(l, 'content', source.content) }); } catch (e) { say(l, 'content.json', 'not valid JSON', [String(e.message)]); }
+    else try { compare(l, 'content.json', source.content, { ...read(file), ...(l === 'zh-Hant' ? { ...read('src/i18n/zh-Hant/content-course.json'), ...read('astra-lessons/i18n/zh-Hant.json') } : {}), ...packFor(l, 'content', source.content) }); } catch (e) { say(l, 'content.json', 'not valid JSON', [String(e.message)]); }
   }
   if ((!only || only === 'lessons') && l !== 'zh-Hant') {
     const file = `src/i18n/${l}/lessons.json`;

@@ -62,7 +62,7 @@ try{
  fs.mkdirSync('.wrangler',{recursive:true});
  await page.screenshot({path:'.wrangler/gauntlet-teacher-voice.png'});
  await page.getByRole('button',{name:'Preview voice',exact:true}).click();
- await page.waitForFunction(()=>{const b=Array.from(document.querySelectorAll('#teacher-voice button'))[0];return b&&!b.disabled;});
+ await page.waitForFunction(()=>Array.from(document.querySelectorAll('#teacher-voice button')).some(b=>b.textContent==='Preview voice'&&!b.disabled));
  assert(calls.some(c=>c.provider==='qwen'&&c.accent==='zh-HK'),'Qwen preview wrong locale');
  await navigate('/');await page.screenshot({path:'.wrangler/gauntlet-cantonese-home.png'});
  await navigate('/lesson/yue-greetings-1');
