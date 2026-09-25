@@ -1,0 +1,2064 @@
+{
+  "id": "spanish-adventure",
+  "language": "es",
+  "title": "Spanish Adventure",
+  "grownUpTitle": "Spanish",
+  "exercisePrefix": "sx",
+  "items": {
+    "es-agua": {
+      "text": "agua",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "water",
+      "picture": "💧",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-leche": {
+      "text": "leche",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "milk",
+      "picture": "🥛",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-pan": {
+      "text": "pan",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "bread",
+      "picture": "🍞",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-manzana": {
+      "text": "manzana",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "apple",
+      "picture": "🍎",
+      "focus": [
+        "es:z",
+        "es:vowel"
+      ]
+    },
+    "es-plátano": {
+      "text": "plátano",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "banana",
+      "picture": "🍌",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-queso": {
+      "text": "queso",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "cheese",
+      "picture": "🧀",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-pollo": {
+      "text": "pollo",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "chicken",
+      "picture": "🍗",
+      "focus": [
+        "es:ll"
+      ]
+    },
+    "es-zumo": {
+      "text": "zumo",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "juice",
+      "picture": "🧃",
+      "focus": [
+        "es:z"
+      ]
+    },
+    "es-arroz": {
+      "text": "arroz",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "rice",
+      "picture": "🍚",
+      "focus": [
+        "es:rr",
+        "es:z"
+      ]
+    },
+    "es-huevo": {
+      "text": "huevo",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "egg",
+      "picture": "🥚",
+      "focus": [
+        "es:b",
+        "es:vowel"
+      ]
+    },
+    "es-pescado": {
+      "text": "pescado",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "fish",
+      "picture": "🐟",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-chocolate": {
+      "text": "chocolate",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "chocolate",
+      "picture": "🍫",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-café": {
+      "text": "café",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "coffee",
+      "picture": "☕",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-helado": {
+      "text": "helado",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "ice cream",
+      "picture": "🍦",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-naranja": {
+      "text": "naranja",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "orange",
+      "picture": "🍊",
+      "focus": [
+        "es:j"
+      ]
+    },
+    "es-fresa": {
+      "text": "fresa",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "strawberry",
+      "picture": "🍓",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-uva": {
+      "text": "uva",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "grape",
+      "picture": "🍇",
+      "focus": [
+        "es:b"
+      ]
+    },
+    "es-jamón": {
+      "text": "jamón",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "ham",
+      "picture": "🍖",
+      "focus": [
+        "es:j"
+      ]
+    },
+    "es-patata": {
+      "text": "patata",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "potato",
+      "picture": "🥔",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-tomate": {
+      "text": "tomate",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "tomato",
+      "picture": "🍅",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-galleta": {
+      "text": "galleta",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "biscuit",
+      "picture": "🍪",
+      "focus": [
+        "es:ll"
+      ]
+    },
+    "es-tarta": {
+      "text": "tarta",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "cake",
+      "picture": "🎂",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-sopa": {
+      "text": "sopa",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "soup",
+      "picture": "🍲",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-azúcar": {
+      "text": "azúcar",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "sugar",
+      "picture": "🍬",
+      "focus": [
+        "es:z",
+        "es:r"
+      ]
+    },
+    "es-zanahoria": {
+      "text": "zanahoria",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "carrot",
+      "picture": "🥕",
+      "focus": [
+        "es:z",
+        "es:r"
+      ]
+    },
+    "es-pera": {
+      "text": "pera",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "pear",
+      "picture": "🍐",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-cereza": {
+      "text": "cereza",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "cherry",
+      "picture": "🍒",
+      "focus": [
+        "es:z",
+        "es:r"
+      ]
+    },
+    "es-churros": {
+      "text": "churros",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "churros",
+      "picture": "🥖",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-pero": {
+      "text": "pero",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "but",
+      "picture": "🤔",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-perro": {
+      "text": "perro",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "dog",
+      "picture": "🐶",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-caro": {
+      "text": "caro",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "expensive",
+      "picture": "💸",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-carro": {
+      "text": "carro",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "cart",
+      "picture": "🛒",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-casa": {
+      "text": "casa",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "house",
+      "picture": "🏠",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-caza": {
+      "text": "caza",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "hunting",
+      "picture": "🏹",
+      "focus": [
+        "es:z"
+      ]
+    },
+    "es-pena": {
+      "text": "pena",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "sadness",
+      "picture": "😢",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-peña": {
+      "text": "peña",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "rock (a crag)",
+      "picture": "🪨",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-polo": {
+      "text": "polo",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "ice lolly",
+      "picture": "🍧",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-coro": {
+      "text": "coro",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "choir",
+      "picture": "🎶",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-corro": {
+      "text": "corro",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "I run",
+      "picture": "🏃",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-ajo": {
+      "text": "ajo",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "garlic",
+      "picture": "🧄",
+      "focus": [
+        "es:j"
+      ]
+    },
+    "es-piña": {
+      "text": "piña",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "pineapple",
+      "picture": "🍍",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-niño": {
+      "text": "niño",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "child",
+      "picture": "👦",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-mañana": {
+      "text": "mañana",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "tomorrow",
+      "picture": "🌅",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-bocadillo": {
+      "text": "bocadillo",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "sandwich (on a roll)",
+      "picture": "🥪",
+      "focus": [
+        "es:b",
+        "es:ll"
+      ]
+    },
+    "es-paella": {
+      "text": "paella",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "paella",
+      "picture": "🥘",
+      "focus": [
+        "es:ll"
+      ]
+    },
+    "es-agua-por-favor": {
+      "text": "Agua, por favor.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Water, please.",
+      "picture": "💧",
+      "focus": [
+        "es:r",
+        "es:b"
+      ]
+    },
+    "es-quiero-pan": {
+      "text": "Quiero pan.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I want bread.",
+      "picture": "🍞",
+      "focus": [
+        "es:r",
+        "es:vowel"
+      ]
+    },
+    "es-gracias": {
+      "text": "Gracias.",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "Thank you.",
+      "picture": "🙏",
+      "focus": [
+        "es:r",
+        "es:z"
+      ]
+    },
+    "es-muchas-gracias": {
+      "text": "Muchas gracias.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Thank you very much.",
+      "picture": "💛",
+      "focus": [
+        "es:r",
+        "es:z"
+      ]
+    },
+    "es-hola": {
+      "text": "Hola.",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "Hello.",
+      "picture": "👋",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-buenos-días": {
+      "text": "Buenos días.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Good morning.",
+      "picture": "🌅",
+      "focus": [
+        "es:b",
+        "es:vowel"
+      ]
+    },
+    "es-adiós": {
+      "text": "Adiós.",
+      "lang": "es-ES",
+      "kind": "word",
+      "meaning": "Goodbye.",
+      "picture": "👋",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-tengo-hambre": {
+      "text": "Tengo hambre.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I’m hungry.",
+      "picture": "😋",
+      "focus": [
+        "es:b",
+        "es:r"
+      ]
+    },
+    "es-tengo-sed": {
+      "text": "Tengo sed.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I’m thirsty.",
+      "picture": "🥤",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-me-gusta-el-queso": {
+      "text": "Me gusta el queso.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "I like cheese.",
+      "picture": "🧀",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-qué-hay-para-comer": {
+      "text": "¿Qué hay para comer?",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "What is there to eat?",
+      "picture": "🍽️",
+      "focus": [
+        "es:r",
+        "es:vowel"
+      ]
+    },
+    "es-quiero-un-zumo-de-naranja-por-favor": {
+      "text": "Quiero un zumo de naranja, por favor.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "I’d like an orange juice, please.",
+      "picture": "🍊",
+      "focus": [
+        "es:z",
+        "es:j",
+        "es:r",
+        "es:b"
+      ]
+    },
+    "es-la-cuenta-por-favor": {
+      "text": "La cuenta, por favor.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "The bill, please.",
+      "picture": "🧾",
+      "focus": [
+        "es:r",
+        "es:b"
+      ]
+    },
+    "es-qué-rico": {
+      "text": "¡Qué rico!",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Yummy!",
+      "picture": "😋",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-sí-por-favor": {
+      "text": "Sí, por favor.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Yes, please.",
+      "picture": "👍",
+      "focus": [
+        "es:r",
+        "es:b"
+      ]
+    },
+    "es-no-gracias": {
+      "text": "No, gracias.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "No, thank you.",
+      "picture": "🙅",
+      "focus": [
+        "es:r",
+        "es:z"
+      ]
+    },
+    "es-quiero-leche": {
+      "text": "Quiero leche.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I want milk.",
+      "picture": "🥛",
+      "focus": [
+        "es:r",
+        "es:vowel"
+      ]
+    },
+    "es-quiero-un-zumo": {
+      "text": "Quiero un zumo.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I want a juice.",
+      "picture": "🧃",
+      "focus": [
+        "es:r",
+        "es:z"
+      ]
+    },
+    "es-sí-muy-rico": {
+      "text": "Sí, muy rico.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Yes, very tasty.",
+      "picture": "😋",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-sí-está-muy-rico": {
+      "text": "Sí, está muy rico.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "Yes, it’s very tasty.",
+      "picture": "😋",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-sí-me-gusta-mucho": {
+      "text": "Sí, me gusta mucho.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "Yes, I like it a lot.",
+      "picture": "😊",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-hola-qué-quieres": {
+      "text": "¡Hola! ¿Qué quieres?",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Hello! What would you like?"
+    },
+    "es-aquí-tienes": {
+      "text": "Aquí tienes.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Here you are."
+    },
+    "es-algo-más": {
+      "text": "¿Algo más?",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Anything else?"
+    },
+    "es-está-rico": {
+      "text": "¿Está rico?",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Is it tasty?"
+    },
+    "es-qué-quieres-beber": {
+      "text": "¿Qué quieres beber?",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "What would you like to drink?"
+    },
+    "es-rra": {
+      "text": "rra",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: rolled r + a",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-rre": {
+      "text": "rre",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: rolled r + e",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-rro": {
+      "text": "rro",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: rolled r + o",
+      "focus": [
+        "es:rr"
+      ]
+    },
+    "es-tra": {
+      "text": "tra",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: tap r after t",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-dre": {
+      "text": "dre",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: tap r after d",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-pro": {
+      "text": "pro",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: tap r after p",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-ja": {
+      "text": "ja",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: jota + a",
+      "focus": [
+        "es:j"
+      ]
+    },
+    "es-je": {
+      "text": "je",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: jota + e",
+      "focus": [
+        "es:j"
+      ]
+    },
+    "es-jo": {
+      "text": "jo",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: jota + o",
+      "focus": [
+        "es:j"
+      ]
+    },
+    "es-ña": {
+      "text": "ña",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: ñ + a",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-ñe": {
+      "text": "ñe",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: ñ + e",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-ño": {
+      "text": "ño",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: ñ + o",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-za": {
+      "text": "za",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: th + a",
+      "focus": [
+        "es:z"
+      ]
+    },
+    "es-ce": {
+      "text": "ce",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: th + e (c before e)",
+      "focus": [
+        "es:z"
+      ]
+    },
+    "es-ci": {
+      "text": "ci",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: th + i (c before i)",
+      "focus": [
+        "es:z"
+      ]
+    },
+    "es-ba": {
+      "text": "ba",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: b + a",
+      "focus": [
+        "es:b"
+      ]
+    },
+    "es-va": {
+      "text": "va",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: v said as b + a",
+      "focus": [
+        "es:b"
+      ]
+    },
+    "es-vo": {
+      "text": "vo",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: v said as b + o",
+      "focus": [
+        "es:b"
+      ]
+    },
+    "es-lla": {
+      "text": "lla",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: ll + a",
+      "focus": [
+        "es:ll"
+      ]
+    },
+    "es-lle": {
+      "text": "lle",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: ll + e",
+      "focus": [
+        "es:ll"
+      ]
+    },
+    "es-llo": {
+      "text": "llo",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: ll + o",
+      "focus": [
+        "es:ll"
+      ]
+    },
+    "es-a": {
+      "text": "a",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: pure a",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-e": {
+      "text": "e",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: pure e",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-o": {
+      "text": "o",
+      "lang": "es-ES",
+      "kind": "syllable",
+      "meaning": "drill: pure o",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-quiero-arroz": {
+      "text": "Quiero arroz.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I want rice.",
+      "picture": "🍚",
+      "focus": [
+        "es:rr",
+        "es:z"
+      ]
+    },
+    "es-churros-con-chocolate": {
+      "text": "Churros con chocolate",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Churros with chocolate",
+      "picture": "🍫",
+      "focus": [
+        "es:rr",
+        "es:vowel"
+      ]
+    },
+    "es-el-perro-come-arroz": {
+      "text": "El perro come arroz.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "The dog eats rice.",
+      "picture": "🐶",
+      "focus": [
+        "es:rr",
+        "es:z"
+      ]
+    },
+    "es-quiero-una-pera": {
+      "text": "Quiero una pera.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I want a pear.",
+      "picture": "🍐",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-fresas-con-nata": {
+      "text": "Fresas con nata",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Strawberries with cream",
+      "picture": "🍓",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-quiero-una-tarta-de-fresa": {
+      "text": "Quiero una tarta de fresa.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "I want a strawberry cake.",
+      "picture": "🎂",
+      "focus": [
+        "es:r"
+      ]
+    },
+    "es-jamón-y-queso": {
+      "text": "Jamón y queso",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Ham and cheese",
+      "picture": "🍖",
+      "focus": [
+        "es:j"
+      ]
+    },
+    "es-zumo-de-naranja": {
+      "text": "Zumo de naranja",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Orange juice",
+      "picture": "🍊",
+      "focus": [
+        "es:j",
+        "es:z"
+      ]
+    },
+    "es-zumo-de-piña": {
+      "text": "Zumo de piña",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Pineapple juice",
+      "picture": "🍍",
+      "focus": [
+        "es:ñ",
+        "es:z"
+      ]
+    },
+    "es-un-niño-pequeño": {
+      "text": "Un niño pequeño",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "A little boy",
+      "picture": "👦",
+      "focus": [
+        "es:ñ"
+      ]
+    },
+    "es-el-niño-quiere-piña": {
+      "text": "El niño quiere piña.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "The boy wants pineapple.",
+      "picture": "🍍",
+      "focus": [
+        "es:ñ",
+        "es:r"
+      ]
+    },
+    "es-zumo-de-manzana": {
+      "text": "Zumo de manzana",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Apple juice",
+      "picture": "🍎",
+      "focus": [
+        "es:z"
+      ]
+    },
+    "es-cereza-y-manzana": {
+      "text": "Cereza y manzana",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Cherry and apple",
+      "picture": "🍒",
+      "focus": [
+        "es:z",
+        "es:r"
+      ]
+    },
+    "es-quiero-un-zumo-de-manzana": {
+      "text": "Quiero un zumo de manzana.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "I want an apple juice.",
+      "picture": "🍎",
+      "focus": [
+        "es:z",
+        "es:r"
+      ]
+    },
+    "es-un-bocadillo-de-jamón": {
+      "text": "Un bocadillo de jamón",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "A ham sandwich",
+      "picture": "🥪",
+      "focus": [
+        "es:b",
+        "es:j"
+      ]
+    },
+    "es-bebo-agua": {
+      "text": "Bebo agua.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I drink water.",
+      "picture": "💧",
+      "focus": [
+        "es:b"
+      ]
+    },
+    "es-bebo-un-vaso-de-agua": {
+      "text": "Bebo un vaso de agua.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "I drink a glass of water.",
+      "picture": "🥤",
+      "focus": [
+        "es:b"
+      ]
+    },
+    "es-quiero-paella": {
+      "text": "Quiero paella.",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "I want paella.",
+      "picture": "🥘",
+      "focus": [
+        "es:ll",
+        "es:r"
+      ]
+    },
+    "es-pollo-con-patatas": {
+      "text": "Pollo con patatas",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Chicken with potatoes",
+      "picture": "🍗",
+      "focus": [
+        "es:ll"
+      ]
+    },
+    "es-quiero-pollo-y-una-galleta": {
+      "text": "Quiero pollo y una galleta.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "I want chicken and a biscuit.",
+      "picture": "🍪",
+      "focus": [
+        "es:ll",
+        "es:r"
+      ]
+    },
+    "es-café-con-leche": {
+      "text": "Café con leche",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Coffee with milk",
+      "picture": "☕",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-pan-con-tomate": {
+      "text": "Pan con tomate",
+      "lang": "es-ES",
+      "kind": "phrase",
+      "meaning": "Bread with tomato",
+      "picture": "🍅",
+      "focus": [
+        "es:vowel"
+      ]
+    },
+    "es-quiero-café-con-leche-por-favor": {
+      "text": "Quiero café con leche, por favor.",
+      "lang": "es-ES",
+      "kind": "sentence",
+      "meaning": "I’d like a coffee with milk, please.",
+      "picture": "☕",
+      "focus": [
+        "es:vowel",
+        "es:r"
+      ]
+    }
+  },
+  "units": [
+    {
+      "id": "es-food",
+      "title": "Yummy Food ¡Qué rico!",
+      "subtitle": "Order food and drinks in Spanish",
+      "icon": "🥘",
+      "color": "var(--coral)",
+      "grownUp": {
+        "title": "Food & Drink",
+        "subtitle": "Order in cafés and restaurants"
+      },
+      "lessons": [
+        {
+          "id": "es-food-1",
+          "title": "Key words",
+          "icon": "🍎",
+          "kind": "words",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "es-agua"
+              },
+              {
+                "type": "speak",
+                "item": "es-leche"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-pan",
+                "others": [
+                  "es-agua",
+                  "es-leche"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "es-pan"
+              },
+              {
+                "type": "speak",
+                "item": "es-manzana"
+              },
+              {
+                "type": "speak",
+                "item": "es-plátano"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "es-queso"
+              },
+              {
+                "type": "speak",
+                "item": "es-pollo"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-zumo",
+                "others": [
+                  "es-queso",
+                  "es-pollo"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "es-zumo"
+              },
+              {
+                "type": "speak",
+                "item": "es-arroz"
+              },
+              {
+                "type": "speak",
+                "item": "es-huevo"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "es-pescado"
+              },
+              {
+                "type": "speak",
+                "item": "es-chocolate"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-jamón",
+                "others": [
+                  "es-naranja",
+                  "es-café"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "es-café"
+              },
+              {
+                "type": "speak",
+                "item": "es-jamón"
+              },
+              {
+                "type": "speak",
+                "item": "es-naranja"
+              }
+            ]
+          }
+        },
+        {
+          "id": "es-food-2",
+          "title": "Useful phrases",
+          "icon": "💬",
+          "kind": "phrases",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "es-hola"
+              },
+              {
+                "type": "speak",
+                "item": "es-agua-por-favor"
+              },
+              {
+                "type": "speak",
+                "item": "es-quiero-pan"
+              },
+              {
+                "type": "speak",
+                "item": "es-gracias"
+              },
+              {
+                "type": "speak",
+                "item": "es-adiós"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "es-buenos-días"
+              },
+              {
+                "type": "speak",
+                "item": "es-tengo-hambre"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-tengo-sed",
+                "others": [
+                  "es-tengo-hambre"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "es-tengo-sed"
+              },
+              {
+                "type": "speak",
+                "item": "es-muchas-gracias"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "es-me-gusta-el-queso"
+              },
+              {
+                "type": "speak",
+                "item": "es-qué-hay-para-comer"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-quiero-un-zumo-de-naranja-por-favor",
+                "others": [
+                  "es-me-gusta-el-queso",
+                  "es-la-cuenta-por-favor"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "es-quiero-un-zumo-de-naranja-por-favor"
+              },
+              {
+                "type": "speak",
+                "item": "es-la-cuenta-por-favor"
+              }
+            ]
+          }
+        },
+        {
+          "id": "es-food-3",
+          "title": "Tricky sounds",
+          "icon": "👅",
+          "kind": "pronunciation",
+          "exercises": {
+            "little": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-pero",
+                  "es-perro"
+                ],
+                "answer": 1,
+                "focus": "es:rr"
+              },
+              {
+                "type": "speak",
+                "item": "es-perro"
+              },
+              {
+                "type": "speak",
+                "item": "es-pollo"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-pollo",
+                  "es-polo"
+                ],
+                "answer": 0,
+                "focus": "es:ll"
+              },
+              {
+                "type": "speak",
+                "item": "es-polo"
+              }
+            ],
+            "junior": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-casa",
+                  "es-caza"
+                ],
+                "answer": 1,
+                "focus": "es:z"
+              },
+              {
+                "type": "speak",
+                "item": "es-casa"
+              },
+              {
+                "type": "speak",
+                "item": "es-zumo"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-caro",
+                  "es-carro"
+                ],
+                "answer": 1,
+                "focus": "es:rr"
+              },
+              {
+                "type": "speak",
+                "item": "es-carro"
+              }
+            ],
+            "teen": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-pena",
+                  "es-peña"
+                ],
+                "answer": 1,
+                "focus": "es:ñ"
+              },
+              {
+                "type": "speak",
+                "item": "es-peña"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-coro",
+                  "es-corro"
+                ],
+                "answer": 1,
+                "focus": "es:rr"
+              },
+              {
+                "type": "speak",
+                "item": "es-corro"
+              },
+              {
+                "type": "speak",
+                "item": "es-azúcar"
+              }
+            ]
+          }
+        },
+        {
+          "id": "es-food-4",
+          "title": "Listen closely",
+          "icon": "👂",
+          "kind": "listening",
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "es-agua",
+                "others": [
+                  "es-leche",
+                  "es-pan"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-pero",
+                  "es-perro"
+                ],
+                "answer": 0,
+                "focus": "es:rr"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-manzana",
+                "others": [
+                  "es-plátano",
+                  "es-pan"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-pollo",
+                  "es-polo"
+                ],
+                "answer": 1,
+                "focus": "es:ll"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "es-zumo",
+                "others": [
+                  "es-queso",
+                  "es-huevo"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-caro",
+                  "es-carro"
+                ],
+                "answer": 0,
+                "focus": "es:rr"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-arroz",
+                "others": [
+                  "es-pollo",
+                  "es-zumo"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-casa",
+                  "es-caza"
+                ],
+                "answer": 1,
+                "focus": "es:z"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-tengo-hambre",
+                "others": [
+                  "es-tengo-sed"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-pena",
+                  "es-peña"
+                ],
+                "answer": 0,
+                "focus": "es:ñ"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-quiero-un-zumo-de-naranja-por-favor",
+                "others": [
+                  "es-qué-hay-para-comer",
+                  "es-la-cuenta-por-favor"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-coro",
+                  "es-corro"
+                ],
+                "answer": 0,
+                "focus": "es:rr"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "es-jamón",
+                "others": [
+                  "es-naranja",
+                  "es-helado"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "es-pero",
+                  "es-perro"
+                ],
+                "answer": 1,
+                "focus": "es:rr"
+              }
+            ]
+          }
+        },
+        {
+          "id": "es-food-5",
+          "title": "Say what you see",
+          "icon": "🗣️",
+          "kind": "speaking",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "es-manzana",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-plátano",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-leche",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-pan",
+                "prompt": "image"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "es-huevo",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-queso",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-sopa",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-patata",
+                "prompt": "image"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "es-tarta",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-churros",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-pescado",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-helado",
+                "prompt": "image"
+              }
+            ]
+          }
+        },
+        {
+          "id": "es-food-6",
+          "title": "At the café",
+          "icon": "☕",
+          "kind": "conversation",
+          "exercises": {
+            "little": [
+              {
+                "type": "dialogue",
+                "tutor": "es-hola-qué-quieres",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "es-agua-por-favor",
+                  "es-quiero-pan"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "es-aquí-tienes",
+                "picture": "🍽️",
+                "replies": [
+                  "es-gracias",
+                  "es-muchas-gracias"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "es-algo-más",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "es-no-gracias",
+                  "es-sí-por-favor"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "dialogue",
+                "tutor": "es-qué-quieres-beber",
+                "picture": "🧃",
+                "replies": [
+                  "es-quiero-un-zumo",
+                  "es-quiero-leche"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "es-algo-más",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "es-quiero-pan",
+                  "es-no-gracias"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "es-está-rico",
+                "picture": "😋",
+                "replies": [
+                  "es-qué-rico",
+                  "es-sí-muy-rico"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "es-hola-qué-quieres",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "es-qué-hay-para-comer",
+                  "es-quiero-un-zumo-de-naranja-por-favor"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "es-está-rico",
+                "picture": "😋",
+                "replies": [
+                  "es-sí-está-muy-rico",
+                  "es-sí-me-gusta-mucho"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "es-algo-más",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "es-la-cuenta-por-favor",
+                  "es-no-gracias"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "es-food-7",
+          "title": "Review",
+          "icon": "🏆",
+          "kind": "review",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "es-agua",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "es-perro"
+              },
+              {
+                "type": "speak",
+                "item": "es-gracias"
+              },
+              {
+                "type": "speak",
+                "item": "es-agua-por-favor"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "es-zumo"
+              },
+              {
+                "type": "speak",
+                "item": "es-carro"
+              },
+              {
+                "type": "speak",
+                "item": "es-tengo-hambre"
+              },
+              {
+                "type": "speak",
+                "item": "es-muchas-gracias"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "es-naranja"
+              },
+              {
+                "type": "speak",
+                "item": "es-me-gusta-el-queso"
+              },
+              {
+                "type": "speak",
+                "item": "es-qué-hay-para-comer"
+              },
+              {
+                "type": "speak",
+                "item": "es-la-cuenta-por-favor"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "es-family",
+      "title": "My Family Mi familia",
+      "subtitle": "Mum, dad, grandma and me",
+      "icon": "👨‍👩‍👧",
+      "color": "var(--sky)",
+      "grownUp": {
+        "title": "Family",
+        "subtitle": "Talk about the people in your life"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "es-animals",
+      "title": "Animals Los animales",
+      "subtitle": "Pandas, tigers and pets",
+      "icon": "🐼",
+      "color": "var(--leaf)",
+      "grownUp": {
+        "title": "Animals",
+        "subtitle": "Pets, farms and wildlife"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "es-school",
+      "title": "At School En el colegio",
+      "subtitle": "Classroom words and questions",
+      "icon": "🎒",
+      "color": "var(--sun)",
+      "grownUp": {
+        "title": "School & Study",
+        "subtitle": "Classroom words and questions"
+      },
+      "locked": true,
+      "lessons": []
+    }
+  ],
+  "check": {
+    "little": [
+      "es-agua",
+      "es-pan",
+      "es-perro"
+    ],
+    "junior": [
+      "es-zumo",
+      "es-jamón",
+      "es-perro",
+      "es-tengo-hambre"
+    ],
+    "teen": [
+      "es-quiero-un-zumo-de-naranja-por-favor",
+      "es-gracias",
+      "es-tengo-hambre"
+    ]
+  },
+  "lab": {
+    "sounds": [
+      "es:rr",
+      "es:r",
+      "es:j",
+      "es:ñ",
+      "es:z",
+      "es:b",
+      "es:ll",
+      "es:vowel"
+    ],
+    "ladders": {
+      "es:rr": {
+        "syllables": [
+          "es-rra",
+          "es-rre",
+          "es-rro"
+        ],
+        "words": [
+          "es-perro",
+          "es-arroz",
+          "es-churros"
+        ],
+        "phrases": [
+          "es-quiero-arroz",
+          "es-churros-con-chocolate"
+        ],
+        "sentence": [
+          "es-el-perro-come-arroz"
+        ]
+      },
+      "es:r": {
+        "syllables": [
+          "es-tra",
+          "es-dre",
+          "es-pro"
+        ],
+        "words": [
+          "es-pera",
+          "es-fresa",
+          "es-zanahoria"
+        ],
+        "phrases": [
+          "es-quiero-una-pera",
+          "es-fresas-con-nata"
+        ],
+        "sentence": [
+          "es-quiero-una-tarta-de-fresa"
+        ]
+      },
+      "es:j": {
+        "syllables": [
+          "es-ja",
+          "es-je",
+          "es-jo"
+        ],
+        "words": [
+          "es-jamón",
+          "es-naranja",
+          "es-ajo"
+        ],
+        "phrases": [
+          "es-jamón-y-queso",
+          "es-zumo-de-naranja"
+        ],
+        "sentence": [
+          "es-quiero-un-zumo-de-naranja-por-favor"
+        ]
+      },
+      "es:ñ": {
+        "syllables": [
+          "es-ña",
+          "es-ñe",
+          "es-ño"
+        ],
+        "words": [
+          "es-piña",
+          "es-niño",
+          "es-mañana"
+        ],
+        "phrases": [
+          "es-zumo-de-piña",
+          "es-un-niño-pequeño"
+        ],
+        "sentence": [
+          "es-el-niño-quiere-piña"
+        ]
+      },
+      "es:z": {
+        "syllables": [
+          "es-za",
+          "es-ce",
+          "es-ci"
+        ],
+        "words": [
+          "es-zumo",
+          "es-manzana",
+          "es-cereza"
+        ],
+        "phrases": [
+          "es-zumo-de-manzana",
+          "es-cereza-y-manzana"
+        ],
+        "sentence": [
+          "es-quiero-un-zumo-de-manzana"
+        ]
+      },
+      "es:b": {
+        "syllables": [
+          "es-ba",
+          "es-va",
+          "es-vo"
+        ],
+        "words": [
+          "es-huevo",
+          "es-uva",
+          "es-bocadillo"
+        ],
+        "phrases": [
+          "es-un-bocadillo-de-jamón",
+          "es-bebo-agua"
+        ],
+        "sentence": [
+          "es-bebo-un-vaso-de-agua"
+        ]
+      },
+      "es:ll": {
+        "syllables": [
+          "es-lla",
+          "es-lle",
+          "es-llo"
+        ],
+        "words": [
+          "es-pollo",
+          "es-galleta",
+          "es-paella"
+        ],
+        "phrases": [
+          "es-quiero-paella",
+          "es-pollo-con-patatas"
+        ],
+        "sentence": [
+          "es-quiero-pollo-y-una-galleta"
+        ]
+      },
+      "es:vowel": {
+        "syllables": [
+          "es-a",
+          "es-e",
+          "es-o"
+        ],
+        "words": [
+          "es-café",
+          "es-tomate",
+          "es-chocolate"
+        ],
+        "phrases": [
+          "es-café-con-leche",
+          "es-pan-con-tomate"
+        ],
+        "sentence": [
+          "es-quiero-café-con-leche-por-favor"
+        ]
+      }
+    }
+  }
+}

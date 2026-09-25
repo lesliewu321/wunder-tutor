@@ -1,0 +1,2179 @@
+{
+  "id": "korean-adventure",
+  "language": "ko",
+  "title": "Korean Adventure",
+  "grownUpTitle": "Korean",
+  "exercisePrefix": "kx",
+  "items": {
+    "ko-mul": {
+      "text": "물",
+      "picture": "💧",
+      "meaning": "water",
+      "kind": "word",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "물",
+        "romaja": "mul"
+      }
+    },
+    "ko-bap": {
+      "text": "밥",
+      "picture": "🍚",
+      "meaning": "rice (cooked)",
+      "kind": "word",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "밥",
+        "romaja": "bap"
+      }
+    },
+    "ko-ppang": {
+      "text": "빵",
+      "picture": "🍞",
+      "meaning": "bread",
+      "kind": "word",
+      "focus": [
+        "ko:tense",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "빵",
+        "romaja": "ppang"
+      }
+    },
+    "ko-uyu": {
+      "text": "우유",
+      "picture": "🥛",
+      "meaning": "milk",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "우유",
+        "romaja": "uyu"
+      }
+    },
+    "ko-sagwa": {
+      "text": "사과",
+      "picture": "🍎",
+      "meaning": "apple",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "사과",
+        "romaja": "sagwa"
+      }
+    },
+    "ko-banana": {
+      "text": "바나나",
+      "picture": "🍌",
+      "meaning": "banana",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "바나나",
+        "romaja": "banana"
+      }
+    },
+    "ko-gimchi": {
+      "text": "김치",
+      "picture": "🥬",
+      "meaning": "kimchi",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "김치",
+        "romaja": "gimchi"
+      }
+    },
+    "ko-tteok": {
+      "text": "떡",
+      "picture": "🍡",
+      "meaning": "rice cake",
+      "kind": "word",
+      "focus": [
+        "ko:tense",
+        "ko:eo",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "떡",
+        "romaja": "tteok"
+      }
+    },
+    "ko-tteokbokki": {
+      "text": "떡볶이",
+      "picture": "🌶️",
+      "meaning": "spicy rice cakes",
+      "kind": "word",
+      "focus": [
+        "ko:tense",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "떡뽀끼",
+        "romaja": "tteokbokki"
+      }
+    },
+    "ko-keopi": {
+      "text": "커피",
+      "picture": "☕",
+      "meaning": "coffee",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "커피",
+        "romaja": "keopi"
+      }
+    },
+    "ko-juseu": {
+      "text": "주스",
+      "picture": "🧃",
+      "meaning": "juice",
+      "kind": "word",
+      "focus": [
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "주스",
+        "romaja": "juseu"
+      }
+    },
+    "ko-gyeran": {
+      "text": "계란",
+      "picture": "🥚",
+      "meaning": "egg",
+      "kind": "word",
+      "focus": [
+        "ko:r",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "계란",
+        "romaja": "gyeran"
+      }
+    },
+    "ko-guk": {
+      "text": "국",
+      "picture": "🍲",
+      "meaning": "soup",
+      "kind": "word",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "국",
+        "romaja": "guk"
+      }
+    },
+    "ko-gungmul": {
+      "text": "국물",
+      "picture": "🥣",
+      "meaning": "soup broth",
+      "kind": "word",
+      "focus": [
+        "ko:batchim",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "궁물",
+        "romaja": "gungmul"
+      }
+    },
+    "ko-ramyeon": {
+      "text": "라면",
+      "picture": "🍜",
+      "meaning": "instant noodles",
+      "kind": "word",
+      "focus": [
+        "ko:r",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "라면",
+        "romaja": "ramyeon"
+      }
+    },
+    "ko-chikin": {
+      "text": "치킨",
+      "picture": "🍗",
+      "meaning": "fried chicken",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "치킨",
+        "romaja": "chikin"
+      }
+    },
+    "ko-aiseukeurim": {
+      "text": "아이스크림",
+      "picture": "🍦",
+      "meaning": "ice cream",
+      "kind": "word",
+      "focus": [
+        "ko:eu",
+        "ko:aspirated",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "아이스크림",
+        "romaja": "aiseukeurim"
+      }
+    },
+    "ko-chokollit": {
+      "text": "초콜릿",
+      "picture": "🍫",
+      "meaning": "chocolate",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated",
+        "ko:r",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "초콜릳",
+        "romaja": "chokollit"
+      }
+    },
+    "ko-keikeu": {
+      "text": "케이크",
+      "picture": "🍰",
+      "meaning": "cake",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated",
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "케이크",
+        "romaja": "keikeu"
+      }
+    },
+    "ko-subak": {
+      "text": "수박",
+      "picture": "🍉",
+      "meaning": "watermelon",
+      "kind": "word",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "수박",
+        "romaja": "subak"
+      }
+    },
+    "ko-ttalgi": {
+      "text": "딸기",
+      "picture": "🍓",
+      "meaning": "strawberry",
+      "kind": "word",
+      "focus": [
+        "ko:tense",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "딸기",
+        "romaja": "ttalgi"
+      }
+    },
+    "ko-podo": {
+      "text": "포도",
+      "picture": "🍇",
+      "meaning": "grapes",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "포도",
+        "romaja": "podo"
+      }
+    },
+    "ko-cha": {
+      "text": "차",
+      "picture": "🍵",
+      "meaning": "tea",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "차",
+        "romaja": "cha"
+      }
+    },
+    "ko-gogi": {
+      "text": "고기",
+      "picture": "🥩",
+      "meaning": "meat",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "고기",
+        "romaja": "gogi"
+      }
+    },
+    "ko-saengseon": {
+      "text": "생선",
+      "picture": "🐟",
+      "meaning": "fish (to eat)",
+      "kind": "word",
+      "focus": [
+        "ko:eo",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "생선",
+        "romaja": "saengseon"
+      }
+    },
+    "ko-gwaja": {
+      "text": "과자",
+      "picture": "🍪",
+      "meaning": "snacks, biscuits",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "과자",
+        "romaja": "gwaja"
+      }
+    },
+    "ko-ne": {
+      "text": "네",
+      "picture": "✅",
+      "meaning": "yes",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "네",
+        "romaja": "ne"
+      }
+    },
+    "ko-aniyo": {
+      "text": "아니요",
+      "picture": "❌",
+      "meaning": "no",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "아니요",
+        "romaja": "aniyo"
+      }
+    },
+    "ko-dal": {
+      "text": "달",
+      "picture": "🌙",
+      "meaning": "moon",
+      "kind": "word",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "달",
+        "romaja": "dal"
+      }
+    },
+    "ko-ttal": {
+      "text": "딸",
+      "picture": "👧",
+      "meaning": "daughter",
+      "kind": "word",
+      "focus": [
+        "ko:tense",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "딸",
+        "romaja": "ttal"
+      }
+    },
+    "ko-tal": {
+      "text": "탈",
+      "picture": "🎭",
+      "meaning": "mask",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "탈",
+        "romaja": "tal"
+      }
+    },
+    "ko-bul": {
+      "text": "불",
+      "picture": "🔥",
+      "meaning": "fire",
+      "kind": "word",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "불",
+        "romaja": "bul"
+      }
+    },
+    "ko-pul": {
+      "text": "풀",
+      "picture": "🌿",
+      "meaning": "grass",
+      "kind": "word",
+      "focus": [
+        "ko:aspirated",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "풀",
+        "romaja": "pul"
+      }
+    },
+    "ko-so": {
+      "text": "소",
+      "picture": "🐄",
+      "meaning": "cow",
+      "kind": "word",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "소",
+        "romaja": "so"
+      }
+    },
+    "ko-geul": {
+      "text": "글",
+      "picture": "✍️",
+      "meaning": "writing",
+      "kind": "word",
+      "focus": [
+        "ko:eu",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "글",
+        "romaja": "geul"
+      }
+    },
+    "ko-gul": {
+      "text": "굴",
+      "picture": "🦪",
+      "meaning": "oyster",
+      "kind": "word",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "굴",
+        "romaja": "gul"
+      }
+    },
+    "ko-kka": {
+      "text": "까",
+      "meaning": "kka — a tight k with no puff of air",
+      "kind": "syllable",
+      "focus": [
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "까",
+        "romaja": "kka"
+      }
+    },
+    "ko-tta": {
+      "text": "따",
+      "meaning": "tta — a tight t with no puff of air",
+      "kind": "syllable",
+      "focus": [
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "따",
+        "romaja": "tta"
+      }
+    },
+    "ko-ppa": {
+      "text": "빠",
+      "meaning": "ppa — a tight p with no puff of air",
+      "kind": "syllable",
+      "focus": [
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "빠",
+        "romaja": "ppa"
+      }
+    },
+    "ko-ka": {
+      "text": "카",
+      "meaning": "ka — k with a big puff of air",
+      "kind": "syllable",
+      "focus": [
+        "ko:aspirated"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "카",
+        "romaja": "ka"
+      }
+    },
+    "ko-ta": {
+      "text": "타",
+      "meaning": "ta — t with a big puff of air",
+      "kind": "syllable",
+      "focus": [
+        "ko:aspirated"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "타",
+        "romaja": "ta"
+      }
+    },
+    "ko-pa": {
+      "text": "파",
+      "meaning": "pa — p with a big puff of air",
+      "kind": "syllable",
+      "focus": [
+        "ko:aspirated"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "파",
+        "romaja": "pa"
+      }
+    },
+    "ko-ra": {
+      "text": "라",
+      "meaning": "ra — one quick tap of the tongue",
+      "kind": "syllable",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "라",
+        "romaja": "ra"
+      }
+    },
+    "ko-ri": {
+      "text": "리",
+      "meaning": "ri — one quick tap of the tongue",
+      "kind": "syllable",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "리",
+        "romaja": "ri"
+      }
+    },
+    "ko-al": {
+      "text": "알",
+      "picture": "🥚",
+      "meaning": "al — an l held at the end (알: an egg)",
+      "kind": "syllable",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "알",
+        "romaja": "al"
+      }
+    },
+    "ko-eo": {
+      "text": "어",
+      "meaning": "eo — open mouth, loose lips",
+      "kind": "syllable",
+      "focus": [
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "어",
+        "romaja": "eo"
+      }
+    },
+    "ko-seo": {
+      "text": "서",
+      "picture": "🧍",
+      "meaning": "seo — the first sound of 서울 Seoul (stand!)",
+      "kind": "syllable",
+      "focus": [
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "서",
+        "romaja": "seo"
+      }
+    },
+    "ko-neo": {
+      "text": "너",
+      "picture": "🫵",
+      "meaning": "neo — you (to a friend)",
+      "kind": "syllable",
+      "focus": [
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "너",
+        "romaja": "neo"
+      }
+    },
+    "ko-eu": {
+      "text": "으",
+      "meaning": "eu — “oo” with a flat smile",
+      "kind": "syllable",
+      "focus": [
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "으",
+        "romaja": "eu"
+      }
+    },
+    "ko-geu": {
+      "text": "그",
+      "picture": "👉",
+      "meaning": "geu — that",
+      "kind": "syllable",
+      "focus": [
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "그",
+        "romaja": "geu"
+      }
+    },
+    "ko-seu": {
+      "text": "스",
+      "meaning": "seu — the last sound of 주스 juice",
+      "kind": "syllable",
+      "focus": [
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "스",
+        "romaja": "seu"
+      }
+    },
+    "ko-ap": {
+      "text": "압",
+      "meaning": "ap — close the lips and hold",
+      "kind": "syllable",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "압",
+        "romaja": "ap"
+      }
+    },
+    "ko-at": {
+      "text": "앗",
+      "meaning": "at — tongue up and hold (앗! oops)",
+      "kind": "syllable",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "앋",
+        "romaja": "at"
+      }
+    },
+    "ko-ak": {
+      "text": "악",
+      "meaning": "ak — close at the back and hold",
+      "kind": "syllable",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "악",
+        "romaja": "ak"
+      }
+    },
+    "ko-mul-juseyo": {
+      "text": "물 주세요",
+      "picture": "💧",
+      "meaning": "Water, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "물 주세요",
+        "romaja": "mul juseyo"
+      }
+    },
+    "ko-bap-juseyo": {
+      "text": "밥 주세요",
+      "picture": "🍚",
+      "meaning": "Rice, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "밥 주세요",
+        "romaja": "bap juseyo"
+      }
+    },
+    "ko-ppang-juseyo": {
+      "text": "빵 주세요",
+      "picture": "🍞",
+      "meaning": "Bread, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:tense",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "빵 주세요",
+        "romaja": "ppang juseyo"
+      }
+    },
+    "ko-uyu-juseyo": {
+      "text": "우유 주세요",
+      "picture": "🥛",
+      "meaning": "Milk, please",
+      "kind": "phrase",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "우유 주세요",
+        "romaja": "uyu juseyo"
+      }
+    },
+    "ko-keopi-juseyo": {
+      "text": "커피 주세요",
+      "picture": "☕",
+      "meaning": "Coffee, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:aspirated",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "커피 주세요",
+        "romaja": "keopi juseyo"
+      }
+    },
+    "ko-gimchi-juseyo": {
+      "text": "김치 주세요",
+      "picture": "🥬",
+      "meaning": "Kimchi, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:aspirated",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "김치 주세요",
+        "romaja": "gimchi juseyo"
+      }
+    },
+    "ko-tteokbokki-juseyo": {
+      "text": "떡볶이 주세요",
+      "picture": "🌶️",
+      "meaning": "Tteokbokki, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:tense",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "떡뽀끼 주세요",
+        "romaja": "tteokbokki juseyo"
+      }
+    },
+    "ko-juseu-juseyo": {
+      "text": "주스 주세요",
+      "picture": "🧃",
+      "meaning": "Juice, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "주스 주세요",
+        "romaja": "juseu juseyo"
+      }
+    },
+    "ko-aiseukeurim-juseyo": {
+      "text": "아이스크림 주세요",
+      "picture": "🍦",
+      "meaning": "Ice cream, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:eu",
+        "ko:aspirated",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "아이스크림 주세요",
+        "romaja": "aiseukeurim juseyo"
+      }
+    },
+    "ko-igeo-juseyo": {
+      "text": "이거 주세요",
+      "picture": "👉",
+      "meaning": "This one, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "이거 주세요",
+        "romaja": "igeo juseyo"
+      }
+    },
+    "ko-deo-juseyo": {
+      "text": "더 주세요",
+      "picture": "➕",
+      "meaning": "More, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "더 주세요",
+        "romaja": "deo juseyo"
+      }
+    },
+    "ko-mul-deo-juseyo": {
+      "text": "물 더 주세요",
+      "picture": "💧",
+      "meaning": "More water, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:r",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "물 더 주세요",
+        "romaja": "mul deo juseyo"
+      }
+    },
+    "ko-jogeumman-juseyo": {
+      "text": "조금만 주세요",
+      "picture": "🤏",
+      "meaning": "Just a little, please",
+      "kind": "phrase",
+      "focus": [
+        "ko:eu",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "조금만 주세요",
+        "romaja": "jogeumman juseyo"
+      }
+    },
+    "ko-ne-juseyo": {
+      "text": "네, 주세요",
+      "picture": "🙂",
+      "meaning": "Yes, please",
+      "kind": "phrase",
+      "focus": [],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "네 주세요",
+        "romaja": "ne juseyo"
+      }
+    },
+    "ko-gamsahamnida": {
+      "text": "감사합니다.",
+      "picture": "🙏",
+      "meaning": "Thank you.",
+      "kind": "sentence",
+      "focus": [
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "감사함니다",
+        "romaja": "gamsahamnida"
+      }
+    },
+    "ko-masisseoyo": {
+      "text": "맛있어요.",
+      "picture": "😋",
+      "meaning": "It’s delicious.",
+      "kind": "sentence",
+      "focus": [
+        "ko:tense",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "마시써요",
+        "romaja": "masisseoyo"
+      }
+    },
+    "ko-baegopayo": {
+      "text": "배고파요.",
+      "picture": "🤤",
+      "meaning": "I’m hungry.",
+      "kind": "sentence",
+      "focus": [
+        "ko:aspirated"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "배고파요",
+        "romaja": "baegopayo"
+      }
+    },
+    "ko-annyeonghaseyo": {
+      "text": "안녕하세요.",
+      "picture": "👋",
+      "meaning": "Hello.",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "안녕하세요",
+        "romaja": "annyeonghaseyo"
+      }
+    },
+    "ko-eolmayeyo": {
+      "text": "얼마예요?",
+      "picture": "💰",
+      "meaning": "How much is it?",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "얼마예요",
+        "romaja": "eolmayeyo"
+      }
+    },
+    "ko-jeoneun-sagwareul-joahaeyo": {
+      "text": "저는 사과를 좋아해요.",
+      "picture": "🍎",
+      "meaning": "I like apples.",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:eu",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "저는 사과를 조아해요",
+        "romaja": "jeoneun sagwareul joahaeyo"
+      }
+    },
+    "ko-jeoneun-gimchireul-joahaeyo": {
+      "text": "저는 김치를 좋아해요.",
+      "picture": "🥬",
+      "meaning": "I like kimchi.",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:eu",
+        "ko:aspirated",
+        "ko:r"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "저는 김치를 조아해요",
+        "romaja": "jeoneun gimchireul joahaeyo"
+      }
+    },
+    "ko-jal-meokgetseumnida": {
+      "text": "잘 먹겠습니다.",
+      "picture": "🙏",
+      "meaning": "Thank you for the meal (said before eating).",
+      "kind": "sentence",
+      "focus": [
+        "ko:r",
+        "ko:eo",
+        "ko:batchim",
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "잘 먹껟씀니다",
+        "romaja": "jal meokgetseumnida"
+      }
+    },
+    "ko-jal-meogeotseumnida": {
+      "text": "잘 먹었습니다.",
+      "picture": "😊",
+      "meaning": "Thank you for the meal (said after eating).",
+      "kind": "sentence",
+      "focus": [
+        "ko:r",
+        "ko:eo",
+        "ko:batchim",
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "잘 머걷씀니다",
+        "romaja": "jal meogeotseumnida"
+      }
+    },
+    "ko-ne-jal-meogeotseumnida": {
+      "text": "네, 잘 먹었습니다.",
+      "picture": "😊",
+      "meaning": "Yes, thank you for the meal.",
+      "kind": "sentence",
+      "focus": [
+        "ko:r",
+        "ko:eo",
+        "ko:batchim",
+        "ko:eu"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "네 잘 머걷씀니다",
+        "romaja": "ne jal meogeotseumnida"
+      }
+    },
+    "ko-aniyo-gwaenchanayo": {
+      "text": "아니요, 괜찮아요.",
+      "picture": "🙅",
+      "meaning": "No, I’m fine, thank you.",
+      "kind": "sentence",
+      "focus": [
+        "ko:aspirated"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "아니요 괜차나요",
+        "romaja": "aniyo gwaenchanayo"
+      }
+    },
+    "ko-gungmuri-masisseoyo": {
+      "text": "국물이 맛있어요.",
+      "picture": "🥣",
+      "meaning": "The broth is delicious.",
+      "kind": "sentence",
+      "focus": [
+        "ko:batchim",
+        "ko:r",
+        "ko:tense",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "궁무리 마시써요",
+        "romaja": "gungmuri masisseoyo"
+      }
+    },
+    "ko-tteokbokkiga-masisseoyo": {
+      "text": "떡볶이가 맛있어요.",
+      "picture": "🌶️",
+      "meaning": "The tteokbokki is delicious.",
+      "kind": "sentence",
+      "focus": [
+        "ko:tense",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "떡뽀끼가 마시써요",
+        "romaja": "tteokbokkiga masisseoyo"
+      }
+    },
+    "ko-babi-masisseoyo": {
+      "text": "밥이 맛있어요.",
+      "picture": "🍚",
+      "meaning": "The rice is delicious.",
+      "kind": "sentence",
+      "focus": [
+        "ko:tense",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "바비 마시써요",
+        "romaja": "babi masisseoyo"
+      }
+    },
+    "ko-jeongmal-masisseoyo": {
+      "text": "정말 맛있어요!",
+      "picture": "🤩",
+      "meaning": "It’s really delicious!",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:r",
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "정말 마시써요",
+        "romaja": "jeongmal masisseoyo"
+      }
+    },
+    "ko-mul-han-jan-juseyo": {
+      "text": "물 한 잔 주세요.",
+      "picture": "💧",
+      "meaning": "A glass of water, please.",
+      "kind": "sentence",
+      "focus": [
+        "ko:r",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "물 한 잔 주세요",
+        "romaja": "mul han jan juseyo"
+      }
+    },
+    "ko-keopi-han-jan-juseyo": {
+      "text": "커피 한 잔 주세요.",
+      "picture": "☕",
+      "meaning": "A cup of coffee, please.",
+      "kind": "sentence",
+      "focus": [
+        "ko:aspirated",
+        "ko:eo",
+        "ko:batchim"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "커피 한 잔 주세요",
+        "romaja": "keopi han jan juseyo"
+      }
+    },
+    "ko-mwo-deurilkkayo": {
+      "text": "뭐 드릴까요?",
+      "meaning": "What can I get you?",
+      "kind": "sentence",
+      "focus": [
+        "ko:eu",
+        "ko:r",
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "뭐 드릴까요",
+        "romaja": "mwo deurilkkayo"
+      }
+    },
+    "ko-yeogi-isseoyo": {
+      "text": "여기 있어요.",
+      "meaning": "Here you are.",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "여기 이써요",
+        "romaja": "yeogi isseoyo"
+      }
+    },
+    "ko-eumsik-masisseoyo": {
+      "text": "음식 맛있어요?",
+      "meaning": "Is the food tasty?",
+      "kind": "sentence",
+      "focus": [
+        "ko:eu",
+        "ko:batchim",
+        "ko:tense",
+        "ko:eo"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "음식 마시써요",
+        "romaja": "eumsik masisseoyo"
+      }
+    },
+    "ko-deo-deurilkkayo": {
+      "text": "더 드릴까요?",
+      "meaning": "Would you like some more?",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:eu",
+        "ko:r",
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "더 드릴까요",
+        "romaja": "deo deurilkkayo"
+      }
+    },
+    "ko-annyeonghaseyo-mwo-deurilkkayo": {
+      "text": "안녕하세요. 뭐 드릴까요?",
+      "meaning": "Hello. What can I get you?",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:eu",
+        "ko:r",
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "안녕하세요 뭐 드릴까요",
+        "romaja": "annyeonghaseyo mwo deurilkkayo"
+      }
+    },
+    "ko-eoseo-oseyo-mwo-deurilkkayo": {
+      "text": "어서 오세요. 뭐 드릴까요?",
+      "meaning": "Welcome. What can I get you?",
+      "kind": "sentence",
+      "focus": [
+        "ko:eo",
+        "ko:eu",
+        "ko:r",
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "어서 오세요 뭐 드릴까요",
+        "romaja": "eoseo oseyo mwo deurilkkayo"
+      }
+    },
+    "ko-da-deusyeosseoyo": {
+      "text": "다 드셨어요?",
+      "meaning": "Have you finished?",
+      "kind": "sentence",
+      "focus": [
+        "ko:eu",
+        "ko:eo",
+        "ko:tense"
+      ],
+      "lang": "ko-KR",
+      "ko": {
+        "pron": "다 드셔써요",
+        "romaja": "da deusyeosseoyo"
+      }
+    }
+  },
+  "units": [
+    {
+      "id": "ko-food",
+      "title": "Yummy Food 맛있는 음식",
+      "subtitle": "Order food and drinks in Korean",
+      "icon": "🍚",
+      "color": "var(--coral)",
+      "grownUp": {
+        "title": "Food & Drink 음식",
+        "subtitle": "Order food and drinks in Korean"
+      },
+      "lessons": [
+        {
+          "id": "ko-food-1",
+          "title": "Key words",
+          "icon": "🍎",
+          "kind": "words",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "ko-mul"
+              },
+              {
+                "type": "speak",
+                "item": "ko-bap"
+              },
+              {
+                "type": "speak",
+                "item": "ko-uyu"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-uyu",
+                "others": [
+                  "ko-mul",
+                  "ko-bap"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "ko-sagwa"
+              },
+              {
+                "type": "speak",
+                "item": "ko-ppang"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "ko-gimchi"
+              },
+              {
+                "type": "speak",
+                "item": "ko-tteokbokki"
+              },
+              {
+                "type": "speak",
+                "item": "ko-keopi"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-keopi",
+                "others": [
+                  "ko-gimchi",
+                  "ko-juseu"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "ko-juseu"
+              },
+              {
+                "type": "speak",
+                "item": "ko-gyeran"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "ko-gungmul"
+              },
+              {
+                "type": "speak",
+                "item": "ko-ramyeon"
+              },
+              {
+                "type": "speak",
+                "item": "ko-aiseukeurim"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-aiseukeurim",
+                "others": [
+                  "ko-chokollit",
+                  "ko-keikeu"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "ko-chokollit"
+              },
+              {
+                "type": "speak",
+                "item": "ko-saengseon"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ko-food-2",
+          "title": "Useful phrases",
+          "icon": "💬",
+          "kind": "phrases",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "ko-mul-juseyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-gamsahamnida"
+              },
+              {
+                "type": "speak",
+                "item": "ko-ne"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-ne",
+                "others": [
+                  "ko-aniyo"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "ko-masisseoyo"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "ko-bap-juseyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-baegopayo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-igeo-juseyo"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-igeo-juseyo",
+                "others": [
+                  "ko-bap-juseyo",
+                  "ko-deo-juseyo"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "ko-deo-juseyo"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "ko-annyeonghaseyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-jal-meokgetseumnida"
+              },
+              {
+                "type": "speak",
+                "item": "ko-eolmayeyo"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-jal-meokgetseumnida",
+                "others": [
+                  "ko-jal-meogeotseumnida"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "ko-jeoneun-sagwareul-joahaeyo"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ko-food-3",
+          "title": "Tricky sounds",
+          "icon": "👅",
+          "kind": "pronunciation",
+          "exercises": {
+            "little": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-dal",
+                  "ko-ttal"
+                ],
+                "answer": 1,
+                "focus": "ko:tense"
+              },
+              {
+                "type": "speak",
+                "item": "ko-tteok"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-bul",
+                  "ko-pul"
+                ],
+                "answer": 0,
+                "focus": "ko:aspirated"
+              },
+              {
+                "type": "speak",
+                "item": "ko-keopi"
+              },
+              {
+                "type": "speak",
+                "item": "ko-mul"
+              }
+            ],
+            "junior": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-seo",
+                  "ko-so"
+                ],
+                "answer": 0,
+                "focus": "ko:eo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-tteokbokki"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-geul",
+                  "ko-gul"
+                ],
+                "answer": 0,
+                "focus": "ko:eu"
+              },
+              {
+                "type": "speak",
+                "item": "ko-juseu"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-dal",
+                  "ko-tal"
+                ],
+                "answer": 1,
+                "focus": "ko:aspirated"
+              }
+            ],
+            "teen": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-ttal",
+                  "ko-tal"
+                ],
+                "answer": 0,
+                "focus": "ko:tense"
+              },
+              {
+                "type": "speak",
+                "item": "ko-jal-meokgetseumnida"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-seo",
+                  "ko-so"
+                ],
+                "answer": 1,
+                "focus": "ko:eo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-gungmuri-masisseoyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-tteokbokkiga-masisseoyo"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ko-food-4",
+          "title": "Listen closely",
+          "icon": "👂",
+          "kind": "listening",
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "ko-bap",
+                "others": [
+                  "ko-ppang",
+                  "ko-mul"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-bul",
+                  "ko-pul"
+                ],
+                "answer": 1,
+                "focus": "ko:aspirated"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-sagwa",
+                "others": [
+                  "ko-subak",
+                  "ko-podo"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-dal",
+                  "ko-ttal"
+                ],
+                "answer": 0,
+                "focus": "ko:tense"
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "ko-tteok",
+                "others": [
+                  "ko-tteokbokki",
+                  "ko-ttalgi"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-geul",
+                  "ko-gul"
+                ],
+                "answer": 1,
+                "focus": "ko:eu"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-guk",
+                "others": [
+                  "ko-gungmul",
+                  "ko-gogi"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-seo",
+                  "ko-so"
+                ],
+                "answer": 1,
+                "focus": "ko:eo"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-keopi",
+                "others": [
+                  "ko-keikeu",
+                  "ko-cha"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "choose-heard",
+                "answer": "ko-jal-meokgetseumnida",
+                "others": [
+                  "ko-jal-meogeotseumnida"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-dal",
+                  "ko-tal"
+                ],
+                "answer": 1,
+                "focus": "ko:aspirated"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-mul-juseyo",
+                "others": [
+                  "ko-mul-deo-juseyo",
+                  "ko-uyu-juseyo"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "ko-ttal",
+                  "ko-tal"
+                ],
+                "answer": 1,
+                "focus": "ko:tense"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "ko-gungmuri-masisseoyo",
+                "others": [
+                  "ko-babi-masisseoyo",
+                  "ko-tteokbokkiga-masisseoyo"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "ko-food-5",
+          "title": "Say what you see",
+          "icon": "🗣️",
+          "kind": "speaking",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "ko-banana",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-uyu",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-sagwa",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-ppang",
+                "prompt": "image"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "ko-ttalgi",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-subak",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-gyeran",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-chikin",
+                "prompt": "image"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "ko-aiseukeurim",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-keikeu",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-gwaja",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "ko-gogi",
+                "prompt": "image"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ko-food-6",
+          "title": "At the café",
+          "icon": "☕",
+          "kind": "conversation",
+          "exercises": {
+            "little": [
+              {
+                "type": "dialogue",
+                "tutor": "ko-mwo-deurilkkayo",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "ko-mul-juseyo",
+                  "ko-bap-juseyo"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "ko-yeogi-isseoyo",
+                "picture": "🍽️",
+                "replies": [
+                  "ko-gamsahamnida"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "ko-eumsik-masisseoyo",
+                "picture": "😋",
+                "replies": [
+                  "ko-masisseoyo",
+                  "ko-ne"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "dialogue",
+                "tutor": "ko-annyeonghaseyo-mwo-deurilkkayo",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "ko-tteokbokki-juseyo",
+                  "ko-uyu-juseyo"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "ko-yeogi-isseoyo",
+                "picture": "🍽️",
+                "replies": [
+                  "ko-gamsahamnida",
+                  "ko-jal-meokgetseumnida"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "ko-deo-deurilkkayo",
+                "picture": "🍲",
+                "replies": [
+                  "ko-ne-juseyo",
+                  "ko-aniyo-gwaenchanayo"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "ko-eoseo-oseyo-mwo-deurilkkayo",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "ko-keopi-han-jan-juseyo",
+                  "ko-mul-han-jan-juseyo"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "ko-eumsik-masisseoyo",
+                "picture": "😋",
+                "replies": [
+                  "ko-jeongmal-masisseoyo",
+                  "ko-gungmuri-masisseoyo"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "ko-da-deusyeosseoyo",
+                "picture": "🧾",
+                "replies": [
+                  "ko-ne-jal-meogeotseumnida",
+                  "ko-eolmayeyo"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "ko-food-7",
+          "title": "Review",
+          "icon": "🏆",
+          "kind": "review",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "ko-mul"
+              },
+              {
+                "type": "speak",
+                "item": "ko-bap"
+              },
+              {
+                "type": "speak",
+                "item": "ko-mul-juseyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-gamsahamnida"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "ko-tteokbokki"
+              },
+              {
+                "type": "speak",
+                "item": "ko-igeo-juseyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-baegopayo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-jal-meokgetseumnida"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "ko-eolmayeyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-jeoneun-gimchireul-joahaeyo"
+              },
+              {
+                "type": "speak",
+                "item": "ko-jal-meogeotseumnida"
+              },
+              {
+                "type": "speak",
+                "item": "ko-jeongmal-masisseoyo"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ko-family",
+      "title": "My Family 우리 가족",
+      "subtitle": "Mum, dad, grandma and me",
+      "icon": "👨‍👩‍👧",
+      "color": "var(--sky)",
+      "grownUp": {
+        "title": "Family 가족",
+        "subtitle": "Talk about the people in your life"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "ko-animals",
+      "title": "Animals 동물",
+      "subtitle": "Pandas, tigers and pets",
+      "icon": "🐼",
+      "color": "var(--leaf)",
+      "grownUp": {
+        "title": "Animals 동물",
+        "subtitle": "Pets, farms and wildlife"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "ko-school",
+      "title": "At School 학교",
+      "subtitle": "Classroom words and questions",
+      "icon": "🎒",
+      "color": "var(--sun)",
+      "grownUp": {
+        "title": "School & Study 학교",
+        "subtitle": "Classroom words and questions"
+      },
+      "locked": true,
+      "lessons": []
+    }
+  ],
+  "check": {
+    "little": [
+      "ko-mul",
+      "ko-bap",
+      "ko-keopi"
+    ],
+    "junior": [
+      "ko-tteok",
+      "ko-mul-juseyo",
+      "ko-gamsahamnida",
+      "ko-baegopayo"
+    ],
+    "teen": [
+      "ko-mul-juseyo",
+      "ko-gamsahamnida",
+      "ko-masisseoyo"
+    ]
+  },
+  "lab": {
+    "sounds": [
+      "ko:tense",
+      "ko:aspirated",
+      "ko:r",
+      "ko:eo",
+      "ko:eu",
+      "ko:batchim"
+    ],
+    "ladders": {
+      "ko:tense": {
+        "syllables": [
+          "ko-kka",
+          "ko-tta",
+          "ko-ppa"
+        ],
+        "words": [
+          "ko-tteok",
+          "ko-ttalgi",
+          "ko-tteokbokki"
+        ],
+        "phrases": [
+          "ko-tteokbokki-juseyo",
+          "ko-ppang-juseyo"
+        ],
+        "sentence": [
+          "ko-tteokbokkiga-masisseoyo"
+        ]
+      },
+      "ko:aspirated": {
+        "syllables": [
+          "ko-ka",
+          "ko-ta",
+          "ko-pa"
+        ],
+        "words": [
+          "ko-keopi",
+          "ko-cha",
+          "ko-podo"
+        ],
+        "phrases": [
+          "ko-keopi-juseyo",
+          "ko-gimchi-juseyo"
+        ],
+        "sentence": [
+          "ko-keopi-han-jan-juseyo"
+        ]
+      },
+      "ko:r": {
+        "syllables": [
+          "ko-ra",
+          "ko-ri",
+          "ko-al"
+        ],
+        "words": [
+          "ko-mul",
+          "ko-ramyeon",
+          "ko-ttalgi"
+        ],
+        "phrases": [
+          "ko-mul-juseyo",
+          "ko-mul-deo-juseyo"
+        ],
+        "sentence": [
+          "ko-mul-han-jan-juseyo"
+        ]
+      },
+      "ko:eo": {
+        "syllables": [
+          "ko-eo",
+          "ko-seo",
+          "ko-neo"
+        ],
+        "words": [
+          "ko-tteok",
+          "ko-keopi",
+          "ko-saengseon"
+        ],
+        "phrases": [
+          "ko-igeo-juseyo",
+          "ko-deo-juseyo"
+        ],
+        "sentence": [
+          "ko-eolmayeyo"
+        ]
+      },
+      "ko:eu": {
+        "syllables": [
+          "ko-eu",
+          "ko-geu",
+          "ko-seu"
+        ],
+        "words": [
+          "ko-juseu",
+          "ko-keikeu",
+          "ko-aiseukeurim"
+        ],
+        "phrases": [
+          "ko-juseu-juseyo",
+          "ko-aiseukeurim-juseyo"
+        ],
+        "sentence": [
+          "ko-jeoneun-sagwareul-joahaeyo"
+        ]
+      },
+      "ko:batchim": {
+        "syllables": [
+          "ko-ap",
+          "ko-at",
+          "ko-ak"
+        ],
+        "words": [
+          "ko-bap",
+          "ko-guk",
+          "ko-subak"
+        ],
+        "phrases": [
+          "ko-bap-juseyo",
+          "ko-jogeumman-juseyo"
+        ],
+        "sentence": [
+          "ko-jal-meokgetseumnida"
+        ]
+      }
+    }
+  }
+}
