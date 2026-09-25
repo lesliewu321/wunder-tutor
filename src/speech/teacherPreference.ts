@@ -3,7 +3,7 @@ import type { ApiHealth } from './health';
 import { TEACHER_VOICE_DEFAULTS } from './teacherVoiceDefaults';
 // Gemini remains an internal provider for the onboarding sample; it is not a learner voice choice.
 // Old Gemini preferences fail validation and inherit the current app defaults. Scan is independent.
-export const TEACHER_VOICES = ['auto', 'azure', 'qwen', 'chirp', 'device'] as const;
+export const TEACHER_VOICES = ['auto', 'azure', 'chirp', 'qwen', 'device'] as const;
 export type TeacherVoiceChoice = typeof TEACHER_VOICES[number] | 'gemini';
 export type TeacherVoice = Exclude<TeacherVoiceChoice, 'auto'>;
 export type CloudVoice = Exclude<TeacherVoice, 'device'>;
