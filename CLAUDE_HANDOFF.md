@@ -174,6 +174,31 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
     tra/dre/pro (a bare "ra" is a trill by rule); the Chinese translations of both courses are the agents' own —
     review the sound tips ("打舌的 rr", "吉拿棒"; scenario "El Café Sol" → 陽光咖啡室; lesson 6 in Korean is 在咖啡店
     though the scene is a 분식집).
+- **Tests are offered when they measure something (Leslie: "when is a good time to show test? random?" → "add"):**
+  `src/engine/testing.ts` — a lesson's test is due two days after it was completed, or straight away for the unit's
+  last lesson once the unit is done; taking it clears it until the lesson is completed again. Home's hero says "Test
+  due: …" with "Take the test" once a day at most (`wunder-tutor/test-nudge/<id>`), the node says "Test due — tap Test
+  above"; a test score under 75 sends the item back to the review schedule (`finishItem`). Deployed (a657ec2 /
+  51c0e78e).
+- **Tongue twisters + leaderboards (Leslie: "add tongue twister gamification. I am thinking of a global/regional
+  leaderboard table too. so user can see"), built and DEPLOYED the same evening:** `content/twisters.json` (22
+  twisters, six languages, each with a `proven` flag written by `npx vite-node eval/twisters.ts --write` — the
+  teacher's own take must pass the scorer; 20 of 22 do: 妈妈骑马 scores 48 with 骂马 missed, 경찰청 70; 四是四 passes at
+  83, thinly). Rules (`src/content/twisters.ts`): pass = overall ≥ 80 and no word missed; time = the speech itself
+  (`speechMs`), never under 200 ms. Game (`src/features/twisters/Twisters.tsx`, routes `/twisters`,
+  `/twisters/:id`, a row on Home under "Talk with Tutu"): Listen / Slow, one mic, the verdict with the time, the
+  device's best, and the board — "Near me (HK)" / "World" chips, top 20, "You: #n · time". Server
+  (`server/twisters.mjs`, routes in core.mjs): `GET /api/twisters/board?twister=&device=` is public (60/min),
+  `POST /api/twisters/score` sits behind the code (30/10 min) and keeps only a faster pass per device (upsert on
+  twister+device); region = Cloudflare's `request.cf.country` (locally `COUNTRY`, default HK). Note: a request from Leslie's own network came out as **TW** live (its egress is routed through Taiwan, the same reason the colo is TPE), so their testers may land on the TW board rather than HK — that is Cloudflare's view of the IP, not a bug here. Table
+  `twister_scores` (migration 20260925150000, applied; API-only). **Privacy decisions (say so if you want otherwise):**
+  what goes public is avatar + nickname (the learner's name, cut to 16 chars) + a two-letter region; no age, account or
+  device id ever leaves the API; a Settings switch "Show {name} on leaderboards" (`shareScores`, ON by default, next
+  to the recordings switches) keeps a learner off the boards while the game still works. Run in the 5199 copy: fail
+  (73) then pass (2.27 s) with the demo mic, the row appeared on the HK and World boards as "🐯 Tiger", "You: #1"; that
+  test row was then deleted from the live table. Tests: server/twisters.test.mjs (+6), src/__tests__/twisters.test.ts
+  (+5); 315 pass. Not done: a twister's teacher take is not gated per language for LEARNERS (the scorer's known
+  weakness on Mandarin sequences remains), no per-age filtering of twisters, no anti-cheat beyond "a pass, 200 ms+".
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
