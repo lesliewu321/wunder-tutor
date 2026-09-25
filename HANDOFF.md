@@ -277,3 +277,50 @@ This update supersedes the communication-pack status and old lesson counts above
   No secret values were displayed. Leslie remains responsible for npm run keys:push.
 - Required checks passed in the current shared checkout: npm test (1835 passed, 2 skipped), typecheck,
   content:check and i18n:check. Concurrent Cantonese work has progressed since the earlier test failures.
+
+
+## 2026-09-25 — Cantonese, gauntlet fixes and simpler course selection released
+
+- Deployed application commit: 0523563 (course/reliability implementation c6c8e30).
+- Pages production deployment: 5bdfc1a2-fab6-4263-b468-e4790ba08b61.
+  Live: https://app.wundertutor.com ; release: https://5bdfc1a2.wunder-tutor.pages.dev.
+- Reminder Worker wunder-reminders version: c67b3011-8708-4ba2-a01b-c663074e0e6c. The course whitelist now
+  includes Cantonese; malformed/cleared schedule inputs fail safely. No new secret or schema changes.
+- Hong Kong Cantonese is the seventh course (yue, speech locale zh-HK): 28 beginner lessons in seven topics,
+  70 original practice items with Traditional Cantonese and Jyutping, four age-group plans, seven conversations,
+  and three pronunciation ladders. Sources/generator: astra-lessons/hk-cantonese; runtime pack:
+  astra-lessons/courses/yue.json. All new titles, guides, meanings and descriptions have seven-language catalogs.
+  This is original beginner content, not accredited/officially approved material; native teacher review is pending.
+- Locale routing: Azure HiuMaanNeural, Chirp yue-HK Aoede, Qwen Kiki. Automatic skips Gemini for Cantonese.
+  Device fallback requires the correct language. Cantonese scoring stays Azure with word-level feedback;
+  no invented English phoneme labels or Mandarin tone diagnosis. No calibrated Cantonese tongue twister yet.
+  Scan OCR practice still supports English/Mandarin; its UI remains translated into all seven app languages.
+- Saved Leslie's rule in AGENTS.md: every new app language and lesson/conversation/bonus/Scan feature needs
+  translations across all supported app languages and translation permutation checks.
+- Country/region flags appear beside language choices. Profile now lists all seven available courses directly,
+  selecting one active course at a time; removed the Add or remove courses sheet. Existing progress is retained.
+  Onboarding lists available courses only and explains switching from Profile in all seven languages.
+- Tutu is larger during setup and remains visible for adults. The speaking introduction uses a prominent listening
+  Tutu instead of the learner avatar. Removed the white card/shadow behind the onboarding improvement-consent row.
+- Teacher voice is now its own settings card, with the selected choice shown, preview, and clear unavailable choices.
+  A Get latest web version button reloads with a fresh URL; the old a620025 screenshot predates these settings.
+- Gauntlets fixed missing automatic voice alternatives, cache-read failures silencing speech, stale/cancelled
+  playback and watchdog cleanup. Access/account limits stop further cloud attempts. Saving reminders while off
+  stays off; opting out wins over an in-flight enable. Repeated listens share the same generation/cache.
+- Required checks passed in clean detached .wrangler/cantonese-release at 0523563: npm test 1835 passed
+  (two optional export tests skipped), typecheck, content:check, i18n:export, i18n:check. Translation matrix:
+  784 lesson permutations; reminders: 112903 preference combinations and 418 timezone cases across four dates.
+  Re-run commands and scope are in GAUNTLET.md.
+- Edge browser QA: 196 language/course/age home combinations, 49 translated flows, six teacher choices,
+  persistence, Hong Kong preview routing, single course switching, plain consent styling, Tutu visible at adult
+  and phone sizes. External font CDN was stubbed for predictable layout checks; APIs/account state were fixtures.
+- Production/deployment HTML, JS, CSS, HK flag and service-worker bytes match the build. Live mobile UI shows
+  0523563, seven course choices, teacher settings and reminders; worker URL is versioned with updateViaCache=none.
+  Unauthenticated notification API requests remain 401. Main JS SHA256:
+  9ec1061ceb55d0f6f2c85dd5b821f68499e7f0cbb52f9421bf8d3943e5da6bc5.
+- QwenCloud endpoint support from 7207ca4 is included. No secrets were read or uploaded by this task.
+  The separate live Qwen/Azure smoke-test notes remain the evidence for local synthesis; owner key upload and
+  production audition are separate. No physical external Web Push delivery was performed in this task.
+- Deployed only from the clean committed checkout. Existing unused Mandarin-item and large-bundle warnings remain.
+  Temporary QA server and release checkout cleaned up; port 5173 untouched. Unrelated source-library files and
+  the concurrent Azure test note preserved. No GitHub push or mobile build. This is a handoff-only follow-up commit.
