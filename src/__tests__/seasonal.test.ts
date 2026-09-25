@@ -6,14 +6,18 @@ import { ZH_ITEMS } from '../content/zh/course';
 // Leslie, 2026-09-25: "add bonus/seasonal lessons. eg currently is it midautumn festival in hk".
 describe('seasonal bonus lessons', () => {
   it('offers Mid-Autumn to Putonghua learners around the day, every year written in the calendar', () => {
-    const on = (y: number, m: number, d: number, courses = ['zh'] as const) => activeSeasons(new Date(y, m - 1, d, 12), [...courses]).map((s) => s.event.id);
+    const on = (y: number, m: number, d: number) => activeSeasons(new Date(y, m - 1, d, 12), 'zh').map((s) => s.event.id);
     expect(on(2026, 9, 25)).toEqual(['mid-autumn']); // the day
     expect(on(2026, 9, 15)).toEqual(['mid-autumn']); // ten days before
     expect(on(2026, 9, 29)).toEqual(['mid-autumn']); // four days after
     expect(on(2026, 9, 14)).toEqual([]);
     expect(on(2026, 9, 30)).toEqual([]);
     expect(on(2027, 9, 15)).toEqual(['mid-autumn']);
-    expect(activeSeasons(new Date(2026, 8, 25, 12), ['en', 'ja'])).toEqual([]); // no lesson for those courses yet
+    expect(activeSeasons(new Date(2026, 8, 25, 12), 'en')).toEqual([]); // no lesson for this course yet
+  });
+
+  it.each(['en', 'yue', 'ja', 'ko', 'fr', 'es'] as const)('never offers Mandarin bonus practice when %s is selected', course => {
+    expect(activeSeasons(new Date(2026, 8, 25, 12), course)).toEqual([]);
   });
 
   it('every festival has a date and its languages; its lessons exist and are only in those languages', () => {
@@ -39,11 +43,11 @@ describe('seasonal bonus lessons', () => {
     expect([...find('christmas').courses].sort()).toEqual(['en', 'es', 'fr', 'ja', 'ko', 'zh']);
     expect(find('christmas').every).toBe('12-25');
     // Christmas has no lessons written yet, so it shows nothing — even on the day.
-    expect(activeSeasons(new Date(2026, 11, 25, 12), ['en', 'zh'])).toEqual([]);
+    expect(activeSeasons(new Date(2026, 11, 25, 12), 'zh')).toEqual([]);
   });
 
   it('says which day the festival is, this time round', () => {
-    const [s0] = activeSeasons(new Date(2026, 8, 20, 12), ['en', 'zh']);
+    const [s0] = activeSeasons(new Date(2026, 8, 20, 12), 'zh');
     expect(s0.course).toBe('zh');
     expect([s0.day.getFullYear(), s0.day.getMonth() + 1, s0.day.getDate()]).toEqual([2026, 9, 25]);
   });

@@ -53,6 +53,16 @@ describe('gauntlet: teacher voice configuration matrix', () => {
     await expect(s.voice.speak('sample', { accent: 'en-US' })).rejects.toMatchObject({ code });
     expect(s.calls).toHaveLength(1);
   });
+  it.each(['azure', 'chirp', 'qwen'] as const)('%s caches the same Chinese text separately in Cantonese and Putonghua', async provider => {
+    const s = await setup(); s.pref.setTeacherVoiceChoice(provider);
+    await s.voice.speak('你好！', { accent: 'zh-CN' });
+    await s.voice.speak('你好！', { accent: 'zh-HK' });
+    await s.voice.speak('你好！', { accent: 'zh-CN' });
+    await s.voice.speak('你好！', { accent: 'zh-HK' });
+    expect(s.calls.map(c => c.accent)).toEqual(['zh-CN', 'zh-HK']);
+    expect(s.played).toHaveLength(4);
+  });
+
   it('stop discards delayed audio and settles the pending caller promptly', async () => {
     let deliver!: (r: Response) => void;
     const s = await setup(15, () => new Promise(r => { deliver = r; }));

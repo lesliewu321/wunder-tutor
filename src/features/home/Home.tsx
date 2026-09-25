@@ -12,7 +12,7 @@ import { dueItems, itemCourse, nextLessonId } from '../../engine/learning';
 import { liveStreak, todayXp } from '../../engine/rewards';
 import { focusSound, weakSoundsIn } from '../../intelligence/profile';
 import { testDue } from '../../engine/testing';
-import { useActiveProfile, useStore } from '../../state/store';
+import { useActiveProfile } from '../../state/store';
 import { activeSeasons } from '../../content/seasonal';
 import type { CourseId } from '../../domain/types';
 import { dateLocale, type Key } from '../../i18n';
@@ -25,9 +25,8 @@ export function Home() {
   const { t, tn, tc } = useT();
   const nav = useNavigate();
   const p = useActiveProfile();
-  const setCourse = useStore((s) => s.setCourse);
-  // Festival bonus lessons on now for this learner's courses (content/seasonal/events.json).
-  const seasons = activeSeasons(new Date(), p.learning);
+  // Bonus lessons follow the single selected course, including learners who previously studied another language.
+  const seasons = activeSeasons(new Date(), p.course);
   const COURSE = courseFor(p.course, p.band);
   const unit = currentUnit(COURSE, p.lessonsCompleted);
   const lessons = courseLessons(COURSE);
@@ -111,10 +110,9 @@ export function Home() {
           : <Button variant="coral" size="lg" block onClick={() => nav(`/lesson/${next?.id ?? review.id}`)}>{t(doneCount === 0 ? 'home.hero.start' : next ? 'home.hero.continue' : 'home.hero.review')}</Button>}
       </section>
 
-      {/* A festival's bonus lesson while it is on (Leslie, 2026-09-25: "push lessons for chinese learners" at Mid-Autumn).
-          It opens in its own course, switching to it if the learner was on another. */}
+      {/* Festival practice belongs to the selected course and never switches the learner's language. */}
       {seasons.map(({ event, course, lesson, day }) => (
-        <button key={event.id} type="button" className="season-card" onClick={() => { if (p.course !== course) setCourse(course); nav(`/lesson/${lesson.id}`); }}>
+        <button key={event.id} type="button" className="season-card" onClick={() => nav(`/lesson/${lesson.id}`)}>
           <span className="season-card__icon" aria-hidden>{event.icon}</span>
           <span className="season-card__text">
             <small>{t('home.season.tag')} · <i>{day.toLocaleDateString(dateLocale(), { weekday: 'short', day: 'numeric', month: 'short' })}</i> · <i>{t(course === 'en' ? 'common.course.en' : `settings.me.course.${course}` as Key)}</i></small>

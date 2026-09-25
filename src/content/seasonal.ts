@@ -42,19 +42,16 @@ const daysAround = (event: SeasonEvent, year: number): string[] =>
 
 export interface ActiveSeason { event: SeasonEvent; course: CourseId; lesson: Lesson; /** The festival day this time (local midnight). */ day: Date }
 
-/**
- * The festivals on now for a learner of these courses: one per festival, in the first of the learner's courses that
- * the festival is for AND has a lesson in. A festival not for any of their courses is never offered.
- */
-export function activeSeasons(now: Date, courses: CourseId[]): ActiveSeason[] {
+/** Festivals with an authored lesson in the currently selected course. Previous courses must not change its language. */
+export function activeSeasons(now: Date, course: CourseId): ActiveSeason[] {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const out: ActiveSeason[] = [];
   for (const event of SEASON_EVENTS) {
     const day = daysAround(event, now.getFullYear()).map(localDay).find((d) => today >= d - event.before * DAY && today <= d + event.after * DAY);
     if (day === undefined) continue;
-    const course = courses.find((c) => event.courses.includes(c) && event.lessons[c]);
-    const lesson = course && SEASONAL_LESSONS.find((l) => l.id === event.lessons[course]);
-    if (course && lesson) out.push({ event, course, lesson, day: new Date(day) });
+    if (!event.courses.includes(course)) continue;
+    const lesson = SEASONAL_LESSONS.find((l) => l.id === event.lessons[course]);
+    if (lesson) out.push({ event, course, lesson, day: new Date(day) });
   }
   return out;
 }
