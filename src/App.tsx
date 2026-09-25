@@ -24,11 +24,12 @@ import { isApp } from './platform';
 // Five places to go. What a screen DOES lives on the screen: the camera is Snap & say's own button, the microphone
 // belongs to lessons and conversations. A camera in the bar was out of place beside the course and a second "New
 // photo" beside the book. Snap & say was Home's second mode until 2026-09-25, when Leslie drew Home's two mode cards
-// onto the bar: the Course card was the Learn tab twice over, so it went, and the book got a tab and an icon of its own.
+// onto the bar: the Course card was the Learn tab twice over, so it went, and the book got a tab of its own — with the
+// camera icon, at Leslie's word ("use camera icon for snap and say").
 const TABS: { to: string; label: Key; icon: IconName }[] = [
   { to: '/', label: 'common.nav.learn', icon: 'home' },
   { to: '/lab', label: 'common.nav.lab', icon: 'lab' },
-  { to: '/book', label: 'common.nav.book', icon: 'snap' },
+  { to: '/book', label: 'common.nav.book', icon: 'camera' },
   { to: '/progress', label: 'common.nav.progress', icon: 'chart' },
   { to: '/me', label: 'common.nav.me', icon: 'user' },
 ];

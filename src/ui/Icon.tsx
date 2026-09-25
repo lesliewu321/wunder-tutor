@@ -30,8 +30,6 @@ const PATHS = {
   wifi: 'M3.5 9.5a12.5 12.5 0 0 1 17 0M6.5 13a8 8 0 0 1 11 0M9.5 16.3a3.6 3.6 0 0 1 5 0M12 19.5v.01',
   book: 'M12 6.5c-1.8-1.3-4.4-2-7.5-2v13c3.1 0 5.7.7 7.5 2 1.8-1.3 4.4-2 7.5-2v-13c-3.1 0-5.7.7-7.5 2ZM12 6.5v13',
   keyboard: 'M3.5 7h17v10h-17ZM7 10.5h.01M10.3 10.5h.01M13.7 10.5h.01M17 10.5h.01M8 14h8',
-  /** Snap & say: a viewfinder's corners around three sound bars — a page snapped, then said. */
-  snap: 'M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4M9 10.5v3M12 8.5v7M15 10v4',
 } as const;
 
 export type IconName = keyof typeof PATHS | 'turtle';

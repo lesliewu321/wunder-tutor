@@ -43,7 +43,7 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   bar: "course and snap&say seems duplicate on homepage. create a new icon". The Course card was the Learn tab twice
   over. Now: Home is the course only (the modes row, `.modes` CSS and `home.mode.*` texts are gone); the bar has
   FIVE tabs — Learn, Lab, **Snap & say** (`/book`, `BookTab.tsx` = `BookHome` on a screen of its own; 繁中
-  拍照跟讀), Progress, Me — with a new `snap` icon (a viewfinder's corners around three sound bars). The camera
+  拍照跟讀), Progress, Me — with the camera icon (a drawn "snap" icon lasted an hour: Leslie asked for the camera). The camera
   and /say come back to `/book`; Android Back treats it as a tab (back.ts). The stored Home mode
   (`wunder-tutor/home-mode/<id>`) is no longer read or written; forgetBook still removes the old key. Seen in the
   5199 copy at phone width (a seeded learner via `__store`): Home without the cards, the tab, a typed page on it,
