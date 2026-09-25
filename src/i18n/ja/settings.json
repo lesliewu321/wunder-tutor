@@ -179,5 +179,16 @@
   "settings.voice.connectionRequired": "接続を確認してください",
   "settings.beta.accountAccess": "このアカウントでは発音評価とクラウド音声を利用できます。この端末で招待コードを入力する必要はありません。",
   "settings.beta.unchecked": "このコードはまだ確認されていません。保存ボタンを押して確認してください。",
-  "settings.beta.optional": "招待コードをお持ちの場合は、ここに入力できます。"
+  "settings.beta.optional": "招待コードをお持ちの場合は、ここに入力できます。",
+  "settings.voice.course": "コースの言語",
+  "settings.voice.primary": "メインの音声",
+  "settings.voice.backup": "予備の音声",
+  "settings.voice.noBackup": "予備なし",
+  "settings.voice.pairHint": "メインの音声が使えない場合は予備の音声を使います。変更は言語ごとにこの端末に保存されます。",
+  "settings.voice.deviceFallbackHint": "両方の音声が使えない場合は、端末に同じ言語の音声があれば使用します。",
+  "settings.voice.previewPrimary": "メインを試聴",
+  "settings.voice.previewBackup": "予備を試聴",
+  "settings.voice.resetPair": "アプリの初期設定を使う",
+  "settings.voice.defaultPair": "アプリの初期設定を使用中。",
+  "settings.voice.customPair": "保存した設定を使用中。"
 }

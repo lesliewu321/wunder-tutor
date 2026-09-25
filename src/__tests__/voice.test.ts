@@ -12,7 +12,7 @@ const server = (opts: { authorized?: boolean; voices?: Record<string, boolean>; 
     if (url.includes('/api/health')) {
       await opts.slow;
       const a = opts.authorized ?? true;
-      return new Response(JSON.stringify({ ok: true, needsCode: true, codeSet: true, authorized: a, azure: a, gemini: a, claude: a, voiceProviders: opts.voices, ttsVersion: a ? 'v1' : null }), { headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify({ ok: true, needsCode: true, codeSet: true, authorized: a, azure: a, gemini: a, claude: a, voiceProviders: opts.voices ?? { chirp: a, azure: a, qwen: a, gemini: a }, ttsVersion: a ? 'v1' : null }), { headers: { 'content-type': 'application/json' } });
     }
     if (url.includes('/api/tts')) {
       const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
@@ -60,11 +60,11 @@ describe('the teacher’s voice on a phone', () => {
     const { calls } = server();
     const played = audio();
     const { voice } = await import('../speech/voice');
-    await voice.speak('你好', { accent: 'zh-CN' });
+    await voice.speak('你好', { accent: 'zh-CN', provider: 'gemini' });
     expect(calls.map((c) => c.backup)).toEqual([undefined, true]);
     expect(played).toHaveLength(1);
     // The backup's take is kept as the line's: no second round next time.
-    await voice.speak('你好', { accent: 'zh-CN' });
+    await voice.speak('你好', { accent: 'zh-CN', provider: 'gemini' });
     expect(calls).toHaveLength(2);
     expect(played).toHaveLength(2);
   });

@@ -184,5 +184,16 @@
   "settings.voice.connectionRequired": "Vérifiez la connexion",
   "settings.beta.accountAccess": "Votre compte donne déjà accès à l’évaluation de la prononciation et aux voix en ligne. Aucun code d’invitation n’est nécessaire sur cet appareil.",
   "settings.beta.unchecked": "Ce code n’a pas encore été vérifié. Appuyez sur le bouton d’enregistrement pour le vérifier.",
-  "settings.beta.optional": "Si vous avez un code d’invitation, vous pouvez le saisir ici."
+  "settings.beta.optional": "Si vous avez un code d’invitation, vous pouvez le saisir ici.",
+  "settings.voice.course": "Langue du cours",
+  "settings.voice.primary": "Voix principale",
+  "settings.voice.backup": "Voix de secours",
+  "settings.voice.noBackup": "Sans voix de secours",
+  "settings.voice.pairHint": "La voix de secours prend le relais si la voix principale est indisponible ou échoue. Vos choix sont enregistrés par langue sur cet appareil.",
+  "settings.voice.deviceFallbackHint": "Si les deux voix échouent, une voix de l’appareil dans la même langue est utilisée, si elle est disponible.",
+  "settings.voice.previewPrimary": "Écouter la voix principale",
+  "settings.voice.previewBackup": "Écouter la voix de secours",
+  "settings.voice.resetPair": "Utiliser les réglages de l’app",
+  "settings.voice.defaultPair": "Réglages de l’app utilisés.",
+  "settings.voice.customPair": "Vos choix enregistrés sont utilisés."
 }

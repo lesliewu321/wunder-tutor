@@ -1,18 +1,73 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { isTeacherVoice, selectedVoice, teacherVoiceChoice, setTeacherVoiceChoice, voiceConfigured } from '../speech/teacherPreference';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { hasTeacherVoiceOverride, isTeacherVoice, selectedVoice, teacherVoiceChoice, setTeacherVoiceChoice, voiceConfigured, recommendedVoicePair, teacherVoicePair, teacherVoiceOrder, setTeacherVoicePair, resetTeacherVoicePair } from '../speech/teacherPreference';
+import { TEACHER_VOICE_DEFAULTS } from '../speech/teacherVoiceDefaults';
 import type { ApiHealth } from '../speech/health';
+import type { Locale } from '../domain/types';
+const KEY = 'wunder-tutor/teacher-voices-by-course';
+let storage: Map<string, string>;
+beforeEach(() => {
+  storage = new Map();
+  vi.stubGlobal('localStorage', { getItem: (k: string) => storage.get(k) ?? null, setItem: (k: string, v: string) => storage.set(k, v) });
+});
 afterEach(() => { setTeacherVoiceChoice('auto'); vi.unstubAllGlobals(); });
-describe('teacher voice preferences', () => {
-  it('persists only recognised choices on this device', () => {
-    const storage = new Map(); vi.stubGlobal('localStorage', { getItem: (k: string) => storage.get(k), setItem: (k: string, v: string) => storage.set(k, v) });
-    expect(isTeacherVoice('chirp')).toBe(true); expect(isTeacherVoice('unknown')).toBe(false);
-    setTeacherVoiceChoice('qwen'); expect(teacherVoiceChoice()).toBe('qwen'); expect([...storage.values()]).toEqual(['qwen']);
+
+describe('per-course teacher voice preferences', () => {
+  it.each<Locale>(['en-US', 'en-GB', 'zh-CN', 'zh-HK', 'ja-JP', 'ko-KR', 'fr-FR', 'es-ES'])('inherits the owner default for %s', locale => {
+    expect(teacherVoicePair(locale)).toEqual(locale.startsWith('zh') ? { primary: 'qwen', backup: 'chirp' } : { primary: 'chirp', backup: 'azure' });
+    expect(hasTeacherVoiceOverride(locale)).toBe(false);
   });
-  it('keeps explicit choices and auto-selects only configured voices', () => {
-    const h = { gemini: false, voiceProviders: { azure: true, qwen: false, chirp: true } } as ApiHealth;
-    setTeacherVoiceChoice('auto'); expect(selectedVoice(h)).toBe('azure');
-    expect(selectedVoice({ ...h, gemini: true })).toBe('gemini');
-    setTeacherVoiceChoice('qwen'); expect(selectedVoice(h)).toBe('qwen'); expect(voiceConfigured('qwen', h)).toBe(false);
-    setTeacherVoiceChoice('device'); expect(selectedVoice(h)).toBe('device');
+  it('keeps a language override separate and shares it between English accents', () => {
+    setTeacherVoicePair('en-US', { primary: 'qwen', backup: 'azure' });
+    expect(teacherVoicePair('en-GB')).toEqual({ primary: 'qwen', backup: 'azure' });
+    expect(teacherVoicePair('fr-FR')).toEqual({ primary: 'chirp', backup: 'azure' });
+    expect(JSON.parse(storage.get(KEY)!)).toEqual({ en: { primary: 'qwen', backup: 'azure' } });
+    expect(hasTeacherVoiceOverride('en-US')).toBe(true);
+  });
+  it('owner changes update inherited defaults without overwriting overrides, and reset resumes inheritance', () => {
+    const original = { ...TEACHER_VOICE_DEFAULTS.en };
+    try {
+      setTeacherVoicePair('en-US', { primary: 'chirp', backup: 'qwen' });
+      TEACHER_VOICE_DEFAULTS.en = { primary: 'azure', backup: 'chirp' };
+      expect(teacherVoicePair('en-US')).toEqual({ primary: 'chirp', backup: 'qwen' });
+      resetTeacherVoicePair('en-US');
+      expect(teacherVoicePair('en-US')).toEqual(TEACHER_VOICE_DEFAULTS.en);
+      TEACHER_VOICE_DEFAULTS.en = original;
+      expect(teacherVoicePair('en-US')).toEqual(original);
+      expect(hasTeacherVoiceOverride('en-US')).toBe(false);
+    } finally { TEACHER_VOICE_DEFAULTS.en = original; }
+  });
+  it('preserves legacy explicit choices, especially device-only, until a course is reset', () => {
+    expect(isTeacherVoice('chirp')).toBe(true); expect(isTeacherVoice('unknown')).toBe(false);
+    setTeacherVoiceChoice('device'); expect(teacherVoiceChoice()).toBe('device');
+    expect(teacherVoiceOrder('zh-HK')).toEqual(['device']);
+    resetTeacherVoicePair('zh-HK');
+    expect(teacherVoiceOrder('zh-HK')).toEqual(['qwen', 'chirp', 'device']);
+    expect(teacherVoiceOrder('en-US')).toEqual(['device']);
+    setTeacherVoiceChoice('qwen'); expect(teacherVoiceOrder('en-US')).toEqual(['qwen']);
+  });
+  it('skips an unavailable primary but never mutates the saved selection', () => {
+    const h = { gemini: true, voiceProviders: { azure: true, qwen: false, chirp: true } } as ApiHealth;
+    expect(selectedVoice(h, 'zh-HK')).toBe('chirp');
+    expect(teacherVoicePair('zh-HK').primary).toBe('qwen');
+    expect(voiceConfigured('qwen', h)).toBe(false);
+    setTeacherVoicePair('zh-HK', { primary: 'qwen', backup: 'none' });
+    expect(selectedVoice(h, 'zh-HK')).toBeUndefined();
+  });
+  it('rejects unsupported, duplicate and malformed settings', () => {
+    for (const pair of [{ primary: 'gemini', backup: 'azure' }, { primary: 'qwen', backup: 'qwen' }, { primary: 'qwen', backup: 'bogus' }]) {
+      setTeacherVoicePair('zh-HK', pair as any);
+      expect(teacherVoicePair('zh-HK')).toEqual(recommendedVoicePair('zh-HK'));
+    }
+    storage.set(KEY, '{broken'); expect(teacherVoicePair('en-US')).toEqual(recommendedVoicePair('en-US'));
+    storage.set(KEY, JSON.stringify({ en: { primary: 'bogus', backup: 'chirp' }, yue: { primary: 'gemini', backup: 'azure' }, fr: { primary: 'azure', backup: 'none' } }));
+    expect(teacherVoicePair('zh-HK')).toEqual(recommendedVoicePair('zh-HK'));
+    expect(teacherVoicePair('fr-FR')).toEqual({ primary: 'azure', backup: 'none' });
+  });
+  it('keeps settings during a session when storage is unavailable', () => {
+    teacherVoicePair('en-US');
+    vi.stubGlobal('localStorage', { getItem: () => { throw Error('blocked'); }, setItem: () => { throw Error('blocked'); } });
+    setTeacherVoicePair('en-US', { primary: 'azure', backup: 'device' });
+    expect(teacherVoiceOrder('en-US')).toEqual(['azure', 'device']);
+    resetTeacherVoicePair('en-US'); expect(teacherVoicePair('en-US')).toEqual(recommendedVoicePair('en-US'));
   });
 });

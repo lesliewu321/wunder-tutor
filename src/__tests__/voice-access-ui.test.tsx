@@ -24,7 +24,7 @@ describe('voice access explanations', () => {
       expect(option(html, provider)).toContain('disabled');
       expect(option(html, provider)).toContain(t('settings.voice.accessRequired'));
     }
-    expect(option(html, 'gemini')).toContain(t('settings.voice.courseUnavailable'));
+    expect(html).not.toContain('value="gemini"');
     expect(option(html, 'device')).not.toContain('disabled');
     expect(html).toContain(t('settings.beta.title'));
     expect(html).toContain(t('settings.conn.again'));
@@ -36,10 +36,10 @@ describe('voice access explanations', () => {
     expect(option(render(health({ reached: false, needsCode: false })), 'chirp')).toContain('Check connection');
     expect(option(render(health()), 'chirp')).toContain('Invite code required');
   });
-  it('enables Cantonese Chirp after authorization while leaving Gemini unavailable for the course', () => {
+  it('enables Cantonese Chirp after authorization while hiding Gemini', () => {
     const html = render(health({ authorized: true, voiceProviders: { azure: true, chirp: true, qwen: true, gemini: true } }));
     expect(option(html, 'chirp')).not.toContain('disabled');
-    expect(option(html, 'gemini')).toContain('disabled');
+    expect(html).not.toContain('value="gemini"');
     expect(html).not.toContain('Invite code required');
   });
   it('does not tell an authorized learner to enter a code for a missing provider', () => {
