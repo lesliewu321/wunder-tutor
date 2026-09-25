@@ -10,6 +10,7 @@ import { audioRepo } from '../../data/repository';
 import { buildRecordingExport, consentText } from '../../data/exportRecordings';
 import { blobToWav16k } from '../../speech/recorder';
 import { HOME_LANGUAGES, homeLanguageLabel } from '../../content/translations';
+import { inScript } from '../../content/zh/script';
 import { DAILY_GOALS, goalDetail, goalLabel, liveStreak } from '../../engine/rewards';
 import { LANGUAGES, language, sentences, type Key, type Language } from '../../i18n';
 import { rich, useT } from '../../i18n/useT';
@@ -35,7 +36,12 @@ export function Me() {
   const studyMinutes = Math.round(Object.values(p.pronunciation.days).reduce((n, d) => n + (d.speakingMs ?? 0), 0) / 60000);
   const setCourse = useStore((s) => s.setCourse);
   // Every available course can be selected directly; progress remains attached to its course.
-  const courseLabel = (id: CourseId) => t(id === 'en' ? 'common.course.en' : ('settings.me.course.' + id) as Key);
+  const nativeNames: Record<CourseId, string> = { en: 'English', zh: inScript('普通话', p.zhScript), yue: '香港廣東話', ja: '日本語', ko: '한국어', fr: 'Français', es: 'Español' };
+  const courseLabel = (id: CourseId) => {
+    const translated = t(id === 'en' ? 'common.course.en' : ('settings.me.course.' + id) as Key);
+    const native = nativeNames[id];
+    return native === translated ? native : native + ' · ' + translated;
+  };
 
   return (
     <div className="screen me">
