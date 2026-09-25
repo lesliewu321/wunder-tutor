@@ -50,6 +50,32 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   Start reading → Back to the page lands on /book; and the tablet rail with five items. 261 tests, typecheck clean.
   At 320 px "Snap & say" wrapped onto two lines: `.nav__label` is now nowrap and the bar's font is 0.66rem under
   361 px (measured: every label one line, the long one 56 of 61 px).
+- **The big build, step 1 — the engine/content split, English and Putonghua (commit below, NOT deployed):** Leslie:
+  "use the gauntlet method and do these. eng and putongua first, then we all other languages" (the order agreed: split →
+  test mode → comprehensive course → tongue twisters). Now: `content/courses/en.json` and `zh.json` hold the two
+  courses as DATA — items keyed by id (`it-<slug>`, `zh-<pinyin>[-s]`, `lab-<sound>-<slug>`), units → lessons →
+  exercises per band (`speak` / `choose-heard` (answer + others) / `minimal-pair` / `dialogue` (line or tutor
+  item)), the first speaking `check`, and `lab.sounds` + `lab.ladders`; "speak from a translation" prompts sit on
+  the items (`translations`). `src/content/load.ts` (`buildCourse`) turns a file into the objects and REFUSES a
+  broken one with file + place (unknown item, listening exercise with nothing to choose, missing band, pinyin that does
+  not match the id…). `src/content/course.ts` and `zh/course.ts` keep every old export, so the engine, the screens,
+  the evals and the warm script never noticed; `zh/item.ts` holds `zhItem`/`zi`; the zh scenario file names its
+  lines by id (`zhLine('zh-xie4-xie5-s')`). Schema `content/schema/course.schema.json`; linter `npm run
+  content:check` (schema + loader, no dependency). **Proof of identical play:** `src/__tests__/content.test.ts` compares
+  the built courses with `fixtures/content-golden.json`, dumped from the TypeScript courses that morning — course,
+  check, ladders, sounds, every zh item in order, lesson ids: equal (translations excepted, they moved). Run in the 5199
+  copy: English food-1 and Putonghua zh-food-1 play from the data (right band, 麵包 in Traditional with pinyin), demo
+  microphone scores. 270 tests, typecheck and production build clean.
+  - Found on the way: **"Thank you very much." was written twice under one id** (once with meaning + focus, once bare in
+    the teen café dialogue) and the bare one won `ITEM_INDEX`; the data keeps the full one, a test says so.
+  - Kept as it was, on purpose: `ITEM_INDEX` still leaves out English Lab and check-only items (the review engine never
+    handed those out); `zh-shi2` and the 四是四 twister stay in zh.json unused (the linter lists them).
+  - **Still TypeScript:** French and Japanese courses (`fr/course.ts`, `ja/course.ts` — next), the sound catalogues
+    (`phonemes.ts`, `*/sounds.ts`), the scenarios. **Still bundled:** the JSON is imported into the app; serving it
+    from the CDN needs an async boot (the engine reads `ITEM_INDEX` synchronously everywhere) — a later step. The
+    author CSV export/import promised in the plan is not written yet.
+  - The one-off generator that dumped the golden and the JSON from the TypeScript is gone with the TypeScript (a copy
+    sits in the session scratchpad); it cannot run again and need not.
 - Preview note: the app's browser-pane `preview_start` was bound to another project's launch.json this session
   (the session started in wunder-delivery and moved here); the 5199 server was started with plain `npx vite --port
   5199 --strictPort` and opened by URL instead. Nothing was deployed or pushed.
