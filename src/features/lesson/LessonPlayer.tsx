@@ -1,3 +1,4 @@
+import { ReminderOffer } from '../../notifications/Notifications';
 import { ageGuidance } from '../../../astra-lessons/curriculum';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -346,6 +347,7 @@ function LessonComplete({ title, results, outcome, xpGained, streak, listen, bon
             </div>
           </button>
         )}
+        <ReminderOffer />
         {outcome.achievements.map((a: Achievement) => (
           <div key={a.id} className="card callout callout--badge"><span className="callout__icon" aria-hidden>{a.icon}</span><div><b>{badgeName(a)}</b><p>{badgeDetail(a)}</p></div></div>
         ))}

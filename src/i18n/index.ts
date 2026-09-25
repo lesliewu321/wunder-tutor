@@ -11,6 +11,8 @@
 //   * content that lives with its data (the name and tips of a sound, a lesson's title): the English stays in the
 //     data, a translation may be given in src/i18n/zh-Hant/content.json under a key built from the data's id (`tc`).
 // `npm run i18n:export` writes every line side by side for checking; `npm run i18n:import` takes the checked file back.
+import notifications from './en/notifications.json';
+import zhNotifications from './zh-Hant/notifications.json';
 import common from './en/common.json';
 import feedback from './en/feedback.json';
 import home from './en/home.json';
@@ -53,14 +55,14 @@ export const LANGUAGES: { id: Language; label: string; htmlLang: string; locale:
 ];
 export const isLanguage = (v: unknown): v is Language => LANGUAGES.some((l) => l.id === v);
 
-export const en = { ...common, ...onboarding, ...settings, ...speak, ...feedback, ...home, ...lesson, ...lab, ...practice, ...progress, ...twisters };
+export const en = { ...notifications, ...common, ...onboarding, ...settings, ...speak, ...feedback, ...home, ...lesson, ...lab, ...practice, ...progress, ...twisters };
 export type Key = keyof typeof en;
 type Params = Record<string, string | number>;
 
 type Catalog = Partial<Record<string, string>>;
 const INTERFACE: Partial<Record<Language, Catalog>> = {
   en,
-  'zh-Hant': { ...zhCommon, ...zhOnboarding, ...zhSettings, ...zhSpeak, ...zhFeedback, ...zhHome, ...zhLesson, ...zhLab, ...zhPractice, ...zhProgress, ...zhTwisters },
+  'zh-Hant': { ...zhNotifications, ...zhCommon, ...zhOnboarding, ...zhSettings, ...zhSpeak, ...zhFeedback, ...zhHome, ...zhLesson, ...zhLab, ...zhPractice, ...zhProgress, ...zhTwisters },
 };
 const CONTENT: Partial<Record<Language, Catalog>> = { en: {}, 'zh-Hant': { ...zhContent, ...zhContentCourse, ...astraContent } };
 /** Lesson guides and reading questions, keyed by their English (`tl`). 繁體中文 keeps its own in the course data. */

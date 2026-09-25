@@ -139,6 +139,7 @@ export async function signInWithCode(email: string, code: string, consent: { ver
 export async function signOut(): Promise<void> {
   const b = await load();
   await syncNow().catch(() => undefined);
+  await import('../notifications/client').then(m => m.stopReminders()).catch(() => undefined);
   await b.auth.signOut({ scope: 'local' });
 }
 
@@ -161,6 +162,7 @@ export async function eraseAccountLearners(): Promise<AccountError | null> {
 export async function deleteAccount(): Promise<AccountError | null> {
   try {
     const b = await load();
+    await import('../notifications/client').then(m => m.stopReminders(true));
     await b.deleteAccount();
     forgetSync();
     return null;

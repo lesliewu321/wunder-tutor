@@ -39,3 +39,9 @@ bucket_name = "wunder-tutor-recordings"
 name = "EGRESS"
 class_name = "GoogleEgress"
 script_name = "wunder-egress"
+
+# Explicit browser-push reminders; deploy notifications/wrangler.jsonc first.
+[[durable_objects.bindings]]
+name = "REMINDERS"
+class_name = "ReminderRecipient"
+script_name = "wunder-reminders"

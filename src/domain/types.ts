@@ -265,7 +265,11 @@ export interface Achievement {
   earnedAt: number;
 }
 
+export interface LearningActivity { id: string; at: number; kind: 'lesson' | 'test' | 'conversation'; }
+
 export interface ChildProfile {
+  /** Bounded completion log: repeated lessons count as practice on their actual day. */
+  activity?: LearningActivity[];
   id: string;
   name: string;
   avatar: string;

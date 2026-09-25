@@ -15,5 +15,7 @@
 # The service worker and manifest must always be fresh.
 /sw.js
   Cache-Control: no-cache
+/push.js
+  Cache-Control: no-cache
 /manifest.webmanifest
   Cache-Control: no-cache

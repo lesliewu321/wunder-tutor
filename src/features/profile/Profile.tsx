@@ -1,3 +1,4 @@
+import { ReminderLink } from '../../notifications/Notifications';
 import { TeacherVoiceSelect } from './TeacherVoiceSelect';
 import { useEffect, useState } from 'react';
 import { handleFor, makeHandle } from '../../engine/handles';
@@ -144,6 +145,7 @@ export function Me() {
         </div>
       </section>
 
+      <ReminderLink />
       <button type="button" className="row-link" onClick={() => nav('/twisters')}>
         <span className="row-link__icon" aria-hidden>🌀</span>
         <span><b>{t('settings.me.twisters')}</b><small>{t('settings.me.twisters.detail', { handle: handleFor(p, patch) })}</small></span>
@@ -235,6 +237,7 @@ export function ParentZone() {
       <TopBar title={settingsName(p.band)} onBack={() => nav('/me')} />
 
       <AccountPanel />
+      <ReminderLink />
 
       {services && (services.needsCode || !!getAccessCode()) && (
         <section id="zone-code">

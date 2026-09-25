@@ -1,3 +1,4 @@
+import { WeeklyChallenge } from '../../notifications/Notifications';
 import { ageGuidance, stageLabel } from '../../../astra-lessons/curriculum';
 import { useEffect, useState } from 'react';
 import { LessonMap, sceneFor, type MapNode } from './LessonMap';
@@ -72,6 +73,7 @@ export function Home() {
           <span><small>{t(greeting())}</small><b>{p.name}</b></span>
         </button>
         <div className="home__stats">
+          <button type="button" className="icon-btn" aria-label={t('notify.title')} onClick={() => nav('/notifications')}><Icon name="bell" size={22} /></button>
           <span className={`stat-pill ${streak ? 'stat-pill--hot' : ''}`} aria-label={t('home.streak.aria', { n: streak })}><Icon name="flame" size={18} fill={!!streak} />{streak}</span>
           <span className="stat-pill stat-pill--xp" aria-label={t('home.xp.aria', { xp, goal: p.dailyGoalXp })}><Icon name="bolt" size={18} fill />{xp}<small>/{p.dailyGoalXp}</small></span>
         </div>
@@ -134,6 +136,7 @@ export function Home() {
 
       <div className="daily"><div className="daily__row"><b>{t('home.daily.title')}</b><span>{goalPct >= 1 ? `${t('home.daily.done')} 🎉` : t('home.daily.toGo', { n: p.dailyGoalXp - xp })}</span></div><ProgressBar value={goalPct} tone="leaf" /></div>
 
+      <WeeklyChallenge compact />
       {/* Conversation practice lives in the Lab; tongue twisters are a bonus round after a unit, and on Profile
           (Leslie, 2026-09-25). */}
       </div>

@@ -21,6 +21,7 @@ import { SayIt } from './features/say/SayIt';
 import { CameraHost } from './features/say/CameraHost';
 import { pressBack } from './back';
 import { isApp } from './platform';
+import { Notifications } from './notifications/Notifications';
 
 // Five places to go. What a screen DOES lives on the screen: the camera is Snap & say's own button, the microphone
 // belongs to lessons and conversations. A camera in the bar was out of place beside the course and a second "New
@@ -125,6 +126,7 @@ export function App() {
             <Route path="speak/:scenarioId" element={<Conversation />} />
             <Route path="say" element={<SayIt />} />
             <Route path="parents" element={<ParentZone />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path="check/:course" element={<CourseCheck />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

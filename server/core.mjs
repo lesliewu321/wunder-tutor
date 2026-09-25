@@ -594,7 +594,8 @@ export function createApi(rawEnv, deps = {}) {
   const allowStatus = createLimiter(30, 60_000);
 
   // ---------------------------------------------------------------- router
-  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read', '/api/redeem', '/api/contributions/forget', '/api/twisters/score']);
+  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read', '/api/redeem', '/api/contributions/forget', '/api/twisters/score', '/api/notifications']);
+  const allowReminders = createLimiter(90, 60_000);
   const allowBoard = createLimiter(60, 60_000);
   const allowScore = createLimiter(30, 10 * 60_000);
   /** Forgetting is cheap to ask for but reads the database: a handful of times per address. */
@@ -705,6 +706,22 @@ export function createApi(rawEnv, deps = {}) {
       // Setup's accent preview plays before the device has a code: those few fixed lines are open to anyone (tts.mjs).
       if (!authorized && !(path === '/api/tts' && await isPreview(request))) throw new HttpError(401, 'access_code_required');
 
+      if (path === '/api/notifications') {
+        if (!allowReminders(client)) throw new HttpError(429, 'rate_limited');
+        if (!deps.reminders) return json(503, { error: 'notifications_unavailable' });
+        const bytes = await readBody(request);
+        if (bytes.length > 16000) throw new HttpError(413, 'payload_too_large');
+        let body;
+        try { body = JSON.parse(new TextDecoder().decode(bytes)); } catch { throw new HttpError(400, 'invalid_json'); }
+        if (!/^[a-f0-9-]{36}$/i.test(body?.device ?? '')) throw new HttpError(400, 'invalid_device');
+        // Verified account identity, or a private random beta installation id. Never trust a caller's user id.
+        const recipient = family ? 'family/' + family : 'device/' + body.device;
+        try { return json(200, await deps.reminders(recipient, body)); }
+        catch (e) {
+          if (/^(invalid_|not_primary|key_required)/.test(e?.message ?? '')) throw new HttpError(400, e.message);
+          throw new HttpError(502, 'notifications_failed');
+        }
+      }
       if (path === '/api/twisters/score') {
         // A passing take goes on the board. Behind the code like scoring itself: only a learner who can be scored can post.
         if (!allowScore(client)) throw new HttpError(429, 'rate_limited');

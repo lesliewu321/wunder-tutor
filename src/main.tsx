@@ -5,6 +5,8 @@ import { ErrorBoundary } from './ui/ErrorBoundary';
 import { useStore } from './state/store';
 import { startAccount } from './account/account';
 import { isApp } from './platform';
+import { startReminders } from './notifications/client';
+import './styles/notifications.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/speak.css';
@@ -18,6 +20,7 @@ createRoot(document.getElementById('root')!).render(<StrictMode><ErrorBoundary><
 
 // A family with an account: keep its devices the same. (Nothing is loaded for a family without one.)
 startAccount();
+startReminders();
 
 // Offline app shell — production website only. The phone app already carries every file on the device, and a service
 // worker there would only serve a second, stale copy of them.

@@ -1,6 +1,7 @@
 // Minimal offline app shell. Network-first for navigations (so deploys show up immediately),
 // cache-first for hashed build assets. API calls are never cached.
-const CACHE = 'wunder-shell-v2';
+importScripts('/push.js');
+const CACHE = 'wunder-shell-v3';
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['/', '/icon.svg', '/manifest.webmanifest'])).then(() => self.skipWaiting()));

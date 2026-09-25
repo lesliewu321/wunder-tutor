@@ -1,0 +1,39 @@
+.notifications { max-width: 720px; margin: 0 auto; }
+.notifications section { margin-block: 22px; }
+.notification-intro { color: var(--muted); margin: 4px 0 20px; }
+.weekly-challenge { background: linear-gradient(130deg, var(--paper, #fff), var(--lavender, #eee8ff)); border: 1px solid var(--line, #e6e0f0); border-radius: 24px; padding: 20px; margin-block: 18px; }
+.weekly-challenge.is-complete { background: linear-gradient(130deg, var(--paper, #fff), #daf6e6); }
+.weekly-challenge__heading { display: flex; align-items: center; gap: 12px; }
+.weekly-challenge__heading > span { font-size: 32px; }
+.weekly-challenge__heading b { font-size: 1.15rem; }
+.weekly-challenge p { margin: 4px 0; }
+.week-stamps { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 18px 0 12px; }
+.week-stamps > span { text-align: center; min-width: 0; }
+.week-stamps small { display: block; margin-bottom: 6px; font-size: .75rem; overflow-wrap: anywhere; }
+.week-stamps b { display: grid; place-items: center; margin: auto; border: 1px dashed var(--muted); border-radius: 50%; width: 33px; height: 33px; }
+.week-stamps .is-done b { background: #248654; color: white; border: 0; }
+.week-stamps .is-today b { border: 2px solid var(--primary, #7150ff); }
+.notification-next { padding: 22px; }
+.notification-next h2 { margin: 8px 0; font-size: 1.3rem; }
+.notification-next p, .reminder-offer p { margin: 10px 0 16px; }
+.notification-badge { display: flex; gap: 14px; padding: 18px; margin: 12px 0; }
+.notification-badge > span { font-size: 30px; }
+.notification-badge p { margin: 4px 0 0; }
+.notification-settings .section-title { display: flex; align-items: center; gap: 10px; }
+.notification-status { padding: 14px 18px; border-radius: 14px; background: var(--lavender, #eee8ff); font-weight: 700; }
+.notification-status p { font-weight: 400; }
+.notification-settings .form-card { margin-block: 16px; min-width: 0; }
+.notification-settings fieldset { border: 1px solid var(--line, #e6e0f0); padding: 14px; }
+.notification-settings legend { padding: 0 8px; font-weight: 700; }
+.notification-days { display: flex; gap: 7px; flex-wrap: wrap; }
+.notification-days .chip { flex: 1; min-height: 44px; min-width: 46px; }
+.notification-courses { display: flex; gap: 12px 22px; flex-wrap: wrap; }
+.notification-courses label { display: flex; align-items: center; min-height: 44px; gap: 8px; }
+.notification-courses input { accent-color: var(--primary, #7150ff); width: 20px; height: 20px; }
+.notification-settings input[type=time], .notification-settings .select-row input:not([type]) { background: var(--lavender, #eee8ff); border-radius: 12px; padding: 10px; border: 0; color: inherit; max-width: 52%; min-width: 0; font: inherit; }
+.notification-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-block: 12px; }
+.notification-message { padding: 12px; border-left: 3px solid var(--primary, #7150ff); }
+.reminder-offer { padding: 20px; text-align: left; width: 100%; }
+[data-theme=dark] .weekly-challenge, [data-theme=dark] .notification-status, [data-theme=dark] .notification-settings input[type=time], [data-theme=dark] .notification-settings .select-row input:not([type]) { background: #29213e; }
+[data-theme=dark] .weekly-challenge.is-complete { background: #153d32; }
+@media (max-width: 380px) { .week-stamps { gap: 3px; } .week-stamps b { width: 29px; height: 29px; } .home__stats { gap: 4px; } }

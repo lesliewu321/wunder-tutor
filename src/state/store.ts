@@ -74,6 +74,10 @@ const withXp = (p: ChildProfile, amount: number, now: number): ChildProfile => {
   return { ...p, xp: p.xp + amount, pronunciation: { ...p.pronunciation, days: { ...p.pronunciation.days, [dk]: { ...day, xp: day.xp + amount } } } };
 };
 
+const completedActivity = (p: ChildProfile, kind: 'lesson' | 'test' | 'conversation', at: number): ChildProfile => ({
+  ...p, activity: [...(p.activity ?? []).filter(a => a.at > at - 90 * 86400000), { id: uid(), at, kind }].slice(-500),
+});
+
 const grant = (p: ChildProfile, ids: string[], now: number): { profile: ChildProfile; earned: Achievement[] } => {
   const earned = ids.filter((id) => !p.achievements.some((a) => a.id === id)).map((id) => achievement(id, now));
   return { profile: earned.length ? { ...p, achievements: [...p.achievements, ...earned] } : p, earned };
@@ -170,7 +174,7 @@ export const useStore = create<AppState>()(
           ...p,
           lessonsCompleted: { ...p.lessonsCompleted, [lessonId]: { completedAt: now, stars: Math.max(stars, prev?.stars ?? 0), bestAvg: Math.max(avgScore, prev?.bestAvg ?? 0) } },
         };
-        next = withXp(next, XP.lesson, now);
+        next = withXp(completedActivity(next, 'lesson', now), XP.lesson, now);
         const ids = ['first-lesson'];
         const unit = ALL_LESSONS.find((l) => l.id === lessonId)?.unitId;
         if (unit && ALL_LESSONS.filter((l) => l.unitId === unit).every((l) => next.lessonsCompleted[l.id])) ids.push(`unit-${unit}`);
@@ -185,7 +189,7 @@ export const useStore = create<AppState>()(
         const now = Date.now();
         const prev = p?.tests?.[lessonId];
         const rec: TestRecord = { at: now, score, best: Math.max(score, prev?.best ?? 0), taken: (prev?.taken ?? 0) + 1 };
-        if (p) set((st) => ({ profiles: { ...st.profiles, [p.id]: { ...p, tests: { ...p.tests, [lessonId]: rec } } } }));
+        if (p) set((st) => ({ profiles: { ...st.profiles, [p.id]: { ...completedActivity(p, 'test', now), tests: { ...p.tests, [lessonId]: rec } } } }));
         return rec;
       },
 
@@ -195,7 +199,7 @@ export const useStore = create<AppState>()(
         if (!p) return [];
         const now = Date.now();
         const next = withXp({ ...p, conversations: [...p.conversations, { ...rec, id: uid(), at: now }].slice(-50) }, XP.conversation, now);
-        const granted = grant(next, ['chatterbox'], now);
+        const granted = grant(completedActivity(next, 'conversation', now), ['chatterbox'], now);
         set((st) => ({ profiles: { ...st.profiles, [p.id]: granted.profile } }));
         return granted.earned;
       },
@@ -236,6 +240,7 @@ export const useStore = create<AppState>()(
       },
 
       async deleteProfile(profileId, opts) {
+        await import('../notifications/client').then(m => m.stopReminders()).catch(() => undefined);
         await audioRepo.clear(`${profileId}/`);
         forgetBook(profileId);
         if (!opts?.heardFromAccount) noteLearnerDeleted(profileId);
@@ -247,6 +252,7 @@ export const useStore = create<AppState>()(
       },
 
       async deleteEverything() {
+        await import('../notifications/client').then(m => m.stopReminders(true)).catch(() => undefined);
         await audioRepo.clear('');
         Object.keys(get().profiles).forEach(forgetBook);
         forgetSync();

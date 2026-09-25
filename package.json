@@ -15,6 +15,7 @@
     "cf:dev": "npm run build && wrangler pages dev dist --port 8788",
     "keys:check": "node scripts/push-keys.mjs --check",
     "keys:push": "node scripts/push-keys.mjs",
+    "deploy:notifications": "wrangler deploy -c notifications/wrangler.jsonc",
     "deploy:egress": "wrangler deploy -c egress/wrangler.toml",
     "i18n:export": "node scripts/i18n-export.mjs",
     "i18n:import": "node scripts/i18n-import.mjs",
@@ -44,6 +45,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
+    "web-push": "3.6.7",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
