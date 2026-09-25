@@ -49,7 +49,7 @@ export function Me() {
       {/* One active course, selected from the full available list. */}
       <label className="course-pick"><span><LanguageFlag language={p.course} accent={p.accent} /> {t('home.course.aria')}</span>
         <select value={p.course} onChange={(e) => setCourse(e.target.value as CourseId)}>
-          {COURSES.map((id) => <option key={id} value={id}>{flagEmoji(id, p.accent)} {courseLabel(id)}</option>)}
+          {COURSES.map((id) => <option key={id} value={id}>{courseLabel(id)}</option>)}
         </select>
       </label>
       <section className="me__card">
