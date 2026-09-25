@@ -12,7 +12,7 @@ import { SEASON_EVENTS, SEASONAL_LESSONS } from '../src/content/seasonal';
 import { ZH_SOUNDS } from '../src/content/zh/sounds';
 import { ACHIEVEMENT_CATALOGUE, achievement, badgeDetail, badgeName, DAILY_GOALS, goalDetail, goalLabel } from '../src/engine/rewards';
 import { catalogs, en, noteContent, setLanguage, tc } from '../src/i18n';
-import type { AgeBand } from '../src/domain/types';
+import type { AgeBand, SpeakItem } from '../src/domain/types';
 
 const BANDS: AgeBand[] = ['little', 'junior', 'teen', 'adult'];
 /** The lesson guides and reading questions of every course: English → 繁體中文, one entry per distinct English line. */
@@ -35,7 +35,17 @@ const lessonPhrases = (): Record<string, string> => {
  */
 const itemMeanings = (): Record<string, { items: string[]; langs: string[] }> => {
   const out: Record<string, { items: string[]; langs: string[] }> = {};
-  for (const it of Object.values(ITEM_INDEX)) {
+  // The lessons' items, and the conversations' lines (their own files, not in the item index).
+  const lines: SpeakItem[] = [];
+  const walk = (o: unknown): void => {
+    if (Array.isArray(o)) { o.forEach(walk); return; }
+    if (!o || typeof o !== 'object') return;
+    const r = o as Record<string, unknown>;
+    if (typeof r.text === 'string' && typeof r.id === 'string' && typeof r.kind === 'string') { lines.push(r as unknown as SpeakItem); return; }
+    Object.values(r).forEach(walk);
+  };
+  walk(SCENARIOS.map((sc) => [sc.turns, sc.closing]));
+  for (const it of [...Object.values(ITEM_INDEX), ...lines]) {
     if (!it.meaning) continue;
     const m = (out[it.meaning] ??= { items: [], langs: [] });
     if (m.items.length < 3 && !m.items.includes(it.text)) m.items.push(it.text);
