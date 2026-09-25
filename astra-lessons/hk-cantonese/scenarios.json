@@ -6,9 +6,9 @@
     "icon": "👋",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+      "little": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
+      "junior": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名.",
+      "teen": "Use 唔該 for help or service and 多謝 for a gift. Ask a name with 咩名."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",
@@ -57,9 +57,9 @@
       }
     ],
     "closing": {
-      "little": "yue-greetings-4",
-      "junior": "yue-greetings-4",
-      "teen": "yue-greetings-4"
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
     }
   },
   {
@@ -69,9 +69,9 @@
     "icon": "🔢",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+      "little": "Use 兩 before the classifier 張 for two tickets. 幾點 asks the time.",
+      "junior": "Use 兩 before the classifier 張 for two tickets. 幾點 asks the time.",
+      "teen": "Use 兩 before the classifier 張 for two tickets. 幾點 asks the time."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",
@@ -117,9 +117,501 @@
       }
     ],
     "closing": {
-      "little": "yue-greetings-4",
-      "junior": "yue-greetings-4",
-      "teen": "yue-greetings-4"
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-family",
+    "course": "yue",
+    "title": "Family and belonging",
+    "icon": "🏠",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use 嘅 to show belonging: 我嘅 means my. 我哋 means we.",
+      "junior": "Use 嘅 to show belonging: 我嘅 means my. 我哋 means we.",
+      "teen": "Use 嘅 to show belonging: 我嘅 means my. 我哋 means we."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Family and belonging"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-family-7",
+          "junior": "yue-family-7",
+          "teen": "yue-family-7"
+        },
+        "replies": {
+          "little": [
+            "yue-family-5"
+          ],
+          "junior": [
+            "yue-family-5"
+          ],
+          "teen": [
+            "yue-family-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-family-9",
+          "junior": "yue-family-9",
+          "teen": "yue-family-9"
+        },
+        "replies": {
+          "little": [
+            "yue-family-8"
+          ],
+          "junior": [
+            "yue-family-8"
+          ],
+          "teen": [
+            "yue-family-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-home",
+    "course": "yue",
+    "title": "At home and where things are",
+    "icon": "🛋️",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "喺 tells where something is. 有冇 asks whether something is there.",
+      "junior": "喺 tells where something is. 有冇 asks whether something is there.",
+      "teen": "喺 tells where something is. 有冇 asks whether something is there."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "At home and where things are"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-home-7",
+          "junior": "yue-home-7",
+          "teen": "yue-home-7"
+        },
+        "replies": {
+          "little": [
+            "yue-home-5"
+          ],
+          "junior": [
+            "yue-home-5"
+          ],
+          "teen": [
+            "yue-home-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-home-9",
+          "junior": "yue-home-9",
+          "teen": "yue-home-9"
+        },
+        "replies": {
+          "little": [
+            "yue-home-8"
+          ],
+          "junior": [
+            "yue-home-8"
+          ],
+          "teen": [
+            "yue-home-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-school",
+    "course": "yue",
+    "title": "Learning and asking for help",
+    "icon": "🎒",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "聽唔明 means not understanding what you hear. Use 再 to ask for another try.",
+      "junior": "聽唔明 means not understanding what you hear. Use 再 to ask for another try.",
+      "teen": "聽唔明 means not understanding what you hear. Use 再 to ask for another try."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Learning and asking for help"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-school-7",
+          "junior": "yue-school-7",
+          "teen": "yue-school-7"
+        },
+        "replies": {
+          "little": [
+            "yue-school-5",
+            "yue-school-8"
+          ],
+          "junior": [
+            "yue-school-5",
+            "yue-school-8"
+          ],
+          "teen": [
+            "yue-school-5",
+            "yue-school-8"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-school-9",
+          "junior": "yue-school-9",
+          "teen": "yue-school-9"
+        },
+        "replies": {
+          "little": [
+            "yue-school-10"
+          ],
+          "junior": [
+            "yue-school-10"
+          ],
+          "teen": [
+            "yue-school-10"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-animals",
+    "course": "yue",
+    "title": "Animals and classifiers",
+    "icon": "🐈",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use 隻 for these animals. 呢隻 means this one; 嗰隻 means that one.",
+      "junior": "Use 隻 for these animals. 呢隻 means this one; 嗰隻 means that one.",
+      "teen": "Use 隻 for these animals. 呢隻 means this one; 嗰隻 means that one."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Animals and classifiers"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-animals-7",
+          "junior": "yue-animals-7",
+          "teen": "yue-animals-7"
+        },
+        "replies": {
+          "little": [
+            "yue-animals-5"
+          ],
+          "junior": [
+            "yue-animals-5"
+          ],
+          "teen": [
+            "yue-animals-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-animals-9",
+          "junior": "yue-animals-9",
+          "teen": "yue-animals-9"
+        },
+        "replies": {
+          "little": [
+            "yue-animals-8"
+          ],
+          "junior": [
+            "yue-animals-8"
+          ],
+          "teen": [
+            "yue-animals-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-weather",
+    "course": "yue",
+    "title": "Weather and getting ready",
+    "icon": "🌦️",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Put the time word first: 今日 means today and 聽日 means tomorrow.",
+      "junior": "Put the time word first: 今日 means today and 聽日 means tomorrow.",
+      "teen": "Put the time word first: 今日 means today and 聽日 means tomorrow."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Weather and getting ready"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-weather-7",
+          "junior": "yue-weather-7",
+          "teen": "yue-weather-7"
+        },
+        "replies": {
+          "little": [
+            "yue-weather-5"
+          ],
+          "junior": [
+            "yue-weather-5"
+          ],
+          "teen": [
+            "yue-weather-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-weather-9",
+          "junior": "yue-weather-9",
+          "teen": "yue-weather-9"
+        },
+        "replies": {
+          "little": [
+            "yue-weather-8"
+          ],
+          "junior": [
+            "yue-weather-8"
+          ],
+          "teen": [
+            "yue-weather-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-feelings",
+    "course": "yue",
+    "title": "Feelings and needs",
+    "icon": "🙂",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "想 expresses what you would like to do. 唔想 makes it negative.",
+      "junior": "想 expresses what you would like to do. 唔想 makes it negative.",
+      "teen": "想 expresses what you would like to do. 唔想 makes it negative."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Feelings and needs"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-feelings-7",
+          "junior": "yue-feelings-7",
+          "teen": "yue-feelings-7"
+        },
+        "replies": {
+          "little": [
+            "yue-feelings-5"
+          ],
+          "junior": [
+            "yue-feelings-5"
+          ],
+          "teen": [
+            "yue-feelings-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-feelings-9",
+          "junior": "yue-feelings-9",
+          "teen": "yue-feelings-9"
+        },
+        "replies": {
+          "little": [
+            "yue-feelings-8"
+          ],
+          "junior": [
+            "yue-feelings-8"
+          ],
+          "teen": [
+            "yue-feelings-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-routines",
+    "course": "yue",
+    "title": "Daily routines and actions",
+    "icon": "⏰",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Add 緊 after a verb for an action happening now: 食緊 means eating.",
+      "junior": "Add 緊 after a verb for an action happening now: 食緊 means eating.",
+      "teen": "Add 緊 after a verb for an action happening now: 食緊 means eating."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Daily routines and actions"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-routines-7",
+          "junior": "yue-routines-7",
+          "teen": "yue-routines-7"
+        },
+        "replies": {
+          "little": [
+            "yue-routines-5"
+          ],
+          "junior": [
+            "yue-routines-5"
+          ],
+          "teen": [
+            "yue-routines-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-routines-9",
+          "junior": "yue-routines-9",
+          "teen": "yue-routines-9"
+        },
+        "replies": {
+          "little": [
+            "yue-routines-6",
+            "yue-routines-8"
+          ],
+          "junior": [
+            "yue-routines-6",
+            "yue-routines-8"
+          ],
+          "teen": [
+            "yue-routines-6",
+            "yue-routines-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-hobbies",
+    "course": "yue",
+    "title": "Hobbies and abilities",
+    "icon": "🎨",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "識 describes a learned ability. 識唔識 asks if someone knows how.",
+      "junior": "識 describes a learned ability. 識唔識 asks if someone knows how.",
+      "teen": "識 describes a learned ability. 識唔識 asks if someone knows how."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Hobbies and abilities"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-hobbies-7",
+          "junior": "yue-hobbies-7",
+          "teen": "yue-hobbies-7"
+        },
+        "replies": {
+          "little": [
+            "yue-hobbies-5",
+            "yue-hobbies-6"
+          ],
+          "junior": [
+            "yue-hobbies-5",
+            "yue-hobbies-6"
+          ],
+          "teen": [
+            "yue-hobbies-5",
+            "yue-hobbies-6"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-hobbies-9",
+          "junior": "yue-hobbies-9",
+          "teen": "yue-hobbies-9"
+        },
+        "replies": {
+          "little": [
+            "yue-hobbies-8",
+            "yue-hobbies-10"
+          ],
+          "junior": [
+            "yue-hobbies-8",
+            "yue-hobbies-10"
+          ],
+          "teen": [
+            "yue-hobbies-8",
+            "yue-hobbies-10"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
     }
   },
   {
@@ -129,9 +621,9 @@
     "icon": "🍜",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+      "little": "Use 一杯 for a drink and 一個 for a bun. 唔要冰 means no ice.",
+      "junior": "Use 一杯 for a drink and 一個 for a bun. 唔要冰 means no ice.",
+      "teen": "Use 一杯 for a drink and 一個 for a bun. 唔要冰 means no ice."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",
@@ -180,9 +672,9 @@
       }
     ],
     "closing": {
-      "little": "yue-greetings-4",
-      "junior": "yue-greetings-4",
-      "teen": "yue-greetings-4"
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
     }
   },
   {
@@ -192,9 +684,9 @@
     "icon": "🤝",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+      "little": "鍾意 expresses liking. 一齊 invites someone to do something together.",
+      "junior": "鍾意 expresses liking. 一齊 invites someone to do something together.",
+      "teen": "鍾意 expresses liking. 一齊 invites someone to do something together."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",
@@ -240,9 +732,9 @@
       }
     ],
     "closing": {
-      "little": "yue-greetings-4",
-      "junior": "yue-greetings-4",
-      "teen": "yue-greetings-4"
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
     }
   },
   {
@@ -252,9 +744,9 @@
     "icon": "🚇",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+      "little": "Use 喺邊 to ask where. 轉左 means turn left; 落車 means get off.",
+      "junior": "Use 喺邊 to ask where. 轉左 means turn left; 落車 means get off.",
+      "teen": "Use 喺邊 to ask where. 轉左 means turn left; 落車 means get off."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",
@@ -300,9 +792,9 @@
       }
     ],
     "closing": {
-      "little": "yue-greetings-4",
-      "junior": "yue-greetings-4",
-      "teen": "yue-greetings-4"
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
     }
   },
   {
@@ -312,9 +804,9 @@
     "icon": "🛍️",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+      "little": "幾多錢 asks the price. In everyday Hong Kong speech, 蚊 means dollars.",
+      "junior": "幾多錢 asks the price. In everyday Hong Kong speech, 蚊 means dollars.",
+      "teen": "幾多錢 asks the price. In everyday Hong Kong speech, 蚊 means dollars."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",
@@ -360,9 +852,498 @@
       }
     ],
     "closing": {
-      "little": "yue-greetings-4",
-      "junior": "yue-greetings-4",
-      "teen": "yue-greetings-4"
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-dining",
+    "course": "yue",
+    "title": "Ordering and preferences",
+    "icon": "🥢",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "少啲 asks for less. 唔要 means do not include it. Confirm a special request clearly.",
+      "junior": "少啲 asks for less. 唔要 means do not include it. Confirm a special request clearly.",
+      "teen": "少啲 asks for less. 唔要 means do not include it. Confirm a special request clearly."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Ordering and preferences"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-dining-7",
+          "junior": "yue-dining-7",
+          "teen": "yue-dining-7"
+        },
+        "replies": {
+          "little": [
+            "yue-dining-5"
+          ],
+          "junior": [
+            "yue-dining-5"
+          ],
+          "teen": [
+            "yue-dining-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-dining-9",
+          "junior": "yue-dining-9",
+          "teen": "yue-dining-9"
+        },
+        "replies": {
+          "little": [
+            "yue-dining-8"
+          ],
+          "junior": [
+            "yue-dining-8"
+          ],
+          "teen": [
+            "yue-dining-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-services",
+    "course": "yue",
+    "title": "Library and community services",
+    "icon": "📚",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "借 means borrow; 還 means return. Use 可唔可以 for a polite permission question.",
+      "junior": "借 means borrow; 還 means return. Use 可唔可以 for a polite permission question.",
+      "teen": "借 means borrow; 還 means return. Use 可唔可以 for a polite permission question."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Library and community services"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-services-7",
+          "junior": "yue-services-7",
+          "teen": "yue-services-7"
+        },
+        "replies": {
+          "little": [
+            "yue-services-5"
+          ],
+          "junior": [
+            "yue-services-5"
+          ],
+          "teen": [
+            "yue-services-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-services-9",
+          "junior": "yue-services-9",
+          "teen": "yue-services-9"
+        },
+        "replies": {
+          "little": [
+            "yue-services-8"
+          ],
+          "junior": [
+            "yue-services-8"
+          ],
+          "teen": [
+            "yue-services-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-health",
+    "course": "yue",
+    "title": "Feeling unwell and asking for help",
+    "icon": "🩺",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use 唔舒服 to say you feel unwell and 邊度 to ask where. Practise telling a trusted adult.",
+      "junior": "Use 唔舒服 to say you feel unwell and 邊度 to ask where. Practise telling a trusted adult.",
+      "teen": "Use 唔舒服 to say you feel unwell and 邊度 to ask where. Practise telling a trusted adult."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Feeling unwell and asking for help"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-health-7",
+          "junior": "yue-health-7",
+          "teen": "yue-health-7"
+        },
+        "replies": {
+          "little": [
+            "yue-health-5"
+          ],
+          "junior": [
+            "yue-health-5"
+          ],
+          "teen": [
+            "yue-health-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-health-9",
+          "junior": "yue-health-9",
+          "teen": "yue-health-9"
+        },
+        "replies": {
+          "little": [
+            "yue-health-8"
+          ],
+          "junior": [
+            "yue-health-8"
+          ],
+          "teen": [
+            "yue-health-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-travel",
+    "course": "yue",
+    "title": "Trips and accommodation",
+    "icon": "🧳",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use 想去 for a destination and 住 for staying somewhere. Practise with pretend travel details.",
+      "junior": "Use 想去 for a destination and 住 for staying somewhere. Practise with pretend travel details.",
+      "teen": "Use 想去 for a destination and 住 for staying somewhere. Practise with pretend travel details."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Trips and accommodation"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-travel-7",
+          "junior": "yue-travel-7",
+          "teen": "yue-travel-7"
+        },
+        "replies": {
+          "little": [
+            "yue-travel-6"
+          ],
+          "junior": [
+            "yue-travel-6"
+          ],
+          "teen": [
+            "yue-travel-6"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-travel-9",
+          "junior": "yue-travel-9",
+          "teen": "yue-travel-9"
+        },
+        "replies": {
+          "little": [
+            "yue-travel-8"
+          ],
+          "junior": [
+            "yue-travel-8"
+          ],
+          "teen": [
+            "yue-travel-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-digital",
+    "course": "yue",
+    "title": "Messages and staying connected",
+    "icon": "📱",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "未 asks whether something has happened yet. 咗 marks a completed event; 未 means not yet in a reply.",
+      "junior": "未 asks whether something has happened yet. 咗 marks a completed event; 未 means not yet in a reply.",
+      "teen": "未 asks whether something has happened yet. 咗 marks a completed event; 未 means not yet in a reply."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Messages and staying connected"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-digital-7",
+          "junior": "yue-digital-7",
+          "teen": "yue-digital-7"
+        },
+        "replies": {
+          "little": [
+            "yue-digital-5",
+            "yue-digital-6"
+          ],
+          "junior": [
+            "yue-digital-5",
+            "yue-digital-6"
+          ],
+          "teen": [
+            "yue-digital-5",
+            "yue-digital-6"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-digital-9",
+          "junior": "yue-digital-9",
+          "teen": "yue-digital-9"
+        },
+        "replies": {
+          "little": [
+            "yue-digital-8"
+          ],
+          "junior": [
+            "yue-digital-8"
+          ],
+          "teen": [
+            "yue-digital-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-plans",
+    "course": "yue",
+    "title": "Invitations and making plans",
+    "icon": "🗓️",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "好唔好 invites agreement. 得閒 means free or available; 冇時間 means having no time.",
+      "junior": "好唔好 invites agreement. 得閒 means free or available; 冇時間 means having no time.",
+      "teen": "好唔好 invites agreement. 得閒 means free or available; 冇時間 means having no time."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Invitations and making plans"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-plans-7",
+          "junior": "yue-plans-7",
+          "teen": "yue-plans-7"
+        },
+        "replies": {
+          "little": [
+            "yue-plans-5",
+            "yue-plans-6"
+          ],
+          "junior": [
+            "yue-plans-5",
+            "yue-plans-6"
+          ],
+          "teen": [
+            "yue-plans-5",
+            "yue-plans-6"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-plans-9",
+          "junior": "yue-plans-9",
+          "teen": "yue-plans-9"
+        },
+        "replies": {
+          "little": [
+            "yue-plans-8"
+          ],
+          "junior": [
+            "yue-plans-8"
+          ],
+          "teen": [
+            "yue-plans-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-stories",
+    "course": "yue",
+    "title": "Talking about past experiences",
+    "icon": "📖",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "咗 marks a completed event. 過 after a verb describes having had an experience.",
+      "junior": "咗 marks a completed event. 過 after a verb describes having had an experience.",
+      "teen": "咗 marks a completed event. 過 after a verb describes having had an experience."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Talking about past experiences"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-stories-7",
+          "junior": "yue-stories-7",
+          "teen": "yue-stories-7"
+        },
+        "replies": {
+          "little": [
+            "yue-stories-5"
+          ],
+          "junior": [
+            "yue-stories-5"
+          ],
+          "teen": [
+            "yue-stories-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-stories-9",
+          "junior": "yue-stories-9",
+          "teen": "yue-stories-9"
+        },
+        "replies": {
+          "little": [
+            "yue-stories-6",
+            "yue-stories-8"
+          ],
+          "junior": [
+            "yue-stories-6",
+            "yue-stories-8"
+          ],
+          "teen": [
+            "yue-stories-6",
+            "yue-stories-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-opinions",
+    "course": "yue",
+    "title": "Opinions and comparisons",
+    "icon": "💬",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "Use 覺得 to give an opinion and 比 to compare. 因為 introduces a reason.",
+      "junior": "Use 覺得 to give an opinion and 比 to compare. 因為 introduces a reason.",
+      "teen": "Use 覺得 to give an opinion and 比 to compare. 因為 introduces a reason."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Opinions and comparisons"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-opinions-7",
+          "junior": "yue-opinions-7",
+          "teen": "yue-opinions-7"
+        },
+        "replies": {
+          "little": [
+            "yue-opinions-5"
+          ],
+          "junior": [
+            "yue-opinions-5"
+          ],
+          "teen": [
+            "yue-opinions-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-opinions-9",
+          "junior": "yue-opinions-9",
+          "teen": "yue-opinions-9"
+        },
+        "replies": {
+          "little": [
+            "yue-opinions-8"
+          ],
+          "junior": [
+            "yue-opinions-8"
+          ],
+          "teen": [
+            "yue-opinions-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
     }
   },
   {
@@ -372,9 +1353,9 @@
     "icon": "📚",
     "color": "var(--leaf)",
     "blurb": {
-      "little": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "junior": "Use these phrases in a Hong Kong Cantonese role-play.",
-      "teen": "Use these phrases in a Hong Kong Cantonese role-play."
+      "little": "我哋 means we. Use 可唔可以 to ask for help and 慢啲 to ask for a slower pace.",
+      "junior": "我哋 means we. Use 可唔可以 to ask for help and 慢啲 to ask for a slower pace.",
+      "teen": "我哋 means we. Use 可唔可以 to ask for help and 慢啲 to ask for a slower pace."
     },
     "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
     "tutorRole": "a helpful practice partner",
@@ -423,9 +1404,69 @@
       }
     ],
     "closing": {
-      "little": "yue-greetings-4",
-      "junior": "yue-greetings-4",
-      "teen": "yue-greetings-4"
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
+    }
+  },
+  {
+    "id": "yue-problems",
+    "course": "yue",
+    "title": "Solving problems together",
+    "icon": "🧩",
+    "color": "var(--leaf)",
+    "blurb": {
+      "little": "先…再… puts actions in order. 搵唔到 means being unable to find something.",
+      "junior": "先…再… puts actions in order. 搵唔到 means being unable to find something.",
+      "teen": "先…再… puts actions in order. 搵唔到 means being unable to find something."
+    },
+    "setting": "A friendly role-play in Hong Kong using spoken Hong Kong Cantonese.",
+    "tutorRole": "a helpful practice partner",
+    "goals": [
+      "Solving problems together"
+    ],
+    "turns": [
+      {
+        "tutor": {
+          "little": "yue-problems-7",
+          "junior": "yue-problems-7",
+          "teen": "yue-problems-7"
+        },
+        "replies": {
+          "little": [
+            "yue-problems-5"
+          ],
+          "junior": [
+            "yue-problems-5"
+          ],
+          "teen": [
+            "yue-problems-5"
+          ]
+        }
+      },
+      {
+        "tutor": {
+          "little": "yue-problems-9",
+          "junior": "yue-problems-9",
+          "teen": "yue-problems-9"
+        },
+        "replies": {
+          "little": [
+            "yue-problems-8"
+          ],
+          "junior": [
+            "yue-problems-8"
+          ],
+          "teen": [
+            "yue-problems-8"
+          ]
+        }
+      }
+    ],
+    "closing": {
+      "little": "yue-goodbye",
+      "junior": "yue-goodbye",
+      "teen": "yue-goodbye"
     }
   }
 ]

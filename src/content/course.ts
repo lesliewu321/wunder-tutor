@@ -1,5 +1,6 @@
 import { type AgeBand, type ContentBand, type Course, type CourseId, isGrownUp, type Lesson, type SpeakItem, type Unit } from '../domain/types';
-import { tc } from '../i18n';
+import { language, tc } from '../i18n';
+import { inScript } from './zh/script';
 import { YUE_COURSE, YUE_ITEMS } from './yue/course';
 import { FR_COURSE, FR_ITEMS } from './fr/course';
 import { JA_COURSE, JA_ITEMS } from './ja/course';
@@ -8,7 +9,6 @@ import { ES_COURSE, ES_ITEMS } from './es/course';
 import { buildCourse, type CourseFile } from './load';
 import { AGE_BANDS, mergeCurriculum } from '../../astra-lessons/curriculum';
 import { addCommunicationToBuilt } from '../../astra-lessons/communication';
-import { inScript } from './zh/script';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
 import { SEASONAL_ITEMS, SEASONAL_LESSONS } from './seasonal';
 import enData from '../../astra-lessons/courses/en.json';
@@ -28,8 +28,8 @@ const PATHS = Object.fromEntries(Object.entries(COURSES).map(([id, course]) => [
 export const courseFor = (id: CourseId, band: AgeBand = 'junior'): Course => (PATHS[id] ?? PATHS.en)[band];
 
 /**
- * Course, unit and lesson names as this learner sees them: plainer for teens and adults, Chinese in their script, and
- * in the app's language — the English stays in the data, the translation is looked up by id each time it is read
+ * Course, unit and lesson names as this learner sees them: plainer for teens and adults, and
+ * in the app's language (independent of the Mandarin practice script) — the English stays in the data, the translation is looked up by id each time it is read
  * (src/i18n/zh-Hant/content-course.json: `course.<id>.title`, `unit.<id>.title`, `unit.<id>.subtitle`, each with an
  * `.adult` line for the plainer name, and `lesson.<id>.title`).
  */
@@ -37,13 +37,15 @@ export const courseTitle = (c: Course, band: AgeBand): string => {
   const plain = isGrownUp(band) && c.grownUpTitle;
   return plain ? tc(`course.${c.id}.title.adult`, plain) : tc(`course.${c.id}.title`, c.title);
 };
+// English Mandarin-unit titles quote practice characters; translated UI copy follows its own language.
+const unitCopy = (unit: Unit, text: string): string => unit.id.startsWith('zh-') && language() === 'en' ? inScript(text) : text;
 export const unitTitle = (u: Unit, band: AgeBand): string => {
   const plain = isGrownUp(band) && !(band === 'teen' && /(^|-)work$/.test(u.id)) && u.grownUp?.title;
-  return inScript(plain ? tc(`unit.${u.id}.title.adult`, plain) : tc(`unit.${u.id}.title`, u.title));
+  return unitCopy(u, plain ? tc(`unit.${u.id}.title.adult`, plain) : tc(`unit.${u.id}.title`, u.title));
 };
 export const unitSubtitle = (u: Unit, band: AgeBand): string => {
   const plain = isGrownUp(band) && !(band === 'teen' && /(^|-)work$/.test(u.id)) && u.grownUp?.subtitle;
-  return inScript(plain ? tc(`unit.${u.id}.subtitle.adult`, plain) : tc(`unit.${u.id}.subtitle`, u.subtitle));
+  return unitCopy(u, plain ? tc(`unit.${u.id}.subtitle.adult`, plain) : tc(`unit.${u.id}.subtitle`, u.subtitle));
 };
 export const lessonTitle = (l: Pick<Lesson, 'id' | 'title'>): string => tc(`lesson.${l.id}.title`, l.title);
 

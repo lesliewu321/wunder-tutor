@@ -27,3 +27,13 @@ Saving a schedule while reminders are off keeps delivery disabled. Opt-out wins 
 ## Remaining external checks
 
 Upload owner-managed Qwen/Chirp credentials and audition real speech, including Cantonese. Test Web Push on physical iOS, Android and desktop devices. Native review of course content and translations, and Cantonese pronunciation scoring calibration, remain separate from these software checks.
+
+## 2026-09-25 Cantonese curriculum matrix
+
+The Cantonese path now contains 96 lessons, 24 conversations, 246 items and six pronunciation ladders. All seven catalogs contain 272 content labels, 33 guide lines and 244 meaning keys each. No catalog holes or English fallbacks are accepted for this material.
+
+The general lesson matrix covers 10,752 Cantonese lesson permutations (96 × 7 languages × 4 ages × 2 scripts × 2 accents). gauntlet-cantonese-translations.test.tsx adds 112 runtime combinations for all titles, 2,688 conversation permutations and 672 ladder permutations, plus full catalog and six-tone chart checks. Target practice remains Traditional Cantonese/Jyutping with zh-HK speech; interface titles do not inherit a Mandarin character preference. Mandarin English-language bilingual titles retain their intended script behavior.
+
+Local Edge QA checked 28 Cantonese Home combinations, all 24 topics in seven app languages (168 lesson entries), seven conversation screens and seven six-tone chart screens at 390px. The matrix used intercepted speech responses. Separate actual Chirp playback checks exercised 本書喺枱面。, 尋日我去咗公園。 and 我搵唔到鎖匙。 through localhost; all returned non-silent WAV audio and reached the browser ended event. Details are in ignored .wrangler/cantonese-*-results.json.
+
+A nested release checkout may be discovered by Vitest. To test or export only the main checkout, append --exclude '.wrangler/**' to the Vitest invocation. Do not remove another task's checkout to change discovery. Native linguistic review and calibrated pronunciation scoring remain external checks.

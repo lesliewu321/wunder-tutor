@@ -10,6 +10,7 @@ import { useT } from '../../i18n/useT';
 import { labOrder, MASTERED_AT, WEAK_BELOW } from '../../intelligence/profile';
 import { noSoundMessage } from '../../speech/health';
 import { voice } from '../../speech/voice';
+import { CantoneseTones } from '../../ui/CantoneseTones';
 import { ToneContour } from '../../ui/ToneContour';
 import { useActiveProfile, useStore } from '../../state/store';
 import { Icon } from '../../ui/Icon';
@@ -56,7 +57,7 @@ export function LabHome() {
   return (
     <div className="screen lab">
       <TopBar title={t('lab.title')} />
-      <p className="lead">{t(p.course === 'zh' ? 'lab.home.lead.zh' : 'lab.home.lead.en')}</p>
+      <p className="lead">{t(p.course === 'zh' || p.course === 'yue' ? 'lab.home.lead.zh' : 'lab.home.lead.en')}</p>
       {/* Conversation practice (Leslie, 2026-09-25: "converstion practice should be in lab"). */}
       <button type="button" className="row-link" onClick={() => nav('/speak')}>
         <span className="row-link__icon"><Icon name="chat" /></span>
@@ -75,7 +76,7 @@ export function LabHome() {
                 <span className="sound-card__glyph" data-long={isLongLabel(info.label) || undefined}>{info.label}</span>
                 <span className="sound-card__text">
                   <b>{info.name}</b>
-                  <small>{t('lab.home.asIn', { example: info.example })}{isGrownUp(p.band) && !isZhSound(id) && !isJaSound(id) && !isKoSound(id) && !isEsSound(id) ? ` · /${id}/` : ''}</small>
+                  <small>{t('lab.home.asIn', { example: info.example })}{isGrownUp(p.band) && !id.startsWith('yue:') && !isZhSound(id) && !isJaSound(id) && !isKoSound(id) && !isEsSound(id) ? ` · /${id}/` : ''}</small>
                   <ProgressBar value={done / total} tone="leaf" />
                 </span>
                 <span className="sound-card__side">
@@ -103,7 +104,7 @@ export function LabSound() {
   const st = status(p, sound);
   const nextStage = LAB_STAGES.find((s) => stageDone(p, sound, s) < ladder[s].length) ?? 'sentence';
   // A Mandarin tone or a Japanese beat has no IPA symbol worth showing; each example is said in its own language.
-  const noSymbol = isZhSound(sound) || isJaSound(sound) || isKoSound(sound) || isEsSound(sound);
+  const noSymbol = sound.startsWith('yue:') || isZhSound(sound) || isJaSound(sound) || isKoSound(sound) || isEsSound(sound);
   const say = (slow: boolean) => void voice.speak(exampleSpeech(sound), { accent: soundLocale(sound, p.accent), slow }).catch((e) => void noSoundMessage(p.band, e).then((m) => toast(m, '🔇')));
 
   return (
@@ -112,7 +113,7 @@ export function LabSound() {
       <section className="card guide">
         <div className="guide__top">
           <div className="guide__glyph" data-long={isLongLabel(info.label) || undefined}><b>{info.label}</b>{p.band !== 'little' && !noSymbol && <small>/{sound}/</small>}</div>
-          {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={190} /> : <Mouth pose={info.pose} size={190} />}
+          {sound === 'yue:tones' ? <CantoneseTones size={190} /> : info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={190} /> : <Mouth pose={info.pose} size={190} />}
         </div>
         <p className="guide__tip">{tipFor(sound, p.band)}</p>
         <ul className="steps">

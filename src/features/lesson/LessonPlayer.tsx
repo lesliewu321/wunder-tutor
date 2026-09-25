@@ -23,6 +23,7 @@ import { Button, Confetti, IconButton, ProgressBar, Sheet, toast } from '../../u
 import { Icon } from '../../ui/Icon';
 import { Mascot } from '../../ui/Mascot';
 import { Mouth } from '../../ui/Mouth';
+import { CantoneseTones } from '../../ui/CantoneseTones';
 import { ToneContour } from '../../ui/ToneContour';
 import { ItemText } from '../../ui/ItemText';
 import { SpeakExercise, type SpeakResult } from '../speak/SpeakExercise';
@@ -205,7 +206,7 @@ function DrillIntro({ sound, onDone }: { sound: PhonemeId; onDone: () => void })
       <div className="drill-intro__stage">
         <span className="tag tag--sun">{t('lesson.drill.tag')}</span>
         <h2>{info.category === 'tone' ? t('lesson.drill.title.tone', { tone }) : t('lesson.drill.title.sound', { label: info.label })}</h2>
-        {info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={210} /> : <Mouth pose={info.pose} size={210} />}
+        {sound === 'yue:tones' ? <CantoneseTones size={210} /> : info.category === 'tone' ? <ToneContour tone={Number(sound.slice(-1)) as 1 | 2 | 3 | 4} size={210} /> : <Mouth pose={info.pose} size={210} />}
         <p className="drill-intro__tip">{tipFor(sound, profile.band)}</p>
         <button type="button" className="pill" onClick={() => void voice.speak(exampleSpeech(sound), { accent: soundLocale(sound, profile.accent), slow: true }).catch(() => undefined)}>🔈 {t('lesson.drill.hear', { example: info.example })}</button>
       </div>

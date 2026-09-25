@@ -44,7 +44,7 @@ try{
   for(const path of ['/parents','/notifications','/speak','/lab','/twisters','/book','/lesson/yue-greetings-1']){
    await navigate(path);await check(locale+path);
    if(path==='/parents')assert(await page.locator('#teacher-voice select option').count()===6,'voice choices '+locale);
-   if(path==='/speak')assert(await page.locator('.scenario-list li').count()===7,'Cantonese scenes '+locale);
+   if(path==='/speak')assert(await page.locator('.scenario-list li').count()===24,'Cantonese scenes '+locale);
   }
  }
  await navigate('/me');

@@ -70,5 +70,77 @@
       "air": "nose",
       "voiced": true
     }
+  },
+  {
+    "id": "yue:vowels",
+    "label": "aa · a",
+    "example": "三 saam1",
+    "category": "vowel",
+    "name": "Long aa and short a",
+    "tip": {
+      "junior": "Compare saam1 and sam1. Keep the final m and tone steady while changing the vowel."
+    },
+    "steps": [
+      "Compare saam1 and sam1. Keep the final m and tone steady while changing the vowel."
+    ],
+    "problem": "Compare saam1 and sam1. Keep the final m and tone steady while changing the vowel.",
+    "detail": "Compare saam1 and sam1. Keep the final m and tone steady while changing the vowel.",
+    "difficulty": 0.5,
+    "pose": {
+      "open": 0.6,
+      "round": 0,
+      "spread": 0,
+      "tongue": "low",
+      "air": "none",
+      "voiced": true
+    }
+  },
+  {
+    "id": "yue:aspiration",
+    "label": "d · t",
+    "example": "低 dai1",
+    "category": "consonant",
+    "name": "A gentle start and a puff of air",
+    "tip": {
+      "junior": "Compare dai1 and tai1. The t starts with a stronger puff of air; keep the vowel and tone the same."
+    },
+    "steps": [
+      "Compare dai1 and tai1. The t starts with a stronger puff of air; keep the vowel and tone the same."
+    ],
+    "problem": "Compare dai1 and tai1. The t starts with a stronger puff of air; keep the vowel and tone the same.",
+    "detail": "Compare dai1 and tai1. The t starts with a stronger puff of air; keep the vowel and tone the same.",
+    "difficulty": 0.5,
+    "pose": {
+      "open": 0.2,
+      "round": 0,
+      "spread": 0,
+      "tongue": "ridge",
+      "air": "puff",
+      "voiced": false
+    }
+  },
+  {
+    "id": "yue:rounding",
+    "label": "i · yu",
+    "example": "書 syu1",
+    "category": "vowel",
+    "name": "Rounded yu",
+    "tip": {
+      "junior": "Compare si1 and syu1. Start with i, then round your lips while keeping your tongue near the front."
+    },
+    "steps": [
+      "Compare si1 and syu1. Start with i, then round your lips while keeping your tongue near the front."
+    ],
+    "problem": "Compare si1 and syu1. Start with i, then round your lips while keeping your tongue near the front.",
+    "detail": "Compare si1 and syu1. Start with i, then round your lips while keeping your tongue near the front.",
+    "difficulty": 0.5,
+    "pose": {
+      "open": 0.2,
+      "round": 0.8,
+      "spread": 0,
+      "tongue": "high-front",
+      "air": "none",
+      "voiced": true
+    }
   }
 ]

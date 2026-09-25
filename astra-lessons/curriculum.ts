@@ -10,8 +10,8 @@ export const FOUNDATION_ORDER: Record<AgeBand, string[]> = {
   teen: ['greetings', 'numbers', 'family', 'home', 'school', 'routines', 'food', 'animals', 'weather', 'feelings', 'hobbies'],
   adult: ['greetings', 'numbers', 'family', 'home', 'food', 'routines', 'school', 'animals', 'weather', 'feelings', 'hobbies'],
 };
-const EVERYDAY = ['people', 'town', 'shopping', 'travel', 'out'];
-const APPLIED = ['stories', 'plans', 'work'];
+const EVERYDAY = ['people', 'town', 'shopping', 'travel', 'out', 'dining', 'services', 'health', 'digital'];
+const APPLIED = ['stories', 'plans', 'work', 'opinions', 'problems'];
 export type Stage = 1 | 2 | 3;
 export const topicOf = (unitId: string): string => unitId.replace(/^(yue|zh|fr|ja|ko|es)-/, '');
 export const stageOf = (unit: Pick<Unit, 'id'>): Stage => APPLIED.includes(topicOf(unit.id)) ? 3 : EVERYDAY.includes(topicOf(unit.id)) ? 2 : 1;
@@ -41,7 +41,8 @@ export const lessonExercises = (lesson: Lesson, band: AgeBand): Exercise[] =>
 export function mergeCurriculum(course: Course, band: AgeBand): Course {
   const topics = [...FOUNDATION_ORDER[band], 'cafe', ...EVERYDAY, ...APPLIED];
   const rank = (u: Unit) => { const i = topics.indexOf(topicOf(u.id)); return i < 0 ? topics.length : i; };
-  const ordered = [...course.units].sort((a, b) => Number(!!a.locked) - Number(!!b.locked) || rank(a) - rank(b));
+  // Cantonese has an authored prerequisite order, including its dedicated grammar/application topics.
+  const ordered = course.language === 'yue' ? [...course.units] : [...course.units].sort((a, b) => Number(!!a.locked) - Number(!!b.locked) || rank(a) - rank(b));
   const earlierWords: Exercise[] = [];
   const units = ordered.map(unit => {
     const lessons = unit.lessons.map(lesson => {
