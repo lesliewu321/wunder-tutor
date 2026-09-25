@@ -2,6 +2,18 @@
 
 ## 2026-09-25 (session 5) — the 1M-user plan, the relay only where Google refuses, English as a home language
 
+### DEPLOYED 2026-09-25 ~02:45 UTC (Leslie: "upload to webapp for testing. do not make apk or ios") — commit a5591c4, Pages deployment 9c5fff03, bundle index-DL6lv_Dd.js
+
+- Everything since 9a05fb3 is now live on app.wundertutor.com: reinstall handling, the one-language setup and its
+  pages, the relay rule, English at home, the Snap & say tab. **No APK / AAB / iOS build was made** — Leslie said not
+  to until told otherwise; the phone app still runs the 1.0.7 (code 8) build from 2026-09-23.
+- Live checks: `/api/status` ok ×3. **Finding:** the request entered at **TPE** (cf-ray …-TPE), and Google refused
+  the DIRECT probe from there too — `egress: google-apac-a NRT (refused: direct TPE)` — so the relay carried on
+  exactly as designed (the fallback is the point). On 2026-09-20 the same code and key had answered "ok" at TPE, so a
+  Worker's outbound address at TPE is not reliably one Google serves (Cloudflare's egress addresses are shared and
+  Google reads their location however it likes). So far "direct" has not been seen live from any location; the
+  status line says per location what happened, and a relay is only ever a ~50 ms detour. Not pushed to GitHub.
+
 Leslie asked for the current setup and a plan for 1M users — then said it is **paywalled, ~100% paying**. Given in chat
 (not in this file): the architecture (static app + edge Function + Postgres + speech APIs) stays; what breaks first is
 (1) the single Google relay Durable Object, (2) per-isolate rate limits, (3) one Azure S0 resource (~100 concurrent),
