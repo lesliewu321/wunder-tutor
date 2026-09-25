@@ -246,6 +246,7 @@ export function ParentZone() {
         <h2 className="section-title">{t('settings.voice.title')}</h2>
         {toggle('storeRecordings', t('settings.voice.keep.label'), t('settings.voice.keep.detail'))}
         {services?.azure && toggle('contributeRecordings', t('settings.voice.contribute.label'), t('settings.voice.contribute.detail'))}
+        {toggle('shareScores', t('settings.voice.share.label', { name: p.name }), t('settings.voice.share.detail'))}
         {/* Where recordings go, told truthfully for each case: the privacy line changes with the switch above. */}
         <p className="fineprint fineprint--left">{recordings == null ? t('settings.voice.counting') : sentences(
           tn('settings.voice.stored', recordings, { name }),

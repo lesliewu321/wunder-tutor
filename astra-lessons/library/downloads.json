@@ -1,0 +1,179 @@
+[
+  {
+    "file": "japanese/irodori-elementary-1-a2.pdf",
+    "url": "https://www.irodori.jpf.go.jp/assets/data/elementary01/pdf/Y_all.pdf",
+    "title": "Irodori Elementary 1",
+    "publisher": "The Japan Foundation",
+    "level": "A2",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.irodori.jpf.go.jp/assets/data/elementary01/pdf/Y_all.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 74622312,
+    "sha256": "7ab9a18ee37abcc0466d6f6c1b63278d19e72ef464d815992a8ef244132759f2"
+  },
+  {
+    "file": "japanese/irodori-elementary-2-a2.pdf",
+    "url": "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_all.pdf",
+    "title": "Irodori Elementary 2",
+    "publisher": "The Japan Foundation",
+    "level": "A2",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_all.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 111475763,
+    "sha256": "99e72e599aca44850b855f2de02d3638213a25253f5be850a85e65f291375a88"
+  },
+  {
+    "file": "japanese/irodori-starter-a1.pdf",
+    "url": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_all.pdf",
+    "title": "Irodori Starter",
+    "publisher": "The Japan Foundation",
+    "level": "A1",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_all.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 158721952,
+    "sha256": "190f658d375c4149d13fb348de03445c61a01b890c620000f6f86c23fb61dc98"
+  },
+  {
+    "file": "spanish/beginning-spanish.pdf",
+    "url": "https://pdxscholar.library.pdx.edu/cgi/viewcontent.cgi?article=1046&context=pdxopen",
+    "title": "Beginning Spanish ¡Empecemos por aquí!",
+    "publisher": "Portland State University Library",
+    "level": "Beginning Spanish",
+    "status": "failed",
+    "error": "HTTP 403"
+  },
+  {
+    "file": "korean/korean-through-folktales.pdf",
+    "url": "https://pdxscholar.library.pdx.edu/cgi/viewcontent.cgi?article=1013&context=pdxopen",
+    "title": "Korean Through Folktales",
+    "publisher": "Portland State University Library",
+    "level": "Elementary, intermediate and advanced versions",
+    "status": "failed",
+    "error": "HTTP 403"
+  },
+  {
+    "file": "french/francais-interactif.pdf",
+    "url": "https://www.laits.utexas.edu/fi/FrancaisInteractif-textbook.pdf",
+    "title": "Français interactif, fourth edition",
+    "publisher": "COERLL, University of Texas at Austin",
+    "level": "First-year university French",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.laits.utexas.edu/fi/FrancaisInteractif-textbook.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 25032616,
+    "sha256": "7b990fe2688c8d1cd61d3e32cabd53f4db8f1d08c0ea7ec3f84e24c1a8c357ee"
+  },
+  {
+    "file": "japanese/irodori-pre-intermediate-a2-b1.pdf",
+    "url": "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_all.pdf",
+    "title": "Irodori Pre-Intermediate",
+    "publisher": "The Japan Foundation",
+    "level": "A2/B1",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_all.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 133896818,
+    "sha256": "a5053506d114afef484ac1b87ff9e73850bf6450e3d82d4256d9af5246ccc96c"
+  },
+  {
+    "file": "korean/eps-topik-01-hangeul-preparation.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-1.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: hangeul preparation",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-1.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 3004626,
+    "sha256": "c542d48f2832e9d6be6a3c1814f7b5e51257a41285002c171a4e14ef3216df79"
+  },
+  {
+    "file": "korean/eps-topik-04-public-services.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-4.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: public services",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-4.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 28616883,
+    "sha256": "a2b63523c8994cd3b768343eed98e6935323ec178b72980bf6f95c304947428c"
+  },
+  {
+    "file": "korean/eps-topik-05-korean-culture.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-5.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: korean culture",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-5.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 34883368,
+    "sha256": "47c00cab335ff62c2a79d07759827fed309fd775b07050bdcb78965fefc2b226"
+  },
+  {
+    "file": "korean/eps-topik-02-basic-life.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-2.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: basic life",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "failed",
+    "error": "terminated"
+  },
+  {
+    "file": "korean/eps-topik-03-daily-life.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-3.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: daily life",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "failed",
+    "error": "terminated"
+  },
+  {
+    "file": "korean/eps-topik-06-workplace-culture.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-6.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: workplace culture",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-6.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 7825570,
+    "sha256": "507925d59bddc6a41f4d9f26d65dc289cba213c177ac23d8e04960c905c222a5"
+  },
+  {
+    "file": "korean/eps-topik-09-laws-and-systems.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-9.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: laws and systems",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-9.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 13869771,
+    "sha256": "b753bf0b60b962a23c07c9e9853e8d20f85d79d532bd4b3569a593e2af343397"
+  },
+  {
+    "file": "korean/eps-topik-08-workplace-safety.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-8.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: workplace safety",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "downloaded",
+    "resolvedUrl": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-8.pdf",
+    "retrieved": "2026-09-25",
+    "bytes": 25314908,
+    "sha256": "6d88f76b16d76b9f7449bc0569c0722dac16ac14b21f1a44b49f549a74c2c4d1"
+  },
+  {
+    "file": "korean/eps-topik-07-workplace-language.pdf",
+    "url": "https://www.hrdkorea.or.kr/download/epstopik/EPS-TOPIK-7.pdf",
+    "title": "EPS-TOPIK NEW Standard Textbook: workplace language",
+    "publisher": "Human Resources Development Service of Korea",
+    "level": "2024 revised edition; adult daily-life and employment Korean",
+    "status": "failed",
+    "error": "terminated"
+  }
+]

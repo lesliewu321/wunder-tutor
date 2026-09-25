@@ -16,6 +16,7 @@ import { useT } from './i18n/useT';
 import { Icon, type IconName } from './ui/Icon';
 import { Toaster } from './ui/kit';
 import { BookTab } from './features/say/BookTab';
+import { TwisterPlay, Twisters } from './features/twisters/Twisters';
 import { SayIt } from './features/say/SayIt';
 import { CameraHost } from './features/say/CameraHost';
 import { pressBack } from './back';
@@ -112,6 +113,8 @@ export function App() {
               <Route index element={<Home />} />
               <Route path="lab" element={<LabHome />} />
               <Route path="book" element={<BookTab />} />
+              <Route path="twisters" element={<Twisters />} />
+              <Route path="twisters/:twister" element={<TwisterPlay />} />
               <Route path="speak" element={<PracticeHome />} />
               <Route path="progress" element={<Progress />} />
               <Route path="me" element={<Me />} />

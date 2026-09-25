@@ -13,6 +13,7 @@
 import { HttpError } from './http-error.mjs';
 import { createFamilies } from './family.mjs';
 import { createInvites } from './invites.mjs';
+import { createTwisters } from './twisters.mjs';
 import { createTts, DEFAULT_LIVE_MODEL, DEFAULT_VOICE, PREVIEW_LINES, TtsError } from './tts.mjs';
 import { createBackupVoice } from './azure-tts.mjs';
 import { DEFAULT_READ_MODEL, readText } from './read.mjs';
@@ -188,6 +189,8 @@ export function createApi(rawEnv, deps = {}) {
   const families = deps.families ?? (env('SUPABASE_URL') ? createFamilies({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log }) : null);
   // Invite codes and contributed recordings (server/invites.mjs): the same database, the same secret key.
   // deps.recordings: where contributed audio is kept (R2 on Cloudflare, a folder locally); without it, Supabase Storage as before.
+  // The tongue-twister leaderboard (server/twisters.mjs): same database, same secret key.
+  const twisters = deps.twisters ?? (env('SUPABASE_URL') ? createTwisters({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log }) : null);
   const invites = deps.invites ?? (env('SUPABASE_URL') ? createInvites({ url: env('SUPABASE_URL'), secretKey: cleanApiKey(env('SUPABASE_SECRET_KEY')), log, recordings: deps.recordings ?? null }) : null);
 
   const canDial = deps.canDialWebSocket ?? (Boolean(deps.connectWebSocket) || typeof WebSocket === 'function');
@@ -583,7 +586,9 @@ export function createApi(rawEnv, deps = {}) {
   const allowStatus = createLimiter(30, 60_000);
 
   // ---------------------------------------------------------------- router
-  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read', '/api/redeem', '/api/contributions/forget']);
+  const ROUTES = new Set(['/api/health', '/api/assess', '/api/tutor', '/api/tts', '/api/read', '/api/redeem', '/api/contributions/forget', '/api/twisters/score']);
+  const allowBoard = createLimiter(60, 60_000);
+  const allowScore = createLimiter(30, 10 * 60_000);
   /** Forgetting is cheap to ask for but reads the database: a handful of times per address. */
   const allowForget = createLimiter(6, 10 * 60_000);
 
@@ -660,6 +665,13 @@ export function createApi(rawEnv, deps = {}) {
           read: open && status.read,
         });
       }
+      if (route === 'GET /api/twisters/board') {
+        // The board is public: nicknames, avatars, regions and times, nothing else. Rate-limited, no code needed.
+        if (!allowBoard(client)) throw new HttpError(429, 'rate_limited');
+        if (!twisters) return json(200, { region: ctx.country ?? 'XX', global: [], regional: [], me: null });
+        try { return json(200, await twisters.board({ twister: url.searchParams.get('twister') ?? '', device: url.searchParams.get('device') ?? '', region: ctx.country ?? 'XX' })); }
+        catch (e) { if (/unknown twister/.test(e?.message ?? '')) throw new HttpError(400, 'unknown_twister'); log.warn?.(`[twisters] board: ${e?.message ?? e}`); throw new HttpError(502, 'board_failed'); }
+      }
       if (route === 'GET /api/status') {
         if (!allowStatus(client)) throw new HttpError(429, 'rate_limited');
         const { notes, ...words } = await liveStatus();
@@ -683,6 +695,15 @@ export function createApi(rawEnv, deps = {}) {
       // Setup's accent preview plays before the device has a code: those few fixed lines are open to anyone (tts.mjs).
       if (!authorized && !(path === '/api/tts' && await isPreview(request))) throw new HttpError(401, 'access_code_required');
 
+      if (path === '/api/twisters/score') {
+        // A passing take goes on the board. Behind the code like scoring itself: only a learner who can be scored can post.
+        if (!allowScore(client)) throw new HttpError(429, 'rate_limited');
+        let body;
+        try { body = await request.json(); } catch { throw new HttpError(400, 'invalid_json'); }
+        if (!twisters) return json(200, { kept: false });
+        try { return json(200, await twisters.submit({ ...body, region: ctx.country ?? 'XX' })); }
+        catch (e) { const m = e?.message ?? ''; if (/unknown twister|bad device|bad time|not a pass/.test(m)) throw new HttpError(400, 'invalid_score', { reason: m }); log.warn?.(`[twisters] submit: ${m}`); throw new HttpError(502, 'board_failed'); }
+      }
       if (path === '/api/assess') {
         await spend('scorings');
         return await handleAssess(request, url, client, ctx);

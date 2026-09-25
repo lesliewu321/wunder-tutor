@@ -18,6 +18,7 @@ import practice from './en/practice.json';
 import progress from './en/progress.json';
 import settings from './en/settings.json';
 import speak from './en/speak.json';
+import twisters from './en/twisters.json';
 import zhCommon from './zh-Hant/common.json';
 import zhContent from './zh-Hant/content.json';
 import zhContentCourse from './zh-Hant/content-course.json';
@@ -31,6 +32,7 @@ import zhPractice from './zh-Hant/practice.json';
 import zhProgress from './zh-Hant/progress.json';
 import zhSettings from './zh-Hant/settings.json';
 import zhSpeak from './zh-Hant/speak.json';
+import zhTwisters from './zh-Hant/twisters.json';
 
 export type Language = 'en' | 'zh-Hant';
 export const LANGUAGES: { id: Language; label: string; htmlLang: string }[] = [
@@ -38,13 +40,13 @@ export const LANGUAGES: { id: Language; label: string; htmlLang: string }[] = [
   { id: 'zh-Hant', label: '繁體中文', htmlLang: 'zh-Hant-HK' },
 ];
 
-export const en = { ...common, ...onboarding, ...settings, ...speak, ...feedback, ...home, ...lesson, ...lab, ...practice, ...progress };
+export const en = { ...common, ...onboarding, ...settings, ...speak, ...feedback, ...home, ...lesson, ...lab, ...practice, ...progress, ...twisters };
 export type Key = keyof typeof en;
 type Params = Record<string, string | number>;
 
 const INTERFACE: Record<Language, Partial<Record<string, string>>> = {
   en,
-  'zh-Hant': { ...zhCommon, ...zhOnboarding, ...zhSettings, ...zhSpeak, ...zhFeedback, ...zhHome, ...zhLesson, ...zhLab, ...zhPractice, ...zhProgress },
+  'zh-Hant': { ...zhCommon, ...zhOnboarding, ...zhSettings, ...zhSpeak, ...zhFeedback, ...zhHome, ...zhLesson, ...zhLab, ...zhPractice, ...zhProgress, ...zhTwisters },
 };
 const CONTENT: Record<Language, Partial<Record<string, string>>> = { en: {}, 'zh-Hant': { ...zhContent, ...zhContentCourse, ...astraContent } };
 

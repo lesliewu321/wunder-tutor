@@ -312,6 +312,8 @@ export interface ConversationRecord {
 
 export interface ParentSettings {
   storeRecordings: boolean;
+  /** Tongue-twister boards: a passing time goes up under the learner's nickname and avatar unless this is off. */
+  shareScores?: boolean;
   /**
    * "Help improve Wunder Tutor": the server keeps practice recordings, with no name, to test and improve how
    * pronunciation is checked. On by default: ticked in setup (Leslie, 2026-09-21) and in a fresh install's settings

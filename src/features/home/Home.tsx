@@ -131,6 +131,11 @@ export function Home() {
         <span><b>{t(p.band === 'adult' ? 'home.talk.title.adult' : 'home.talk.title.kid')}</b><small>{t('home.talk.sub')}</small></span>
         <Icon name="chevron" size={20} />
       </button>
+      <button type="button" className="row-link" onClick={() => nav('/twisters')}>
+        <span className="row-link__icon" aria-hidden>🌀</span>
+        <span><b>{t('home.twisters.title')}</b><small>{t('home.twisters.sub')}</small></span>
+        <Icon name="chevron" size={20} />
+      </button>
       </div>
 
       <section className="path" aria-label={t('home.path.aria')}>

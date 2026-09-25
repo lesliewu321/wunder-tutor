@@ -389,3 +389,11 @@
 .literacy .choice__stage { width: 100%; }
 .literacy .choice__dock { width: 100%; }
 .literacy__options .reply { justify-content: flex-start; text-align: left; padding: 16px; }
+
+/* Tongue twisters: the line's card turns with the verdict; the board sits under the mic. */
+.twister .prompt { border: 3px solid transparent; }
+.twister--pass { border-color: var(--good) !important; }
+.twister--fail { border-color: var(--weak) !important; }
+.twister__dock { position: static; margin: 12px 0; }
+.board { margin-top: 8px; }
+.twister__level { display: inline; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-soft); font-size: 0.72rem; font-weight: 700; vertical-align: middle; }

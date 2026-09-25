@@ -39,6 +39,8 @@
   "settings.voice.stored.other": "{n} recordings stored for {name}.",
   "settings.voice.contribute.label": "Help improve Wunder Tutor",
   "settings.voice.contribute.detail": "The Wunder Tutor team keeps practice recordings, with no name, to test the pronunciation checks on real voices and make them better. Recordings already go to the server to be scored; this keeps them instead of throwing them away. They are kept for 90 days at most, then deleted; deleting the recordings or the learner here deletes them at once.",
+  "settings.voice.share.label": "Show {name} on leaderboards",
+  "settings.voice.share.detail": "Tongue-twister times go on the world and regional boards under the nickname and avatar only — no age, no account, no location beyond the region. Off, and the game still works on this device.",
   "settings.voice.leave.kept": "Recordings go to the speech service to be scored, and the Wunder Tutor team keeps a copy, with no name, to make the checks better.",
   "settings.voice.leave.scored": "Recordings never leave this device except to be scored by the speech service, which does not keep them — unless you choose to share them below.",
   "settings.voice.leave.never": "Recordings never leave this device — unless you choose to share them below.",

@@ -59,7 +59,7 @@ interface AppState {
 
 // contributeRecordings is on by default (Leslie, 2026-09-25: "enable consent by default"); setup shows the switch and a
 // parent can turn it off there or in Settings. A device set up before the switch existed keeps a missing value = no.
-const defaultSettings: ParentSettings = { storeRecordings: true, contributeRecordings: true, consentedAt: null, demoMic: false, simulate: 'none', theme: 'auto' };
+const defaultSettings: ParentSettings = { storeRecordings: true, contributeRecordings: true, shareScores: true, consentedAt: null, demoMic: false, simulate: 'none', theme: 'auto' };
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 const MAX_ATTEMPTS = 500;
 const KEEP_AUDIO_PER_ITEM = 3;

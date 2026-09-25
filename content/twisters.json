@@ -1,0 +1,285 @@
+{
+  "_": "Tongue twisters for the game (src/features/twisters). English first: its scorer names every sound and is the strongest. A twister is only PLAYED once `proven` is true — eval/twisters.ts says a twister with a teacher take the scorer itself fails cannot be offered (四是四，十是十 proved that a scorer can fail a whole sequence while marking every syllable in it perfectly). Pass = the scorer's overall at or above `pass`, no word missed; rank = fastest passing time.",
+  "pass": 80,
+  "twisters": [
+    {
+      "id": "en-sea-shells",
+      "locale": "en-US",
+      "text": "She sells sea shells by the sea shore.",
+      "picture": "🐚",
+      "sounds": [
+        "ʃ",
+        "s"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 93
+    },
+    {
+      "id": "en-red-lorry",
+      "locale": "en-US",
+      "text": "Red lorry, yellow lorry.",
+      "picture": "🚚",
+      "sounds": [
+        "r",
+        "l"
+      ],
+      "level": 1,
+      "proven": true,
+      "teacherScore": 100
+    },
+    {
+      "id": "en-fresh-fish",
+      "locale": "en-US",
+      "text": "Fresh fried fish.",
+      "picture": "🐟",
+      "sounds": [
+        "f",
+        "r"
+      ],
+      "level": 1,
+      "proven": true,
+      "teacherScore": 98
+    },
+    {
+      "id": "en-six-snails",
+      "locale": "en-US",
+      "text": "Six slippery snails slid slowly seaward.",
+      "picture": "🐌",
+      "sounds": [
+        "s",
+        "l"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 100
+    },
+    {
+      "id": "en-peter-piper",
+      "locale": "en-US",
+      "text": "Peter Piper picked a peck of pickled peppers.",
+      "picture": "🌶️",
+      "sounds": [
+        "p"
+      ],
+      "level": 3,
+      "proven": true,
+      "teacherScore": 98
+    },
+    {
+      "id": "en-woodchuck",
+      "locale": "en-US",
+      "text": "How much wood would a woodchuck chuck?",
+      "picture": "🪵",
+      "sounds": [
+        "w",
+        "tʃ"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 99
+    },
+    {
+      "id": "en-thirty-three",
+      "locale": "en-US",
+      "text": "Thirty-three thirsty thieves.",
+      "picture": "🥤",
+      "sounds": [
+        "θ"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 97
+    },
+    {
+      "id": "en-big-black-bug",
+      "locale": "en-US",
+      "text": "A big black bug bit a big black bear.",
+      "picture": "🐻",
+      "sounds": [
+        "b"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 99
+    },
+    {
+      "id": "en-cheap-ship",
+      "locale": "en-US",
+      "text": "The cheap ship trip.",
+      "picture": "🚢",
+      "sounds": [
+        "tʃ",
+        "ʃ"
+      ],
+      "level": 1,
+      "proven": true,
+      "teacherScore": 94
+    },
+    {
+      "id": "en-lemon-liniment",
+      "locale": "en-US",
+      "text": "Little Lily likes lemon lollies.",
+      "picture": "🍋",
+      "sounds": [
+        "l"
+      ],
+      "level": 1,
+      "proven": true,
+      "teacherScore": 99
+    },
+    {
+      "id": "zh-mama-qi-ma",
+      "locale": "zh-CN",
+      "text": "妈妈骑马，马慢，妈妈骂马。",
+      "picture": "🐴",
+      "sounds": [
+        "zh:t1",
+        "zh:t3",
+        "zh:t4"
+      ],
+      "level": 3,
+      "proven": false,
+      "teacherScore": 48,
+      "note": "teacher 48, missed 骂 马"
+    },
+    {
+      "id": "zh-si-shi-si",
+      "locale": "zh-CN",
+      "text": "四是四，十是十。",
+      "picture": "🔢",
+      "sounds": [
+        "zh:sh",
+        "zh:s"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 83
+    },
+    {
+      "id": "zh-chi-putao",
+      "locale": "zh-CN",
+      "text": "吃葡萄不吐葡萄皮。",
+      "picture": "🍇",
+      "sounds": [
+        "zh:t2",
+        "zh:sh"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 99
+    },
+    {
+      "id": "es-tres-tristes-tigres",
+      "locale": "es-ES",
+      "text": "Tres tristes tigres tragan trigo en un trigal.",
+      "picture": "🐯",
+      "sounds": [
+        "es:r",
+        "es:rr"
+      ],
+      "level": 3,
+      "proven": true,
+      "teacherScore": 100
+    },
+    {
+      "id": "es-pablito",
+      "locale": "es-ES",
+      "text": "Pablito clavó un clavito.",
+      "picture": "🔨",
+      "sounds": [
+        "es:b",
+        "es:vowel"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 98
+    },
+    {
+      "id": "es-erre-con-erre",
+      "locale": "es-ES",
+      "text": "Erre con erre, cigarro.",
+      "picture": "🚂",
+      "sounds": [
+        "es:rr"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 98
+    },
+    {
+      "id": "ko-ganjang-gongjang",
+      "locale": "ko-KR",
+      "text": "간장 공장 공장장은 강 공장장이다.",
+      "picture": "🏭",
+      "sounds": [
+        "ko:batchim"
+      ],
+      "level": 3,
+      "proven": true,
+      "teacherScore": 83
+    },
+    {
+      "id": "ko-gyeongchalcheong",
+      "locale": "ko-KR",
+      "text": "경찰청 쇠창살 외철창살.",
+      "picture": "🚓",
+      "sounds": [
+        "ko:aspirated",
+        "ko:tense"
+      ],
+      "level": 3,
+      "proven": false,
+      "teacherScore": 70,
+      "note": "teacher 70"
+    },
+    {
+      "id": "fr-chaussettes",
+      "locale": "fr-FR",
+      "text": "Les chaussettes de l'archiduchesse sont-elles sèches ?",
+      "picture": "🧦",
+      "sounds": [
+        "ʃ"
+      ],
+      "level": 3,
+      "proven": true,
+      "teacherScore": 90
+    },
+    {
+      "id": "fr-chasseur",
+      "locale": "fr-FR",
+      "text": "Un chasseur sachant chasser.",
+      "picture": "🦌",
+      "sounds": [
+        "ʃ"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 95
+    },
+    {
+      "id": "ja-namamugi",
+      "locale": "ja-JP",
+      "text": "なまむぎ なまごめ なまたまご",
+      "picture": "🥚",
+      "sounds": [
+        "ja:r"
+      ],
+      "level": 2,
+      "proven": true,
+      "teacherScore": 97
+    },
+    {
+      "id": "ja-tonari-no-kyaku",
+      "locale": "ja-JP",
+      "text": "となりの きゃくは よく かき くう きゃくだ",
+      "picture": "🍊",
+      "sounds": [
+        "ja:ky"
+      ],
+      "level": 3,
+      "proven": true,
+      "teacherScore": 98
+    }
+  ]
+}

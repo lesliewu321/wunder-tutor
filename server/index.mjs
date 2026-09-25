@@ -77,7 +77,7 @@ const server = http.createServer(async (req, res) => {
     const request = new Request(`http://${req.headers.host ?? 'localhost'}${req.url ?? '/'}`, {
       method: req.method, headers, body: hasBody ? req : undefined, duplex: hasBody ? 'half' : undefined,
     });
-    const response = await api.handle(request, { clientId: req.socket.remoteAddress ?? 'local' });
+    const response = await api.handle(request, { clientId: req.socket.remoteAddress ?? 'local' , country: (process.env.COUNTRY ?? 'HK').trim() });
     const body = Buffer.from(await response.arrayBuffer());
     const out = Object.fromEntries(response.headers);
     out['content-length'] = String(body.length);

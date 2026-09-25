@@ -107,5 +107,6 @@ export async function onRequest({ request, env, waitUntil }) {
     googleFetch: googleFetch(env), egressInfo: egressInfo(env),
   });
   // waitUntil: a contributed recording is stored after the score has gone back (server/core.mjs keepIfAsked).
-  return api.handle(request, { clientId: request.headers.get('cf-connecting-ip') ?? 'unknown', waitUntil });
+  // country: where the request came from (Cloudflare's own geolocation), for the regional leaderboard — never stored with anything that identifies a person.
+  return api.handle(request, { clientId: request.headers.get('cf-connecting-ip') ?? 'unknown', waitUntil, country: request.cf?.country });
 }
