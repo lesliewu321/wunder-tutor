@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
+    "content:check": "vite-node scripts/content-check.ts",
     "server": "node server/index.mjs",
     "deploy": "npm run build && wrangler pages deploy dist --project-name wunder-tutor --branch main --commit-dirty=true",
     "cf:dev": "npm run build && wrangler pages dev dist --port 8788",

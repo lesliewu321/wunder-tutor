@@ -56,6 +56,8 @@ export interface SpeakItem {
   zh?: ZhText;
   /** Japanese items: `text` is the line as written (kanji and kana, what the scorer is sent); this adds how it is read. */
   ja?: JaText;
+  /** "Speak from a translation" prompts, by the learner's home language; an item without one falls back to a picture prompt. */
+  translations?: Partial<Record<HomeLanguage, string>>;
 }
 
 export interface JaText {

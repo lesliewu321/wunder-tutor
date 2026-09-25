@@ -1,0 +1,2533 @@
+{
+  "id": "english-adventure",
+  "language": "en",
+  "title": "English Adventure",
+  "grownUpTitle": "English",
+  "exercisePrefix": "ex",
+  "items": {
+    "it-apple": {
+      "text": "apple",
+      "picture": "🍎",
+      "meaning": "a round red or green fruit",
+      "kind": "word",
+      "focus": [
+        "æ"
+      ]
+    },
+    "it-milk": {
+      "text": "milk",
+      "picture": "🥛",
+      "meaning": "a white drink",
+      "kind": "word",
+      "focus": [
+        "ɪ",
+        "l"
+      ]
+    },
+    "it-bread": {
+      "text": "bread",
+      "picture": "🍞",
+      "meaning": "you make toast with it",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "it-water": {
+      "text": "water",
+      "picture": "💧",
+      "meaning": "a clear drink",
+      "kind": "word",
+      "focus": [
+        "w"
+      ]
+    },
+    "it-banana": {
+      "text": "banana",
+      "picture": "🍌",
+      "meaning": "a long yellow fruit",
+      "kind": "word",
+      "focus": [
+        "æ"
+      ]
+    },
+    "it-cheese": {
+      "text": "cheese",
+      "picture": "🧀",
+      "meaning": "yellow food made from milk",
+      "kind": "word",
+      "focus": [
+        "tʃ",
+        "z"
+      ]
+    },
+    "it-chicken": {
+      "text": "chicken",
+      "picture": "🍗",
+      "meaning": "meat from a bird",
+      "kind": "word",
+      "focus": [
+        "tʃ",
+        "ɪ"
+      ]
+    },
+    "it-orange-juice": {
+      "text": "orange juice",
+      "picture": "🧃",
+      "meaning": "a sweet drink made from oranges",
+      "kind": "phrase",
+      "focus": [
+        "r",
+        "dʒ"
+      ]
+    },
+    "it-sandwich": {
+      "text": "sandwich",
+      "picture": "🥪",
+      "meaning": "two slices of bread with food inside",
+      "kind": "word",
+      "focus": [
+        "æ",
+        "w"
+      ]
+    },
+    "it-breakfast": {
+      "text": "breakfast",
+      "picture": "🍳",
+      "meaning": "the first meal of the day",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "it-vegetables": {
+      "text": "vegetables",
+      "picture": "🥦",
+      "meaning": "plants you eat, like carrots and broccoli",
+      "kind": "word",
+      "focus": [
+        "v",
+        "dʒ"
+      ]
+    },
+    "it-restaurant": {
+      "text": "restaurant",
+      "picture": "🍽️",
+      "meaning": "a place where you pay to eat a meal",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "it-chocolate": {
+      "text": "chocolate",
+      "picture": "🍫",
+      "meaning": "a sweet brown treat",
+      "kind": "word",
+      "focus": [
+        "tʃ",
+        "l"
+      ]
+    },
+    "it-milk-please": {
+      "text": "Milk, please.",
+      "picture": "🥛",
+      "meaning": "ask for milk politely",
+      "kind": "phrase",
+      "focus": [
+        "ɪ",
+        "z"
+      ]
+    },
+    "it-an-apple-please": {
+      "text": "An apple, please.",
+      "picture": "🍎",
+      "meaning": "ask for an apple politely",
+      "kind": "phrase",
+      "focus": [
+        "æ"
+      ]
+    },
+    "it-thank-you": {
+      "text": "Thank you!",
+      "picture": "💛",
+      "meaning": "say this when someone helps you",
+      "kind": "phrase",
+      "focus": [
+        "θ"
+      ]
+    },
+    "it-yes-please": {
+      "text": "Yes, please.",
+      "picture": "👍",
+      "meaning": "a polite way to say yes",
+      "kind": "phrase",
+      "focus": [
+        "z"
+      ]
+    },
+    "it-i-would-like-an-apple": {
+      "text": "I would like an apple.",
+      "picture": "🍎",
+      "meaning": "a polite way to say what you want",
+      "kind": "sentence",
+      "focus": [
+        "w",
+        "l",
+        "æ"
+      ]
+    },
+    "it-can-i-have-some-water-please": {
+      "text": "Can I have some water, please?",
+      "picture": "💧",
+      "meaning": "ask for water politely",
+      "kind": "sentence",
+      "focus": [
+        "w",
+        "v"
+      ],
+      "translations": {
+        "yue": "可以給我一些水嗎？",
+        "es": "¿Me das un poco de agua, por favor?",
+        "zh": "请给我一些水，好吗？",
+        "de": "Kann ich bitte etwas Wasser haben?",
+        "fr": "Je peux avoir de l’eau, s’il vous plaît ?",
+        "pt": "Posso tomar um pouco de água, por favor?",
+        "ja": "お水をもらえますか？",
+        "ko": "물 좀 주시겠어요?",
+        "hi": "क्या मुझे थोड़ा पानी मिल सकता है?",
+        "ar": "هل يمكنني الحصول على بعض الماء من فضلك؟"
+      }
+    },
+    "it-i-am-very-hungry": {
+      "text": "I am very hungry.",
+      "picture": "😋",
+      "meaning": "you really need food",
+      "kind": "sentence",
+      "focus": [
+        "v",
+        "r"
+      ]
+    },
+    "it-thank-you-very-much": {
+      "text": "Thank you very much.",
+      "picture": "💛",
+      "meaning": "a big thank-you",
+      "kind": "sentence",
+      "focus": [
+        "θ",
+        "v"
+      ],
+      "translations": {
+        "yue": "非常感謝。",
+        "es": "Muchas gracias.",
+        "zh": "非常感谢。",
+        "de": "Vielen Dank.",
+        "fr": "Merci beaucoup.",
+        "pt": "Muito obrigado.",
+        "ja": "どうもありがとうございます。",
+        "ko": "정말 감사합니다.",
+        "hi": "बहुत-बहुत धन्यवाद।",
+        "ar": "شكراً جزيلاً."
+      }
+    },
+    "it-i-would-like-a-cup-of-hot-chocolate": {
+      "text": "I would like a cup of hot chocolate.",
+      "picture": "☕",
+      "meaning": "order a warm drink politely",
+      "kind": "sentence",
+      "focus": [
+        "w",
+        "l",
+        "tʃ"
+      ],
+      "translations": {
+        "yue": "我想要一杯熱朱古力。",
+        "es": "Quisiera una taza de chocolate caliente.",
+        "zh": "我想要一杯热巧克力。",
+        "de": "Ich hätte gern eine Tasse heiße Schokolade.",
+        "fr": "Je voudrais une tasse de chocolat chaud.",
+        "pt": "Eu queria uma xícara de chocolate quente.",
+        "ja": "ホットチョコレートを一杯ください。",
+        "ko": "핫초코 한 잔 주세요.",
+        "hi": "मुझे एक कप हॉट चॉकलेट चाहिए।",
+        "ar": "أريد كوباً من الشوكولاتة الساخنة."
+      }
+    },
+    "it-could-i-have-the-menu-please": {
+      "text": "Could I have the menu, please?",
+      "picture": "📋",
+      "meaning": "ask to see the list of food",
+      "kind": "sentence",
+      "focus": [
+        "ð",
+        "v"
+      ],
+      "translations": {
+        "yue": "可以給我餐牌嗎？",
+        "es": "¿Me trae el menú, por favor?",
+        "zh": "请给我菜单，好吗？",
+        "de": "Könnte ich bitte die Speisekarte haben?",
+        "fr": "Pourrais-je avoir le menu, s’il vous plaît ?",
+        "pt": "Poderia me trazer o cardápio, por favor?",
+        "ja": "メニューをいただけますか？",
+        "ko": "메뉴판 좀 주시겠어요?",
+        "hi": "क्या मुझे मेन्यू मिल सकता है?",
+        "ar": "هل يمكنني الحصول على قائمة الطعام من فضلك؟"
+      }
+    },
+    "it-what-do-you-recommend": {
+      "text": "What do you recommend?",
+      "picture": "🤔",
+      "meaning": "ask the waiter for a suggestion",
+      "kind": "sentence",
+      "focus": [
+        "w",
+        "r"
+      ],
+      "translations": {
+        "yue": "你有什麼推介？",
+        "es": "¿Qué me recomienda?",
+        "zh": "你推荐什么？",
+        "de": "Was empfehlen Sie?",
+        "fr": "Que recommandez-vous ?",
+        "pt": "O que você recomenda?",
+        "ja": "おすすめは何ですか？",
+        "ko": "무엇을 추천하시나요?",
+        "hi": "आप क्या सुझाव देंगे?",
+        "ar": "بماذا تنصح؟"
+      }
+    },
+    "it-that-sounds-great-thank-you": {
+      "text": "That sounds great, thank you.",
+      "picture": "😄",
+      "meaning": "agree happily",
+      "kind": "sentence",
+      "focus": [
+        "ð",
+        "θ",
+        "r"
+      ],
+      "translations": {
+        "yue": "聽起來很不錯，謝謝。",
+        "es": "Suena genial, gracias.",
+        "zh": "听起来很棒，谢谢。",
+        "de": "Das klingt super, danke.",
+        "fr": "Ça a l’air super, merci.",
+        "pt": "Parece ótimo, obrigado.",
+        "ja": "いいですね、ありがとう。",
+        "ko": "좋아요, 감사합니다.",
+        "hi": "यह बढ़िया लगता है, धन्यवाद।",
+        "ar": "يبدو رائعاً، شكراً لك."
+      }
+    },
+    "it-three": {
+      "text": "three",
+      "picture": "3️⃣",
+      "meaning": "the number 3",
+      "kind": "word",
+      "focus": [
+        "θ",
+        "r"
+      ]
+    },
+    "it-tree": {
+      "text": "tree",
+      "picture": "🌳",
+      "meaning": "a tall plant with leaves",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "it-red": {
+      "text": "red",
+      "picture": "🔴",
+      "meaning": "the colour of a tomato",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "it-think": {
+      "text": "think",
+      "picture": "💭",
+      "meaning": "to use your mind",
+      "kind": "word",
+      "focus": [
+        "θ"
+      ]
+    },
+    "it-sink": {
+      "text": "sink",
+      "picture": "🚰",
+      "meaning": "where you wash your hands",
+      "kind": "word",
+      "focus": [
+        "s"
+      ]
+    },
+    "it-thirsty": {
+      "text": "thirsty",
+      "picture": "🥵",
+      "meaning": "when you need a drink",
+      "kind": "word",
+      "focus": [
+        "θ"
+      ]
+    },
+    "it-three-red-apples": {
+      "text": "three red apples",
+      "picture": "🍎",
+      "meaning": "count the apples",
+      "kind": "phrase",
+      "focus": [
+        "θ",
+        "r"
+      ]
+    },
+    "it-fries": {
+      "text": "fries",
+      "picture": "🍟",
+      "meaning": "thin fried potatoes",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "it-flies": {
+      "text": "flies",
+      "picture": "🪰",
+      "meaning": "small flying insects",
+      "kind": "word",
+      "focus": [
+        "l"
+      ]
+    },
+    "it-i-think-i-ll-have-the-fish": {
+      "text": "I think I'll have the fish.",
+      "picture": "🐟",
+      "meaning": "decide what to order",
+      "kind": "sentence",
+      "focus": [
+        "θ",
+        "ð"
+      ]
+    },
+    "it-very": {
+      "text": "very",
+      "picture": "⭐",
+      "meaning": "a lot",
+      "kind": "word",
+      "focus": [
+        "v"
+      ]
+    },
+    "it-berry": {
+      "text": "berry",
+      "picture": "🫐",
+      "meaning": "a small round fruit",
+      "kind": "word",
+      "focus": [
+        "b"
+      ]
+    },
+    "it-very-fresh-vegetables": {
+      "text": "very fresh vegetables",
+      "picture": "🥦",
+      "meaning": "describe healthy food",
+      "kind": "phrase",
+      "focus": [
+        "v",
+        "r"
+      ]
+    },
+    "it-ship": {
+      "text": "ship",
+      "picture": "🚢",
+      "meaning": "a big boat",
+      "kind": "word",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "it-sheep": {
+      "text": "sheep",
+      "picture": "🐑",
+      "meaning": "a woolly farm animal",
+      "kind": "word",
+      "focus": [
+        "i"
+      ]
+    },
+    "it-i-m-thirsty": {
+      "text": "I'm thirsty.",
+      "picture": "🥵",
+      "meaning": "you need a drink",
+      "kind": "phrase",
+      "focus": [
+        "θ"
+      ]
+    },
+    "it-i-would-like-some-orange-juice": {
+      "text": "I would like some orange juice.",
+      "picture": "🧃",
+      "kind": "sentence"
+    },
+    "it-i-would-like-a-cheese-sandwich": {
+      "text": "I would like a cheese sandwich.",
+      "picture": "🥪",
+      "kind": "sentence"
+    },
+    "it-i-am-a-little-hungry": {
+      "text": "I am a little hungry.",
+      "picture": "🙂",
+      "kind": "sentence"
+    },
+    "it-no-thank-you-just-the-fish": {
+      "text": "No, thank you. Just the fish.",
+      "picture": "🙅",
+      "kind": "sentence"
+    },
+    "it-very-red": {
+      "text": "very red",
+      "picture": "🔴",
+      "kind": "phrase"
+    },
+    "it-very-red-apples": {
+      "text": "very red apples",
+      "picture": "🍎",
+      "kind": "phrase"
+    },
+    "it-i-think-this-is-the-right-ship": {
+      "text": "I think this is the right ship.",
+      "picture": "🚢",
+      "kind": "sentence"
+    },
+    "fr-tu": {
+      "text": "tu",
+      "picture": "🫵",
+      "meaning": "you",
+      "kind": "word",
+      "focus": [
+        "y"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-jus": {
+      "text": "jus",
+      "picture": "🧃",
+      "meaning": "juice",
+      "kind": "word",
+      "focus": [
+        "ʒ",
+        "y"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-rue": {
+      "text": "rue",
+      "picture": "🛣️",
+      "meaning": "street",
+      "kind": "word",
+      "focus": [
+        "ʁ",
+        "y"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-sucre": {
+      "text": "sucre",
+      "picture": "🍬",
+      "meaning": "sugar",
+      "kind": "word",
+      "focus": [
+        "y",
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-un-peu-de-sucre": {
+      "text": "un peu de sucre",
+      "picture": "🍬",
+      "meaning": "a little sugar",
+      "kind": "sentence",
+      "focus": [
+        "ø",
+        "y"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-deux-cafés": {
+      "text": "deux cafés",
+      "picture": "☕",
+      "meaning": "two coffees",
+      "kind": "phrase",
+      "focus": [
+        "ø"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-je-voudrais-un-croissant": {
+      "text": "je voudrais un croissant",
+      "picture": "🥐",
+      "meaning": "I'd like a croissant",
+      "kind": "sentence",
+      "focus": [
+        "ʒ",
+        "ʁ",
+        "ɑ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-riz": {
+      "text": "riz",
+      "picture": "🍚",
+      "meaning": "rice",
+      "kind": "word",
+      "focus": [
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-rouge": {
+      "text": "rouge",
+      "picture": "🔴",
+      "meaning": "red",
+      "kind": "word",
+      "focus": [
+        "ʁ",
+        "ʒ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-fromage": {
+      "text": "fromage",
+      "picture": "🧀",
+      "meaning": "cheese",
+      "kind": "word",
+      "focus": [
+        "ʁ",
+        "ʒ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-livre": {
+      "text": "livre",
+      "picture": "📖",
+      "meaning": "book",
+      "kind": "word",
+      "focus": [
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-frère": {
+      "text": "frère",
+      "picture": "👦",
+      "meaning": "brother",
+      "kind": "word",
+      "focus": [
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-la-fleur-rouge": {
+      "text": "la fleur rouge",
+      "picture": "🌸",
+      "meaning": "the red flower",
+      "kind": "phrase",
+      "focus": [
+        "œ",
+        "ʁ",
+        "ʒ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-un-croissant": {
+      "text": "un croissant",
+      "picture": "🥐",
+      "meaning": "a croissant",
+      "kind": "phrase",
+      "focus": [
+        "ʁ",
+        "ɑ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-je-voudrais-un-café": {
+      "text": "je voudrais un café",
+      "picture": "☕",
+      "meaning": "I'd like a coffee",
+      "kind": "sentence",
+      "focus": [
+        "ʒ",
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-blanc": {
+      "text": "blanc",
+      "picture": "⚪",
+      "meaning": "white",
+      "kind": "word",
+      "focus": [
+        "ɑ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-croissant": {
+      "text": "croissant",
+      "picture": "🥐",
+      "meaning": "croissant",
+      "kind": "word",
+      "focus": [
+        "ʁ",
+        "ɑ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-montagne": {
+      "text": "montagne",
+      "picture": "⛰️",
+      "meaning": "mountain",
+      "kind": "word",
+      "focus": [
+        "ɲ",
+        "ɔ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-un-chien-blanc": {
+      "text": "un chien blanc",
+      "picture": "🐶",
+      "meaning": "a white dog",
+      "kind": "phrase",
+      "focus": [
+        "ɛ̃",
+        "ɑ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-comment-ça-va": {
+      "text": "comment ça va",
+      "picture": "🙂",
+      "meaning": "how are you",
+      "kind": "phrase",
+      "focus": [
+        "ɑ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-pain": {
+      "text": "pain",
+      "picture": "🥖",
+      "meaning": "bread",
+      "kind": "word",
+      "focus": [
+        "ɛ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-un": {
+      "text": "un",
+      "picture": "1️⃣",
+      "meaning": "one",
+      "kind": "word",
+      "focus": [
+        "ɛ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-chien": {
+      "text": "chien",
+      "picture": "🐶",
+      "meaning": "dog",
+      "kind": "word",
+      "focus": [
+        "ɛ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-cinq": {
+      "text": "cinq",
+      "picture": "5️⃣",
+      "meaning": "five",
+      "kind": "word",
+      "focus": [
+        "ɛ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-un-café": {
+      "text": "un café",
+      "picture": "☕",
+      "meaning": "a coffee",
+      "kind": "phrase",
+      "focus": [
+        "ɛ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-très-bien-merci": {
+      "text": "très bien, merci",
+      "picture": "😊",
+      "meaning": "very well, thank you",
+      "kind": "phrase",
+      "focus": [
+        "ʁ",
+        "ɛ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-bon": {
+      "text": "bon",
+      "picture": "👍",
+      "meaning": "good",
+      "kind": "word",
+      "focus": [
+        "ɔ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-poisson": {
+      "text": "poisson",
+      "picture": "🐟",
+      "meaning": "fish",
+      "kind": "word",
+      "focus": [
+        "ɔ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-maison": {
+      "text": "maison",
+      "picture": "🏠",
+      "meaning": "house",
+      "kind": "word",
+      "focus": [
+        "ɔ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-c'est-très-bon": {
+      "text": "c'est très bon",
+      "picture": "😋",
+      "meaning": "it's very good",
+      "kind": "phrase",
+      "focus": [
+        "ʁ",
+        "ɔ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-l'addition-s'il-vous-plaît": {
+      "text": "l'addition, s'il vous plaît",
+      "picture": "🧾",
+      "meaning": "the bill, please",
+      "kind": "sentence",
+      "focus": [
+        "ɔ̃"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-deux": {
+      "text": "deux",
+      "picture": "2️⃣",
+      "meaning": "two",
+      "kind": "word",
+      "focus": [
+        "ø"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-peu": {
+      "text": "peu",
+      "picture": "🤏",
+      "meaning": "a little",
+      "kind": "word",
+      "focus": [
+        "ø"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-bleu": {
+      "text": "bleu",
+      "picture": "🔵",
+      "meaning": "blue",
+      "kind": "word",
+      "focus": [
+        "ø"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-sœur": {
+      "text": "sœur",
+      "picture": "👧",
+      "meaning": "sister",
+      "kind": "word",
+      "focus": [
+        "œ",
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-fleur": {
+      "text": "fleur",
+      "picture": "🌸",
+      "meaning": "flower",
+      "kind": "word",
+      "focus": [
+        "œ",
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-neuf": {
+      "text": "neuf",
+      "picture": "9️⃣",
+      "meaning": "nine",
+      "kind": "word",
+      "focus": [
+        "œ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-jour": {
+      "text": "jour",
+      "picture": "☀️",
+      "meaning": "day",
+      "kind": "word",
+      "focus": [
+        "ʒ",
+        "ʁ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-jaune": {
+      "text": "jaune",
+      "picture": "🟡",
+      "meaning": "yellow",
+      "kind": "word",
+      "focus": [
+        "ʒ"
+      ],
+      "lang": "fr-FR"
+    },
+    "fr-j'aime-le-chocolat": {
+      "text": "j'aime le chocolat",
+      "picture": "🍫",
+      "meaning": "I like chocolate",
+      "kind": "phrase",
+      "focus": [
+        "ʒ"
+      ],
+      "lang": "fr-FR"
+    },
+    "lab-θ-tha": {
+      "text": "tha",
+      "say": "thah",
+      "kind": "syllable",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-thee": {
+      "text": "thee",
+      "say": "thee",
+      "kind": "syllable",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-thoo": {
+      "text": "thoo",
+      "say": "thoo",
+      "kind": "syllable",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-three": {
+      "text": "three",
+      "picture": "3️⃣",
+      "kind": "word",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-thank": {
+      "text": "thank",
+      "picture": "💛",
+      "kind": "word",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-mouth": {
+      "text": "mouth",
+      "picture": "👄",
+      "kind": "word",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-thank-you": {
+      "text": "thank you",
+      "kind": "phrase",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-three-things": {
+      "text": "three things",
+      "kind": "phrase",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-θ-i-think-i-am-thirsty-": {
+      "text": "I think I am thirsty.",
+      "kind": "sentence",
+      "focus": [
+        "θ"
+      ]
+    },
+    "lab-r-ra": {
+      "text": "ra",
+      "say": "rah",
+      "kind": "syllable",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-ree": {
+      "text": "ree",
+      "say": "ree",
+      "kind": "syllable",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-roo": {
+      "text": "roo",
+      "say": "roo",
+      "kind": "syllable",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-red": {
+      "text": "red",
+      "picture": "🔴",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-right": {
+      "text": "right",
+      "picture": "➡️",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-around": {
+      "text": "around",
+      "picture": "🔄",
+      "kind": "word",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-right-now": {
+      "text": "right now",
+      "kind": "phrase",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-around-the-corner": {
+      "text": "around the corner",
+      "kind": "phrase",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-r-turn-right-at-the-next-street-": {
+      "text": "Turn right at the next street.",
+      "kind": "sentence",
+      "focus": [
+        "r"
+      ]
+    },
+    "lab-ð-the": {
+      "text": "the",
+      "say": "the",
+      "kind": "syllable",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-they": {
+      "text": "they",
+      "say": "they",
+      "kind": "syllable",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-though": {
+      "text": "though",
+      "say": "though",
+      "kind": "syllable",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-this": {
+      "text": "this",
+      "picture": "👇",
+      "kind": "word",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-that": {
+      "text": "that",
+      "picture": "👉",
+      "kind": "word",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-mother": {
+      "text": "mother",
+      "picture": "👩",
+      "kind": "word",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-this-one": {
+      "text": "this one",
+      "kind": "phrase",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-my-brother": {
+      "text": "my brother",
+      "kind": "phrase",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-ð-this-is-my-mother-and-that-is-my-brother-": {
+      "text": "This is my mother and that is my brother.",
+      "kind": "sentence",
+      "focus": [
+        "ð"
+      ]
+    },
+    "lab-v-va": {
+      "text": "va",
+      "say": "vah",
+      "kind": "syllable",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-vee": {
+      "text": "vee",
+      "say": "vee",
+      "kind": "syllable",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-voo": {
+      "text": "voo",
+      "say": "voo",
+      "kind": "syllable",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-very": {
+      "text": "very",
+      "picture": "⭐",
+      "kind": "word",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-five": {
+      "text": "five",
+      "picture": "5️⃣",
+      "kind": "word",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-seven": {
+      "text": "seven",
+      "picture": "7️⃣",
+      "kind": "word",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-very-good": {
+      "text": "very good",
+      "kind": "phrase",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-five-vegetables": {
+      "text": "five vegetables",
+      "kind": "phrase",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-v-we-love-to-visit-the-village-": {
+      "text": "We love to visit the village.",
+      "kind": "sentence",
+      "focus": [
+        "v"
+      ]
+    },
+    "lab-w-wa": {
+      "text": "wa",
+      "say": "wah",
+      "kind": "syllable",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-wee": {
+      "text": "wee",
+      "say": "wee",
+      "kind": "syllable",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-woo": {
+      "text": "woo",
+      "say": "woo",
+      "kind": "syllable",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-water": {
+      "text": "water",
+      "picture": "💧",
+      "kind": "word",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-we": {
+      "text": "we",
+      "picture": "👫",
+      "kind": "word",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-want": {
+      "text": "want",
+      "picture": "🙏",
+      "kind": "word",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-we-want": {
+      "text": "we want",
+      "kind": "phrase",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-warm-water": {
+      "text": "warm water",
+      "kind": "phrase",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-w-we-want-some-warm-water-": {
+      "text": "We want some warm water.",
+      "kind": "sentence",
+      "focus": [
+        "w"
+      ]
+    },
+    "lab-l-la": {
+      "text": "la",
+      "say": "lah",
+      "kind": "syllable",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-lee": {
+      "text": "lee",
+      "say": "lee",
+      "kind": "syllable",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-loo": {
+      "text": "loo",
+      "say": "loo",
+      "kind": "syllable",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-like": {
+      "text": "like",
+      "picture": "👍",
+      "kind": "word",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-lemon": {
+      "text": "lemon",
+      "picture": "🍋",
+      "kind": "word",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-yellow": {
+      "text": "yellow",
+      "picture": "🟡",
+      "kind": "word",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-i-like": {
+      "text": "I like",
+      "kind": "phrase",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-yellow-lemon": {
+      "text": "yellow lemon",
+      "kind": "phrase",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-l-i-would-like-a-little-lemonade-": {
+      "text": "I would like a little lemonade.",
+      "kind": "sentence",
+      "focus": [
+        "l"
+      ]
+    },
+    "lab-æ-at": {
+      "text": "at",
+      "say": "at",
+      "kind": "syllable",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-am": {
+      "text": "am",
+      "say": "am",
+      "kind": "syllable",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-add": {
+      "text": "add",
+      "say": "add",
+      "kind": "syllable",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-apple": {
+      "text": "apple",
+      "picture": "🍎",
+      "kind": "word",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-cat": {
+      "text": "cat",
+      "picture": "🐱",
+      "kind": "word",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-happy": {
+      "text": "happy",
+      "picture": "😊",
+      "kind": "word",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-a-happy-cat": {
+      "text": "a happy cat",
+      "kind": "phrase",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-that-hat": {
+      "text": "that hat",
+      "kind": "phrase",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-æ-the-happy-cat-sat-on-my-hat-": {
+      "text": "The happy cat sat on my hat.",
+      "kind": "sentence",
+      "focus": [
+        "æ"
+      ]
+    },
+    "lab-ɪ-it": {
+      "text": "it",
+      "say": "it",
+      "kind": "syllable",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-in": {
+      "text": "in",
+      "say": "in",
+      "kind": "syllable",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-is": {
+      "text": "is",
+      "say": "is",
+      "kind": "syllable",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-milk": {
+      "text": "milk",
+      "picture": "🥛",
+      "kind": "word",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-fish": {
+      "text": "fish",
+      "picture": "🐟",
+      "kind": "word",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-chicken": {
+      "text": "chicken",
+      "picture": "🍗",
+      "kind": "word",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-big-fish": {
+      "text": "big fish",
+      "kind": "phrase",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-a-little-bit": {
+      "text": "a little bit",
+      "kind": "phrase",
+      "focus": [
+        "ɪ"
+      ]
+    },
+    "lab-ɪ-the-big-fish-is-in-the-dish-": {
+      "text": "The big fish is in the dish.",
+      "kind": "sentence",
+      "focus": [
+        "ɪ"
+      ]
+    }
+  },
+  "units": [
+    {
+      "id": "food",
+      "title": "Yummy Food",
+      "subtitle": "Order food and drinks",
+      "icon": "🍎",
+      "color": "var(--coral)",
+      "grownUp": {
+        "title": "Food & Drink",
+        "subtitle": "Order at cafés and restaurants"
+      },
+      "lessons": [
+        {
+          "id": "food-1",
+          "title": "Key words",
+          "icon": "🍎",
+          "kind": "words",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-apple"
+              },
+              {
+                "type": "speak",
+                "item": "it-milk"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-milk",
+                "others": [
+                  "it-apple",
+                  "it-bread"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-bread"
+              },
+              {
+                "type": "speak",
+                "item": "it-water"
+              },
+              {
+                "type": "speak",
+                "item": "it-banana"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-water"
+              },
+              {
+                "type": "speak",
+                "item": "it-cheese"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-cheese",
+                "others": [
+                  "it-chicken",
+                  "it-orange-juice"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-chicken"
+              },
+              {
+                "type": "speak",
+                "item": "it-orange-juice"
+              },
+              {
+                "type": "speak",
+                "item": "it-sandwich"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-breakfast"
+              },
+              {
+                "type": "speak",
+                "item": "it-vegetables"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-vegetables",
+                "others": [
+                  "it-breakfast",
+                  "it-restaurant"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-chocolate"
+              },
+              {
+                "type": "speak",
+                "item": "it-sandwich"
+              },
+              {
+                "type": "speak",
+                "item": "it-restaurant"
+              }
+            ]
+          }
+        },
+        {
+          "id": "food-2",
+          "title": "Useful phrases",
+          "icon": "💬",
+          "kind": "phrases",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-milk-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-an-apple-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-an-apple-please",
+                "others": [
+                  "it-milk-please"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-thank-you"
+              },
+              {
+                "type": "speak",
+                "item": "it-yes-please"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-i-would-like-an-apple"
+              },
+              {
+                "type": "speak",
+                "item": "it-can-i-have-some-water-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-can-i-have-some-water-please",
+                "others": [
+                  "it-i-would-like-an-apple",
+                  "it-i-am-very-hungry"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-thank-you-very-much"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-am-very-hungry"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-i-would-like-a-cup-of-hot-chocolate"
+              },
+              {
+                "type": "speak",
+                "item": "it-could-i-have-the-menu-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-what-do-you-recommend",
+                "others": [
+                  "it-could-i-have-the-menu-please",
+                  "it-that-sounds-great-thank-you"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-what-do-you-recommend"
+              },
+              {
+                "type": "speak",
+                "item": "it-that-sounds-great-thank-you"
+              }
+            ]
+          }
+        },
+        {
+          "id": "food-3",
+          "title": "Tricky sounds",
+          "icon": "👅",
+          "kind": "pronunciation",
+          "exercises": {
+            "little": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-three",
+                  "it-tree"
+                ],
+                "answer": 0,
+                "focus": "θ"
+              },
+              {
+                "type": "speak",
+                "item": "it-three"
+              },
+              {
+                "type": "speak",
+                "item": "it-red"
+              },
+              {
+                "type": "speak",
+                "item": "it-thank-you"
+              }
+            ],
+            "junior": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-think",
+                  "it-sink"
+                ],
+                "answer": 0,
+                "focus": "θ"
+              },
+              {
+                "type": "speak",
+                "item": "it-three"
+              },
+              {
+                "type": "speak",
+                "item": "it-thirsty"
+              },
+              {
+                "type": "speak",
+                "item": "it-three-red-apples"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-fries",
+                  "it-flies"
+                ],
+                "answer": 0,
+                "focus": "r"
+              }
+            ],
+            "teen": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-three",
+                  "it-tree"
+                ],
+                "answer": 0,
+                "focus": "θ"
+              },
+              {
+                "type": "speak",
+                "item": "it-thirsty"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-think-i-ll-have-the-fish"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-very",
+                  "it-berry"
+                ],
+                "answer": 0,
+                "focus": "v"
+              },
+              {
+                "type": "speak",
+                "item": "it-very-fresh-vegetables"
+              }
+            ]
+          }
+        },
+        {
+          "id": "food-4",
+          "title": "Listen closely",
+          "icon": "👂",
+          "kind": "listening",
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "it-banana",
+                "others": [
+                  "it-apple",
+                  "it-bread"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-fries",
+                  "it-flies"
+                ],
+                "answer": 0,
+                "focus": "r"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-water",
+                "others": [
+                  "it-milk",
+                  "it-banana"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-fries"
+              }
+            ],
+            "junior": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-ship",
+                  "it-sheep"
+                ],
+                "answer": 1,
+                "focus": "ɪ"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-sandwich",
+                "others": [
+                  "it-chicken",
+                  "it-cheese"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-fries",
+                  "it-flies"
+                ],
+                "answer": 1,
+                "focus": "r"
+              },
+              {
+                "type": "speak",
+                "item": "it-fries"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-am-very-hungry",
+                "others": [
+                  "it-can-i-have-some-water-please",
+                  "it-thank-you-very-much"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-ship",
+                  "it-sheep"
+                ],
+                "answer": 0,
+                "focus": "ɪ"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-think",
+                  "it-sink"
+                ],
+                "answer": 1,
+                "focus": "θ"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-i-have-the-menu-please",
+                "others": [
+                  "it-what-do-you-recommend",
+                  "it-i-would-like-a-cup-of-hot-chocolate"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "it-fries",
+                  "it-flies"
+                ],
+                "answer": 0,
+                "focus": "r"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-m-thirsty"
+              }
+            ]
+          }
+        },
+        {
+          "id": "food-5",
+          "title": "Say what you see",
+          "icon": "🗣️",
+          "kind": "speaking",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-apple",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "it-milk",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "it-banana",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "it-water",
+                "prompt": "image"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-cheese",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-an-apple",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "it-can-i-have-some-water-please",
+                "prompt": "translation"
+              },
+              {
+                "type": "speak",
+                "item": "it-thank-you-very-much",
+                "prompt": "translation"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-i-would-like-a-cup-of-hot-chocolate",
+                "prompt": "translation"
+              },
+              {
+                "type": "speak",
+                "item": "it-could-i-have-the-menu-please",
+                "prompt": "translation"
+              },
+              {
+                "type": "speak",
+                "item": "it-what-do-you-recommend",
+                "prompt": "translation"
+              },
+              {
+                "type": "speak",
+                "item": "it-that-sounds-great-thank-you",
+                "prompt": "translation"
+              }
+            ]
+          }
+        },
+        {
+          "id": "food-6",
+          "title": "At the café",
+          "icon": "☕",
+          "kind": "conversation",
+          "exercises": {
+            "little": [
+              {
+                "type": "dialogue",
+                "line": "Hello! What would you like?",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "it-milk-please",
+                  "it-an-apple-please"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "Here you are!",
+                "picture": "🍽️",
+                "replies": [
+                  "it-thank-you"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "Would you like a banana too?",
+                "picture": "🍌",
+                "replies": [
+                  "it-yes-please"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "dialogue",
+                "line": "Hello! Welcome to the Wunder Café. What would you like to drink?",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "it-can-i-have-some-water-please",
+                  "it-i-would-like-some-orange-juice"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "Of course! And something to eat?",
+                "picture": "🍽️",
+                "replies": [
+                  "it-i-would-like-an-apple",
+                  "it-i-would-like-a-cheese-sandwich"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "Good choice. Are you very hungry today?",
+                "picture": "😋",
+                "replies": [
+                  "it-i-am-very-hungry",
+                  "it-i-am-a-little-hungry"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "Here you are. Enjoy your food!",
+                "picture": "🛎️",
+                "replies": [
+                  "it-thank-you-very-much"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "line": "Good afternoon! Welcome to the Wunder Café. Are you ready to order?",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "it-could-i-have-the-menu-please",
+                  "it-what-do-you-recommend"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "The fish is very fresh today, and our hot chocolate is famous.",
+                "picture": "🐟",
+                "replies": [
+                  "it-i-think-i-ll-have-the-fish",
+                  "it-i-would-like-a-cup-of-hot-chocolate"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "Excellent choice. Would you like fresh vegetables with that?",
+                "picture": "🥦",
+                "replies": [
+                  "it-that-sounds-great-thank-you",
+                  "it-no-thank-you-just-the-fish"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "line": "Perfect. I’ll bring everything in three minutes.",
+                "picture": "⏱️",
+                "replies": [
+                  "it-thank-you-very-much"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "food-7",
+          "title": "Review",
+          "icon": "🏆",
+          "kind": "review",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-apple",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "it-three"
+              },
+              {
+                "type": "speak",
+                "item": "it-thank-you"
+              },
+              {
+                "type": "speak",
+                "item": "it-milk-please"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-thirsty"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-an-apple"
+              },
+              {
+                "type": "speak",
+                "item": "it-can-i-have-some-water-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-three-red-apples"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-vegetables"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-a-cup-of-hot-chocolate"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-think-i-ll-have-the-fish"
+              },
+              {
+                "type": "speak",
+                "item": "it-that-sounds-great-thank-you"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "family",
+      "title": "My Family",
+      "subtitle": "Talk about the people you love",
+      "icon": "👨‍👩‍👧",
+      "color": "var(--sky)",
+      "grownUp": {
+        "title": "Family",
+        "subtitle": "Talk about the people in your life"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "animals",
+      "title": "Animal Friends",
+      "subtitle": "Pets, farms and the zoo",
+      "icon": "🦁",
+      "color": "var(--leaf)",
+      "grownUp": {
+        "title": "Animals",
+        "subtitle": "Pets, farms and wildlife"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "school",
+      "title": "At School",
+      "subtitle": "Classroom words and questions",
+      "icon": "🎒",
+      "color": "var(--sun)",
+      "grownUp": {
+        "title": "School & Study",
+        "subtitle": "Classroom words and questions"
+      },
+      "locked": true,
+      "lessons": []
+    }
+  ],
+  "check": {
+    "little": [
+      "it-water",
+      "it-three",
+      "it-apple"
+    ],
+    "junior": [
+      "it-water",
+      "it-three",
+      "it-very-red",
+      "it-thank-you"
+    ],
+    "teen": [
+      "it-thirsty",
+      "it-very-red-apples",
+      "it-i-think-this-is-the-right-ship"
+    ]
+  },
+  "lab": {
+    "sounds": [
+      "θ",
+      "r",
+      "ð",
+      "v",
+      "w",
+      "l",
+      "æ",
+      "ɪ"
+    ],
+    "ladders": {
+      "y": {
+        "syllables": [
+          "fr-tu",
+          "fr-jus",
+          "fr-rue"
+        ],
+        "words": [
+          "fr-sucre",
+          "fr-rue",
+          "fr-jus"
+        ],
+        "phrases": [
+          "fr-un-peu-de-sucre",
+          "fr-deux-cafés"
+        ],
+        "sentence": [
+          "fr-je-voudrais-un-croissant"
+        ]
+      },
+      "ʁ": {
+        "syllables": [
+          "fr-riz",
+          "fr-rue",
+          "fr-rouge"
+        ],
+        "words": [
+          "fr-fromage",
+          "fr-livre",
+          "fr-frère"
+        ],
+        "phrases": [
+          "fr-la-fleur-rouge",
+          "fr-un-croissant"
+        ],
+        "sentence": [
+          "fr-je-voudrais-un-café"
+        ]
+      },
+      "ɑ̃": {
+        "syllables": [
+          "fr-blanc",
+          "fr-croissant",
+          "fr-montagne"
+        ],
+        "words": [
+          "fr-croissant",
+          "fr-blanc",
+          "fr-montagne"
+        ],
+        "phrases": [
+          "fr-un-chien-blanc",
+          "fr-comment-ça-va"
+        ],
+        "sentence": [
+          "fr-je-voudrais-un-croissant"
+        ]
+      },
+      "ɛ̃": {
+        "syllables": [
+          "fr-pain",
+          "fr-un",
+          "fr-chien"
+        ],
+        "words": [
+          "fr-pain",
+          "fr-chien",
+          "fr-cinq"
+        ],
+        "phrases": [
+          "fr-un-café",
+          "fr-un-chien-blanc"
+        ],
+        "sentence": [
+          "fr-très-bien-merci"
+        ]
+      },
+      "ɔ̃": {
+        "syllables": [
+          "fr-bon",
+          "fr-poisson",
+          "fr-maison"
+        ],
+        "words": [
+          "fr-poisson",
+          "fr-maison",
+          "fr-montagne"
+        ],
+        "phrases": [
+          "fr-c'est-très-bon",
+          "fr-l'addition-s'il-vous-plaît"
+        ],
+        "sentence": [
+          "fr-c'est-très-bon"
+        ]
+      },
+      "ø": {
+        "syllables": [
+          "fr-deux",
+          "fr-peu",
+          "fr-bleu"
+        ],
+        "words": [
+          "fr-bleu",
+          "fr-deux",
+          "fr-peu"
+        ],
+        "phrases": [
+          "fr-deux-cafés",
+          "fr-un-peu-de-sucre"
+        ],
+        "sentence": [
+          "fr-un-peu-de-sucre"
+        ]
+      },
+      "œ": {
+        "syllables": [
+          "fr-sœur",
+          "fr-fleur",
+          "fr-neuf"
+        ],
+        "words": [
+          "fr-fleur",
+          "fr-sœur",
+          "fr-neuf"
+        ],
+        "phrases": [
+          "fr-la-fleur-rouge",
+          "fr-la-fleur-rouge"
+        ],
+        "sentence": [
+          "fr-la-fleur-rouge"
+        ]
+      },
+      "ʒ": {
+        "syllables": [
+          "fr-jus",
+          "fr-jour",
+          "fr-rouge"
+        ],
+        "words": [
+          "fr-fromage",
+          "fr-jaune",
+          "fr-jour"
+        ],
+        "phrases": [
+          "fr-j'aime-le-chocolat",
+          "fr-la-fleur-rouge"
+        ],
+        "sentence": [
+          "fr-j'aime-le-chocolat"
+        ]
+      },
+      "ɲ": {
+        "syllables": [
+          "fr-montagne",
+          "fr-montagne",
+          "fr-montagne"
+        ],
+        "words": [
+          "fr-montagne",
+          "fr-maison",
+          "fr-bon"
+        ],
+        "phrases": [
+          "fr-c'est-très-bon",
+          "fr-comment-ça-va"
+        ],
+        "sentence": [
+          "fr-c'est-très-bon"
+        ]
+      },
+      "θ": {
+        "syllables": [
+          "lab-θ-tha",
+          "lab-θ-thee",
+          "lab-θ-thoo"
+        ],
+        "words": [
+          "lab-θ-three",
+          "lab-θ-thank",
+          "lab-θ-mouth"
+        ],
+        "phrases": [
+          "lab-θ-thank-you",
+          "lab-θ-three-things"
+        ],
+        "sentence": [
+          "lab-θ-i-think-i-am-thirsty-"
+        ]
+      },
+      "r": {
+        "syllables": [
+          "lab-r-ra",
+          "lab-r-ree",
+          "lab-r-roo"
+        ],
+        "words": [
+          "lab-r-red",
+          "lab-r-right",
+          "lab-r-around"
+        ],
+        "phrases": [
+          "lab-r-right-now",
+          "lab-r-around-the-corner"
+        ],
+        "sentence": [
+          "lab-r-turn-right-at-the-next-street-"
+        ]
+      },
+      "ð": {
+        "syllables": [
+          "lab-ð-the",
+          "lab-ð-they",
+          "lab-ð-though"
+        ],
+        "words": [
+          "lab-ð-this",
+          "lab-ð-that",
+          "lab-ð-mother"
+        ],
+        "phrases": [
+          "lab-ð-this-one",
+          "lab-ð-my-brother"
+        ],
+        "sentence": [
+          "lab-ð-this-is-my-mother-and-that-is-my-brother-"
+        ]
+      },
+      "v": {
+        "syllables": [
+          "lab-v-va",
+          "lab-v-vee",
+          "lab-v-voo"
+        ],
+        "words": [
+          "lab-v-very",
+          "lab-v-five",
+          "lab-v-seven"
+        ],
+        "phrases": [
+          "lab-v-very-good",
+          "lab-v-five-vegetables"
+        ],
+        "sentence": [
+          "lab-v-we-love-to-visit-the-village-"
+        ]
+      },
+      "w": {
+        "syllables": [
+          "lab-w-wa",
+          "lab-w-wee",
+          "lab-w-woo"
+        ],
+        "words": [
+          "lab-w-water",
+          "lab-w-we",
+          "lab-w-want"
+        ],
+        "phrases": [
+          "lab-w-we-want",
+          "lab-w-warm-water"
+        ],
+        "sentence": [
+          "lab-w-we-want-some-warm-water-"
+        ]
+      },
+      "l": {
+        "syllables": [
+          "lab-l-la",
+          "lab-l-lee",
+          "lab-l-loo"
+        ],
+        "words": [
+          "lab-l-like",
+          "lab-l-lemon",
+          "lab-l-yellow"
+        ],
+        "phrases": [
+          "lab-l-i-like",
+          "lab-l-yellow-lemon"
+        ],
+        "sentence": [
+          "lab-l-i-would-like-a-little-lemonade-"
+        ]
+      },
+      "æ": {
+        "syllables": [
+          "lab-æ-at",
+          "lab-æ-am",
+          "lab-æ-add"
+        ],
+        "words": [
+          "lab-æ-apple",
+          "lab-æ-cat",
+          "lab-æ-happy"
+        ],
+        "phrases": [
+          "lab-æ-a-happy-cat",
+          "lab-æ-that-hat"
+        ],
+        "sentence": [
+          "lab-æ-the-happy-cat-sat-on-my-hat-"
+        ]
+      },
+      "ɪ": {
+        "syllables": [
+          "lab-ɪ-it",
+          "lab-ɪ-in",
+          "lab-ɪ-is"
+        ],
+        "words": [
+          "lab-ɪ-milk",
+          "lab-ɪ-fish",
+          "lab-ɪ-chicken"
+        ],
+        "phrases": [
+          "lab-ɪ-big-fish",
+          "lab-ɪ-a-little-bit"
+        ],
+        "sentence": [
+          "lab-ɪ-the-big-fish-is-in-the-dish-"
+        ]
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import type { Scenario } from '../scenarios';
-import { ZP, zi } from './course';
+import { zhLine, zi } from './course';
 
 // Conversations in Putonghua, for the Mandarin course (Leslie, 2026-09-21: "conversation practice is only in english,
 // even when putonghua is selected — it should follow the language to learn").
@@ -112,7 +112,7 @@ const R = {
 
 /** How each scene ends. */
 const BYE = {
-  zaijian: ZP.zaijian,
+  zaijian: zhLine('zh-zai4-jian4-s'),
   huanyingZaiLai: zi('再见！欢迎再来！', '再見！歡迎再來！', 'zai4 jian4 huan1 ying2 zai4 lai2', 'Goodbye! Come again!'),
   xiaCiJian: zi('谢谢光临，下次见！', '謝謝光臨，下次見！', 'xie4 xie5 guang1 lin2 xia4 ci4 jian4', 'Thanks for coming. See you next time!'),
   xiexieNiLai: zi('谢谢你来！再见！', '謝謝你來！再見！', 'xie4 xie5 ni3 lai2 zai4 jian4', 'Thanks for coming! Goodbye!'),
@@ -133,19 +133,19 @@ export const ZH_SCENARIOS: Scenario[] = [
     turns: [
       {
         tutor: { little: T.niHaoEMa, junior: T.huanyingEMa, teen: T.guanglinJiwei },
-        replies: { little: [ZP.eLe, ZP.nihao], junior: [R.henE, R.yidianE], teen: [R.yiWei, R.liangWei] },
+        replies: { little: [zhLine('zh-wo3-e4-le5-s'), zhLine('zh-ni3-hao3-s')], junior: [R.henE, R.yidianE], teen: [R.yiWei, R.liangWei] },
       },
       {
         tutor: { little: T.xiangHe, junior: T.xiangHe, teen: T.qingZuo },
-        replies: { little: [ZP.woYaoShui, R.yaoNiunai], junior: [ZP.heGuozhi, ZP.xiangHeShui], teen: [ZP.qingGei, ZP.heCha] },
+        replies: { little: [zhLine('zh-wo3-yao4-shui3-s'), R.yaoNiunai], junior: [zhLine('zh-wo3-xiang3-he1-guo3-zhi1-s'), zhLine('zh-wo3-xiang3-he1-shui3-s')], teen: [zhLine('zh-qing3-gei3-wo3-yi1-bei1-shui3-s'), zhLine('zh-wo3-xiang3-he1-cha2-s')] },
       },
       {
         tutor: { little: T.xiangChi, junior: T.haodeChi, teen: T.meiWenti },
-        replies: { little: [ZP.yaoPingguo, R.yaoMianbao], junior: [ZP.chiMiantiao, R.chiJiaozi], teen: [ZP.xihuanYu, R.youShenmeHaochi] },
+        replies: { little: [zhLine('zh-wo3-yao4-ping2-guo3-s'), R.yaoMianbao], junior: [zhLine('zh-wo3-xiang3-chi1-mian4-tiao2-s'), R.chiJiaozi], teen: [zhLine('zh-wo3-xi3-huan5-chi1-yu2-s'), R.youShenmeHaochi] },
       },
       {
         tutor: { little: T.geiNi, junior: T.manYong, teen: T.caiLaiLe },
-        replies: { little: [ZP.xiexie], junior: [R.xiexieNi], teen: [ZP.haochiXiexie, R.feichangHaochi] },
+        replies: { little: [zhLine('zh-xie4-xie5-s')], junior: [R.xiexieNi], teen: [zhLine('zh-hen3-hao3-chi1-xie4-xie5-s'), R.feichangHaochi] },
       },
     ],
     closing: { little: BYE.zaijian, junior: BYE.huanyingZaiLai, teen: BYE.xiaCiJian },
@@ -171,7 +171,7 @@ export const ZH_SCENARIOS: Scenario[] = [
       },
       {
         tutor: { little: T.yaoZouLe, junior: T.kaixinMa, teen: T.guanMen },
-        replies: { little: [ZP.zaijian, ZP.xiexie], junior: [R.henKaixin, R.kaixinXiexieNi], teen: [R.henKaixinXiexieNi, R.henHaowan] },
+        replies: { little: [zhLine('zh-zai4-jian4-s'), zhLine('zh-xie4-xie5-s')], junior: [R.henKaixin, R.kaixinXiexieNi], teen: [R.henKaixinXiexieNi, R.henHaowan] },
       },
     ],
     closing: { little: BYE.xiexieNiLai, junior: BYE.laiDongwuyuan, teen: BYE.guanglinZaijian },
@@ -185,7 +185,7 @@ export const ZH_SCENARIOS: Scenario[] = [
     turns: [
       {
         tutor: { little: T.woJiaoXiaowen, junior: T.renshiNi, teen: T.meiJianguo },
-        replies: { little: [R.niHaoXiaowen, ZP.nihao], junior: [R.gaoxing, R.niHaoXiaowen], teen: [R.niHaoGaoxing, R.xinLaiDe] },
+        replies: { little: [R.niHaoXiaowen, zhLine('zh-ni3-hao3-s')], junior: [R.gaoxing, R.niHaoXiaowen], teen: [R.niHaoGaoxing, R.xinLaiDe] },
       },
       {
         tutor: { little: T.hongseNiNe, junior: T.yanse, teen: T.zuqiu },

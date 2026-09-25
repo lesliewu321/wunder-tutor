@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wundertutor.com/schema/course.json",
+  "title": "Wunder Tutor course",
+  "description": "One course of one language: its items, units, lessons, first speaking check and Lab ladders. Read by src/content/load.ts; checked by scripts/content-check.ts. Ids are written here, never derived, because a learner's progress is keyed by them.",
+  "type": "object",
+  "required": ["id", "language", "title", "exercisePrefix", "items", "units", "check", "lab"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Course id, e.g. english-adventure. Names are translated by it (i18n: course.<id>.title)." },
+    "language": { "type": "string", "enum": ["en", "zh", "fr", "ja"] },
+    "title": { "type": "string", "minLength": 1, "description": "The course's name for children, in English (the source; other App languages translate by id)." },
+    "grownUpTitle": { "type": "string", "description": "For teens and adults: plainer, usually just the language." },
+    "exercisePrefix": { "type": "string", "pattern": "^[a-z]+$", "description": "Exercise ids are <prefix>-<n>, numbered through the file in lesson, band, exercise order." },
+    "items": {
+      "type": "object",
+      "description": "Every line a learner can be asked to say, by id. English: it-<slug of the text>. Mandarin: zh-<pinyin joined with dashes>, plus -s for a full sentence. Lab: lab-<sound>-<slug>.",
+      "additionalProperties": { "$ref": "#/definitions/item" }
+    },
+    "units": { "type": "array", "items": { "$ref": "#/definitions/unit" } },
+    "check": {
+      "type": "object",
+      "description": "The short speaking check the first time this course is opened, by age band: item ids.",
+      "required": ["little", "junior", "teen"],
+      "additionalProperties": false,
+      "properties": { "little": { "$ref": "#/definitions/ids" }, "junior": { "$ref": "#/definitions/ids" }, "teen": { "$ref": "#/definitions/ids" } }
+    },
+    "lab": {
+      "type": "object",
+      "required": ["ladders"],
+      "additionalProperties": false,
+      "properties": {
+        "sounds": { "type": "array", "items": { "type": "string" }, "description": "The Lab's sounds in teaching order; each needs a ladder. Defaults to the ladders' order." },
+        "ladders": {
+          "type": "object",
+          "description": "Sound → syllables → words → phrases → sentence, each rung a list of item ids.",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["syllables", "words", "phrases", "sentence"],
+            "additionalProperties": false,
+            "properties": { "syllables": { "$ref": "#/definitions/ids" }, "words": { "$ref": "#/definitions/ids" }, "phrases": { "$ref": "#/definitions/ids" }, "sentence": { "$ref": "#/definitions/ids" } }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ids": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "item": {
+      "type": "object",
+      "required": ["text"],
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string", "minLength": 1, "description": "What the scorer is sent. Mandarin: Simplified characters." },
+        "say": { "type": "string", "description": "What the teacher's voice says when it differs from the text (isolated syllables: 'thah' for 'tha')." },
+        "picture": { "type": "string", "description": "An emoji." },
+        "meaning": { "type": "string", "description": "A short plain-English meaning or context line (junior, teen)." },
+        "kind": { "type": "string", "enum": ["sound", "syllable", "word", "phrase", "sentence"], "description": "Derived from the text when omitted." },
+        "focus": { "type": "array", "items": { "type": "string" }, "description": "The sounds this item deliberately practises (ids from the sound catalogue)." },
+        "lang": { "type": "string", "enum": ["zh-CN", "fr-FR", "ja-JP"], "description": "Omitted for English, which is said in the learner's accent." },
+        "zh": {
+          "type": "object", "required": ["hant", "py"], "additionalProperties": false,
+          "properties": { "hant": { "type": "string", "description": "Traditional characters, as read in Hong Kong." }, "py": { "type": "string", "description": "Numbered pinyin with citation tones, one syllable per character: 'wo3 xiang3 he1 shui3'." } }
+        },
+        "ja": {
+          "type": "object", "required": ["kana", "romaji", "ruby"], "additionalProperties": false,
+          "properties": { "kana": { "type": "string" }, "romaji": { "type": "string" }, "ruby": { "type": "array", "items": { "type": "object", "required": ["text"], "properties": { "text": { "type": "string" }, "reading": { "type": "string" } } } } }
+        },
+        "translations": { "type": "object", "additionalProperties": { "type": "string" }, "description": "'Speak from a translation' prompts by home language (yue, zh, es, …)." }
+      }
+    },
+    "unit": {
+      "type": "object",
+      "required": ["id", "title", "subtitle", "icon", "color", "lessons"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "icon": { "type": "string" },
+        "color": { "type": "string", "description": "A CSS colour, usually a theme variable: var(--coral)." },
+        "grownUp": { "type": "object", "required": ["title", "subtitle"], "additionalProperties": false, "properties": { "title": { "type": "string" }, "subtitle": { "type": "string" } } },
+        "locked": { "type": "boolean", "description": "Shown but not yet playable; must have no lessons." },
+        "lessons": { "type": "array", "items": { "$ref": "#/definitions/lesson" } }
+      }
+    },
+    "lesson": {
+      "type": "object",
+      "required": ["id", "title", "icon", "kind", "exercises"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "title": { "type": "string" },
+        "icon": { "type": "string" },
+        "kind": { "type": "string", "enum": ["words", "phrases", "pronunciation", "listening", "speaking", "conversation", "review"] },
+        "exercises": {
+          "type": "object",
+          "description": "The same lesson teaches different material to a 6- and a 14-year-old: one list per age band.",
+          "required": ["little", "junior", "teen"],
+          "additionalProperties": false,
+          "properties": { "little": { "$ref": "#/definitions/exercises" }, "junior": { "$ref": "#/definitions/exercises" }, "teen": { "$ref": "#/definitions/exercises" } }
+        }
+      }
+    },
+    "exercises": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/exercise" } },
+    "exercise": {
+      "type": "object",
+      "required": ["type"],
+      "properties": { "type": { "type": "string", "enum": ["speak", "choose-heard", "minimal-pair", "dialogue"] } },
+      "oneOf": [
+        { "properties": { "type": { "const": "speak" }, "item": { "type": "string" }, "prompt": { "type": "string", "enum": ["text", "image", "translation"] } }, "required": ["item"], "additionalProperties": false },
+        { "properties": { "type": { "const": "choose-heard" }, "answer": { "type": "string" }, "others": { "$ref": "#/definitions/ids" } }, "required": ["answer", "others"], "additionalProperties": false },
+        { "properties": { "type": { "const": "minimal-pair" }, "pair": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "string" } }, "answer": { "type": "integer", "enum": [0, 1] }, "focus": { "type": "string" } }, "required": ["pair", "answer", "focus"], "additionalProperties": false },
+        { "properties": { "type": { "const": "dialogue" }, "line": { "type": "string", "description": "What the tutor says (English courses)." }, "tutor": { "type": "string", "description": "…or the item the tutor says (courses whose lines need their own spellings)." }, "picture": { "type": "string" }, "replies": { "$ref": "#/definitions/ids" } }, "required": ["replies"], "additionalProperties": false }
+      ]
+    }
+  }
+}

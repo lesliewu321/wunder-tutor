@@ -1,0 +1,2408 @@
+{
+  "id": "putonghua-adventure",
+  "language": "zh",
+  "title": "Putonghua Adventure",
+  "grownUpTitle": "Putonghua",
+  "exercisePrefix": "zx",
+  "items": {
+    "zh-shui3": {
+      "text": "水",
+      "picture": "💧",
+      "meaning": "water",
+      "kind": "word",
+      "focus": [
+        "zh:sh",
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "水",
+        "py": "shui3"
+      }
+    },
+    "zh-niu2-nai3": {
+      "text": "牛奶",
+      "picture": "🥛",
+      "meaning": "milk",
+      "kind": "word",
+      "focus": [
+        "zh:n",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "牛奶",
+        "py": "niu2 nai3"
+      }
+    },
+    "zh-ping2-guo3": {
+      "text": "苹果",
+      "picture": "🍎",
+      "meaning": "apple",
+      "kind": "word",
+      "focus": [
+        "zh:-ng",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "蘋果",
+        "py": "ping2 guo3"
+      }
+    },
+    "zh-xiang1-jiao1": {
+      "text": "香蕉",
+      "picture": "🍌",
+      "meaning": "banana",
+      "kind": "word",
+      "focus": [
+        "zh:j",
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "香蕉",
+        "py": "xiang1 jiao1"
+      }
+    },
+    "zh-mian4-bao1": {
+      "text": "面包",
+      "picture": "🍞",
+      "meaning": "bread",
+      "kind": "word",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "麵包",
+        "py": "mian4 bao1"
+      }
+    },
+    "zh-ji1-dan4": {
+      "text": "鸡蛋",
+      "picture": "🥚",
+      "meaning": "egg",
+      "kind": "word",
+      "focus": [
+        "zh:j",
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "雞蛋",
+        "py": "ji1 dan4"
+      }
+    },
+    "zh-mi3-fan4": {
+      "text": "米饭",
+      "picture": "🍚",
+      "meaning": "rice",
+      "kind": "word",
+      "focus": [
+        "zh:t3",
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "米飯",
+        "py": "mi3 fan4"
+      }
+    },
+    "zh-mian4-tiao2": {
+      "text": "面条",
+      "picture": "🍜",
+      "meaning": "noodles",
+      "kind": "word",
+      "focus": [
+        "zh:t4",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "麵條",
+        "py": "mian4 tiao2"
+      }
+    },
+    "zh-guo3-zhi1": {
+      "text": "果汁",
+      "picture": "🧃",
+      "meaning": "juice",
+      "kind": "word",
+      "focus": [
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "果汁",
+        "py": "guo3 zhi1"
+      }
+    },
+    "zh-dan4-gao1": {
+      "text": "蛋糕",
+      "picture": "🍰",
+      "meaning": "cake",
+      "kind": "word",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "蛋糕",
+        "py": "dan4 gao1"
+      }
+    },
+    "zh-cha2": {
+      "text": "茶",
+      "picture": "🍵",
+      "meaning": "tea",
+      "kind": "word",
+      "focus": [
+        "zh:sh",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "茶",
+        "py": "cha2"
+      }
+    },
+    "zh-yu2": {
+      "text": "鱼",
+      "picture": "🐟",
+      "meaning": "fish",
+      "kind": "word",
+      "focus": [
+        "zh:ü",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "魚",
+        "py": "yu2"
+      }
+    },
+    "zh-tang1": {
+      "text": "汤",
+      "picture": "🍲",
+      "meaning": "soup",
+      "kind": "word",
+      "focus": [
+        "zh:-ng",
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "湯",
+        "py": "tang1"
+      }
+    },
+    "zh-tang2": {
+      "text": "糖",
+      "picture": "🍬",
+      "meaning": "sweets",
+      "kind": "word",
+      "focus": [
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "糖",
+        "py": "tang2"
+      }
+    },
+    "zh-xi1-gua1": {
+      "text": "西瓜",
+      "picture": "🍉",
+      "meaning": "watermelon",
+      "kind": "word",
+      "focus": [
+        "zh:j",
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "西瓜",
+        "py": "xi1 gua1"
+      }
+    },
+    "zh-qiao3-ke4-li4": {
+      "text": "巧克力",
+      "picture": "🍫",
+      "meaning": "chocolate",
+      "kind": "word",
+      "focus": [
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "巧克力",
+        "py": "qiao3 ke4 li4"
+      }
+    },
+    "zh-jiao3-zi5": {
+      "text": "饺子",
+      "picture": "🥟",
+      "meaning": "dumplings",
+      "kind": "word",
+      "focus": [
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "餃子",
+        "py": "jiao3 zi5"
+      }
+    },
+    "zh-bing1-qi2-lin2": {
+      "text": "冰淇淋",
+      "picture": "🍦",
+      "meaning": "ice cream",
+      "kind": "word",
+      "focus": [
+        "zh:-ng",
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "冰淇淋",
+        "py": "bing1 qi2 lin2"
+      }
+    },
+    "zh-ma1": {
+      "text": "妈",
+      "picture": "👩",
+      "meaning": "mum",
+      "kind": "word",
+      "focus": [
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "媽",
+        "py": "ma1"
+      }
+    },
+    "zh-ma2": {
+      "text": "麻",
+      "picture": "🌶️",
+      "meaning": "numbing (as in spicy)",
+      "kind": "word",
+      "focus": [
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "麻",
+        "py": "ma2"
+      }
+    },
+    "zh-ma3": {
+      "text": "马",
+      "picture": "🐴",
+      "meaning": "horse",
+      "kind": "word",
+      "focus": [
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "馬",
+        "py": "ma3"
+      }
+    },
+    "zh-mai3": {
+      "text": "买",
+      "picture": "🛒",
+      "meaning": "to buy",
+      "kind": "word",
+      "focus": [
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "買",
+        "py": "mai3"
+      }
+    },
+    "zh-mai4": {
+      "text": "卖",
+      "picture": "🏷️",
+      "meaning": "to sell",
+      "kind": "word",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "賣",
+        "py": "mai4"
+      }
+    },
+    "zh-shi1": {
+      "text": "诗",
+      "picture": "📜",
+      "meaning": "a poem",
+      "kind": "word",
+      "focus": [
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "詩",
+        "py": "shi1"
+      }
+    },
+    "zh-si1": {
+      "text": "丝",
+      "picture": "🧵",
+      "meaning": "silk thread",
+      "kind": "word",
+      "focus": [
+        "zh:s"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "絲",
+        "py": "si1"
+      }
+    },
+    "zh-shi4": {
+      "text": "是",
+      "picture": "✅",
+      "meaning": "yes / is",
+      "kind": "word",
+      "focus": [
+        "zh:sh",
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "是",
+        "py": "shi4"
+      }
+    },
+    "zh-si4": {
+      "text": "四",
+      "picture": "4️⃣",
+      "meaning": "four",
+      "kind": "word",
+      "focus": [
+        "zh:s",
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "四",
+        "py": "si4"
+      }
+    },
+    "zh-shi2": {
+      "text": "十",
+      "picture": "🔟",
+      "meaning": "ten",
+      "kind": "word",
+      "focus": [
+        "zh:sh",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "十",
+        "py": "shi2"
+      }
+    },
+    "zh-ni3": {
+      "text": "你",
+      "picture": "🫵",
+      "meaning": "you",
+      "kind": "word",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你",
+        "py": "ni3"
+      }
+    },
+    "zh-li3": {
+      "text": "李",
+      "picture": "🍑",
+      "meaning": "plum (and a family name)",
+      "kind": "word",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "李",
+        "py": "li3"
+      }
+    },
+    "zh-ba1": {
+      "text": "八",
+      "picture": "8️⃣",
+      "meaning": "eight",
+      "kind": "word",
+      "focus": [
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "八",
+        "py": "ba1"
+      }
+    },
+    "zh-chi1": {
+      "text": "吃",
+      "picture": "😋",
+      "meaning": "to eat",
+      "kind": "word",
+      "focus": [
+        "zh:sh",
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "吃",
+        "py": "chi1"
+      }
+    },
+    "zh-xue2-xi2": {
+      "text": "学习",
+      "picture": "📚",
+      "meaning": "to study",
+      "kind": "word",
+      "focus": [
+        "zh:t2",
+        "zh:ü"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "學習",
+        "py": "xue2 xi2"
+      }
+    },
+    "zh-xiong2-mao1": {
+      "text": "熊猫",
+      "picture": "🐼",
+      "meaning": "panda",
+      "kind": "word",
+      "focus": [
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "熊貓",
+        "py": "xiong2 mao1"
+      }
+    },
+    "zh-pi2-qiu2": {
+      "text": "皮球",
+      "picture": "⚽",
+      "meaning": "ball",
+      "kind": "word",
+      "focus": [
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "皮球",
+        "py": "pi2 qiu2"
+      }
+    },
+    "zh-mi3": {
+      "text": "米",
+      "picture": "🌾",
+      "meaning": "rice grains",
+      "kind": "word",
+      "focus": [
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "米",
+        "py": "mi3"
+      }
+    },
+    "zh-gou3": {
+      "text": "狗",
+      "picture": "🐶",
+      "meaning": "dog",
+      "kind": "word",
+      "focus": [
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "狗",
+        "py": "gou3"
+      }
+    },
+    "zh-xiao3-gou3": {
+      "text": "小狗",
+      "picture": "🐕",
+      "meaning": "puppy",
+      "kind": "word",
+      "focus": [
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "小狗",
+        "py": "xiao3 gou3"
+      }
+    },
+    "zh-lao3-hu3": {
+      "text": "老虎",
+      "picture": "🐯",
+      "meaning": "tiger",
+      "kind": "word",
+      "focus": [
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "老虎",
+        "py": "lao3 hu3"
+      }
+    },
+    "zh-da4": {
+      "text": "大",
+      "picture": "🐘",
+      "meaning": "big",
+      "kind": "word",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "大",
+        "py": "da4"
+      }
+    },
+    "zh-ba4": {
+      "text": "爸",
+      "picture": "👨",
+      "meaning": "dad",
+      "kind": "word",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "爸",
+        "py": "ba4"
+      }
+    },
+    "zh-zai4-jian4": {
+      "text": "再见",
+      "picture": "👋",
+      "meaning": "goodbye",
+      "kind": "word",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "再見",
+        "py": "zai4 jian4"
+      }
+    },
+    "zh-dian4-shi4": {
+      "text": "电视",
+      "picture": "📺",
+      "meaning": "television",
+      "kind": "word",
+      "focus": [
+        "zh:t4",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "電視",
+        "py": "dian4 shi4"
+      }
+    },
+    "zh-zhi1": {
+      "text": "知",
+      "picture": "💡",
+      "meaning": "to know",
+      "kind": "word",
+      "focus": [
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "知",
+        "py": "zhi1"
+      }
+    },
+    "zh-shu1": {
+      "text": "书",
+      "picture": "📖",
+      "meaning": "book",
+      "kind": "word",
+      "focus": [
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "書",
+        "py": "shu1"
+      }
+    },
+    "zh-shi1-zi5": {
+      "text": "狮子",
+      "picture": "🦁",
+      "meaning": "lion",
+      "kind": "word",
+      "focus": [
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "獅子",
+        "py": "shi1 zi5"
+      }
+    },
+    "zh-nv3": {
+      "text": "女",
+      "picture": "👧",
+      "meaning": "girl / female",
+      "kind": "word",
+      "focus": [
+        "zh:ü",
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "女",
+        "py": "nv3"
+      }
+    },
+    "zh-lv4": {
+      "text": "绿",
+      "picture": "🟢",
+      "meaning": "green",
+      "kind": "word",
+      "focus": [
+        "zh:ü"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "綠",
+        "py": "lv4"
+      }
+    },
+    "zh-ju2-zi5": {
+      "text": "橘子",
+      "picture": "🍊",
+      "meaning": "tangerine",
+      "kind": "word",
+      "focus": [
+        "zh:ü",
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "橘子",
+        "py": "ju2 zi5"
+      }
+    },
+    "zh-qu4": {
+      "text": "去",
+      "picture": "🚶",
+      "meaning": "to go",
+      "kind": "word",
+      "focus": [
+        "zh:ü",
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "去",
+        "py": "qu4"
+      }
+    },
+    "zh-xue2": {
+      "text": "学",
+      "picture": "✏️",
+      "meaning": "to learn",
+      "kind": "word",
+      "focus": [
+        "zh:ü"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "學",
+        "py": "xue2"
+      }
+    },
+    "zh-niu2": {
+      "text": "牛",
+      "picture": "🐮",
+      "meaning": "cow",
+      "kind": "word",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "牛",
+        "py": "niu2"
+      }
+    },
+    "zh-nai3-nai5": {
+      "text": "奶奶",
+      "picture": "👵",
+      "meaning": "grandma",
+      "kind": "word",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "奶奶",
+        "py": "nai3 nai5"
+      }
+    },
+    "zh-lan2-se4": {
+      "text": "蓝色",
+      "picture": "🔵",
+      "meaning": "blue",
+      "kind": "word",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "藍色",
+        "py": "lan2 se4"
+      }
+    },
+    "zh-bing1": {
+      "text": "冰",
+      "picture": "🧊",
+      "meaning": "ice",
+      "kind": "word",
+      "focus": [
+        "zh:-ng"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "冰",
+        "py": "bing1"
+      }
+    },
+    "zh-ji1": {
+      "text": "鸡",
+      "picture": "🐔",
+      "meaning": "chicken",
+      "kind": "word",
+      "focus": [
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "雞",
+        "py": "ji1"
+      }
+    },
+    "zh-qi1": {
+      "text": "七",
+      "picture": "7️⃣",
+      "meaning": "seven",
+      "kind": "word",
+      "focus": [
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "七",
+        "py": "qi1"
+      }
+    },
+    "zh-xi1": {
+      "text": "西",
+      "picture": "🧭",
+      "meaning": "west",
+      "kind": "word",
+      "focus": [
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "西",
+        "py": "xi1"
+      }
+    },
+    "zh-ka1-fei1": {
+      "text": "咖啡",
+      "picture": "☕",
+      "meaning": "coffee",
+      "kind": "word",
+      "focus": [
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "咖啡",
+        "py": "ka1 fei1"
+      }
+    },
+    "zh-wo3-yao4-shui3-s": {
+      "text": "我要水。",
+      "picture": "💧",
+      "meaning": "I want water.",
+      "kind": "phrase",
+      "focus": [
+        "zh:sh",
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我要水。",
+        "py": "wo3 yao4 shui3"
+      }
+    },
+    "zh-xie4-xie5-s": {
+      "text": "谢谢！",
+      "picture": "💛",
+      "meaning": "Thank you!",
+      "kind": "phrase",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "謝謝！",
+        "py": "xie4 xie5"
+      }
+    },
+    "zh-zai4-jian4-s": {
+      "text": "再见！",
+      "picture": "👋",
+      "meaning": "Goodbye!",
+      "kind": "phrase",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "再見！",
+        "py": "zai4 jian4"
+      }
+    },
+    "zh-hao3-chi1-s": {
+      "text": "好吃！",
+      "picture": "😋",
+      "meaning": "Yummy!",
+      "kind": "phrase",
+      "focus": [
+        "zh:sh",
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "好吃！",
+        "py": "hao3 chi1"
+      }
+    },
+    "zh-wo3-xiang3-he1-shui3-s": {
+      "text": "我想喝水。",
+      "picture": "💧",
+      "meaning": "I’d like to drink water.",
+      "kind": "sentence",
+      "focus": [
+        "zh:t3",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我想喝水。",
+        "py": "wo3 xiang3 he1 shui3"
+      }
+    },
+    "zh-wo3-yao4-ping2-guo3-s": {
+      "text": "我要苹果。",
+      "picture": "🍎",
+      "meaning": "I want an apple.",
+      "kind": "sentence",
+      "focus": [
+        "zh:t2",
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我要蘋果。",
+        "py": "wo3 yao4 ping2 guo3"
+      }
+    },
+    "zh-wo3-e4-le5-s": {
+      "text": "我饿了。",
+      "picture": "😋",
+      "meaning": "I’m hungry.",
+      "kind": "phrase",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我餓了。",
+        "py": "wo3 e4 le5"
+      }
+    },
+    "zh-bu4-ke4-qi5-s": {
+      "text": "不客气。",
+      "picture": "🙂",
+      "meaning": "You’re welcome.",
+      "kind": "phrase",
+      "focus": [
+        "zh:t2",
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "不客氣。",
+        "py": "bu4 ke4 qi5"
+      }
+    },
+    "zh-qing3-gei3-wo3-yi1-bei1-shui3-s": {
+      "text": "请给我一杯水。",
+      "picture": "🥛",
+      "meaning": "Please give me a glass of water.",
+      "kind": "sentence",
+      "focus": [
+        "zh:t3",
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "請給我一杯水。",
+        "py": "qing3 gei3 wo3 yi1 bei1 shui3"
+      }
+    },
+    "zh-ni3-xiang3-chi1-shen2-me5-s": {
+      "text": "你想吃什么？",
+      "picture": "🍽️",
+      "meaning": "What would you like to eat?",
+      "kind": "sentence",
+      "focus": [
+        "zh:sh",
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你想吃什麼？",
+        "py": "ni3 xiang3 chi1 shen2 me5"
+      }
+    },
+    "zh-wo3-xi3-huan5-chi1-yu2-s": {
+      "text": "我喜欢吃鱼。",
+      "picture": "🐟",
+      "meaning": "I like eating fish.",
+      "kind": "sentence",
+      "focus": [
+        "zh:ü",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我喜歡吃魚。",
+        "py": "wo3 xi3 huan5 chi1 yu2"
+      }
+    },
+    "zh-hen3-hao3-chi1-s": {
+      "text": "很好吃！",
+      "picture": "😋",
+      "meaning": "Very tasty!",
+      "kind": "phrase",
+      "focus": [
+        "zh:t3",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "很好吃！",
+        "py": "hen3 hao3 chi1"
+      }
+    },
+    "zh-wo3-yao4-tang2-s": {
+      "text": "我要糖。",
+      "picture": "🍬",
+      "meaning": "I want sweets.",
+      "kind": "phrase",
+      "focus": [
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我要糖。",
+        "py": "wo3 yao4 tang2"
+      }
+    },
+    "zh-si4-shi4-si4-shi2-shi4-shi2-s": {
+      "text": "四是四，十是十。",
+      "picture": "🔢",
+      "meaning": "Four is four, ten is ten.",
+      "kind": "sentence",
+      "focus": [
+        "zh:sh",
+        "zh:t4",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "四是四，十是十。",
+        "py": "si4 shi4 si4 shi2 shi4 shi2"
+      }
+    },
+    "zh-ni3-hao3-s": {
+      "text": "你好！",
+      "picture": "👋",
+      "meaning": "Hello!",
+      "kind": "phrase",
+      "focus": [
+        "zh:t3",
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你好！",
+        "py": "ni3 hao3"
+      }
+    },
+    "zh-wo3-xiang3-he1-guo3-zhi1-s": {
+      "text": "我想喝果汁。",
+      "picture": "🧃",
+      "meaning": "I’d like some juice.",
+      "kind": "sentence",
+      "focus": [
+        "zh:sh",
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我想喝果汁。",
+        "py": "wo3 xiang3 he1 guo3 zhi1"
+      }
+    },
+    "zh-wo3-bu4-e4-s": {
+      "text": "我不饿。",
+      "picture": "🙅",
+      "meaning": "I’m not hungry.",
+      "kind": "phrase",
+      "focus": [
+        "zh:t2",
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我不餓。",
+        "py": "wo3 bu4 e4"
+      }
+    },
+    "zh-wo3-xiang3-he1-cha2-s": {
+      "text": "我想喝茶。",
+      "picture": "🍵",
+      "meaning": "I’d like some tea.",
+      "kind": "sentence",
+      "focus": [
+        "zh:sh",
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我想喝茶。",
+        "py": "wo3 xiang3 he1 cha2"
+      }
+    },
+    "zh-wo3-xiang3-chi1-mian4-tiao2-s": {
+      "text": "我想吃面条。",
+      "picture": "🍜",
+      "meaning": "I’d like to eat noodles.",
+      "kind": "sentence",
+      "focus": [
+        "zh:sh",
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我想吃麵條。",
+        "py": "wo3 xiang3 chi1 mian4 tiao2"
+      }
+    },
+    "zh-hen3-hao3-chi1-xie4-xie5-s": {
+      "text": "很好吃，谢谢！",
+      "picture": "😋",
+      "meaning": "Very tasty, thank you!",
+      "kind": "sentence",
+      "focus": [
+        "zh:t3",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "很好吃，謝謝！",
+        "py": "hen3 hao3 chi1 xie4 xie5"
+      }
+    },
+    "zh-he1-tang1": {
+      "text": "喝汤",
+      "picture": "🍲",
+      "meaning": "drink soup",
+      "kind": "word",
+      "focus": [
+        "zh:t1",
+        "zh:-ng"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "喝湯",
+        "py": "he1 tang1"
+      }
+    },
+    "zh-chi1-xiang1-jiao1": {
+      "text": "吃香蕉",
+      "picture": "🍌",
+      "meaning": "eat a banana",
+      "kind": "word",
+      "focus": [
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "吃香蕉",
+        "py": "chi1 xiang1 jiao1"
+      }
+    },
+    "zh-ma1-ma5-he1-tang1-s": {
+      "text": "妈妈喝汤。",
+      "picture": "👩",
+      "meaning": "Mum drinks soup.",
+      "kind": "sentence",
+      "focus": [
+        "zh:t1"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "媽媽喝湯。",
+        "py": "ma1 ma5 he1 tang1"
+      }
+    },
+    "zh-he1-cha2": {
+      "text": "喝茶",
+      "picture": "🍵",
+      "meaning": "drink tea",
+      "kind": "word",
+      "focus": [
+        "zh:t2",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "喝茶",
+        "py": "he1 cha2"
+      }
+    },
+    "zh-chi1-yu2": {
+      "text": "吃鱼",
+      "picture": "🐟",
+      "meaning": "eat fish",
+      "kind": "word",
+      "focus": [
+        "zh:t2",
+        "zh:ü"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "吃魚",
+        "py": "chi1 yu2"
+      }
+    },
+    "zh-xiong2-mao1-he1-cha2-s": {
+      "text": "熊猫喝茶。",
+      "picture": "🐼",
+      "meaning": "The panda drinks tea.",
+      "kind": "sentence",
+      "focus": [
+        "zh:t2"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "熊貓喝茶。",
+        "py": "xiong2 mao1 he1 cha2"
+      }
+    },
+    "zh-he1-shui3": {
+      "text": "喝水",
+      "picture": "💧",
+      "meaning": "drink water",
+      "kind": "word",
+      "focus": [
+        "zh:t3",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "喝水",
+        "py": "he1 shui3"
+      }
+    },
+    "zh-wo3-hen3-e4": {
+      "text": "我很饿",
+      "picture": "😫",
+      "meaning": "I’m very hungry",
+      "kind": "word",
+      "focus": [
+        "zh:t3"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我很餓",
+        "py": "wo3 hen3 e4"
+      }
+    },
+    "zh-chi1-fan4": {
+      "text": "吃饭",
+      "picture": "🍚",
+      "meaning": "eat a meal",
+      "kind": "word",
+      "focus": [
+        "zh:t4",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "吃飯",
+        "py": "chi1 fan4"
+      }
+    },
+    "zh-kan4-dian4-shi4": {
+      "text": "看电视",
+      "picture": "📺",
+      "meaning": "watch TV",
+      "kind": "word",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "看電視",
+        "py": "kan4 dian4 shi4"
+      }
+    },
+    "zh-ba4-ba5-kan4-dian4-shi4-s": {
+      "text": "爸爸看电视。",
+      "picture": "📺",
+      "meaning": "Dad watches TV.",
+      "kind": "sentence",
+      "focus": [
+        "zh:t4"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "爸爸看電視。",
+        "py": "ba4 ba5 kan4 dian4 shi4"
+      }
+    },
+    "zh-kan4-shu1": {
+      "text": "看书",
+      "picture": "📖",
+      "meaning": "read a book",
+      "kind": "word",
+      "focus": [
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "看書",
+        "py": "kan4 shu1"
+      }
+    },
+    "zh-xia4-yu3": {
+      "text": "下雨",
+      "picture": "🌧️",
+      "meaning": "it’s raining",
+      "kind": "word",
+      "focus": [
+        "zh:ü"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "下雨",
+        "py": "xia4 yu3"
+      }
+    },
+    "zh-nv3-hai2-qu4-xue2-xiao4-s": {
+      "text": "女孩去学校。",
+      "picture": "🏫",
+      "meaning": "The girl goes to school.",
+      "kind": "sentence",
+      "focus": [
+        "zh:ü"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "女孩去學校。",
+        "py": "nv3 hai2 qu4 xue2 xiao4"
+      }
+    },
+    "zh-he1-niu2-nai3": {
+      "text": "喝牛奶",
+      "picture": "🥛",
+      "meaning": "drink milk",
+      "kind": "word",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "喝牛奶",
+        "py": "he1 niu2 nai3"
+      }
+    },
+    "zh-ni3-lai2-le5": {
+      "text": "你来了",
+      "picture": "🙌",
+      "meaning": "you’re here",
+      "kind": "word",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你來了",
+        "py": "ni3 lai2 le5"
+      }
+    },
+    "zh-nai3-nai5-he1-niu2-nai3-s": {
+      "text": "奶奶喝牛奶。",
+      "picture": "👵",
+      "meaning": "Grandma drinks milk.",
+      "kind": "sentence",
+      "focus": [
+        "zh:n"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "奶奶喝牛奶。",
+        "py": "nai3 nai5 he1 niu2 nai3"
+      }
+    },
+    "zh-wo3-xiang3-he1-tang1-s": {
+      "text": "我想喝汤。",
+      "picture": "🍲",
+      "meaning": "I’d like some soup.",
+      "kind": "sentence",
+      "focus": [
+        "zh:-ng"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我想喝湯。",
+        "py": "wo3 xiang3 he1 tang1"
+      }
+    },
+    "zh-chi1-ji1-dan4": {
+      "text": "吃鸡蛋",
+      "picture": "🥚",
+      "meaning": "eat an egg",
+      "kind": "word",
+      "focus": [
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "吃雞蛋",
+        "py": "chi1 ji1 dan4"
+      }
+    },
+    "zh-qi1-zhi1-ji1": {
+      "text": "七只鸡",
+      "picture": "🐔",
+      "meaning": "seven chickens",
+      "kind": "word",
+      "focus": [
+        "zh:j",
+        "zh:sh"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "七隻雞",
+        "py": "qi1 zhi1 ji1"
+      }
+    },
+    "zh-wo3-xi3-huan5-chi1-xi1-gua1-s": {
+      "text": "我喜欢吃西瓜。",
+      "picture": "🍉",
+      "meaning": "I like eating watermelon.",
+      "kind": "sentence",
+      "focus": [
+        "zh:j"
+      ],
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "我喜歡吃西瓜。",
+        "py": "wo3 xi3 huan5 chi1 xi1 gua1"
+      }
+    },
+    "zh-ni3-yao4-shen2-me5-s": {
+      "text": "你要什么？",
+      "meaning": "What do you want?",
+      "kind": "sentence",
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你要什麼？",
+        "py": "ni3 yao4 shen2 me5"
+      }
+    },
+    "zh-gei3-ni3-s": {
+      "text": "给你！",
+      "meaning": "Here you are!",
+      "kind": "phrase",
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "給你！",
+        "py": "gei3 ni3"
+      }
+    },
+    "zh-ni3-hao3-ni3-xiang3-he1-shen2-me5-s": {
+      "text": "你好！你想喝什么？",
+      "meaning": "Hello! What would you like to drink?",
+      "kind": "sentence",
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你好！你想喝什麼？",
+        "py": "ni3 hao3 ni3 xiang3 he1 shen2 me5"
+      }
+    },
+    "zh-ni3-e4-ma5-s": {
+      "text": "你饿吗？",
+      "meaning": "Are you hungry?",
+      "kind": "phrase",
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你餓嗎？",
+        "py": "ni3 e4 ma5"
+      }
+    },
+    "zh-ni3-hao3-qing3-wen4-ni3-xiang3-chi1-shen2-me5-s": {
+      "text": "你好！请问你想吃什么？",
+      "meaning": "Hello! What would you like to eat?",
+      "kind": "sentence",
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你好！請問你想吃什麼？",
+        "py": "ni3 hao3 qing3 wen4 ni3 xiang3 chi1 shen2 me5"
+      }
+    },
+    "zh-ni3-xiang3-he1-shen2-me5-s": {
+      "text": "你想喝什么？",
+      "meaning": "What would you like to drink?",
+      "kind": "sentence",
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "你想喝什麼？",
+        "py": "ni3 xiang3 he1 shen2 me5"
+      }
+    },
+    "zh-hao3-chi1-ma5-s": {
+      "text": "好吃吗？",
+      "meaning": "Is it tasty?",
+      "kind": "phrase",
+      "lang": "zh-CN",
+      "zh": {
+        "hant": "好吃嗎？",
+        "py": "hao3 chi1 ma5"
+      }
+    }
+  },
+  "units": [
+    {
+      "id": "zh-food",
+      "title": "Yummy Food 好吃的",
+      "subtitle": "Order food and drinks in Putonghua",
+      "icon": "🥢",
+      "color": "var(--coral)",
+      "grownUp": {
+        "title": "Food & Drink 饮食",
+        "subtitle": "Order food and drinks in Putonghua"
+      },
+      "lessons": [
+        {
+          "id": "zh-food-1",
+          "title": "Key words",
+          "icon": "🍎",
+          "kind": "words",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "zh-shui3"
+              },
+              {
+                "type": "speak",
+                "item": "zh-niu2-nai3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-niu2-nai3",
+                "others": [
+                  "zh-shui3",
+                  "zh-ping2-guo3"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "zh-ping2-guo3"
+              },
+              {
+                "type": "speak",
+                "item": "zh-xiang1-jiao1"
+              },
+              {
+                "type": "speak",
+                "item": "zh-yu2"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "zh-mian4-bao1"
+              },
+              {
+                "type": "speak",
+                "item": "zh-ji1-dan4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-ji1-dan4",
+                "others": [
+                  "zh-mian4-bao1",
+                  "zh-mi3-fan4"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "zh-mi3-fan4"
+              },
+              {
+                "type": "speak",
+                "item": "zh-mian4-tiao2"
+              },
+              {
+                "type": "speak",
+                "item": "zh-guo3-zhi1"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "zh-qiao3-ke4-li4"
+              },
+              {
+                "type": "speak",
+                "item": "zh-bing1-qi2-lin2"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-bing1-qi2-lin2",
+                "others": [
+                  "zh-qiao3-ke4-li4",
+                  "zh-dan4-gao1"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "zh-dan4-gao1"
+              },
+              {
+                "type": "speak",
+                "item": "zh-jiao3-zi5"
+              },
+              {
+                "type": "speak",
+                "item": "zh-xi1-gua1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "zh-food-2",
+          "title": "Useful phrases",
+          "icon": "💬",
+          "kind": "phrases",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "zh-wo3-yao4-shui3-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-xie4-xie5-s"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-xie4-xie5-s",
+                "others": [
+                  "zh-zai4-jian4-s"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "zh-zai4-jian4-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-hao3-chi1-s"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "zh-wo3-xiang3-he1-shui3-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-wo3-yao4-ping2-guo3-s"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-wo3-xiang3-he1-shui3-s",
+                "others": [
+                  "zh-wo3-yao4-ping2-guo3-s",
+                  "zh-wo3-e4-le5-s"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "zh-wo3-e4-le5-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-bu4-ke4-qi5-s"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "zh-qing3-gei3-wo3-yi1-bei1-shui3-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-ni3-xiang3-chi1-shen2-me5-s"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-wo3-xi3-huan5-chi1-yu2-s",
+                "others": [
+                  "zh-qing3-gei3-wo3-yi1-bei1-shui3-s",
+                  "zh-hen3-hao3-chi1-s"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "zh-wo3-xi3-huan5-chi1-yu2-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-hen3-hao3-chi1-s"
+              }
+            ]
+          }
+        },
+        {
+          "id": "zh-food-3",
+          "title": "The four tones",
+          "icon": "🎵",
+          "kind": "pronunciation",
+          "exercises": {
+            "little": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-ma1",
+                  "zh-ma3"
+                ],
+                "answer": 0,
+                "focus": "zh:t1"
+              },
+              {
+                "type": "speak",
+                "item": "zh-ma1"
+              },
+              {
+                "type": "speak",
+                "item": "zh-ma3"
+              },
+              {
+                "type": "speak",
+                "item": "zh-tang1"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-tang1",
+                  "zh-tang2"
+                ],
+                "answer": 1,
+                "focus": "zh:t2"
+              }
+            ],
+            "junior": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-mai3",
+                  "zh-mai4"
+                ],
+                "answer": 0,
+                "focus": "zh:t3"
+              },
+              {
+                "type": "speak",
+                "item": "zh-mai3"
+              },
+              {
+                "type": "speak",
+                "item": "zh-mai4"
+              },
+              {
+                "type": "speak",
+                "item": "zh-tang2"
+              },
+              {
+                "type": "speak",
+                "item": "zh-wo3-yao4-tang2-s"
+              }
+            ],
+            "teen": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-shi1",
+                  "zh-si1"
+                ],
+                "answer": 0,
+                "focus": "zh:sh"
+              },
+              {
+                "type": "speak",
+                "item": "zh-shi4"
+              },
+              {
+                "type": "speak",
+                "item": "zh-si4"
+              },
+              {
+                "type": "speak",
+                "item": "zh-dian4-shi4"
+              },
+              {
+                "type": "speak",
+                "item": "zh-qing3-gei3-wo3-yi1-bei1-shui3-s"
+              }
+            ]
+          }
+        },
+        {
+          "id": "zh-food-4",
+          "title": "Listen closely",
+          "icon": "👂",
+          "kind": "listening",
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "zh-xiang1-jiao1",
+                "others": [
+                  "zh-ping2-guo3",
+                  "zh-yu2"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-ma1",
+                  "zh-ma3"
+                ],
+                "answer": 1,
+                "focus": "zh:t3"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-shui3",
+                "others": [
+                  "zh-niu2-nai3",
+                  "zh-xiang1-jiao1"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "zh-yu2"
+              }
+            ],
+            "junior": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-shi1",
+                  "zh-si1"
+                ],
+                "answer": 0,
+                "focus": "zh:sh"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-mian4-tiao2",
+                "others": [
+                  "zh-mi3-fan4",
+                  "zh-mian4-bao1"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-tang1",
+                  "zh-tang2"
+                ],
+                "answer": 0,
+                "focus": "zh:t1"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-shi4",
+                  "zh-si4"
+                ],
+                "answer": 1,
+                "focus": "zh:sh"
+              },
+              {
+                "type": "speak",
+                "item": "zh-si4"
+              }
+            ],
+            "teen": [
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-shi1",
+                  "zh-si1"
+                ],
+                "answer": 1,
+                "focus": "zh:sh"
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-mai3",
+                  "zh-mai4"
+                ],
+                "answer": 1,
+                "focus": "zh:t4"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "zh-wo3-xi3-huan5-chi1-yu2-s",
+                "others": [
+                  "zh-wo3-xiang3-he1-shui3-s",
+                  "zh-hen3-hao3-chi1-s"
+                ]
+              },
+              {
+                "type": "minimal-pair",
+                "pair": [
+                  "zh-ni3",
+                  "zh-li3"
+                ],
+                "answer": 0,
+                "focus": "zh:n"
+              },
+              {
+                "type": "speak",
+                "item": "zh-ni3-hao3-s"
+              }
+            ]
+          }
+        },
+        {
+          "id": "zh-food-5",
+          "title": "Say what you see",
+          "icon": "🗣️",
+          "kind": "speaking",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "zh-ping2-guo3",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-shui3",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-yu2",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-xiang1-jiao1",
+                "prompt": "image"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "zh-mian4-tiao2",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-ji1-dan4",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-guo3-zhi1",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-dan4-gao1",
+                "prompt": "image"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "zh-bing1-qi2-lin2",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-qiao3-ke4-li4",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-jiao3-zi5",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-xi1-gua1",
+                "prompt": "image"
+              }
+            ]
+          }
+        },
+        {
+          "id": "zh-food-6",
+          "title": "At the café",
+          "icon": "🍵",
+          "kind": "conversation",
+          "exercises": {
+            "little": [
+              {
+                "type": "dialogue",
+                "tutor": "zh-ni3-yao4-shen2-me5-s",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "zh-wo3-yao4-shui3-s",
+                  "zh-wo3-yao4-tang2-s"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "zh-gei3-ni3-s",
+                "picture": "🍽️",
+                "replies": [
+                  "zh-xie4-xie5-s"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "zh-zai4-jian4-s",
+                "picture": "👋",
+                "replies": [
+                  "zh-zai4-jian4-s"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "dialogue",
+                "tutor": "zh-ni3-hao3-ni3-xiang3-he1-shen2-me5-s",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "zh-wo3-xiang3-he1-shui3-s",
+                  "zh-wo3-xiang3-he1-guo3-zhi1-s"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "zh-ni3-e4-ma5-s",
+                "picture": "😋",
+                "replies": [
+                  "zh-wo3-e4-le5-s",
+                  "zh-wo3-bu4-e4-s"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "zh-gei3-ni3-s",
+                "picture": "🛎️",
+                "replies": [
+                  "zh-xie4-xie5-s"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "zh-ni3-hao3-qing3-wen4-ni3-xiang3-chi1-shen2-me5-s",
+                "picture": "🧑‍🍳",
+                "replies": [
+                  "zh-wo3-xi3-huan5-chi1-yu2-s",
+                  "zh-wo3-xiang3-chi1-mian4-tiao2-s"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "zh-ni3-xiang3-he1-shen2-me5-s",
+                "picture": "🍵",
+                "replies": [
+                  "zh-qing3-gei3-wo3-yi1-bei1-shui3-s",
+                  "zh-wo3-xiang3-he1-cha2-s"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "zh-hao3-chi1-ma5-s",
+                "picture": "😋",
+                "replies": [
+                  "zh-hen3-hao3-chi1-s",
+                  "zh-hen3-hao3-chi1-xie4-xie5-s"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "zh-food-7",
+          "title": "Review",
+          "icon": "🏆",
+          "kind": "review",
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "zh-ping2-guo3",
+                "prompt": "image"
+              },
+              {
+                "type": "speak",
+                "item": "zh-ma1"
+              },
+              {
+                "type": "speak",
+                "item": "zh-xie4-xie5-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-wo3-yao4-shui3-s"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "zh-wo3-xiang3-he1-shui3-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-mai3"
+              },
+              {
+                "type": "speak",
+                "item": "zh-tang1"
+              },
+              {
+                "type": "speak",
+                "item": "zh-wo3-yao4-ping2-guo3-s"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "zh-shi1-zi5"
+              },
+              {
+                "type": "speak",
+                "item": "zh-qing3-gei3-wo3-yi1-bei1-shui3-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-wo3-xi3-huan5-chi1-yu2-s"
+              },
+              {
+                "type": "speak",
+                "item": "zh-hen3-hao3-chi1-s"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "zh-family",
+      "title": "My Family 我的家",
+      "subtitle": "Mum, dad, grandma and me",
+      "icon": "👨‍👩‍👧",
+      "color": "var(--sky)",
+      "grownUp": {
+        "title": "Family 家人",
+        "subtitle": "Talk about the people in your life"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "zh-animals",
+      "title": "Animals 动物",
+      "subtitle": "Pandas, tigers and pets",
+      "icon": "🐼",
+      "color": "var(--leaf)",
+      "grownUp": {
+        "title": "Animals 动物",
+        "subtitle": "Pets, farms and wildlife"
+      },
+      "locked": true,
+      "lessons": []
+    },
+    {
+      "id": "zh-school",
+      "title": "At School 学校",
+      "subtitle": "Classroom words and questions",
+      "icon": "🎒",
+      "color": "var(--sun)",
+      "grownUp": {
+        "title": "School & Study 学校",
+        "subtitle": "Classroom words and questions"
+      },
+      "locked": true,
+      "lessons": []
+    }
+  ],
+  "check": {
+    "little": [
+      "zh-ma1",
+      "zh-shui3",
+      "zh-xie4-xie5-s"
+    ],
+    "junior": [
+      "zh-ma1",
+      "zh-si4",
+      "zh-wo3-xiang3-he1-shui3-s",
+      "zh-yu2"
+    ],
+    "teen": [
+      "zh-shi4",
+      "zh-wo3-xi3-huan5-chi1-yu2-s",
+      "zh-qing3-gei3-wo3-yi1-bei1-shui3-s"
+    ]
+  },
+  "lab": {
+    "sounds": [
+      "zh:t3",
+      "zh:sh",
+      "zh:t2",
+      "zh:t1",
+      "zh:t4",
+      "zh:n",
+      "zh:ü",
+      "zh:j",
+      "zh:-ng"
+    ],
+    "ladders": {
+      "zh:t1": {
+        "syllables": [
+          "zh-ma1",
+          "zh-ba1",
+          "zh-chi1"
+        ],
+        "words": [
+          "zh-xiang1-jiao1",
+          "zh-xi1-gua1",
+          "zh-ka1-fei1"
+        ],
+        "phrases": [
+          "zh-he1-tang1",
+          "zh-chi1-xiang1-jiao1"
+        ],
+        "sentence": [
+          "zh-ma1-ma5-he1-tang1-s"
+        ]
+      },
+      "zh:t2": {
+        "syllables": [
+          "zh-ma2",
+          "zh-cha2",
+          "zh-yu2"
+        ],
+        "words": [
+          "zh-xue2-xi2",
+          "zh-xiong2-mao1",
+          "zh-pi2-qiu2"
+        ],
+        "phrases": [
+          "zh-he1-cha2",
+          "zh-chi1-yu2"
+        ],
+        "sentence": [
+          "zh-xiong2-mao1-he1-cha2-s"
+        ]
+      },
+      "zh:t3": {
+        "syllables": [
+          "zh-ma3",
+          "zh-mi3",
+          "zh-gou3"
+        ],
+        "words": [
+          "zh-shui3",
+          "zh-xiao3-gou3",
+          "zh-lao3-hu3"
+        ],
+        "phrases": [
+          "zh-he1-shui3",
+          "zh-wo3-hen3-e4"
+        ],
+        "sentence": [
+          "zh-wo3-xiang3-he1-shui3-s"
+        ]
+      },
+      "zh:t4": {
+        "syllables": [
+          "zh-da4",
+          "zh-ba4",
+          "zh-si4"
+        ],
+        "words": [
+          "zh-zai4-jian4",
+          "zh-dian4-shi4",
+          "zh-dan4-gao1"
+        ],
+        "phrases": [
+          "zh-chi1-fan4",
+          "zh-kan4-dian4-shi4"
+        ],
+        "sentence": [
+          "zh-ba4-ba5-kan4-dian4-shi4-s"
+        ]
+      },
+      "zh:sh": {
+        "syllables": [
+          "zh-zhi1",
+          "zh-chi1",
+          "zh-shi1"
+        ],
+        "words": [
+          "zh-shu1",
+          "zh-cha2",
+          "zh-shi1-zi5"
+        ],
+        "phrases": [
+          "zh-chi1-fan4",
+          "zh-kan4-shu1"
+        ],
+        "sentence": [
+          "zh-qing3-gei3-wo3-yi1-bei1-shui3-s"
+        ]
+      },
+      "zh:j": {
+        "syllables": [
+          "zh-ji1",
+          "zh-qi1",
+          "zh-xi1"
+        ],
+        "words": [
+          "zh-ji1-dan4",
+          "zh-xi1-gua1",
+          "zh-qiao3-ke4-li4"
+        ],
+        "phrases": [
+          "zh-chi1-ji1-dan4",
+          "zh-qi1-zhi1-ji1"
+        ],
+        "sentence": [
+          "zh-wo3-xi3-huan5-chi1-xi1-gua1-s"
+        ]
+      },
+      "zh:ü": {
+        "syllables": [
+          "zh-yu2",
+          "zh-nv3",
+          "zh-lv4"
+        ],
+        "words": [
+          "zh-ju2-zi5",
+          "zh-qu4",
+          "zh-xue2"
+        ],
+        "phrases": [
+          "zh-chi1-yu2",
+          "zh-xia4-yu3"
+        ],
+        "sentence": [
+          "zh-nv3-hai2-qu4-xue2-xiao4-s"
+        ]
+      },
+      "zh:n": {
+        "syllables": [
+          "zh-ni3",
+          "zh-li3",
+          "zh-niu2"
+        ],
+        "words": [
+          "zh-niu2-nai3",
+          "zh-lan2-se4",
+          "zh-nai3-nai5"
+        ],
+        "phrases": [
+          "zh-he1-niu2-nai3",
+          "zh-ni3-lai2-le5"
+        ],
+        "sentence": [
+          "zh-nai3-nai5-he1-niu2-nai3-s"
+        ]
+      },
+      "zh:-ng": {
+        "syllables": [
+          "zh-tang1",
+          "zh-tang2",
+          "zh-bing1"
+        ],
+        "words": [
+          "zh-xiang1-jiao1",
+          "zh-ping2-guo3",
+          "zh-mian4-bao1"
+        ],
+        "phrases": [
+          "zh-he1-tang1",
+          "zh-chi1-xiang1-jiao1"
+        ],
+        "sentence": [
+          "zh-wo3-xiang3-he1-tang1-s"
+        ]
+      }
+    }
+  }
+}

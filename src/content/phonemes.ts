@@ -1,4 +1,5 @@
 import type { Accent, AgeBand, HomeLanguage, Locale, PhonemeId } from '../domain/types';
+import { EN } from './course';
 import { tc } from '../i18n';
 import { FR_SOUNDS } from './fr/sounds';
 import { JA_SOUNDS } from './ja/sounds';
@@ -400,4 +401,5 @@ export const soundLabel = (id: PhonemeId): string => {
 };
 
 /** Sounds with a full Pronunciation Lab ladder, in default teaching order. */
-export const LAB_SOUNDS: PhonemeId[] = ['θ', 'r', 'ð', 'v', 'w', 'l', 'æ', 'ɪ'];
+/** The Lab's English sounds, in teaching order — from the course data (content/courses/en.json, `lab.sounds`). */
+export const LAB_SOUNDS: PhonemeId[] = EN.labSounds;
