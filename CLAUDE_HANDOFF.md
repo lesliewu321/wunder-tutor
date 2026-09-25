@@ -230,6 +230,36 @@ setup) become Stage 0; the heavy-user trap is the paid plan's 600 billed scoring
   375 px for all three bands, the list, and Test mode; labels all fit (max right edge 346 px), nothing overflows
   horizontally. 315 tests pass; typecheck clean. The other agent's `astra-lessons/library/` (1.2 GB, untracked) was
   left out of the commit — theirs to commit. Not pushed to GitHub; no phone build.
+- **App languages, Profile, Lab, bonus round (2026-09-25, commits db8c378 + 15ed604, DEPLOYED — Pages deployment
+  1bc71482, bundle index-CxZMO6D-.js, live, checked):**
+  - **Seven App languages** (Leslie: "add all the course languages to app language", "app language should include
+    traditional and simplified chinese"): English, 繁體中文, 简体中文, 日本語, 한국어, Français, Español. English and
+    繁體中文 are bundled; the other five load on demand (`loadLanguage`, `import.meta.glob`, one chunk per file;
+    `useT` re-renders via `useSyncExternalStore`). 简体中文 is GENERATED: `npm run i18n:hans` (opencc-js hk→cn + a
+    Hong Kong→mainland word table) — never edit zh-Hans by hand. ja/ko/fr/es are **machine drafts** (8 parallel
+    agents from `i18n-source.json`, written by `npm run i18n:export`), unchecked by native speakers; `npm run
+    i18n:check` validates keys/placeholders/bold. Terms chosen: ja レッスン/ユニット/コース, Profile = マイページ; ko
+    레슨/단원/코스, Home language = 모국어; fr leçon/unité, tu for learners, vous for grown-ups, Putonghua = mandarin;
+    es lección/unidad, tú, course "Chino mandarín". Lesson guides and reading questions translate via `tl(english,
+    hant)` keyed by the English line (`<lang>/lessons.json`). Reading explanations "The evidence is in sentence N"
+    are one template per language (`lesson.evidence.1/2`) with the passage's own sentence in the learner's script —
+    the English and Putonghua courses share identical English lines, so the English can't key those. 121 data lines
+    (mostly French sounds) that never had 繁體中文 now do. Supabase migration `20260925160000_app_languages` (applied)
+    widens consents.language and parents.ui_language. `STARTS_IN` still only 'en': no device starts in an unchecked
+    translation. Legal/consent wording in ja/ko/fr/es is a machine draft — needs review before relying on it.
+  - **Hindi and Arabic dropped** ("drop hindi and arabic completely for now"): type, pickers, priors, labels, course
+    translation prompts (content/courses/en.json AND the other agent's astra-lessons/courses/en.json — their build
+    reads ours). Stored/synced learners with hi/ar become 'other' (store v3, merge.ts).
+  - **Profile** ("course should be located in me. rename me to profile", "my progress in profile is duplicate"): tab
+    and title read Profile; the course dropdown moved from Home to under the Profile card (only with 2+ courses);
+    the My progress row is gone.
+  - **Lab / twisters** ("converstion practice should be in lab. tongue twisters should not be in homepage - should be
+    shown as a bonus round (perhaps after a completed module)"): Home has neither row; the Lab opens with the
+    conversation row; finishing a unit's last open lesson shows "Bonus round unlocked!" on the lesson-complete
+    screen with a twister (`bonusTwister`: easiest not yet passed, else slowest best). Only when the unit becomes
+    complete, not on replays. The Profile "Tongue twisters" row stays as the way to the boards. Verified in the 5199
+    copy with the demo mic: the card shows after food-7 and opens /twisters/en-red-lorry.
+  - Tests 329 (was 316). Not pushed to GitHub; no phone build.
 
 
 ## DEPLOYED 2026-09-23 ~03:15 UTC (Leslie: "deploy") — commit 9a05fb3, Pages deployment 9da0fa77, bundle index-DPoItKK_.js
