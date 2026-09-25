@@ -1,3 +1,4 @@
+import { addCommunication } from '../../../astra-lessons/communication';
 import type { Course, Exercise, Lesson, PhonemeId, SpeakItem, Unit } from '../../domain/types';
 import type { LabStage } from '../lab';
 import { frSyllableCount, frTokenize, frWordPhones } from './lexicon';
@@ -173,7 +174,7 @@ const cafeLessons: Lesson[] = [
 
 const lockedUnit = (id: string, title: string, subtitle: string, icon: string, color: string, grownUp?: Unit['grownUp']): Unit => ({ id, title, subtitle, icon, color, lessons: [], locked: true, grownUp });
 
-export const FR_COURSE: Course = {
+const FR_BASE: Course = {
   id: 'french-adventure',
   title: 'French Adventure',
   grownUpTitle: 'French',
@@ -215,7 +216,10 @@ export const FR_LADDERS: Record<PhonemeId, Ladder> = {
 export const FR_LAB_SOUNDS: PhonemeId[] = ['y', 'ʁ', 'ɑ̃', 'ɛ̃', 'ɔ̃', 'ø', 'œ', 'ʒ', 'ɲ'];
 
 /** Every French item, for indexing and for the accuracy test set. */
-export const FR_ITEMS: SpeakItem[] = [...new Map([...Object.values(FW), ...Object.values(FP), ...Object.values(T)].map((it) => [it.id, it])).values()];
+const FR_BASE_ITEMS: SpeakItem[] = [...new Map([...Object.values(FW), ...Object.values(FP), ...Object.values(T)].map((it) => [it.id, it])).values()];
+const FR_EXPANDED = addCommunication(FR_BASE, FR_BASE_ITEMS);
+export const FR_COURSE: Course = FR_EXPANDED.course;
+export const FR_ITEMS: SpeakItem[] = FR_EXPANDED.items;
 
 /** Every distinct word the course says aloud — the lexicon has to know all of them. */
 export const FR_COURSE_WORDS: string[] = [

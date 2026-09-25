@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-09-25T08:31:21.194Z",
+  "courses": [
+    {
+      "language": "en",
+      "topicCard": true,
+      "nineLessons": true,
+      "readingAnswers": true,
+      "sentenceBuilding": true
+    },
+    {
+      "language": "zh",
+      "topicCard": true,
+      "nineLessons": true,
+      "readingAnswers": true,
+      "sentenceBuilding": true
+    },
+    {
+      "language": "ja",
+      "topicCard": true,
+      "nineLessons": true,
+      "readingAnswers": true,
+      "sentenceBuilding": true
+    },
+    {
+      "language": "ko",
+      "topicCard": true,
+      "nineLessons": true,
+      "readingAnswers": true,
+      "sentenceBuilding": true
+    },
+    {
+      "language": "fr",
+      "topicCard": true,
+      "nineLessons": true,
+      "readingAnswers": true,
+      "sentenceBuilding": true
+    },
+    {
+      "language": "es",
+      "topicCard": true,
+      "nineLessons": true,
+      "readingAnswers": true,
+      "sentenceBuilding": true
+    }
+  ],
+  "mobileWidth": 390,
+  "mobileOverflow": false,
+  "workEmail": true,
+  "pageErrors": []
+}

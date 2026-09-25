@@ -1,0 +1,506 @@
+{
+  "o-w0": {
+    "text": "车站",
+    "py": "che1 zhan4"
+  },
+  "o-w1": {
+    "text": "公交车",
+    "py": "gong1 jiao1 che1"
+  },
+  "o-w2": {
+    "text": "车票",
+    "py": "che1 piao4"
+  },
+  "o-w3": {
+    "text": "左边",
+    "py": "zuo3 bian5"
+  },
+  "o-w4": {
+    "text": "右边",
+    "py": "you4 bian5"
+  },
+  "o-w5": {
+    "text": "一直走",
+    "py": "yi1 zhi2 zou3"
+  },
+  "o-w6": {
+    "text": "站台",
+    "py": "zhan4 tai2"
+  },
+  "o-w7": {
+    "text": "十点",
+    "py": "shi2 dian3"
+  },
+  "o-w8": {
+    "text": "明天",
+    "py": "ming2 tian1"
+  },
+  "o-w9": {
+    "text": "往返票",
+    "py": "wang3 fan3 piao4"
+  },
+  "o-w10": {
+    "text": "火车",
+    "py": "huo3 che1"
+  },
+  "o-w11": {
+    "text": "学校",
+    "py": "xue2 xiao4"
+  },
+  "o-q0": {
+    "text": "你/想/去/哪里？",
+    "py": "ni3 xiang3 qu4 na3 li3"
+  },
+  "o-q1": {
+    "text": "我/该/往/哪边/走？",
+    "py": "wo3 gai1 wang3 na3 bian5 zou3"
+  },
+  "o-q2": {
+    "text": "你/想/买/几张/票？",
+    "py": "ni3 xiang3 mai3 ji3 zhang1 piao4"
+  },
+  "o-q3": {
+    "text": "你/怎么/去？",
+    "py": "ni3 zen3 me5 qu4"
+  },
+  "o-q4": {
+    "text": "几点/出发？",
+    "py": "ji3 dian3 chu1 fa1"
+  },
+  "o-q5": {
+    "text": "你/什么时候/出发？",
+    "py": "ni3 shen2 me5 shi2 hou5 chu1 fa1"
+  },
+  "o-l0": {
+    "text": "请/去/车站。",
+    "py": "qing3 qu4 che1 zhan4"
+  },
+  "o-l1": {
+    "text": "往/左/走。",
+    "py": "wang3 zuo3 zou3"
+  },
+  "o-l2": {
+    "text": "请/给/我/一张/票。",
+    "py": "qing3 gei3 wo3 yi1 zhang1 piao4"
+  },
+  "o-l3": {
+    "text": "坐/公交车。",
+    "py": "zuo4 gong1 jiao1 che1"
+  },
+  "o-l4": {
+    "text": "十点。",
+    "py": "shi2 dian3"
+  },
+  "o-l5": {
+    "text": "明天。",
+    "py": "ming2 tian1"
+  },
+  "o-j0": {
+    "text": "我/想/去/车站。",
+    "py": "wo3 xiang3 qu4 che1 zhan4"
+  },
+  "o-j1": {
+    "text": "在/学校/左转。",
+    "py": "zai4 xue2 xiao4 zuo3 zhuan3"
+  },
+  "o-j2": {
+    "text": "我/想/买/一张/票，/谢谢。",
+    "py": "wo3 xiang3 mai3 yi1 zhang1 piao4 xie4 xie5"
+  },
+  "o-j3": {
+    "text": "我/会/坐/公交车。",
+    "py": "wo3 hui4 zuo4 gong1 jiao1 che1"
+  },
+  "o-j4": {
+    "text": "公交车/十点/出发。",
+    "py": "gong1 jiao1 che1 shi2 dian3 chu1 fa1"
+  },
+  "o-j5": {
+    "text": "我/明天/出发。",
+    "py": "wo3 ming2 tian1 chu1 fa1"
+  },
+  "o-t0": {
+    "text": "我/要/去/车站。/请问/怎么/走？",
+    "py": "wo3 yao4 qu4 che1 zhan4 qing3 wen4 zen3 me5 zou3"
+  },
+  "o-t1": {
+    "text": "一直/走，/然后/在/学校/右转。",
+    "py": "yi1 zhi2 zou3 ran2 hou4 zai4 xue2 xiao4 you4 zhuan3"
+  },
+  "o-t2": {
+    "text": "我/想/买/一张/往返票，/谢谢。",
+    "py": "wo3 xiang3 mai3 yi1 zhang1 wang3 fan3 piao4 xie4 xie5"
+  },
+  "o-t3": {
+    "text": "我/会/坐/火车，/在/下一站/换车。",
+    "py": "wo3 hui4 zuo4 huo3 che1 zai4 xia4 yi1 zhan4 huan4 che1"
+  },
+  "o-t4": {
+    "text": "下一班/火车/十点/从/二号/站台/出发。",
+    "py": "xia4 yi1 ban1 huo3 che1 shi2 dian3 cong2 er4 hao4 zhan4 tai2 chu1 fa1"
+  },
+  "o-t5": {
+    "text": "我/想/明天/出发，/星期五/回来。",
+    "py": "wo3 xiang3 ming2 tian1 chu1 fa1 xing1 qi1 wu3 hui2 lai2"
+  },
+  "p-w0": {
+    "text": "名字",
+    "py": "ming2 zi5"
+  },
+  "p-w1": {
+    "text": "朋友",
+    "py": "peng2 you5"
+  },
+  "p-w2": {
+    "text": "家人",
+    "py": "jia1 ren2"
+  },
+  "p-w3": {
+    "text": "学校",
+    "py": "xue2 xiao4"
+  },
+  "p-w4": {
+    "text": "城市",
+    "py": "cheng2 shi4"
+  },
+  "p-w5": {
+    "text": "音乐",
+    "py": "yin1 yue4"
+  },
+  "p-w6": {
+    "text": "足球",
+    "py": "zu2 qiu2"
+  },
+  "p-w7": {
+    "text": "阅读",
+    "py": "yue4 du2"
+  },
+  "p-w8": {
+    "text": "周末",
+    "py": "zhou1 mo4"
+  },
+  "p-w9": {
+    "text": "再见",
+    "py": "zai4 jian4"
+  },
+  "p-w10": {
+    "text": "爱好",
+    "py": "ai4 hao4"
+  },
+  "p-w11": {
+    "text": "语言",
+    "py": "yu3 yan2"
+  },
+  "p-q0": {
+    "text": "你/叫/什么/名字？",
+    "py": "ni3 jiao4 shen2 me5 ming2 zi5"
+  },
+  "p-q1": {
+    "text": "你/住/在哪里？",
+    "py": "ni3 zhu4 zai4 na3 li3"
+  },
+  "p-q2": {
+    "text": "你/喜欢/做/什么？",
+    "py": "ni3 xi3 huan5 zuo4 shen2 me5"
+  },
+  "p-q3": {
+    "text": "你/周末/做/什么？",
+    "py": "ni3 zhou1 mo4 zuo4 shen2 me5"
+  },
+  "p-q4": {
+    "text": "你/想/明天/见面/吗？",
+    "py": "ni3 xiang3 ming2 tian1 jian4 mian4 ma5"
+  },
+  "p-q5": {
+    "text": "我/现在/得/走/了。",
+    "py": "wo3 xian4 zai4 dei3 zou3 le5"
+  },
+  "p-l0": {
+    "text": "我/叫/亚历克斯。",
+    "py": "wo3 jiao4 ya4 li4 ke4 si1"
+  },
+  "p-l1": {
+    "text": "在/城市/里。",
+    "py": "zai4 cheng2 shi4 li3"
+  },
+  "p-l2": {
+    "text": "我/喜欢/音乐。",
+    "py": "wo3 xi3 huan5 yin1 yue4"
+  },
+  "p-l3": {
+    "text": "我/踢/足球。",
+    "py": "wo3 ti1 zu2 qiu2"
+  },
+  "p-l4": {
+    "text": "好/啊。",
+    "py": "hao3 a5"
+  },
+  "p-l5": {
+    "text": "再见。",
+    "py": "zai4 jian4"
+  },
+  "p-j0": {
+    "text": "我/叫/亚历克斯。/你/叫什么/名字？",
+    "py": "wo3 jiao4 ya4 li4 ke4 si1 ni3 jiao4 shen2 me5 ming2 zi5"
+  },
+  "p-j1": {
+    "text": "我/和/家人/住在/这座/城市。",
+    "py": "wo3 he2 jia1 ren2 zhu4 zai4 zhe4 zuo4 cheng2 shi4"
+  },
+  "p-j2": {
+    "text": "我/喜欢/音乐/和/阅读。",
+    "py": "wo3 xi3 huan5 yin1 yue4 he2 yue4 du2"
+  },
+  "p-j3": {
+    "text": "我/和/朋友/踢/足球。",
+    "py": "wo3 he2 peng2 you5 ti1 zu2 qiu2"
+  },
+  "p-j4": {
+    "text": "好。/我们/在/公园/见面/吧。",
+    "py": "hao3 wo3 men5 zai4 gong1 yuan2 jian4 mian4 ba5"
+  },
+  "p-j5": {
+    "text": "明天/见。",
+    "py": "ming2 tian1 jian4"
+  },
+  "p-t0": {
+    "text": "我/叫/亚历克斯。/很/高兴/认识/你。",
+    "py": "wo3 jiao4 ya4 li4 ke4 si1 hen3 gao1 xing4 ren4 shi5 ni3"
+  },
+  "p-t1": {
+    "text": "我/住在/这座/城市，/但是/家人/住在/国外。",
+    "py": "wo3 zhu4 zai4 zhe4 zuo4 cheng2 shi4 dan4 shi4 jia1 ren2 zhu4 zai4 guo2 wai4"
+  },
+  "p-t2": {
+    "text": "我/喜欢/音乐/和/阅读。/你/呢？",
+    "py": "wo3 xi3 huan5 yin1 yue4 he2 yue4 du2 ni3 ne5"
+  },
+  "p-t3": {
+    "text": "我/周末/通常/和/朋友/踢/足球。",
+    "py": "wo3 zhou1 mo4 tong1 chang2 he2 peng2 you5 ti1 zu2 qiu2"
+  },
+  "p-t4": {
+    "text": "好/主意。/我们/明天/在/公园/见面，/好吗？",
+    "py": "hao3 zhu3 yi5 wo3 men5 ming2 tian1 zai4 gong1 yuan2 jian4 mian4 hao3 ma5"
+  },
+  "p-t5": {
+    "text": "和/你/聊天/很/开心。/明天/见。",
+    "py": "he2 ni3 liao2 tian1 hen3 kai1 xin1 ming2 tian1 jian4"
+  },
+  "w-w0": {
+    "text": "团队",
+    "py": "tuan2 dui4"
+  },
+  "w-w1": {
+    "text": "会议",
+    "py": "hui4 yi4"
+  },
+  "w-w2": {
+    "text": "消息",
+    "py": "xiao1 xi5"
+  },
+  "w-w3": {
+    "text": "电话",
+    "py": "dian4 hua4"
+  },
+  "w-w4": {
+    "text": "电子邮件",
+    "py": "dian4 zi3 you2 jian4"
+  },
+  "w-w5": {
+    "text": "今天",
+    "py": "jin1 tian1"
+  },
+  "w-w6": {
+    "text": "明天",
+    "py": "ming2 tian1"
+  },
+  "w-w7": {
+    "text": "十点",
+    "py": "shi2 dian3"
+  },
+  "w-w8": {
+    "text": "帮助",
+    "py": "bang1 zhu4"
+  },
+  "w-w9": {
+    "text": "问题",
+    "py": "wen4 ti2"
+  },
+  "w-w10": {
+    "text": "星期五",
+    "py": "xing1 qi1 wu3"
+  },
+  "w-w11": {
+    "text": "报告",
+    "py": "bao4 gao4"
+  },
+  "w-q0": {
+    "text": "你/能/介绍/一下/自己/吗？",
+    "py": "ni3 neng2 jie4 shao4 yi1 xia4 zi4 ji3 ma5"
+  },
+  "w-q1": {
+    "text": "我们/什么时候/见面？",
+    "py": "wo3 men5 shen2 me5 shi2 hou5 jian4 mian4"
+  },
+  "w-q2": {
+    "text": "你/能/发/一条/消息/吗？",
+    "py": "ni3 neng2 fa1 yi1 tiao2 xiao1 xi5 ma5"
+  },
+  "w-q3": {
+    "text": "请/再/说/一遍，/好吗？",
+    "py": "qing3 zai4 shuo1 yi1 bian4 hao3 ma5"
+  },
+  "w-q4": {
+    "text": "你好。/我/能/帮/你/什么？",
+    "py": "ni3 hao3 wo3 neng2 bang1 ni3 shen2 me5"
+  },
+  "w-q5": {
+    "text": "你/什么时候/能/完成？",
+    "py": "ni3 shen2 me5 shi2 hou5 neng2 wan2 cheng2"
+  },
+  "w-l0": {
+    "text": "我/是/亚历克斯。",
+    "py": "wo3 shi4 ya4 li4 ke4 si1"
+  },
+  "w-l1": {
+    "text": "明天。",
+    "py": "ming2 tian1"
+  },
+  "w-l2": {
+    "text": "我/可以。",
+    "py": "wo3 ke3 yi3"
+  },
+  "w-l3": {
+    "text": "十点。",
+    "py": "shi2 dian3"
+  },
+  "w-l4": {
+    "text": "你/能/帮/我/吗？",
+    "py": "ni3 neng2 bang1 wo3 ma5"
+  },
+  "w-l5": {
+    "text": "今天。",
+    "py": "jin1 tian1"
+  },
+  "w-j0": {
+    "text": "我/是/亚历克斯。/我/和/你/是/一队/的。",
+    "py": "wo3 shi4 ya4 li4 ke4 si1 wo3 he2 ni3 shi4 yi1 dui4 de5"
+  },
+  "w-j1": {
+    "text": "我们/明天/十点/见面/吧。",
+    "py": "wo3 men5 ming2 tian1 shi2 dian3 jian4 mian4 ba5"
+  },
+  "w-j2": {
+    "text": "我/今天/可以/发/消息。",
+    "py": "wo3 jin1 tian1 ke3 yi3 fa1 xiao1 xi5"
+  },
+  "w-j3": {
+    "text": "我们/十点/开会。",
+    "py": "wo3 men5 shi2 dian3 kai1 hui4"
+  },
+  "w-j4": {
+    "text": "请问，/我/可以/和/亚历克斯/说话/吗？",
+    "py": "qing3 wen4 wo3 ke3 yi3 he2 ya4 li4 ke4 si1 shuo1 hua4 ma5"
+  },
+  "w-j5": {
+    "text": "我/今天/可以/完成。",
+    "py": "wo3 jin1 tian1 ke3 yi3 wan2 cheng2"
+  },
+  "w-t0": {
+    "text": "我/是/亚历克斯。/我/在/客服/团队/工作。",
+    "py": "wo3 shi4 ya4 li4 ke4 si1 wo3 zai4 ke4 fu2 tuan2 dui4 gong1 zuo4"
+  },
+  "w-t1": {
+    "text": "我们/能/明天/十点/见面/讨论/报告/吗？",
+    "py": "wo3 men5 neng2 ming2 tian1 shi2 dian3 jian4 mian4 tao3 lun4 bao4 gao4 ma5"
+  },
+  "w-t2": {
+    "text": "我/今天/会/通过/电子邮件/发送/报告。",
+    "py": "wo3 jin1 tian1 hui4 tong1 guo4 dian4 zi3 you2 jian4 fa1 song4 bao4 gao4"
+  },
+  "w-t3": {
+    "text": "当然。/会议/明天/十点/开始。",
+    "py": "dang1 ran2 hui4 yi4 ming2 tian1 shi2 dian3 kai1 shi3"
+  },
+  "w-t4": {
+    "text": "请问，/我/可以/和/亚历克斯/说话/吗？/我/可以/留言/吗？",
+    "py": "qing3 wen4 wo3 ke3 yi3 he2 ya4 li4 ke4 si1 shuo1 hua4 ma5 wo3 ke3 yi3 liu2 yan2 ma5"
+  },
+  "w-t5": {
+    "text": "我/今天/可以/发送/初稿，/最晚/星期五/完成。",
+    "py": "wo3 jin1 tian1 ke3 yi3 fa1 song4 chu1 gao3 zui4 wan3 xing1 qi1 wu3 wan2 cheng2"
+  },
+  "o-rl": {
+    "text": "公交车/十点/出发。",
+    "py": "gong1 jiao1 che1 shi2 dian3 chu1 fa1"
+  },
+  "o-rj": {
+    "text": "火车/十点/出发。/请/去/二号/站台。",
+    "py": "huo3 che1 shi2 dian3 chu1 fa1 qing3 qu4 er4 hao4 zhan4 tai2"
+  },
+  "o-rt": {
+    "text": "去/市区/的/火车/十点/从/二号/站台/出发。/往返票/到/星期五/仍然/有效。",
+    "py": "qu4 shi4 qu1 de5 huo3 che1 shi2 dian3 cong2 er4 hao4 zhan4 tai2 chu1 fa1 wang3 fan3 piao4 dao4 xing1 qi1 wu3 reng2 ran2 you3 xiao4"
+  },
+  "p-rl": {
+    "text": "我/踢/足球。",
+    "py": "wo3 ti1 zu2 qiu2"
+  },
+  "p-rj": {
+    "text": "我/叫/亚历克斯。/我/住在/城市/里。/我/踢/足球。",
+    "py": "wo3 jiao4 ya4 li4 ke4 si1 wo3 zhu4 zai4 cheng2 shi4 li3 wo3 ti1 zu2 qiu2"
+  },
+  "p-rt": {
+    "text": "我/叫/亚历克斯。/我/住在/这座/城市。/周末/我/和/朋友/踢/足球。/我们/明天/可以/在/公园/见面。",
+    "py": "wo3 jiao4 ya4 li4 ke4 si1 wo3 zhu4 zai4 zhe4 zuo4 cheng2 shi4 zhou1 mo4 wo3 he2 peng2 you5 ti1 zu2 qiu2 wo3 men5 ming2 tian1 ke3 yi3 zai4 gong1 yuan2 jian4 mian4"
+  },
+  "w-rl": {
+    "text": "我们/十点/见面。",
+    "py": "wo3 men5 shi2 dian3 jian4 mian4"
+  },
+  "w-rj": {
+    "text": "亚历克斯，/你好。/我们/明天/十点/见面。/请/带/你的/书。/谢谢。",
+    "py": "ya4 li4 ke4 si1 ni3 hao3 wo3 men5 ming2 tian1 shi2 dian3 jian4 mian4 qing3 dai4 ni3 de5 shu1 xie4 xie5"
+  },
+  "w-rt": {
+    "text": "亚历克斯，/你好。/我们/能/明天/十点/见面/讨论/报告/吗？/请/今天/通过/电子邮件/发送/初稿。/谢谢。/祝好！",
+    "py": "ya4 li4 ke4 si1 ni3 hao3 wo3 men5 neng2 ming2 tian1 shi2 dian3 jian4 mian4 tao3 lun4 bao4 gao4 ma5 qing3 jin1 tian1 tong1 guo4 dian4 zi3 you2 jian4 fa1 song4 chu1 gao3 xie4 xie5 zhu4 hao3"
+  },
+  "o-w12": {
+    "text": "八点",
+    "py": "ba1 dian3"
+  },
+  "o-w13": {
+    "text": "十二点",
+    "py": "shi2 er4 dian3"
+  },
+  "o-w14": {
+    "text": "公园",
+    "py": "gong1 yuan2"
+  },
+  "p-w12": {
+    "text": "村庄",
+    "py": "cun1 zhuang1"
+  },
+  "p-w13": {
+    "text": "乡下",
+    "py": "xiang1 xia5"
+  },
+  "p-w14": {
+    "text": "篮球",
+    "py": "lan2 qiu2"
+  },
+  "p-w15": {
+    "text": "游泳",
+    "py": "you2 yong3"
+  },
+  "w-w12": {
+    "text": "八点",
+    "py": "ba1 dian3"
+  },
+  "w-w13": {
+    "text": "十二点",
+    "py": "shi2 er4 dian3"
+  }
+}

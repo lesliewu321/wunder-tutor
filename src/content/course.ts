@@ -5,6 +5,7 @@ import { JA_COURSE, JA_ITEMS } from './ja/course';
 import { KO_COURSE, KO_ITEMS } from './ko/course';
 import { ES_COURSE, ES_ITEMS } from './es/course';
 import { buildCourse, type CourseFile } from './load';
+import { addCommunicationToBuilt } from '../../astra-lessons/communication';
 import { inScript } from './zh/script';
 import { ZH_COURSE, ZH_ITEMS } from './zh/course';
 import { SEASONAL_ITEMS, SEASONAL_LESSONS } from './seasonal';
@@ -15,7 +16,7 @@ import enData from '../../astra-lessons/courses/en.json';
 // Everything below is the same surface it always was: the engine and the screens import from here and never notice
 // where a course came from.
 
-export const EN = buildCourse(enData as unknown as CourseFile, 'astra-lessons/courses/en.json');
+export const EN = addCommunicationToBuilt(buildCourse(enData as unknown as CourseFile, 'astra-lessons/courses/en.json'));
 
 export const COURSE: Course = EN.course;
 export const COURSES: Record<CourseId, Course> = { en: COURSE, zh: ZH_COURSE, fr: FR_COURSE, ja: JA_COURSE, ko: KO_COURSE, es: ES_COURSE };

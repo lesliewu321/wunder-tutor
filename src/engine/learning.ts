@@ -82,7 +82,7 @@ export const buildReview = (lesson: Lesson, profile: ChildProfile, now: number):
       if (picked.length >= 5) break;
     }
   }
-  return [...picked.slice(0, 6).map((it) => speakEx(it, 'review')), ...fallback.filter((ex) => ex.type === 'read-choice' || ex.type === 'arrange')];
+  return [...picked.slice(0, 6).map((it) => speakEx(it, 'review')), ...fallback.filter((ex) => ex.type === 'read-choice' || ex.type === 'arrange' || ex.type === 'choose-heard')];
 };
 
 export const exercisesFor = (lesson: Lesson, profile: ChildProfile, now = Date.now()): Exercise[] =>

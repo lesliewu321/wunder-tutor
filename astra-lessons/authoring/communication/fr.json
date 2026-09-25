@@ -1,0 +1,380 @@
+{
+  "o-w0": {
+    "text": "gare"
+  },
+  "o-w1": {
+    "text": "bus"
+  },
+  "o-w2": {
+    "text": "billet"
+  },
+  "o-w3": {
+    "text": "gauche"
+  },
+  "o-w4": {
+    "text": "droite"
+  },
+  "o-w5": {
+    "text": "tout droit"
+  },
+  "o-w6": {
+    "text": "quai"
+  },
+  "o-w7": {
+    "text": "dix heures"
+  },
+  "o-w8": {
+    "text": "demain"
+  },
+  "o-w9": {
+    "text": "billet aller-retour"
+  },
+  "o-w10": {
+    "text": "train"
+  },
+  "o-w11": {
+    "text": "école"
+  },
+  "o-q0": {
+    "text": "Où voulez-vous aller ?"
+  },
+  "o-q1": {
+    "text": "Par où faut-il passer ?"
+  },
+  "o-q2": {
+    "text": "Combien de billets voulez-vous ?"
+  },
+  "o-q3": {
+    "text": "Comment allez-vous y aller ?"
+  },
+  "o-q4": {
+    "text": "À quelle heure est le départ ?"
+  },
+  "o-q5": {
+    "text": "Quand partez-vous ?"
+  },
+  "o-l0": {
+    "text": "À la gare, s'il vous plaît."
+  },
+  "o-l1": {
+    "text": "Va à gauche."
+  },
+  "o-l2": {
+    "text": "Un billet, s'il vous plaît."
+  },
+  "o-l3": {
+    "text": "En bus."
+  },
+  "o-l4": {
+    "text": "À dix heures."
+  },
+  "o-l5": {
+    "text": "Demain."
+  },
+  "o-j0": {
+    "text": "Je veux aller à la gare."
+  },
+  "o-j1": {
+    "text": "Tourne à gauche à l'école."
+  },
+  "o-j2": {
+    "text": "Je voudrais un billet, s'il vous plaît."
+  },
+  "o-j3": {
+    "text": "Je vais prendre le bus."
+  },
+  "o-j4": {
+    "text": "Le bus part à dix heures."
+  },
+  "o-j5": {
+    "text": "Je pars demain."
+  },
+  "o-t0": {
+    "text": "Je vais à la gare. Pourriez-vous m'indiquer le chemin ?"
+  },
+  "o-t1": {
+    "text": "Allez tout droit, puis tournez à droite à l'école."
+  },
+  "o-t2": {
+    "text": "Je voudrais un billet aller-retour, s'il vous plaît."
+  },
+  "o-t3": {
+    "text": "Je vais prendre le train et changer à la prochaine gare."
+  },
+  "o-t4": {
+    "text": "Le prochain train part à dix heures du quai deux."
+  },
+  "o-t5": {
+    "text": "Je voudrais partir demain et revenir vendredi."
+  },
+  "p-w0": {
+    "text": "nom"
+  },
+  "p-w1": {
+    "text": "ami"
+  },
+  "p-w2": {
+    "text": "famille"
+  },
+  "p-w3": {
+    "text": "école"
+  },
+  "p-w4": {
+    "text": "ville"
+  },
+  "p-w5": {
+    "text": "musique"
+  },
+  "p-w6": {
+    "text": "foot"
+  },
+  "p-w7": {
+    "text": "lecture"
+  },
+  "p-w8": {
+    "text": "week-end"
+  },
+  "p-w9": {
+    "text": "au revoir"
+  },
+  "p-w10": {
+    "text": "loisir"
+  },
+  "p-w11": {
+    "text": "langue"
+  },
+  "p-q0": {
+    "text": "Comment vous appelez-vous ?"
+  },
+  "p-q1": {
+    "text": "Où habitez-vous ?"
+  },
+  "p-q2": {
+    "text": "Qu'est-ce que vous aimez faire ?"
+  },
+  "p-q3": {
+    "text": "Que faites-vous le week-end ?"
+  },
+  "p-q4": {
+    "text": "Voulez-vous qu'on se retrouve demain ?"
+  },
+  "p-q5": {
+    "text": "Je dois partir maintenant."
+  },
+  "p-l0": {
+    "text": "Je m'appelle Alex."
+  },
+  "p-l1": {
+    "text": "En ville."
+  },
+  "p-l2": {
+    "text": "J'aime la musique."
+  },
+  "p-l3": {
+    "text": "Je joue au foot."
+  },
+  "p-l4": {
+    "text": "Oui, s'il vous plaît."
+  },
+  "p-l5": {
+    "text": "Au revoir."
+  },
+  "p-j0": {
+    "text": "Je m'appelle Alex. Comment tu t'appelles ?"
+  },
+  "p-j1": {
+    "text": "J'habite dans cette ville avec ma famille."
+  },
+  "p-j2": {
+    "text": "J'aime la musique et la lecture."
+  },
+  "p-j3": {
+    "text": "Je joue au foot avec mes amis."
+  },
+  "p-j4": {
+    "text": "Oui. On se retrouve au parc."
+  },
+  "p-j5": {
+    "text": "À demain."
+  },
+  "p-t0": {
+    "text": "Je m'appelle Alex. Je suis ravi de faire votre connaissance."
+  },
+  "p-t1": {
+    "text": "J'habite dans cette ville, mais ma famille vit à l'étranger."
+  },
+  "p-t2": {
+    "text": "J'aime la musique et la lecture. Et vous ?"
+  },
+  "p-t3": {
+    "text": "Je joue généralement au foot avec des amis le week-end."
+  },
+  "p-t4": {
+    "text": "Bonne idée. On se retrouve au parc demain ?"
+  },
+  "p-t5": {
+    "text": "J'ai eu plaisir à parler avec vous. À demain."
+  },
+  "w-w0": {
+    "text": "équipe"
+  },
+  "w-w1": {
+    "text": "réunion"
+  },
+  "w-w2": {
+    "text": "message"
+  },
+  "w-w3": {
+    "text": "téléphone"
+  },
+  "w-w4": {
+    "text": "courriel"
+  },
+  "w-w5": {
+    "text": "aujourd'hui"
+  },
+  "w-w6": {
+    "text": "demain"
+  },
+  "w-w7": {
+    "text": "dix heures"
+  },
+  "w-w8": {
+    "text": "aide"
+  },
+  "w-w9": {
+    "text": "question"
+  },
+  "w-w10": {
+    "text": "vendredi"
+  },
+  "w-w11": {
+    "text": "rapport"
+  },
+  "w-q0": {
+    "text": "Pouvez-vous vous présenter ?"
+  },
+  "w-q1": {
+    "text": "Quand pouvons-nous nous retrouver ?"
+  },
+  "w-q2": {
+    "text": "Pouvez-vous envoyer un message ?"
+  },
+  "w-q3": {
+    "text": "Pourriez-vous répéter, s'il vous plaît ?"
+  },
+  "w-q4": {
+    "text": "Bonjour. Comment puis-je vous aider ?"
+  },
+  "w-q5": {
+    "text": "Quand pouvez-vous terminer ?"
+  },
+  "w-l0": {
+    "text": "Je suis Alex."
+  },
+  "w-l1": {
+    "text": "Demain."
+  },
+  "w-l2": {
+    "text": "Oui, je peux."
+  },
+  "w-l3": {
+    "text": "À dix heures."
+  },
+  "w-l4": {
+    "text": "Tu peux m'aider ?"
+  },
+  "w-l5": {
+    "text": "Aujourd'hui."
+  },
+  "w-j0": {
+    "text": "Je suis Alex. Je suis dans ton équipe."
+  },
+  "w-j1": {
+    "text": "On se retrouve demain à dix heures."
+  },
+  "w-j2": {
+    "text": "Je peux envoyer le message aujourd'hui."
+  },
+  "w-j3": {
+    "text": "Notre réunion est à dix heures."
+  },
+  "w-j4": {
+    "text": "Est-ce que je peux parler à Alex, s'il vous plaît ?"
+  },
+  "w-j5": {
+    "text": "Je peux terminer aujourd'hui."
+  },
+  "w-t0": {
+    "text": "Je suis Alex. Je travaille avec l'équipe d'assistance."
+  },
+  "w-t1": {
+    "text": "Pourrions-nous nous retrouver demain à dix heures pour discuter du rapport ?"
+  },
+  "w-t2": {
+    "text": "Je vais envoyer le rapport par courriel aujourd'hui."
+  },
+  "w-t3": {
+    "text": "Bien sûr. La réunion commence demain à dix heures."
+  },
+  "w-t4": {
+    "text": "Pourrais-je parler à Alex, s'il vous plaît ? Puis-je laisser un message ?"
+  },
+  "w-t5": {
+    "text": "Je peux envoyer la première version aujourd'hui et terminer d'ici vendredi."
+  },
+  "o-rl": {
+    "text": "Le bus part à dix heures."
+  },
+  "o-rj": {
+    "text": "Le train part à dix heures. Allez au quai deux, s'il vous plaît."
+  },
+  "o-rt": {
+    "text": "Le train pour la ville part à dix heures du quai deux. Un billet aller-retour est valable jusqu'à vendredi."
+  },
+  "p-rl": {
+    "text": "Je joue au foot."
+  },
+  "p-rj": {
+    "text": "Je m'appelle Alex. J'habite en ville. Je joue au foot."
+  },
+  "p-rt": {
+    "text": "Je m'appelle Alex. J'habite dans cette ville. Le week-end, je joue au foot avec des amis. On peut se retrouver au parc demain."
+  },
+  "w-rl": {
+    "text": "On se retrouve à dix heures."
+  },
+  "w-rj": {
+    "text": "Bonjour Alex. Notre réunion est demain à dix heures. Apporte ton livre, s'il te plaît. Merci."
+  },
+  "w-rt": {
+    "text": "Bonjour Alex. Pourrions-nous nous retrouver demain à dix heures pour discuter du rapport ? Merci d'envoyer la première version par courriel aujourd'hui. Bien cordialement."
+  },
+  "o-w12": {
+    "text": "huit heures"
+  },
+  "o-w13": {
+    "text": "douze heures"
+  },
+  "o-w14": {
+    "text": "parc"
+  },
+  "p-w12": {
+    "text": "village"
+  },
+  "p-w13": {
+    "text": "campagne"
+  },
+  "p-w14": {
+    "text": "basket"
+  },
+  "p-w15": {
+    "text": "natation"
+  },
+  "w-w12": {
+    "text": "huit heures"
+  },
+  "w-w13": {
+    "text": "douze heures"
+  }
+}

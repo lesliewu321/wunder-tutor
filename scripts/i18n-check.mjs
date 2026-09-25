@@ -7,6 +7,9 @@ const [lang, only] = process.argv.slice(2);
 const langs = lang ? [lang] : readdirSync('src/i18n', { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== 'en').map((d) => d.name);
 if (!existsSync('i18n-source.json')) { console.error('i18n-source.json is missing: run `npm run i18n:export` first.'); process.exit(1); }
 const source = JSON.parse(readFileSync('i18n-source.json', 'utf8'));
+const lessonPacks = JSON.parse(readFileSync('astra-lessons/i18n/communication.json', 'utf8'));
+// Packs also serve standalone lesson books; merge their relevant runtime keys just as the app does.
+const packFor = (l, part, expected) => Object.fromEntries(Object.entries(lessonPacks[l]?.[part] ?? {}).filter(([key]) => key in expected));
 const read = (f) => JSON.parse(readFileSync(f, 'utf8'));
 const holes = (s) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort().join();
 const bolds = (s) => (s.match(/\*\*/g) ?? []).length;
@@ -37,13 +40,13 @@ for (const l of langs) {
   if ((!only || only === 'content') && l !== 'zh-Hant') {
     const file = `src/i18n/${l}/content.json`;
     if (!existsSync(file)) say(l, 'content.json', 'file missing', [file]);
-    else try { compare(l, 'content.json', source.content, read(file)); } catch (e) { say(l, 'content.json', 'not valid JSON', [String(e.message)]); }
+    else try { compare(l, 'content.json', source.content, { ...read(file), ...packFor(l, 'content', source.content) }); } catch (e) { say(l, 'content.json', 'not valid JSON', [String(e.message)]); }
   }
   if ((!only || only === 'lessons') && l !== 'zh-Hant') {
     const file = `src/i18n/${l}/lessons.json`;
     const en = Object.fromEntries(Object.keys(source.lessons).map((k) => [k, k]));
     if (!existsSync(file)) say(l, 'lessons.json', 'file missing', [file]);
-    else try { compare(l, 'lessons.json', en, read(file)); } catch (e) { say(l, 'lessons.json', 'not valid JSON', [String(e.message)]); }
+    else try { compare(l, 'lessons.json', en, { ...read(file), ...packFor(l, 'lessons', source.lessons) }); } catch (e) { say(l, 'lessons.json', 'not valid JSON', [String(e.message)]); }
   }
 }
 // What practice items mean (`<lang>/meanings.json`, English meaning → translation). A meaning is not needed in the
@@ -56,7 +59,7 @@ if (!only || only === 'meanings') {
     const need = Object.entries(source.meanings ?? {}).filter(([, m]) => !m.langs.every((x) => own.includes(x))).map(([k]) => k);
     if (!existsSync(file)) { say(l, 'meanings.json', 'file missing', [file]); continue; }
     try {
-      const tr = read(file);
+      const tr = { ...read(file), ...packFor(l, 'meanings', source.meanings ?? {}) };
       say(l, 'meanings.json', 'missing', need.filter((k) => tr[k] == null));
       say(l, 'meanings.json', 'not a meaning in the courses', Object.keys(tr).filter((k) => !(k in (source.meanings ?? {}))));
       say(l, 'meanings.json', 'empty', Object.entries(tr).filter(([, v]) => typeof v !== 'string' || !v.trim()).map(([k]) => k));

@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "editorialStatus": "original-authored; independent teacher review pending",
+  "topics": [
+    "out",
+    "people",
+    "work"
+  ],
+  "courses": [
+    {
+      "language": "en",
+      "file": "astra-lessons/courses/en-communication.json",
+      "units": 3,
+      "lessons": 27,
+      "ageBandVersions": 81,
+      "exercises": 531,
+      "items": 132
+    },
+    {
+      "language": "zh",
+      "file": "astra-lessons/courses/zh-communication.json",
+      "units": 3,
+      "lessons": 27,
+      "ageBandVersions": 81,
+      "exercises": 531,
+      "items": 135
+    },
+    {
+      "language": "ja",
+      "file": "astra-lessons/courses/ja-communication.json",
+      "units": 3,
+      "lessons": 27,
+      "ageBandVersions": 81,
+      "exercises": 531,
+      "items": 134
+    },
+    {
+      "language": "ko",
+      "file": "astra-lessons/courses/ko-communication.json",
+      "units": 3,
+      "lessons": 27,
+      "ageBandVersions": 81,
+      "exercises": 531,
+      "items": 134
+    },
+    {
+      "language": "fr",
+      "file": "astra-lessons/courses/fr-communication.json",
+      "units": 3,
+      "lessons": 27,
+      "ageBandVersions": 81,
+      "exercises": 531,
+      "items": 132
+    },
+    {
+      "language": "es",
+      "file": "astra-lessons/courses/es-communication.json",
+      "units": 3,
+      "lessons": 27,
+      "ageBandVersions": 81,
+      "exercises": 531,
+      "items": 132
+    }
+  ]
+}

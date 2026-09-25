@@ -26,6 +26,7 @@ import zhCommon from './zh-Hant/common.json';
 import zhContent from './zh-Hant/content.json';
 import zhContentCourse from './zh-Hant/content-course.json';
 import astraContent from '../../astra-lessons/i18n/zh-Hant.json';
+import communicationCatalogs from '../../astra-lessons/i18n/communication.json';
 import zhFeedback from './zh-Hant/feedback.json';
 import zhHome from './zh-Hant/home.json';
 import zhLab from './zh-Hant/lab.json';
@@ -64,6 +65,13 @@ const CONTENT: Partial<Record<Language, Catalog>> = { en: {}, 'zh-Hant': { ...zh
 const LESSONS: Partial<Record<Language, Catalog>> = { en: {} };
 /** What practice items mean, keyed by the English meaning in the course data (`tm`). Fetched for every language. */
 const MEANINGS: Partial<Record<Language, Catalog>> = { en: {} };
+// Lesson-pack translations stay next to their authored material.
+for (const [locale, pack] of Object.entries(communicationCatalogs)) {
+  const l = locale as Language;
+  CONTENT[l] = { ...CONTENT[l], ...pack.content };
+  LESSONS[l] = { ...LESSONS[l], ...pack.lessons };
+  MEANINGS[l] = { ...MEANINGS[l], ...pack.meanings };
+}
 
 // Components re-render when a fetched language arrives (useT subscribes to this).
 let revision = 0;
@@ -90,7 +98,7 @@ export const loadLanguage = (l: Language): Promise<void> => {
         Object.assign(into, words);
       }));
       // 繁體中文 keeps the catalogs it was bundled with; what was fetched is added to them.
-      INTERFACE[l] = { ...ui, ...INTERFACE[l] }; CONTENT[l] = { ...content, ...CONTENT[l] }; LESSONS[l] = { ...lessons, ...LESSONS[l] }; MEANINGS[l] = meanings;
+      INTERFACE[l] = { ...ui, ...INTERFACE[l] }; CONTENT[l] = { ...content, ...CONTENT[l] }; LESSONS[l] = { ...lessons, ...LESSONS[l] }; MEANINGS[l] = { ...meanings, ...MEANINGS[l] };
       revision++;
       for (const listener of listeners) listener();
     })().catch((e) => { loading.delete(l); console.warn('[i18n] could not load', l, e); });

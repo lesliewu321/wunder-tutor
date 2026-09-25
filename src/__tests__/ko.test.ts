@@ -18,7 +18,7 @@ describe('the Korean course', () => {
     expect(COURSES.ko).toBe(KO_COURSE);
     expect(KO_COURSE.language).toBe('ko');
     const lessons = KO_COURSE.units.flatMap((u) => u.lessons);
-    expect(lessons.length).toBe(7);
+    expect(lessons.length).toBe(34);
     for (const l of lessons) for (const band of ['little', 'junior', 'teen'] as const) expect(l.exercises[band].length).toBeGreaterThan(0);
     expect(unitCourse(KO_COURSE.units[0].id)).toBe('ko');
   });

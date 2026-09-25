@@ -1,3 +1,4 @@
+import { addCommunicationToBuilt } from '../../../astra-lessons/communication';
 import type { Course, PhonemeId, SpeakItem } from '../../domain/types';
 import { buildCourse, type CourseFile, type Ladder } from '../load';
 import esData from '../../../content/courses/es.json';
@@ -7,7 +8,7 @@ import esData from '../../../content/courses/es.json';
 
 export { es } from './item';
 
-export const ES = buildCourse(esData as unknown as CourseFile, 'content/courses/es.json');
+export const ES = addCommunicationToBuilt(buildCourse(esData as unknown as CourseFile, 'content/courses/es.json'));
 
 export const ES_COURSE: Course = ES.course;
 

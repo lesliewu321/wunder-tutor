@@ -1,0 +1,5084 @@
+{
+  "id": "en-communication",
+  "language": "en",
+  "title": "Communication",
+  "exercisePrefix": "commen",
+  "items": {
+    "it-station": {
+      "text": "station",
+      "kind": "word",
+      "picture": "🚉"
+    },
+    "it-bus": {
+      "text": "bus",
+      "kind": "word",
+      "picture": "🚌"
+    },
+    "it-ticket": {
+      "text": "ticket",
+      "kind": "word",
+      "picture": "🎫"
+    },
+    "it-left": {
+      "text": "left",
+      "kind": "word",
+      "picture": "⬅️"
+    },
+    "it-right": {
+      "text": "right",
+      "kind": "word",
+      "picture": "➡️"
+    },
+    "it-straight-ahead": {
+      "text": "straight ahead",
+      "kind": "phrase",
+      "picture": "⬆️"
+    },
+    "it-platform": {
+      "text": "platform",
+      "kind": "word",
+      "picture": "🚉"
+    },
+    "it-ten-oclock": {
+      "text": "ten o'clock",
+      "kind": "phrase",
+      "picture": "⏰"
+    },
+    "it-tomorrow": {
+      "text": "tomorrow",
+      "kind": "word",
+      "picture": "📅"
+    },
+    "it-return-ticket": {
+      "text": "return ticket",
+      "kind": "phrase",
+      "picture": "🎟️"
+    },
+    "it-train": {
+      "text": "train",
+      "kind": "word",
+      "picture": "🚆"
+    },
+    "it-school": {
+      "text": "school",
+      "kind": "word",
+      "picture": "🏫"
+    },
+    "it-where-would-you-like-to-go": {
+      "text": "Where would you like to go?",
+      "kind": "sentence"
+    },
+    "it-which-way-do-i-go": {
+      "text": "Which way do I go?",
+      "kind": "sentence"
+    },
+    "it-how-many-tickets-would-you-like": {
+      "text": "How many tickets would you like?",
+      "kind": "sentence"
+    },
+    "it-how-will-you-get-there": {
+      "text": "How will you get there?",
+      "kind": "sentence"
+    },
+    "it-what-time-does-it-leave": {
+      "text": "What time does it leave?",
+      "kind": "sentence"
+    },
+    "it-when-are-you-travelling": {
+      "text": "When are you travelling?",
+      "kind": "sentence"
+    },
+    "it-to-the-station-please": {
+      "text": "To the station, please.",
+      "kind": "sentence"
+    },
+    "it-go-left": {
+      "text": "Go left.",
+      "kind": "sentence"
+    },
+    "it-one-ticket-please": {
+      "text": "One ticket, please.",
+      "kind": "sentence"
+    },
+    "it-by-bus": {
+      "text": "By bus.",
+      "kind": "sentence"
+    },
+    "it-at-ten": {
+      "text": "At ten.",
+      "kind": "sentence"
+    },
+    "it-i-want-to-go-to-the-station": {
+      "text": "I want to go to the station.",
+      "kind": "sentence"
+    },
+    "it-turn-left-at-the-school": {
+      "text": "Turn left at the school.",
+      "kind": "sentence"
+    },
+    "it-i-would-like-one-ticket-please": {
+      "text": "I would like one ticket, please.",
+      "kind": "sentence"
+    },
+    "it-i-will-take-the-bus": {
+      "text": "I will take the bus.",
+      "kind": "sentence"
+    },
+    "it-the-bus-leaves-at-ten": {
+      "text": "The bus leaves at ten.",
+      "kind": "sentence"
+    },
+    "it-i-am-travelling-tomorrow": {
+      "text": "I am travelling tomorrow.",
+      "kind": "sentence"
+    },
+    "it-im-going-to-the-station-could-you-show-me-the-way": {
+      "text": "I'm going to the station. Could you show me the way?",
+      "kind": "sentence"
+    },
+    "it-go-straight-then-turn-right-at-the-school": {
+      "text": "Go straight, then turn right at the school.",
+      "kind": "sentence"
+    },
+    "it-i-would-like-one-return-ticket-please": {
+      "text": "I would like one return ticket, please.",
+      "kind": "sentence"
+    },
+    "it-ill-take-the-train-and-change-at-the-next-station": {
+      "text": "I'll take the train and change at the next station.",
+      "kind": "sentence"
+    },
+    "it-the-next-train-leaves-at-ten-from-platform-two": {
+      "text": "The next train leaves at ten from platform two.",
+      "kind": "sentence"
+    },
+    "it-i-would-like-to-leave-tomorrow-and-return-on-friday": {
+      "text": "I would like to leave tomorrow and return on Friday.",
+      "kind": "sentence"
+    },
+    "it-name": {
+      "text": "name",
+      "kind": "word",
+      "picture": "🏷️"
+    },
+    "it-friend": {
+      "text": "friend",
+      "kind": "word",
+      "picture": "🤝"
+    },
+    "it-family": {
+      "text": "family",
+      "kind": "word",
+      "picture": "👨‍👩‍👧"
+    },
+    "it-city": {
+      "text": "city",
+      "kind": "word",
+      "picture": "🏙️"
+    },
+    "it-music": {
+      "text": "music",
+      "kind": "word",
+      "picture": "🎵"
+    },
+    "it-football": {
+      "text": "football",
+      "kind": "word",
+      "picture": "⚽"
+    },
+    "it-reading": {
+      "text": "reading",
+      "kind": "word",
+      "picture": "📚"
+    },
+    "it-weekend": {
+      "text": "weekend",
+      "kind": "word",
+      "picture": "📅"
+    },
+    "it-goodbye": {
+      "text": "goodbye",
+      "kind": "word",
+      "picture": "👋"
+    },
+    "it-hobby": {
+      "text": "hobby",
+      "kind": "word",
+      "picture": "🎨"
+    },
+    "it-language": {
+      "text": "language",
+      "kind": "word",
+      "picture": "💬"
+    },
+    "it-what-is-your-name": {
+      "text": "What is your name?",
+      "kind": "sentence"
+    },
+    "it-where-do-you-live": {
+      "text": "Where do you live?",
+      "kind": "sentence"
+    },
+    "it-what-do-you-like-doing": {
+      "text": "What do you like doing?",
+      "kind": "sentence"
+    },
+    "it-what-do-you-do-at-the-weekend": {
+      "text": "What do you do at the weekend?",
+      "kind": "sentence"
+    },
+    "it-would-you-like-to-meet-tomorrow": {
+      "text": "Would you like to meet tomorrow?",
+      "kind": "sentence"
+    },
+    "it-i-have-to-go-now": {
+      "text": "I have to go now.",
+      "kind": "sentence"
+    },
+    "it-my-name-is-alex": {
+      "text": "My name is Alex.",
+      "kind": "sentence"
+    },
+    "it-in-the-city": {
+      "text": "In the city.",
+      "kind": "sentence"
+    },
+    "it-i-like-music": {
+      "text": "I like music.",
+      "kind": "sentence"
+    },
+    "it-i-play-football": {
+      "text": "I play football.",
+      "kind": "sentence"
+    },
+    "it-yes-please": {
+      "text": "Yes, please.",
+      "kind": "sentence"
+    },
+    "it-my-name-is-alex-what-is-your-name": {
+      "text": "My name is Alex. What is your name?",
+      "kind": "sentence"
+    },
+    "it-i-live-in-this-city-with-my-family": {
+      "text": "I live in this city with my family.",
+      "kind": "sentence"
+    },
+    "it-i-like-music-and-reading": {
+      "text": "I like music and reading.",
+      "kind": "sentence"
+    },
+    "it-i-play-football-with-my-friends": {
+      "text": "I play football with my friends.",
+      "kind": "sentence"
+    },
+    "it-yes-lets-meet-at-the-park": {
+      "text": "Yes. Let's meet at the park.",
+      "kind": "sentence"
+    },
+    "it-see-you-tomorrow": {
+      "text": "See you tomorrow.",
+      "kind": "sentence"
+    },
+    "it-my-name-is-alex-its-nice-to-meet-you": {
+      "text": "My name is Alex. It's nice to meet you.",
+      "kind": "sentence"
+    },
+    "it-i-live-in-this-city-but-my-family-lives-abroad": {
+      "text": "I live in this city, but my family lives abroad.",
+      "kind": "sentence"
+    },
+    "it-i-enjoy-music-and-reading-what-about-you": {
+      "text": "I enjoy music and reading. What about you?",
+      "kind": "sentence"
+    },
+    "it-i-usually-play-football-with-friends-at-the-weekend": {
+      "text": "I usually play football with friends at the weekend.",
+      "kind": "sentence"
+    },
+    "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow": {
+      "text": "That sounds good. Shall we meet at the park tomorrow?",
+      "kind": "sentence"
+    },
+    "it-it-was-nice-talking-to-you-see-you-tomorrow": {
+      "text": "It was nice talking to you. See you tomorrow.",
+      "kind": "sentence"
+    },
+    "it-team": {
+      "text": "team",
+      "kind": "word",
+      "picture": "🤝"
+    },
+    "it-meeting": {
+      "text": "meeting",
+      "kind": "word",
+      "picture": "🗓️"
+    },
+    "it-message": {
+      "text": "message",
+      "kind": "word",
+      "picture": "💬"
+    },
+    "it-telephone": {
+      "text": "telephone",
+      "kind": "word",
+      "picture": "☎️"
+    },
+    "it-email": {
+      "text": "email",
+      "kind": "word",
+      "picture": "✉️"
+    },
+    "it-today": {
+      "text": "today",
+      "kind": "word",
+      "picture": "📆"
+    },
+    "it-help": {
+      "text": "help",
+      "kind": "word",
+      "picture": "🙋"
+    },
+    "it-question": {
+      "text": "question",
+      "kind": "word",
+      "picture": "❔"
+    },
+    "it-friday": {
+      "text": "Friday",
+      "kind": "word",
+      "picture": "📅"
+    },
+    "it-report": {
+      "text": "report",
+      "kind": "word",
+      "picture": "📄"
+    },
+    "it-can-you-introduce-yourself": {
+      "text": "Can you introduce yourself?",
+      "kind": "sentence"
+    },
+    "it-when-shall-we-meet": {
+      "text": "When shall we meet?",
+      "kind": "sentence"
+    },
+    "it-can-you-send-a-message": {
+      "text": "Can you send a message?",
+      "kind": "sentence"
+    },
+    "it-could-you-repeat-that-please": {
+      "text": "Could you repeat that, please?",
+      "kind": "sentence"
+    },
+    "it-hello-how-can-i-help-you": {
+      "text": "Hello. How can I help you?",
+      "kind": "sentence"
+    },
+    "it-when-can-you-finish": {
+      "text": "When can you finish?",
+      "kind": "sentence"
+    },
+    "it-im-alex": {
+      "text": "I'm Alex.",
+      "kind": "sentence"
+    },
+    "it-yes-i-can": {
+      "text": "Yes, I can.",
+      "kind": "sentence"
+    },
+    "it-can-you-help-me": {
+      "text": "Can you help me?",
+      "kind": "sentence"
+    },
+    "it-im-alex-im-on-your-team": {
+      "text": "I'm Alex. I'm on your team.",
+      "kind": "sentence"
+    },
+    "it-lets-meet-tomorrow-at-ten": {
+      "text": "Let's meet tomorrow at ten.",
+      "kind": "sentence"
+    },
+    "it-i-can-send-the-message-today": {
+      "text": "I can send the message today.",
+      "kind": "sentence"
+    },
+    "it-our-meeting-is-at-ten": {
+      "text": "Our meeting is at ten.",
+      "kind": "sentence"
+    },
+    "it-could-i-speak-to-alex-please": {
+      "text": "Could I speak to Alex, please?",
+      "kind": "sentence"
+    },
+    "it-i-can-finish-today": {
+      "text": "I can finish today.",
+      "kind": "sentence"
+    },
+    "it-im-alex-i-work-with-the-support-team": {
+      "text": "I'm Alex. I work with the support team.",
+      "kind": "sentence"
+    },
+    "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report": {
+      "text": "Could we meet tomorrow at ten to discuss the report?",
+      "kind": "sentence"
+    },
+    "it-ill-send-the-report-by-email-today": {
+      "text": "I'll send the report by email today.",
+      "kind": "sentence"
+    },
+    "it-of-course-the-meeting-starts-at-ten-tomorrow": {
+      "text": "Of course. The meeting starts at ten tomorrow.",
+      "kind": "sentence"
+    },
+    "it-could-i-speak-to-alex-please-may-i-leave-a-message": {
+      "text": "Could I speak to Alex, please? May I leave a message?",
+      "kind": "sentence"
+    },
+    "it-i-can-send-the-first-version-today-and-finish-by-friday": {
+      "text": "I can send the first version today and finish by Friday.",
+      "kind": "sentence"
+    },
+    "it-the-train-leaves-at-ten-please-go-to-platform-two": {
+      "text": "The train leaves at ten. Please go to platform two.",
+      "kind": "sentence"
+    },
+    "it-the-train-to-the-city-leaves-at-ten-from-platform-two-a-return-ticket-is-valid-until-friday": {
+      "text": "The train to the city leaves at ten from platform two. A return ticket is valid until Friday.",
+      "kind": "sentence"
+    },
+    "it-my-name-is-alex-i-live-in-the-city-i-play-football": {
+      "text": "My name is Alex. I live in the city. I play football.",
+      "kind": "sentence"
+    },
+    "it-my-name-is-alex-i-live-in-this-city-at-the-weekend-i-play-football-with-friends-we-can-meet-at-the-park-tomorrow": {
+      "text": "My name is Alex. I live in this city. At the weekend, I play football with friends. We can meet at the park tomorrow.",
+      "kind": "sentence"
+    },
+    "it-we-meet-at-ten": {
+      "text": "We meet at ten.",
+      "kind": "sentence"
+    },
+    "it-hello-alex-our-meeting-is-tomorrow-at-ten-please-bring-your-book-thank-you": {
+      "text": "Hello, Alex. Our meeting is tomorrow at ten. Please bring your book. Thank you.",
+      "kind": "sentence"
+    },
+    "it-hello-alex-could-we-meet-tomorrow-at-ten-to-discuss-the-report-please-send-the-first-version-by-email-today-thank-you-best-regards": {
+      "text": "Hello, Alex. Could we meet tomorrow at ten to discuss the report? Please send the first version by email today. Thank you. Best regards.",
+      "kind": "sentence"
+    },
+    "it-eight-oclock": {
+      "text": "eight o'clock",
+      "kind": "phrase",
+      "picture": "⏰"
+    },
+    "it-twelve-oclock": {
+      "text": "twelve o'clock",
+      "kind": "phrase",
+      "picture": "⏰"
+    },
+    "it-park": {
+      "text": "park",
+      "kind": "word",
+      "picture": "🌳"
+    },
+    "it-village": {
+      "text": "village",
+      "kind": "word",
+      "picture": "🏘️"
+    },
+    "it-countryside": {
+      "text": "countryside",
+      "kind": "word",
+      "picture": "🌾"
+    },
+    "it-basketball": {
+      "text": "basketball",
+      "kind": "word",
+      "picture": "🏀"
+    },
+    "it-swimming": {
+      "text": "swimming",
+      "kind": "word",
+      "picture": "🏊"
+    },
+    "en-comm-o-l-a": {
+      "text": "To the station, please. Go left.",
+      "kind": "sentence"
+    },
+    "en-comm-o-l-b": {
+      "text": "At ten. tomorrow",
+      "kind": "sentence"
+    },
+    "en-comm-o-j-a": {
+      "text": "I want to go to the station. Turn left at the school.",
+      "kind": "sentence"
+    },
+    "en-comm-o-j-b": {
+      "text": "The bus leaves at ten. I am travelling tomorrow.",
+      "kind": "sentence"
+    },
+    "en-comm-o-t-a": {
+      "text": "I'm going to the station. Could you show me the way? Go straight, then turn right at the school.",
+      "kind": "sentence"
+    },
+    "en-comm-o-t-b": {
+      "text": "The next train leaves at ten from platform two. I would like to leave tomorrow and return on Friday.",
+      "kind": "sentence"
+    },
+    "en-comm-p-l-a": {
+      "text": "My name is Alex. In the city.",
+      "kind": "sentence"
+    },
+    "en-comm-p-l-b": {
+      "text": "I like music. I play football.",
+      "kind": "sentence"
+    },
+    "en-comm-p-j-a": {
+      "text": "My name is Alex. What is your name? I live in this city with my family.",
+      "kind": "sentence"
+    },
+    "en-comm-p-j-b": {
+      "text": "I like music and reading. I play football with my friends.",
+      "kind": "sentence"
+    },
+    "en-comm-p-t-a": {
+      "text": "My name is Alex. It's nice to meet you. I live in this city, but my family lives abroad.",
+      "kind": "sentence"
+    },
+    "en-comm-p-t-b": {
+      "text": "I enjoy music and reading. What about you? I usually play football with friends at the weekend.",
+      "kind": "sentence"
+    },
+    "en-comm-w-l-a": {
+      "text": "tomorrow At ten.",
+      "kind": "sentence"
+    },
+    "en-comm-w-l-b": {
+      "text": "Yes, I can. today",
+      "kind": "sentence"
+    },
+    "en-comm-w-j-a": {
+      "text": "Let's meet tomorrow at ten. Our meeting is at ten.",
+      "kind": "sentence"
+    },
+    "en-comm-w-j-b": {
+      "text": "I can send the message today. I can finish today.",
+      "kind": "sentence"
+    },
+    "en-comm-w-t-a": {
+      "text": "Could we meet tomorrow at ten to discuss the report? Of course. The meeting starts at ten tomorrow.",
+      "kind": "sentence"
+    },
+    "en-comm-w-t-b": {
+      "text": "I'll send the report by email today. I can send the first version today and finish by Friday.",
+      "kind": "sentence"
+    }
+  },
+  "units": [
+    {
+      "id": "out",
+      "title": "Getting Around",
+      "subtitle": "Directions, tickets and timetables",
+      "icon": "🗺️",
+      "color": "var(--sky)",
+      "grownUp": {
+        "title": "Getting Around",
+        "subtitle": "Directions, tickets and timetables"
+      },
+      "lessons": [
+        {
+          "id": "out-1",
+          "title": "Useful words",
+          "kind": "words",
+          "icon": "🏷️",
+          "guide": {
+            "goal": "Recognise the key words, hear them and say them clearly.",
+            "goalHant": "認識關鍵詞，聆聽並清楚說出。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Make six word cards. Say a word and find its card; younger learners may draw with an adult.",
+            "practiceHant": "製作六張詞卡，說出詞語並找出相應卡片；幼童可與成人一起畫圖。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-station"
+              },
+              {
+                "type": "speak",
+                "item": "it-bus"
+              },
+              {
+                "type": "speak",
+                "item": "it-ticket"
+              },
+              {
+                "type": "speak",
+                "item": "it-left"
+              },
+              {
+                "type": "speak",
+                "item": "it-right"
+              },
+              {
+                "type": "speak",
+                "item": "it-straight-ahead"
+              },
+              {
+                "type": "speak",
+                "item": "it-eight-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-twelve-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-park"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-station",
+                "others": [
+                  "it-bus",
+                  "it-ticket"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-right",
+                "others": [
+                  "it-left",
+                  "it-straight-ahead"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-station"
+              },
+              {
+                "type": "speak",
+                "item": "it-bus"
+              },
+              {
+                "type": "speak",
+                "item": "it-ticket"
+              },
+              {
+                "type": "speak",
+                "item": "it-left"
+              },
+              {
+                "type": "speak",
+                "item": "it-right"
+              },
+              {
+                "type": "speak",
+                "item": "it-straight-ahead"
+              },
+              {
+                "type": "speak",
+                "item": "it-platform"
+              },
+              {
+                "type": "speak",
+                "item": "it-ten-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              },
+              {
+                "type": "speak",
+                "item": "it-eight-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-twelve-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-park"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-station",
+                "others": [
+                  "it-bus",
+                  "it-ticket"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-right",
+                "others": [
+                  "it-left",
+                  "it-straight-ahead"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-station"
+              },
+              {
+                "type": "speak",
+                "item": "it-bus"
+              },
+              {
+                "type": "speak",
+                "item": "it-ticket"
+              },
+              {
+                "type": "speak",
+                "item": "it-left"
+              },
+              {
+                "type": "speak",
+                "item": "it-right"
+              },
+              {
+                "type": "speak",
+                "item": "it-straight-ahead"
+              },
+              {
+                "type": "speak",
+                "item": "it-platform"
+              },
+              {
+                "type": "speak",
+                "item": "it-ten-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              },
+              {
+                "type": "speak",
+                "item": "it-return-ticket"
+              },
+              {
+                "type": "speak",
+                "item": "it-train"
+              },
+              {
+                "type": "speak",
+                "item": "it-school"
+              },
+              {
+                "type": "speak",
+                "item": "it-eight-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-twelve-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-park"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-station",
+                "others": [
+                  "it-bus",
+                  "it-ticket"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-right",
+                "others": [
+                  "it-left",
+                  "it-straight-ahead"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-2",
+          "title": "Ask and give directions",
+          "kind": "phrases",
+          "icon": "💬",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-to-the-station-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-go-left"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-to-the-station-please",
+                "others": [
+                  "it-go-left",
+                  "it-one-ticket-please"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-to-the-station-please",
+                "chunks": [
+                  "To",
+                  "the",
+                  "station,",
+                  "please."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-which-way-do-i-go",
+                "replies": [
+                  "it-go-left"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-where-would-you-like-to-go"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-want-to-go-to-the-station"
+              },
+              {
+                "type": "speak",
+                "item": "it-turn-left-at-the-school"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-want-to-go-to-the-station",
+                "others": [
+                  "it-turn-left-at-the-school",
+                  "it-i-would-like-one-ticket-please"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-want-to-go-to-the-station",
+                "chunks": [
+                  "I",
+                  "want",
+                  "to",
+                  "go",
+                  "to",
+                  "the",
+                  "station."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-which-way-do-i-go",
+                "replies": [
+                  "it-turn-left-at-the-school"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-where-would-you-like-to-go"
+              },
+              {
+                "type": "speak",
+                "item": "it-im-going-to-the-station-could-you-show-me-the-way"
+              },
+              {
+                "type": "speak",
+                "item": "it-go-straight-then-turn-right-at-the-school"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-going-to-the-station-could-you-show-me-the-way",
+                "others": [
+                  "it-go-straight-then-turn-right-at-the-school",
+                  "it-i-would-like-one-return-ticket-please"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-going-to-the-station-could-you-show-me-the-way",
+                "chunks": [
+                  "I'm",
+                  "going",
+                  "to",
+                  "the",
+                  "station.",
+                  "Could",
+                  "you",
+                  "show",
+                  "me",
+                  "the",
+                  "way?"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-which-way-do-i-go",
+                "replies": [
+                  "it-go-straight-then-turn-right-at-the-school"
+                ],
+                "picture": "🗺️"
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-3",
+          "title": "Tickets and transport",
+          "kind": "phrases",
+          "icon": "🎫",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-one-ticket-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-by-bus"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-one-ticket-please",
+                "others": [
+                  "it-by-bus",
+                  "it-at-ten"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-one-ticket-please",
+                "chunks": [
+                  "One",
+                  "ticket,",
+                  "please."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-will-you-get-there",
+                "replies": [
+                  "it-by-bus"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-how-many-tickets-would-you-like"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-one-ticket-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-will-take-the-bus"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-would-like-one-ticket-please",
+                "others": [
+                  "it-i-will-take-the-bus",
+                  "it-the-bus-leaves-at-ten"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-would-like-one-ticket-please",
+                "chunks": [
+                  "I",
+                  "would",
+                  "like",
+                  "one",
+                  "ticket,",
+                  "please."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-will-you-get-there",
+                "replies": [
+                  "it-i-will-take-the-bus"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-how-many-tickets-would-you-like"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-one-return-ticket-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-ill-take-the-train-and-change-at-the-next-station"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-would-like-one-return-ticket-please",
+                "others": [
+                  "it-ill-take-the-train-and-change-at-the-next-station",
+                  "it-the-next-train-leaves-at-ten-from-platform-two"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-would-like-one-return-ticket-please",
+                "chunks": [
+                  "I",
+                  "would",
+                  "like",
+                  "one",
+                  "return",
+                  "ticket,",
+                  "please."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-will-you-get-there",
+                "replies": [
+                  "it-ill-take-the-train-and-change-at-the-next-station"
+                ],
+                "picture": "🗺️"
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-4",
+          "title": "Departure times and travel plans",
+          "kind": "phrases",
+          "icon": "🗓️",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-at-ten"
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-at-ten",
+                "others": [
+                  "it-tomorrow",
+                  "it-to-the-station-please"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-at-ten",
+                "chunks": [
+                  "At",
+                  "ten."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-are-you-travelling",
+                "replies": [
+                  "it-tomorrow"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-what-time-does-it-leave"
+              },
+              {
+                "type": "speak",
+                "item": "it-the-bus-leaves-at-ten"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-am-travelling-tomorrow"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-the-bus-leaves-at-ten",
+                "others": [
+                  "it-i-am-travelling-tomorrow",
+                  "it-i-want-to-go-to-the-station"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-the-bus-leaves-at-ten",
+                "chunks": [
+                  "The",
+                  "bus",
+                  "leaves",
+                  "at",
+                  "ten."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-are-you-travelling",
+                "replies": [
+                  "it-i-am-travelling-tomorrow"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-what-time-does-it-leave"
+              },
+              {
+                "type": "speak",
+                "item": "it-the-next-train-leaves-at-ten-from-platform-two"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-to-leave-tomorrow-and-return-on-friday"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-the-next-train-leaves-at-ten-from-platform-two",
+                "others": [
+                  "it-i-would-like-to-leave-tomorrow-and-return-on-friday",
+                  "it-im-going-to-the-station-could-you-show-me-the-way"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-the-next-train-leaves-at-ten-from-platform-two",
+                "chunks": [
+                  "The",
+                  "next",
+                  "train",
+                  "leaves",
+                  "at",
+                  "ten",
+                  "from",
+                  "platform",
+                  "two."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-are-you-travelling",
+                "replies": [
+                  "it-i-would-like-to-leave-tomorrow-and-return-on-friday"
+                ],
+                "picture": "🗺️"
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-5",
+          "title": "Listen and speak clearly",
+          "kind": "listening",
+          "icon": "👂",
+          "guide": {
+            "goal": "Listen for the important words and details before choosing an answer.",
+            "goalHant": "先聽出關鍵詞及細節，再選答案。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Listen, pause, repeat and compare. Keep words clear; speed is not the goal.",
+            "practiceHant": "聽、停、重複，再比較。以清楚表達為目標，不用追求速度。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "it-left",
+                "others": [
+                  "it-right",
+                  "it-straight-ahead"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-to-the-station-please",
+                "others": [
+                  "it-go-left",
+                  "it-one-ticket-please"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-to-the-station-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-at-ten",
+                "others": [
+                  "it-one-ticket-please",
+                  "it-tomorrow"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-at-ten"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-how-will-you-get-there",
+                "others": [
+                  "it-where-would-you-like-to-go",
+                  "it-what-time-does-it-leave"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "it-left",
+                "others": [
+                  "it-right",
+                  "it-straight-ahead"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-want-to-go-to-the-station",
+                "others": [
+                  "it-turn-left-at-the-school",
+                  "it-i-would-like-one-ticket-please"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-i-want-to-go-to-the-station"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-the-bus-leaves-at-ten",
+                "others": [
+                  "it-i-would-like-one-ticket-please",
+                  "it-i-am-travelling-tomorrow"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-the-bus-leaves-at-ten"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-how-will-you-get-there",
+                "others": [
+                  "it-where-would-you-like-to-go",
+                  "it-what-time-does-it-leave"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "choose-heard",
+                "answer": "it-left",
+                "others": [
+                  "it-right",
+                  "it-straight-ahead"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-going-to-the-station-could-you-show-me-the-way",
+                "others": [
+                  "it-go-straight-then-turn-right-at-the-school",
+                  "it-i-would-like-one-return-ticket-please"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-im-going-to-the-station-could-you-show-me-the-way"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-the-next-train-leaves-at-ten-from-platform-two",
+                "others": [
+                  "it-i-would-like-one-return-ticket-please",
+                  "it-i-would-like-to-leave-tomorrow-and-return-on-friday"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-the-next-train-leaves-at-ten-from-platform-two"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-how-will-you-get-there",
+                "others": [
+                  "it-where-would-you-like-to-go",
+                  "it-what-time-does-it-leave"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-6",
+          "title": "Read for information",
+          "kind": "speaking",
+          "icon": "📖",
+          "guide": {
+            "goal": "Read a short text and find evidence for your answer.",
+            "goalHant": "閱讀短文，找出支持答案的內容。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Point to the words that prove each answer. Read the text aloud once more.",
+            "practiceHant": "指出支持每個答案的詞語，再朗讀一次短文。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-l-a",
+                "question": "Where is the traveller going?",
+                "questionHant": "旅客要去哪裡？",
+                "answer": "it-station",
+                "others": [
+                  "it-school",
+                  "it-park"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-l-b",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-go-left",
+                "chunks": [
+                  "Go",
+                  "left."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-by-bus",
+                "chunks": [
+                  "By",
+                  "bus."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-go-left"
+              }
+            ],
+            "junior": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-j-a",
+                "question": "Where is the traveller going?",
+                "questionHant": "旅客要去哪裡？",
+                "answer": "it-station",
+                "others": [
+                  "it-school",
+                  "it-park"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-j-b",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-turn-left-at-the-school",
+                "chunks": [
+                  "Turn",
+                  "left",
+                  "at",
+                  "the",
+                  "school."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-will-take-the-bus",
+                "chunks": [
+                  "I",
+                  "will",
+                  "take",
+                  "the",
+                  "bus."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-turn-left-at-the-school"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-t-a",
+                "question": "Where is the traveller going?",
+                "questionHant": "旅客要去哪裡？",
+                "answer": "it-station",
+                "others": [
+                  "it-school",
+                  "it-park"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-t-b",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-go-straight-then-turn-right-at-the-school",
+                "chunks": [
+                  "Go",
+                  "straight,",
+                  "then",
+                  "turn",
+                  "right",
+                  "at",
+                  "the",
+                  "school."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-ill-take-the-train-and-change-at-the-next-station",
+                "chunks": [
+                  "I'll",
+                  "take",
+                  "the",
+                  "train",
+                  "and",
+                  "change",
+                  "at",
+                  "the",
+                  "next",
+                  "station."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-go-straight-then-turn-right-at-the-school"
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-7",
+          "title": "Put it into conversation",
+          "kind": "conversation",
+          "icon": "🗣️",
+          "guide": {
+            "goal": "Respond to six prompts. Listen again and try without reading the model.",
+            "goalHant": "回應六個提示。再聽一次，嘗試不看範例回答。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Act out the exchange without the screen. Ask a partner to check whether your meaning is clear.",
+            "practiceHant": "不看螢幕演練對話，請同伴確認意思是否清楚。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "dialogue",
+                "tutor": "it-where-would-you-like-to-go",
+                "replies": [
+                  "it-to-the-station-please"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-which-way-do-i-go",
+                "replies": [
+                  "it-go-left"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-many-tickets-would-you-like",
+                "replies": [
+                  "it-one-ticket-please"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-will-you-get-there",
+                "replies": [
+                  "it-by-bus"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-time-does-it-leave",
+                "replies": [
+                  "it-at-ten"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-are-you-travelling",
+                "replies": [
+                  "it-tomorrow"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "junior": [
+              {
+                "type": "dialogue",
+                "tutor": "it-where-would-you-like-to-go",
+                "replies": [
+                  "it-i-want-to-go-to-the-station"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-which-way-do-i-go",
+                "replies": [
+                  "it-turn-left-at-the-school"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-many-tickets-would-you-like",
+                "replies": [
+                  "it-i-would-like-one-ticket-please"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-will-you-get-there",
+                "replies": [
+                  "it-i-will-take-the-bus"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-time-does-it-leave",
+                "replies": [
+                  "it-the-bus-leaves-at-ten"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-are-you-travelling",
+                "replies": [
+                  "it-i-am-travelling-tomorrow"
+                ],
+                "picture": "🗺️"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "it-where-would-you-like-to-go",
+                "replies": [
+                  "it-im-going-to-the-station-could-you-show-me-the-way"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-which-way-do-i-go",
+                "replies": [
+                  "it-go-straight-then-turn-right-at-the-school"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-many-tickets-would-you-like",
+                "replies": [
+                  "it-i-would-like-one-return-ticket-please"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-how-will-you-get-there",
+                "replies": [
+                  "it-ill-take-the-train-and-change-at-the-next-station"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-time-does-it-leave",
+                "replies": [
+                  "it-the-next-train-leaves-at-ten-from-platform-two"
+                ],
+                "picture": "🗺️"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-are-you-travelling",
+                "replies": [
+                  "it-i-would-like-to-leave-tomorrow-and-return-on-friday"
+                ],
+                "picture": "🗺️"
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-8",
+          "title": "Read, build and write",
+          "kind": "speaking",
+          "icon": "✍️",
+          "guide": {
+            "goal": "Understand a practical text, build sentences and create your own version offline.",
+            "goalHant": "理解實用短文，組句，再離線寫出自己的版本。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Draw a route and write a departure notice with a destination and time. Older learners add a platform and return date. Ask a partner to follow it.",
+            "practiceHant": "畫路線，寫目的地及出發時間；年長學習者加上站台和回程日期，請同伴按資料行動。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "read-choice",
+                "passage": "it-the-bus-leaves-at-ten",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-to-the-station-please",
+                "chunks": [
+                  "To",
+                  "the",
+                  "station,",
+                  "please."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-one-ticket-please",
+                "chunks": [
+                  "One",
+                  "ticket,",
+                  "please."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-at-ten",
+                "chunks": [
+                  "At",
+                  "ten."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              }
+            ],
+            "junior": [
+              {
+                "type": "read-choice",
+                "passage": "it-the-train-leaves-at-ten-please-go-to-platform-two",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-want-to-go-to-the-station",
+                "chunks": [
+                  "I",
+                  "want",
+                  "to",
+                  "go",
+                  "to",
+                  "the",
+                  "station."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-would-like-one-ticket-please",
+                "chunks": [
+                  "I",
+                  "would",
+                  "like",
+                  "one",
+                  "ticket,",
+                  "please."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-the-bus-leaves-at-ten",
+                "chunks": [
+                  "The",
+                  "bus",
+                  "leaves",
+                  "at",
+                  "ten."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-i-am-travelling-tomorrow"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "it-the-train-to-the-city-leaves-at-ten-from-platform-two-a-return-ticket-is-valid-until-friday",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-going-to-the-station-could-you-show-me-the-way",
+                "chunks": [
+                  "I'm",
+                  "going",
+                  "to",
+                  "the",
+                  "station.",
+                  "Could",
+                  "you",
+                  "show",
+                  "me",
+                  "the",
+                  "way?"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-would-like-one-return-ticket-please",
+                "chunks": [
+                  "I",
+                  "would",
+                  "like",
+                  "one",
+                  "return",
+                  "ticket,",
+                  "please."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-the-next-train-leaves-at-ten-from-platform-two",
+                "chunks": [
+                  "The",
+                  "next",
+                  "train",
+                  "leaves",
+                  "at",
+                  "ten",
+                  "from",
+                  "platform",
+                  "two."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-to-leave-tomorrow-and-return-on-friday"
+              }
+            ]
+          }
+        },
+        {
+          "id": "out-9",
+          "title": "Review and independent practice",
+          "kind": "review",
+          "icon": "🏆",
+          "guide": {
+            "goal": "Recall useful language and check reading, listening and sentence order.",
+            "goalHant": "回想實用表達，檢查閱讀、聆聽及句子順序。",
+            "tip": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+            "tipHant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+            "practice": "Try again tomorrow without the model. A partner or teacher should review your original writing; the app checks only the model sentence order.",
+            "practiceHant": "明天不看範例再試。原創寫作請同伴或老師回饋；應用程式只檢查範例句的順序。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-to-the-station-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-one-ticket-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-at-ten",
+                "others": [
+                  "it-by-bus",
+                  "it-tomorrow"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-l-a",
+                "question": "Where is the traveller going?",
+                "questionHant": "旅客要去哪裡？",
+                "answer": "it-station",
+                "others": [
+                  "it-school",
+                  "it-park"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-the-bus-leaves-at-ten",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-at-ten",
+                "chunks": [
+                  "At",
+                  "ten."
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-i-want-to-go-to-the-station"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-one-ticket-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-the-bus-leaves-at-ten",
+                "others": [
+                  "it-i-will-take-the-bus",
+                  "it-i-am-travelling-tomorrow"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-j-a",
+                "question": "Where is the traveller going?",
+                "questionHant": "旅客要去哪裡？",
+                "answer": "it-station",
+                "others": [
+                  "it-school",
+                  "it-park"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-the-train-leaves-at-ten-please-go-to-platform-two",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-the-bus-leaves-at-ten",
+                "chunks": [
+                  "The",
+                  "bus",
+                  "leaves",
+                  "at",
+                  "ten."
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-im-going-to-the-station-could-you-show-me-the-way"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-would-like-one-return-ticket-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-the-next-train-leaves-at-ten-from-platform-two",
+                "others": [
+                  "it-ill-take-the-train-and-change-at-the-next-station",
+                  "it-i-would-like-to-leave-tomorrow-and-return-on-friday"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-o-t-a",
+                "question": "Where is the traveller going?",
+                "questionHant": "旅客要去哪裡？",
+                "answer": "it-station",
+                "others": [
+                  "it-school",
+                  "it-park"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-the-train-to-the-city-leaves-at-ten-from-platform-two-a-return-ticket-is-valid-until-friday",
+                "question": "What time is the departure?",
+                "questionHant": "幾點出發？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-the-next-train-leaves-at-ten-from-platform-two",
+                "chunks": [
+                  "The",
+                  "next",
+                  "train",
+                  "leaves",
+                  "at",
+                  "ten",
+                  "from",
+                  "platform",
+                  "two."
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "people",
+      "title": "People & Small Talk",
+      "subtitle": "Introductions, interests and making plans",
+      "icon": "👋",
+      "color": "var(--leaf)",
+      "grownUp": {
+        "title": "People & Small Talk",
+        "subtitle": "Introductions, interests and making plans"
+      },
+      "lessons": [
+        {
+          "id": "people-1",
+          "title": "Useful words",
+          "kind": "words",
+          "icon": "🏷️",
+          "guide": {
+            "goal": "Recognise the key words, hear them and say them clearly.",
+            "goalHant": "認識關鍵詞，聆聽並清楚說出。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Make six word cards. Say a word and find its card; younger learners may draw with an adult.",
+            "practiceHant": "製作六張詞卡，說出詞語並找出相應卡片；幼童可與成人一起畫圖。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-name"
+              },
+              {
+                "type": "speak",
+                "item": "it-friend"
+              },
+              {
+                "type": "speak",
+                "item": "it-family"
+              },
+              {
+                "type": "speak",
+                "item": "it-school"
+              },
+              {
+                "type": "speak",
+                "item": "it-city"
+              },
+              {
+                "type": "speak",
+                "item": "it-music"
+              },
+              {
+                "type": "speak",
+                "item": "it-village"
+              },
+              {
+                "type": "speak",
+                "item": "it-countryside"
+              },
+              {
+                "type": "speak",
+                "item": "it-basketball"
+              },
+              {
+                "type": "speak",
+                "item": "it-swimming"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-name",
+                "others": [
+                  "it-friend",
+                  "it-family"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-city",
+                "others": [
+                  "it-school",
+                  "it-music"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-name"
+              },
+              {
+                "type": "speak",
+                "item": "it-friend"
+              },
+              {
+                "type": "speak",
+                "item": "it-family"
+              },
+              {
+                "type": "speak",
+                "item": "it-school"
+              },
+              {
+                "type": "speak",
+                "item": "it-city"
+              },
+              {
+                "type": "speak",
+                "item": "it-music"
+              },
+              {
+                "type": "speak",
+                "item": "it-football"
+              },
+              {
+                "type": "speak",
+                "item": "it-reading"
+              },
+              {
+                "type": "speak",
+                "item": "it-weekend"
+              },
+              {
+                "type": "speak",
+                "item": "it-village"
+              },
+              {
+                "type": "speak",
+                "item": "it-countryside"
+              },
+              {
+                "type": "speak",
+                "item": "it-basketball"
+              },
+              {
+                "type": "speak",
+                "item": "it-swimming"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-name",
+                "others": [
+                  "it-friend",
+                  "it-family"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-city",
+                "others": [
+                  "it-school",
+                  "it-music"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-name"
+              },
+              {
+                "type": "speak",
+                "item": "it-friend"
+              },
+              {
+                "type": "speak",
+                "item": "it-family"
+              },
+              {
+                "type": "speak",
+                "item": "it-school"
+              },
+              {
+                "type": "speak",
+                "item": "it-city"
+              },
+              {
+                "type": "speak",
+                "item": "it-music"
+              },
+              {
+                "type": "speak",
+                "item": "it-football"
+              },
+              {
+                "type": "speak",
+                "item": "it-reading"
+              },
+              {
+                "type": "speak",
+                "item": "it-weekend"
+              },
+              {
+                "type": "speak",
+                "item": "it-goodbye"
+              },
+              {
+                "type": "speak",
+                "item": "it-hobby"
+              },
+              {
+                "type": "speak",
+                "item": "it-language"
+              },
+              {
+                "type": "speak",
+                "item": "it-village"
+              },
+              {
+                "type": "speak",
+                "item": "it-countryside"
+              },
+              {
+                "type": "speak",
+                "item": "it-basketball"
+              },
+              {
+                "type": "speak",
+                "item": "it-swimming"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-name",
+                "others": [
+                  "it-friend",
+                  "it-family"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-city",
+                "others": [
+                  "it-school",
+                  "it-music"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-2",
+          "title": "Introduce yourself",
+          "kind": "phrases",
+          "icon": "💬",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex"
+              },
+              {
+                "type": "speak",
+                "item": "it-in-the-city"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-my-name-is-alex",
+                "others": [
+                  "it-in-the-city",
+                  "it-i-like-music"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-my-name-is-alex",
+                "chunks": [
+                  "My",
+                  "name",
+                  "is",
+                  "Alex."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-where-do-you-live",
+                "replies": [
+                  "it-in-the-city"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-what-is-your-name"
+              },
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex-what-is-your-name"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-live-in-this-city-with-my-family"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-my-name-is-alex-what-is-your-name",
+                "others": [
+                  "it-i-live-in-this-city-with-my-family",
+                  "it-i-like-music-and-reading"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-my-name-is-alex-what-is-your-name",
+                "chunks": [
+                  "My",
+                  "name",
+                  "is",
+                  "Alex.",
+                  "What",
+                  "is",
+                  "your",
+                  "name?"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-where-do-you-live",
+                "replies": [
+                  "it-i-live-in-this-city-with-my-family"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-what-is-your-name"
+              },
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex-its-nice-to-meet-you"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-live-in-this-city-but-my-family-lives-abroad"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-my-name-is-alex-its-nice-to-meet-you",
+                "others": [
+                  "it-i-live-in-this-city-but-my-family-lives-abroad",
+                  "it-i-enjoy-music-and-reading-what-about-you"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-my-name-is-alex-its-nice-to-meet-you",
+                "chunks": [
+                  "My",
+                  "name",
+                  "is",
+                  "Alex.",
+                  "It's",
+                  "nice",
+                  "to",
+                  "meet",
+                  "you."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-where-do-you-live",
+                "replies": [
+                  "it-i-live-in-this-city-but-my-family-lives-abroad"
+                ],
+                "picture": "👋"
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-3",
+          "title": "Interests and follow-up questions",
+          "kind": "phrases",
+          "icon": "🎫",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-i-like-music"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-play-football"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-like-music",
+                "others": [
+                  "it-i-play-football",
+                  "it-yes-please"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-like-music",
+                "chunks": [
+                  "I",
+                  "like",
+                  "music."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-do-at-the-weekend",
+                "replies": [
+                  "it-i-play-football"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-what-do-you-like-doing"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-like-music-and-reading"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-play-football-with-my-friends"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-like-music-and-reading",
+                "others": [
+                  "it-i-play-football-with-my-friends",
+                  "it-yes-lets-meet-at-the-park"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-like-music-and-reading",
+                "chunks": [
+                  "I",
+                  "like",
+                  "music",
+                  "and",
+                  "reading."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-do-at-the-weekend",
+                "replies": [
+                  "it-i-play-football-with-my-friends"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-what-do-you-like-doing"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-enjoy-music-and-reading-what-about-you"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-usually-play-football-with-friends-at-the-weekend"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-enjoy-music-and-reading-what-about-you",
+                "others": [
+                  "it-i-usually-play-football-with-friends-at-the-weekend",
+                  "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-enjoy-music-and-reading-what-about-you",
+                "chunks": [
+                  "I",
+                  "enjoy",
+                  "music",
+                  "and",
+                  "reading.",
+                  "What",
+                  "about",
+                  "you?"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-do-at-the-weekend",
+                "replies": [
+                  "it-i-usually-play-football-with-friends-at-the-weekend"
+                ],
+                "picture": "👋"
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-4",
+          "title": "Make plans and say goodbye",
+          "kind": "phrases",
+          "icon": "🗓️",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-yes-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-goodbye"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-yes-please",
+                "others": [
+                  "it-goodbye",
+                  "it-my-name-is-alex"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-please",
+                "chunks": [
+                  "Yes,",
+                  "please."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-i-have-to-go-now",
+                "replies": [
+                  "it-goodbye"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-would-you-like-to-meet-tomorrow"
+              },
+              {
+                "type": "speak",
+                "item": "it-yes-lets-meet-at-the-park"
+              },
+              {
+                "type": "speak",
+                "item": "it-see-you-tomorrow"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-yes-lets-meet-at-the-park",
+                "others": [
+                  "it-see-you-tomorrow",
+                  "it-my-name-is-alex-what-is-your-name"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-lets-meet-at-the-park",
+                "chunks": [
+                  "Yes.",
+                  "Let's",
+                  "meet",
+                  "at",
+                  "the",
+                  "park."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-i-have-to-go-now",
+                "replies": [
+                  "it-see-you-tomorrow"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-would-you-like-to-meet-tomorrow"
+              },
+              {
+                "type": "speak",
+                "item": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow"
+              },
+              {
+                "type": "speak",
+                "item": "it-it-was-nice-talking-to-you-see-you-tomorrow"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow",
+                "others": [
+                  "it-it-was-nice-talking-to-you-see-you-tomorrow",
+                  "it-my-name-is-alex-its-nice-to-meet-you"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow",
+                "chunks": [
+                  "That",
+                  "sounds",
+                  "good.",
+                  "Shall",
+                  "we",
+                  "meet",
+                  "at",
+                  "the",
+                  "park",
+                  "tomorrow?"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-i-have-to-go-now",
+                "replies": [
+                  "it-it-was-nice-talking-to-you-see-you-tomorrow"
+                ],
+                "picture": "👋"
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-5",
+          "title": "Listen and speak clearly",
+          "kind": "listening",
+          "icon": "👂",
+          "guide": {
+            "goal": "Listen for the important words and details before choosing an answer.",
+            "goalHant": "先聽出關鍵詞及細節，再選答案。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Listen, pause, repeat and compare. Keep words clear; speed is not the goal.",
+            "practiceHant": "聽、停、重複，再比較。以清楚表達為目標，不用追求速度。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "it-school",
+                "others": [
+                  "it-city",
+                  "it-music"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-my-name-is-alex",
+                "others": [
+                  "it-in-the-city",
+                  "it-i-like-music"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-yes-please",
+                "others": [
+                  "it-i-like-music",
+                  "it-goodbye"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-yes-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-what-do-you-do-at-the-weekend",
+                "others": [
+                  "it-what-is-your-name",
+                  "it-would-you-like-to-meet-tomorrow"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "it-school",
+                "others": [
+                  "it-city",
+                  "it-music"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-my-name-is-alex-what-is-your-name",
+                "others": [
+                  "it-i-live-in-this-city-with-my-family",
+                  "it-i-like-music-and-reading"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex-what-is-your-name"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-yes-lets-meet-at-the-park",
+                "others": [
+                  "it-i-like-music-and-reading",
+                  "it-see-you-tomorrow"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-yes-lets-meet-at-the-park"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-what-do-you-do-at-the-weekend",
+                "others": [
+                  "it-what-is-your-name",
+                  "it-would-you-like-to-meet-tomorrow"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "choose-heard",
+                "answer": "it-school",
+                "others": [
+                  "it-city",
+                  "it-music"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-my-name-is-alex-its-nice-to-meet-you",
+                "others": [
+                  "it-i-live-in-this-city-but-my-family-lives-abroad",
+                  "it-i-enjoy-music-and-reading-what-about-you"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex-its-nice-to-meet-you"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow",
+                "others": [
+                  "it-i-enjoy-music-and-reading-what-about-you",
+                  "it-it-was-nice-talking-to-you-see-you-tomorrow"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-what-do-you-do-at-the-weekend",
+                "others": [
+                  "it-what-is-your-name",
+                  "it-would-you-like-to-meet-tomorrow"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-6",
+          "title": "Read for information",
+          "kind": "speaking",
+          "icon": "📖",
+          "guide": {
+            "goal": "Read a short text and find evidence for your answer.",
+            "goalHant": "閱讀短文，找出支持答案的內容。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Point to the words that prove each answer. Read the text aloud once more.",
+            "practiceHant": "指出支持每個答案的詞語，再朗讀一次短文。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-l-a",
+                "question": "Where does the person live?",
+                "questionHant": "這個人住在哪裡？",
+                "answer": "it-city",
+                "others": [
+                  "it-village",
+                  "it-countryside"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-l-b",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-in-the-city",
+                "chunks": [
+                  "In",
+                  "the",
+                  "city."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-play-football",
+                "chunks": [
+                  "I",
+                  "play",
+                  "football."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-in-the-city"
+              }
+            ],
+            "junior": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-j-a",
+                "question": "Where does the person live?",
+                "questionHant": "這個人住在哪裡？",
+                "answer": "it-city",
+                "others": [
+                  "it-village",
+                  "it-countryside"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-j-b",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-live-in-this-city-with-my-family",
+                "chunks": [
+                  "I",
+                  "live",
+                  "in",
+                  "this",
+                  "city",
+                  "with",
+                  "my",
+                  "family."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-play-football-with-my-friends",
+                "chunks": [
+                  "I",
+                  "play",
+                  "football",
+                  "with",
+                  "my",
+                  "friends."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-i-live-in-this-city-with-my-family"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-t-a",
+                "question": "Where does the person live?",
+                "questionHant": "這個人住在哪裡？",
+                "answer": "it-city",
+                "others": [
+                  "it-village",
+                  "it-countryside"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-t-b",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-live-in-this-city-but-my-family-lives-abroad",
+                "chunks": [
+                  "I",
+                  "live",
+                  "in",
+                  "this",
+                  "city,",
+                  "but",
+                  "my",
+                  "family",
+                  "lives",
+                  "abroad."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-usually-play-football-with-friends-at-the-weekend",
+                "chunks": [
+                  "I",
+                  "usually",
+                  "play",
+                  "football",
+                  "with",
+                  "friends",
+                  "at",
+                  "the",
+                  "weekend."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-i-live-in-this-city-but-my-family-lives-abroad"
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-7",
+          "title": "Put it into conversation",
+          "kind": "conversation",
+          "icon": "🗣️",
+          "guide": {
+            "goal": "Respond to six prompts. Listen again and try without reading the model.",
+            "goalHant": "回應六個提示。再聽一次，嘗試不看範例回答。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Act out the exchange without the screen. Ask a partner to check whether your meaning is clear.",
+            "practiceHant": "不看螢幕演練對話，請同伴確認意思是否清楚。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "dialogue",
+                "tutor": "it-what-is-your-name",
+                "replies": [
+                  "it-my-name-is-alex"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-where-do-you-live",
+                "replies": [
+                  "it-in-the-city"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-like-doing",
+                "replies": [
+                  "it-i-like-music"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-do-at-the-weekend",
+                "replies": [
+                  "it-i-play-football"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-would-you-like-to-meet-tomorrow",
+                "replies": [
+                  "it-yes-please"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-i-have-to-go-now",
+                "replies": [
+                  "it-goodbye"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "junior": [
+              {
+                "type": "dialogue",
+                "tutor": "it-what-is-your-name",
+                "replies": [
+                  "it-my-name-is-alex-what-is-your-name"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-where-do-you-live",
+                "replies": [
+                  "it-i-live-in-this-city-with-my-family"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-like-doing",
+                "replies": [
+                  "it-i-like-music-and-reading"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-do-at-the-weekend",
+                "replies": [
+                  "it-i-play-football-with-my-friends"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-would-you-like-to-meet-tomorrow",
+                "replies": [
+                  "it-yes-lets-meet-at-the-park"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-i-have-to-go-now",
+                "replies": [
+                  "it-see-you-tomorrow"
+                ],
+                "picture": "👋"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "it-what-is-your-name",
+                "replies": [
+                  "it-my-name-is-alex-its-nice-to-meet-you"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-where-do-you-live",
+                "replies": [
+                  "it-i-live-in-this-city-but-my-family-lives-abroad"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-like-doing",
+                "replies": [
+                  "it-i-enjoy-music-and-reading-what-about-you"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-what-do-you-do-at-the-weekend",
+                "replies": [
+                  "it-i-usually-play-football-with-friends-at-the-weekend"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-would-you-like-to-meet-tomorrow",
+                "replies": [
+                  "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow"
+                ],
+                "picture": "👋"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-i-have-to-go-now",
+                "replies": [
+                  "it-it-was-nice-talking-to-you-see-you-tomorrow"
+                ],
+                "picture": "👋"
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-8",
+          "title": "Read, build and write",
+          "kind": "speaking",
+          "icon": "✍️",
+          "guide": {
+            "goal": "Understand a practical text, build sentences and create your own version offline.",
+            "goalHant": "理解實用短文，組句，再離線寫出自己的版本。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Create a fictional profile with a name, place and interest. Add an invitation and practise a friendly goodbye. Younger learners can dictate or draw.",
+            "practiceHant": "創作虛構人物，寫姓名、居住地及興趣，加上邀請和道別；幼童可口述或畫圖。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "read-choice",
+                "passage": "it-i-play-football",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-my-name-is-alex",
+                "chunks": [
+                  "My",
+                  "name",
+                  "is",
+                  "Alex."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-like-music",
+                "chunks": [
+                  "I",
+                  "like",
+                  "music."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-please",
+                "chunks": [
+                  "Yes,",
+                  "please."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-goodbye"
+              }
+            ],
+            "junior": [
+              {
+                "type": "read-choice",
+                "passage": "it-my-name-is-alex-i-live-in-the-city-i-play-football",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-my-name-is-alex-what-is-your-name",
+                "chunks": [
+                  "My",
+                  "name",
+                  "is",
+                  "Alex.",
+                  "What",
+                  "is",
+                  "your",
+                  "name?"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-like-music-and-reading",
+                "chunks": [
+                  "I",
+                  "like",
+                  "music",
+                  "and",
+                  "reading."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-lets-meet-at-the-park",
+                "chunks": [
+                  "Yes.",
+                  "Let's",
+                  "meet",
+                  "at",
+                  "the",
+                  "park."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-see-you-tomorrow"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "it-my-name-is-alex-i-live-in-this-city-at-the-weekend-i-play-football-with-friends-we-can-meet-at-the-park-tomorrow",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-my-name-is-alex-its-nice-to-meet-you",
+                "chunks": [
+                  "My",
+                  "name",
+                  "is",
+                  "Alex.",
+                  "It's",
+                  "nice",
+                  "to",
+                  "meet",
+                  "you."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-enjoy-music-and-reading-what-about-you",
+                "chunks": [
+                  "I",
+                  "enjoy",
+                  "music",
+                  "and",
+                  "reading.",
+                  "What",
+                  "about",
+                  "you?"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow",
+                "chunks": [
+                  "That",
+                  "sounds",
+                  "good.",
+                  "Shall",
+                  "we",
+                  "meet",
+                  "at",
+                  "the",
+                  "park",
+                  "tomorrow?"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-it-was-nice-talking-to-you-see-you-tomorrow"
+              }
+            ]
+          }
+        },
+        {
+          "id": "people-9",
+          "title": "Review and independent practice",
+          "kind": "review",
+          "icon": "🏆",
+          "guide": {
+            "goal": "Recall useful language and check reading, listening and sentence order.",
+            "goalHant": "回想實用表達，檢查閱讀、聆聽及句子順序。",
+            "tip": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+            "tipHant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+            "practice": "Try again tomorrow without the model. A partner or teacher should review your original writing; the app checks only the model sentence order.",
+            "practiceHant": "明天不看範例再試。原創寫作請同伴或老師回饋；應用程式只檢查範例句的順序。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-like-music"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-yes-please",
+                "others": [
+                  "it-i-play-football",
+                  "it-goodbye"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-l-a",
+                "question": "Where does the person live?",
+                "questionHant": "這個人住在哪裡？",
+                "answer": "it-city",
+                "others": [
+                  "it-village",
+                  "it-countryside"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-i-play-football",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-please",
+                "chunks": [
+                  "Yes,",
+                  "please."
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex-what-is-your-name"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-like-music-and-reading"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-yes-lets-meet-at-the-park",
+                "others": [
+                  "it-i-play-football-with-my-friends",
+                  "it-see-you-tomorrow"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-j-a",
+                "question": "Where does the person live?",
+                "questionHant": "這個人住在哪裡？",
+                "answer": "it-city",
+                "others": [
+                  "it-village",
+                  "it-countryside"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-my-name-is-alex-i-live-in-the-city-i-play-football",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-lets-meet-at-the-park",
+                "chunks": [
+                  "Yes.",
+                  "Let's",
+                  "meet",
+                  "at",
+                  "the",
+                  "park."
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-my-name-is-alex-its-nice-to-meet-you"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-enjoy-music-and-reading-what-about-you"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow",
+                "others": [
+                  "it-i-usually-play-football-with-friends-at-the-weekend",
+                  "it-it-was-nice-talking-to-you-see-you-tomorrow"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-p-t-a",
+                "question": "Where does the person live?",
+                "questionHant": "這個人住在哪裡？",
+                "answer": "it-city",
+                "others": [
+                  "it-village",
+                  "it-countryside"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-my-name-is-alex-i-live-in-this-city-at-the-weekend-i-play-football-with-friends-we-can-meet-at-the-park-tomorrow",
+                "question": "Which sport does the person play?",
+                "questionHant": "這個人參加哪項運動？",
+                "answer": "it-football",
+                "others": [
+                  "it-basketball",
+                  "it-swimming"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-that-sounds-good-shall-we-meet-at-the-park-tomorrow",
+                "chunks": [
+                  "That",
+                  "sounds",
+                  "good.",
+                  "Shall",
+                  "we",
+                  "meet",
+                  "at",
+                  "the",
+                  "park",
+                  "tomorrow?"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "work",
+      "title": "School & Teamwork",
+      "subtitle": "Meetings, messages and asking for help",
+      "icon": "💼",
+      "color": "var(--sun)",
+      "grownUp": {
+        "title": "Work & Professional Communication",
+        "subtitle": "Meetings, email and telephone conversations"
+      },
+      "lessons": [
+        {
+          "id": "work-1",
+          "title": "Useful words",
+          "kind": "words",
+          "icon": "🏷️",
+          "guide": {
+            "goal": "Recognise the key words, hear them and say them clearly.",
+            "goalHant": "認識關鍵詞，聆聽並清楚說出。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Make six word cards. Say a word and find its card; younger learners may draw with an adult.",
+            "practiceHant": "製作六張詞卡，說出詞語並找出相應卡片；幼童可與成人一起畫圖。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-team"
+              },
+              {
+                "type": "speak",
+                "item": "it-meeting"
+              },
+              {
+                "type": "speak",
+                "item": "it-message"
+              },
+              {
+                "type": "speak",
+                "item": "it-telephone"
+              },
+              {
+                "type": "speak",
+                "item": "it-email"
+              },
+              {
+                "type": "speak",
+                "item": "it-today"
+              },
+              {
+                "type": "speak",
+                "item": "it-eight-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-twelve-oclock"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-team",
+                "others": [
+                  "it-meeting",
+                  "it-message"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-email",
+                "others": [
+                  "it-telephone",
+                  "it-today"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-team"
+              },
+              {
+                "type": "speak",
+                "item": "it-meeting"
+              },
+              {
+                "type": "speak",
+                "item": "it-message"
+              },
+              {
+                "type": "speak",
+                "item": "it-telephone"
+              },
+              {
+                "type": "speak",
+                "item": "it-email"
+              },
+              {
+                "type": "speak",
+                "item": "it-today"
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              },
+              {
+                "type": "speak",
+                "item": "it-ten-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-help"
+              },
+              {
+                "type": "speak",
+                "item": "it-eight-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-twelve-oclock"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-team",
+                "others": [
+                  "it-meeting",
+                  "it-message"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-email",
+                "others": [
+                  "it-telephone",
+                  "it-today"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-team"
+              },
+              {
+                "type": "speak",
+                "item": "it-meeting"
+              },
+              {
+                "type": "speak",
+                "item": "it-message"
+              },
+              {
+                "type": "speak",
+                "item": "it-telephone"
+              },
+              {
+                "type": "speak",
+                "item": "it-email"
+              },
+              {
+                "type": "speak",
+                "item": "it-today"
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              },
+              {
+                "type": "speak",
+                "item": "it-ten-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-help"
+              },
+              {
+                "type": "speak",
+                "item": "it-question"
+              },
+              {
+                "type": "speak",
+                "item": "it-friday"
+              },
+              {
+                "type": "speak",
+                "item": "it-report"
+              },
+              {
+                "type": "speak",
+                "item": "it-eight-oclock"
+              },
+              {
+                "type": "speak",
+                "item": "it-twelve-oclock"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-team",
+                "others": [
+                  "it-meeting",
+                  "it-message"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-email",
+                "others": [
+                  "it-telephone",
+                  "it-today"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-2",
+          "title": "Introductions and meeting times",
+          "kind": "phrases",
+          "icon": "💬",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-im-alex"
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-alex",
+                "others": [
+                  "it-tomorrow",
+                  "it-yes-i-can"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-alex",
+                "chunks": [
+                  "I'm",
+                  "Alex."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-shall-we-meet",
+                "replies": [
+                  "it-tomorrow"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-can-you-introduce-yourself"
+              },
+              {
+                "type": "speak",
+                "item": "it-im-alex-im-on-your-team"
+              },
+              {
+                "type": "speak",
+                "item": "it-lets-meet-tomorrow-at-ten"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-alex-im-on-your-team",
+                "others": [
+                  "it-lets-meet-tomorrow-at-ten",
+                  "it-i-can-send-the-message-today"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-alex-im-on-your-team",
+                "chunks": [
+                  "I'm",
+                  "Alex.",
+                  "I'm",
+                  "on",
+                  "your",
+                  "team."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-shall-we-meet",
+                "replies": [
+                  "it-lets-meet-tomorrow-at-ten"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-can-you-introduce-yourself"
+              },
+              {
+                "type": "speak",
+                "item": "it-im-alex-i-work-with-the-support-team"
+              },
+              {
+                "type": "speak",
+                "item": "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-alex-i-work-with-the-support-team",
+                "others": [
+                  "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report",
+                  "it-ill-send-the-report-by-email-today"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-alex-i-work-with-the-support-team",
+                "chunks": [
+                  "I'm",
+                  "Alex.",
+                  "I",
+                  "work",
+                  "with",
+                  "the",
+                  "support",
+                  "team."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-shall-we-meet",
+                "replies": [
+                  "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report"
+                ],
+                "picture": "💼"
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-3",
+          "title": "Messages and clear information",
+          "kind": "phrases",
+          "icon": "🎫",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-yes-i-can"
+              },
+              {
+                "type": "speak",
+                "item": "it-at-ten"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-yes-i-can",
+                "others": [
+                  "it-at-ten",
+                  "it-can-you-help-me"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-i-can",
+                "chunks": [
+                  "Yes,",
+                  "I",
+                  "can."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-could-you-repeat-that-please",
+                "replies": [
+                  "it-at-ten"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-can-you-send-a-message"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-can-send-the-message-today"
+              },
+              {
+                "type": "speak",
+                "item": "it-our-meeting-is-at-ten"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-i-can-send-the-message-today",
+                "others": [
+                  "it-our-meeting-is-at-ten",
+                  "it-could-i-speak-to-alex-please"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-can-send-the-message-today",
+                "chunks": [
+                  "I",
+                  "can",
+                  "send",
+                  "the",
+                  "message",
+                  "today."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-could-you-repeat-that-please",
+                "replies": [
+                  "it-our-meeting-is-at-ten"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-can-you-send-a-message"
+              },
+              {
+                "type": "speak",
+                "item": "it-ill-send-the-report-by-email-today"
+              },
+              {
+                "type": "speak",
+                "item": "it-of-course-the-meeting-starts-at-ten-tomorrow"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-ill-send-the-report-by-email-today",
+                "others": [
+                  "it-of-course-the-meeting-starts-at-ten-tomorrow",
+                  "it-could-i-speak-to-alex-please-may-i-leave-a-message"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-ill-send-the-report-by-email-today",
+                "chunks": [
+                  "I'll",
+                  "send",
+                  "the",
+                  "report",
+                  "by",
+                  "email",
+                  "today."
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-could-you-repeat-that-please",
+                "replies": [
+                  "it-of-course-the-meeting-starts-at-ten-tomorrow"
+                ],
+                "picture": "💼"
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-4",
+          "title": "Telephone calls and deadlines",
+          "kind": "phrases",
+          "icon": "🗓️",
+          "guide": {
+            "goal": "Practise the question and response, then put a useful sentence in order.",
+            "goalHant": "練習問題及回答，再按順序組成實用句子。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+            "practiceHant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-can-you-help-me"
+              },
+              {
+                "type": "speak",
+                "item": "it-today"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-can-you-help-me",
+                "others": [
+                  "it-today",
+                  "it-im-alex"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-can-you-help-me",
+                "chunks": [
+                  "Can",
+                  "you",
+                  "help",
+                  "me?"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-can-you-finish",
+                "replies": [
+                  "it-today"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-hello-how-can-i-help-you"
+              },
+              {
+                "type": "speak",
+                "item": "it-could-i-speak-to-alex-please"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-can-finish-today"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-i-speak-to-alex-please",
+                "others": [
+                  "it-i-can-finish-today",
+                  "it-im-alex-im-on-your-team"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-could-i-speak-to-alex-please",
+                "chunks": [
+                  "Could",
+                  "I",
+                  "speak",
+                  "to",
+                  "Alex,",
+                  "please?"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-can-you-finish",
+                "replies": [
+                  "it-i-can-finish-today"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-hello-how-can-i-help-you"
+              },
+              {
+                "type": "speak",
+                "item": "it-could-i-speak-to-alex-please-may-i-leave-a-message"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-can-send-the-first-version-today-and-finish-by-friday"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-i-speak-to-alex-please-may-i-leave-a-message",
+                "others": [
+                  "it-i-can-send-the-first-version-today-and-finish-by-friday",
+                  "it-im-alex-i-work-with-the-support-team"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-could-i-speak-to-alex-please-may-i-leave-a-message",
+                "chunks": [
+                  "Could",
+                  "I",
+                  "speak",
+                  "to",
+                  "Alex,",
+                  "please?",
+                  "May",
+                  "I",
+                  "leave",
+                  "a",
+                  "message?"
+                ]
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-can-you-finish",
+                "replies": [
+                  "it-i-can-send-the-first-version-today-and-finish-by-friday"
+                ],
+                "picture": "💼"
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-5",
+          "title": "Listen and speak clearly",
+          "kind": "listening",
+          "icon": "👂",
+          "guide": {
+            "goal": "Listen for the important words and details before choosing an answer.",
+            "goalHant": "先聽出關鍵詞及細節，再選答案。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Listen, pause, repeat and compare. Keep words clear; speed is not the goal.",
+            "practiceHant": "聽、停、重複，再比較。以清楚表達為目標，不用追求速度。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "choose-heard",
+                "answer": "it-telephone",
+                "others": [
+                  "it-email",
+                  "it-today"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-alex",
+                "others": [
+                  "it-tomorrow",
+                  "it-yes-i-can"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-im-alex"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-can-you-help-me",
+                "others": [
+                  "it-yes-i-can",
+                  "it-today"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-can-you-help-me"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-you-repeat-that-please",
+                "others": [
+                  "it-can-you-introduce-yourself",
+                  "it-hello-how-can-i-help-you"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "choose-heard",
+                "answer": "it-telephone",
+                "others": [
+                  "it-email",
+                  "it-today"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-alex-im-on-your-team",
+                "others": [
+                  "it-lets-meet-tomorrow-at-ten",
+                  "it-i-can-send-the-message-today"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-im-alex-im-on-your-team"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-i-speak-to-alex-please",
+                "others": [
+                  "it-i-can-send-the-message-today",
+                  "it-i-can-finish-today"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-could-i-speak-to-alex-please"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-you-repeat-that-please",
+                "others": [
+                  "it-can-you-introduce-yourself",
+                  "it-hello-how-can-i-help-you"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "choose-heard",
+                "answer": "it-telephone",
+                "others": [
+                  "it-email",
+                  "it-today"
+                ]
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-im-alex-i-work-with-the-support-team",
+                "others": [
+                  "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report",
+                  "it-ill-send-the-report-by-email-today"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-im-alex-i-work-with-the-support-team"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-i-speak-to-alex-please-may-i-leave-a-message",
+                "others": [
+                  "it-ill-send-the-report-by-email-today",
+                  "it-i-can-send-the-first-version-today-and-finish-by-friday"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-could-i-speak-to-alex-please-may-i-leave-a-message"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-you-repeat-that-please",
+                "others": [
+                  "it-can-you-introduce-yourself",
+                  "it-hello-how-can-i-help-you"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-6",
+          "title": "Read for information",
+          "kind": "speaking",
+          "icon": "📖",
+          "guide": {
+            "goal": "Read a short text and find evidence for your answer.",
+            "goalHant": "閱讀短文，找出支持答案的內容。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Point to the words that prove each answer. Read the text aloud once more.",
+            "practiceHant": "指出支持每個答案的詞語，再朗讀一次短文。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-l-a",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-l-b",
+                "question": "On which day can the speaker finish?",
+                "questionHant": "說話的人哪天能完成？",
+                "answer": "it-today",
+                "others": [
+                  "it-tomorrow",
+                  "it-friday"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              },
+              {
+                "type": "arrange",
+                "item": "it-at-ten",
+                "chunks": [
+                  "At",
+                  "ten."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-tomorrow"
+              }
+            ],
+            "junior": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-j-a",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-j-b",
+                "question": "On which day can the speaker finish?",
+                "questionHant": "說話的人哪天能完成？",
+                "answer": "it-today",
+                "others": [
+                  "it-tomorrow",
+                  "it-friday"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-lets-meet-tomorrow-at-ten",
+                "chunks": [
+                  "Let's",
+                  "meet",
+                  "tomorrow",
+                  "at",
+                  "ten."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-our-meeting-is-at-ten",
+                "chunks": [
+                  "Our",
+                  "meeting",
+                  "is",
+                  "at",
+                  "ten."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-lets-meet-tomorrow-at-ten"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-t-a",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-t-b",
+                "question": "On which day can the speaker finish?",
+                "questionHant": "說話的人哪天能完成？",
+                "answer": "it-friday",
+                "others": [
+                  "it-today",
+                  "it-tomorrow"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report",
+                "chunks": [
+                  "Could",
+                  "we",
+                  "meet",
+                  "tomorrow",
+                  "at",
+                  "ten",
+                  "to",
+                  "discuss",
+                  "the",
+                  "report?"
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-of-course-the-meeting-starts-at-ten-tomorrow",
+                "chunks": [
+                  "Of",
+                  "course.",
+                  "The",
+                  "meeting",
+                  "starts",
+                  "at",
+                  "ten",
+                  "tomorrow."
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report"
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-7",
+          "title": "Put it into conversation",
+          "kind": "conversation",
+          "icon": "🗣️",
+          "guide": {
+            "goal": "Respond to six prompts. Listen again and try without reading the model.",
+            "goalHant": "回應六個提示。再聽一次，嘗試不看範例回答。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Act out the exchange without the screen. Ask a partner to check whether your meaning is clear.",
+            "practiceHant": "不看螢幕演練對話，請同伴確認意思是否清楚。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "dialogue",
+                "tutor": "it-can-you-introduce-yourself",
+                "replies": [
+                  "it-im-alex"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-shall-we-meet",
+                "replies": [
+                  "it-tomorrow"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-can-you-send-a-message",
+                "replies": [
+                  "it-yes-i-can"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-could-you-repeat-that-please",
+                "replies": [
+                  "it-at-ten"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-hello-how-can-i-help-you",
+                "replies": [
+                  "it-can-you-help-me"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-can-you-finish",
+                "replies": [
+                  "it-today"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "junior": [
+              {
+                "type": "dialogue",
+                "tutor": "it-can-you-introduce-yourself",
+                "replies": [
+                  "it-im-alex-im-on-your-team"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-shall-we-meet",
+                "replies": [
+                  "it-lets-meet-tomorrow-at-ten"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-can-you-send-a-message",
+                "replies": [
+                  "it-i-can-send-the-message-today"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-could-you-repeat-that-please",
+                "replies": [
+                  "it-our-meeting-is-at-ten"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-hello-how-can-i-help-you",
+                "replies": [
+                  "it-could-i-speak-to-alex-please"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-can-you-finish",
+                "replies": [
+                  "it-i-can-finish-today"
+                ],
+                "picture": "💼"
+              }
+            ],
+            "teen": [
+              {
+                "type": "dialogue",
+                "tutor": "it-can-you-introduce-yourself",
+                "replies": [
+                  "it-im-alex-i-work-with-the-support-team"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-shall-we-meet",
+                "replies": [
+                  "it-could-we-meet-tomorrow-at-ten-to-discuss-the-report"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-can-you-send-a-message",
+                "replies": [
+                  "it-ill-send-the-report-by-email-today"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-could-you-repeat-that-please",
+                "replies": [
+                  "it-of-course-the-meeting-starts-at-ten-tomorrow"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-hello-how-can-i-help-you",
+                "replies": [
+                  "it-could-i-speak-to-alex-please-may-i-leave-a-message"
+                ],
+                "picture": "💼"
+              },
+              {
+                "type": "dialogue",
+                "tutor": "it-when-can-you-finish",
+                "replies": [
+                  "it-i-can-send-the-first-version-today-and-finish-by-friday"
+                ],
+                "picture": "💼"
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-8",
+          "title": "Read, build and write",
+          "kind": "speaking",
+          "icon": "✍️",
+          "guide": {
+            "goal": "Understand a practical text, build sentences and create your own version offline.",
+            "goalHant": "理解實用短文，組句，再離線寫出自己的版本。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Write a message with a greeting, purpose, meeting time, requested action and closing. Read it to a partner. Children can invite their team to a school activity.",
+            "practiceHant": "寫一則有問候、目的、時間、請求和結尾的訊息，讀給同伴聽；兒童可邀請組員參加學校活動。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "read-choice",
+                "passage": "it-we-meet-at-ten",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-alex",
+                "chunks": [
+                  "I'm",
+                  "Alex."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-yes-i-can",
+                "chunks": [
+                  "Yes,",
+                  "I",
+                  "can."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-can-you-help-me",
+                "chunks": [
+                  "Can",
+                  "you",
+                  "help",
+                  "me?"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-today"
+              }
+            ],
+            "junior": [
+              {
+                "type": "read-choice",
+                "passage": "it-hello-alex-our-meeting-is-tomorrow-at-ten-please-bring-your-book-thank-you",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-alex-im-on-your-team",
+                "chunks": [
+                  "I'm",
+                  "Alex.",
+                  "I'm",
+                  "on",
+                  "your",
+                  "team."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-i-can-send-the-message-today",
+                "chunks": [
+                  "I",
+                  "can",
+                  "send",
+                  "the",
+                  "message",
+                  "today."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-could-i-speak-to-alex-please",
+                "chunks": [
+                  "Could",
+                  "I",
+                  "speak",
+                  "to",
+                  "Alex,",
+                  "please?"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-i-can-finish-today"
+              }
+            ],
+            "teen": [
+              {
+                "type": "read-choice",
+                "passage": "it-hello-alex-could-we-meet-tomorrow-at-ten-to-discuss-the-report-please-send-the-first-version-by-email-today-thank-you-best-regards",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-im-alex-i-work-with-the-support-team",
+                "chunks": [
+                  "I'm",
+                  "Alex.",
+                  "I",
+                  "work",
+                  "with",
+                  "the",
+                  "support",
+                  "team."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-ill-send-the-report-by-email-today",
+                "chunks": [
+                  "I'll",
+                  "send",
+                  "the",
+                  "report",
+                  "by",
+                  "email",
+                  "today."
+                ]
+              },
+              {
+                "type": "arrange",
+                "item": "it-could-i-speak-to-alex-please-may-i-leave-a-message",
+                "chunks": [
+                  "Could",
+                  "I",
+                  "speak",
+                  "to",
+                  "Alex,",
+                  "please?",
+                  "May",
+                  "I",
+                  "leave",
+                  "a",
+                  "message?"
+                ]
+              },
+              {
+                "type": "speak",
+                "item": "it-i-can-send-the-first-version-today-and-finish-by-friday"
+              }
+            ]
+          }
+        },
+        {
+          "id": "work-9",
+          "title": "Review and independent practice",
+          "kind": "review",
+          "icon": "🏆",
+          "guide": {
+            "goal": "Recall useful language and check reading, listening and sentence order.",
+            "goalHant": "回想實用表達，檢查閱讀、聆聽及句子順序。",
+            "tip": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+            "tipHant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+            "practice": "Try again tomorrow without the model. A partner or teacher should review your original writing; the app checks only the model sentence order.",
+            "practiceHant": "明天不看範例再試。原創寫作請同伴或老師回饋；應用程式只檢查範例句的順序。"
+          },
+          "exercises": {
+            "little": [
+              {
+                "type": "speak",
+                "item": "it-im-alex"
+              },
+              {
+                "type": "speak",
+                "item": "it-yes-i-can"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-can-you-help-me",
+                "others": [
+                  "it-at-ten",
+                  "it-today"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-l-a",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-we-meet-at-ten",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-can-you-help-me",
+                "chunks": [
+                  "Can",
+                  "you",
+                  "help",
+                  "me?"
+                ]
+              }
+            ],
+            "junior": [
+              {
+                "type": "speak",
+                "item": "it-im-alex-im-on-your-team"
+              },
+              {
+                "type": "speak",
+                "item": "it-i-can-send-the-message-today"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-i-speak-to-alex-please",
+                "others": [
+                  "it-our-meeting-is-at-ten",
+                  "it-i-can-finish-today"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-j-a",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-hello-alex-our-meeting-is-tomorrow-at-ten-please-bring-your-book-thank-you",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-could-i-speak-to-alex-please",
+                "chunks": [
+                  "Could",
+                  "I",
+                  "speak",
+                  "to",
+                  "Alex,",
+                  "please?"
+                ]
+              }
+            ],
+            "teen": [
+              {
+                "type": "speak",
+                "item": "it-im-alex-i-work-with-the-support-team"
+              },
+              {
+                "type": "speak",
+                "item": "it-ill-send-the-report-by-email-today"
+              },
+              {
+                "type": "choose-heard",
+                "answer": "it-could-i-speak-to-alex-please-may-i-leave-a-message",
+                "others": [
+                  "it-of-course-the-meeting-starts-at-ten-tomorrow",
+                  "it-i-can-send-the-first-version-today-and-finish-by-friday"
+                ]
+              },
+              {
+                "type": "read-choice",
+                "passage": "en-comm-w-t-a",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "read-choice",
+                "passage": "it-hello-alex-could-we-meet-tomorrow-at-ten-to-discuss-the-report-please-send-the-first-version-by-email-today-thank-you-best-regards",
+                "question": "What time is the meeting?",
+                "questionHant": "幾點見面？",
+                "answer": "it-ten-oclock",
+                "others": [
+                  "it-eight-oclock",
+                  "it-twelve-oclock"
+                ],
+                "explanation": "Find the matching detail in the passage, then read the whole sentence again.",
+                "explanationHant": "在短文找出相應細節，再讀一次完整句子。"
+              },
+              {
+                "type": "arrange",
+                "item": "it-could-i-speak-to-alex-please-may-i-leave-a-message",
+                "chunks": [
+                  "Could",
+                  "I",
+                  "speak",
+                  "to",
+                  "Alex,",
+                  "please?",
+                  "May",
+                  "I",
+                  "leave",
+                  "a",
+                  "message?"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "check": {
+    "little": [
+      "it-to-the-station-please",
+      "it-my-name-is-alex",
+      "it-im-alex"
+    ],
+    "junior": [
+      "it-i-want-to-go-to-the-station",
+      "it-my-name-is-alex-what-is-your-name",
+      "it-im-alex-im-on-your-team"
+    ],
+    "teen": [
+      "it-im-going-to-the-station-could-you-show-me-the-way",
+      "it-my-name-is-alex-its-nice-to-meet-you",
+      "it-im-alex-i-work-with-the-support-team"
+    ]
+  },
+  "lab": {
+    "ladders": {}
+  }
+}

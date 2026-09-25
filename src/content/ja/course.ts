@@ -1,3 +1,4 @@
+import { addCommunication } from '../../../astra-lessons/communication';
 import type { Course, Exercise, Lesson, PhonemeId, SpeakItem, Unit } from '../../domain/types';
 import type { LabStage } from '../lab';
 import { moraCount, parseJa } from './kana';
@@ -215,7 +216,7 @@ const foodLessons: Lesson[] = [
 
 const lockedUnit = (id: string, title: string, subtitle: string, icon: string, color: string, grownUp?: Unit['grownUp']): Unit => ({ id, title, subtitle, icon, color, lessons: [], locked: true, grownUp });
 
-export const JA_COURSE: Course = {
+const JA_BASE: Course = {
   id: 'japanese-adventure',
   title: 'Japanese Adventure',
   grownUpTitle: 'Japanese',
@@ -254,4 +255,7 @@ export const JA_LADDERS: Record<PhonemeId, Ladder> = {
 export const JA_LAB_SOUNDS: PhonemeId[] = ['ja:long', 'ja:Q', 'ja:r', 'ja:N', 'ja:voiced', 'ja:z', 'ja:ts', 'ja:f', 'ja:y'];
 
 /** Every Japanese item, for indexing and for the accuracy test set. */
-export const JA_ITEMS: SpeakItem[] = [...new Map([...Object.values(JW), ...Object.values(JP), ...Object.values(T)].map((it) => [it.id, it])).values()];
+const JA_BASE_ITEMS: SpeakItem[] = [...new Map([...Object.values(JW), ...Object.values(JP), ...Object.values(T)].map((it) => [it.id, it])).values()];
+const JA_EXPANDED = addCommunication(JA_BASE, JA_BASE_ITEMS);
+export const JA_COURSE: Course = JA_EXPANDED.course;
+export const JA_ITEMS: SpeakItem[] = JA_EXPANDED.items;

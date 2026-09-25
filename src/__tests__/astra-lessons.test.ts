@@ -11,11 +11,11 @@ import zhData from '../../astra-lessons/courses/zh.json';
 import { emptyProfile } from '../intelligence/profile';
 
 describe('Astra foundation curriculum', () => {
-  it('offers sixteen authored units and all skills for each language and age band', () => {
+  it('preserves sixteen foundation units and adds three communication units', () => {
     for (const course of [COURSE, ZH_COURSE]) {
-      expect(course.units).toHaveLength(16);
-      expect(courseLessons(course)).toHaveLength(112);
-      for (const unit of course.units.slice(1)) {
+      expect(course.units).toHaveLength(19);
+      expect(courseLessons(course)).toHaveLength(139);
+      for (const unit of course.units.slice(1, 16)) {
         expect(unit.locked).toBeUndefined();
         expect(unit.lessons).toHaveLength(7);
         for (const band of ['little', 'junior', 'teen'] as const) {
@@ -92,8 +92,8 @@ describe('multi-unit progression', () => {
   it('ignores unbuilt units and selects the last playable unit for a completed course', () => {
     const all = Object.fromEntries(courseLessons(COURSE).map(l => [l.id, { completedAt: 1, stars: 3, bestAvg: 90 }]));
     const c: Course = { ...COURSE, units: [...COURSE.units, { ...COURSE.units[0], id: 'future', locked: true, lessons: [] as Lesson[] }] };
-    expect(currentUnit(c, all).id).toBe('plans');
-    expect(courseLessons(c)).toHaveLength(112);
+    expect(currentUnit(c, all).id).toBe('work');
+    expect(courseLessons(c)).toHaveLength(139);
   });
   it('shuffles repeated tokens without losing one and compares writing without punctuation penalties', () => {
     const tokens = [0, 1, 2, 3];

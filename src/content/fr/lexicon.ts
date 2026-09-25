@@ -1,3 +1,4 @@
+import communicationPronunciation from '../../../astra-lessons/authoring/communication/fr-pronunciation.json';
 import type { PhonemeId } from '../../domain/types';
 import type { AlignmentCandidate, WordPhones } from '../lexicon';
 
@@ -17,6 +18,7 @@ import type { AlignmentCandidate, WordPhones } from '../lexicon';
 //   * /ɥ/ (huit, nuit) and /j/ (bien) are glides we do not teach; they appear here because the words need them, and
 //     an untaught sound simply gets the generic guide rather than a wrong one.
 const RAW: Record<string, string> = {
+  ...communicationPronunciation,
   // Greetings and politeness
   bonjour: 'bon.jour|b ɔ̃ . ʒ u ʁ', salut: 'sa.lut|s a . l y', bonsoir: 'bon.soir|b ɔ̃ . s w a ʁ',
   merci: 'mer.ci|m ɛ ʁ . s i', pardon: 'par.don|p a ʁ . d ɔ̃', excusez: 'ex.cu.sez|ɛ k s . k y . z e',

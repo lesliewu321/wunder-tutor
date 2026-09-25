@@ -1,3 +1,4 @@
+import { addCommunicationToBuilt } from '../../../astra-lessons/communication';
 import type { Course, PhonemeId, SpeakItem } from '../../domain/types';
 import { buildCourse, type CourseFile, type Ladder } from '../load';
 import zhData from '../../../astra-lessons/courses/zh.json';
@@ -9,7 +10,7 @@ import zhData from '../../../astra-lessons/courses/zh.json';
 
 export { zi } from './item';
 
-export const ZH = buildCourse(zhData as unknown as CourseFile, 'astra-lessons/courses/zh.json');
+export const ZH = addCommunicationToBuilt(buildCourse(zhData as unknown as CourseFile, 'astra-lessons/courses/zh.json'));
 
 export const ZH_COURSE: Course = ZH.course;
 

@@ -18,7 +18,7 @@ describe('the Spanish course', () => {
     expect(COURSES.es).toBe(ES_COURSE);
     expect(ES_COURSE.language).toBe('es');
     const lessons = ES_COURSE.units.flatMap((u) => u.lessons);
-    expect(lessons.length).toBe(7);
+    expect(lessons.length).toBe(34);
     for (const l of lessons) for (const band of ['little', 'junior', 'teen'] as const) expect(l.exercises[band].length).toBeGreaterThan(0);
     expect(unitCourse(ES_COURSE.units[0].id)).toBe('es');
   });

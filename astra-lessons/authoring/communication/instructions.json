@@ -1,0 +1,394 @@
+{
+  "out.title": {
+    "en": "Getting Around",
+    "zh-Hant": "出行與交通",
+    "ja": "移動と交通",
+    "ko": "길 찾기와 교통",
+    "fr": "Se déplacer",
+    "es": "Desplazarse"
+  },
+  "out.sub": {
+    "en": "Directions, tickets and timetables",
+    "zh-Hant": "問路、車票與時間表",
+    "ja": "道案内・切符・時刻表",
+    "ko": "길 안내, 표, 시간표",
+    "fr": "Itinéraires, billets et horaires",
+    "es": "Direcciones, billetes y horarios"
+  },
+  "people.title": {
+    "en": "People & Small Talk",
+    "zh-Hant": "認識別人與日常聊天",
+    "ja": "自己紹介と会話",
+    "ko": "자기소개와 일상 대화",
+    "fr": "Faire connaissance",
+    "es": "Conocer gente y conversar"
+  },
+  "people.sub": {
+    "en": "Introductions, interests and making plans",
+    "zh-Hant": "自我介紹、興趣與相約見面",
+    "ja": "自己紹介・趣味・約束",
+    "ko": "소개, 취미, 약속",
+    "fr": "Présentations, loisirs et rendez-vous",
+    "es": "Presentaciones, aficiones y planes"
+  },
+  "work.title": {
+    "en": "School & Teamwork",
+    "zh-Hant": "學校與團隊合作",
+    "ja": "学校とチームワーク",
+    "ko": "학교와 협동",
+    "fr": "École et travail en équipe",
+    "es": "Escuela y trabajo en equipo"
+  },
+  "work.adult": {
+    "en": "Work & Professional Communication",
+    "zh-Hant": "職場與工作溝通",
+    "ja": "仕事のコミュニケーション",
+    "ko": "직장 의사소통",
+    "fr": "Communication professionnelle",
+    "es": "Comunicación profesional"
+  },
+  "work.sub": {
+    "en": "Meetings, messages and asking for help",
+    "zh-Hant": "約定時間、傳遞訊息與求助",
+    "ja": "打ち合わせ・メッセージ・助けの求め方",
+    "ko": "모임, 메시지, 도움 요청",
+    "fr": "Réunions, messages et demandes d'aide",
+    "es": "Reuniones, mensajes y pedir ayuda"
+  },
+  "work.adultSub": {
+    "en": "Meetings, email and telephone conversations",
+    "zh-Hant": "會議、電郵與電話交談",
+    "ja": "会議・メール・電話",
+    "ko": "회의, 이메일, 전화",
+    "fr": "Réunions, courriels et téléphone",
+    "es": "Reuniones, correo electrónico y teléfono"
+  },
+  "words": {
+    "en": "Useful words",
+    "zh-Hant": "實用詞彙",
+    "ja": "役立つ単語",
+    "ko": "유용한 단어",
+    "fr": "Mots utiles",
+    "es": "Palabras útiles"
+  },
+  "out.task1": {
+    "en": "Ask and give directions",
+    "zh-Hant": "問路與指路",
+    "ja": "道を尋ねる・教える",
+    "ko": "길 묻기와 안내하기",
+    "fr": "Demander et indiquer le chemin",
+    "es": "Preguntar e indicar el camino"
+  },
+  "out.task2": {
+    "en": "Tickets and transport",
+    "zh-Hant": "車票與交通工具",
+    "ja": "切符と交通手段",
+    "ko": "표와 교통수단",
+    "fr": "Billets et transports",
+    "es": "Billetes y transporte"
+  },
+  "out.task3": {
+    "en": "Departure times and travel plans",
+    "zh-Hant": "出發時間與行程",
+    "ja": "出発時刻と予定",
+    "ko": "출발 시간과 여행 계획",
+    "fr": "Départs et projets de voyage",
+    "es": "Salidas y planes de viaje"
+  },
+  "people.task1": {
+    "en": "Introduce yourself",
+    "zh-Hant": "介紹自己",
+    "ja": "自己紹介する",
+    "ko": "자기소개하기",
+    "fr": "Se présenter",
+    "es": "Presentarse"
+  },
+  "people.task2": {
+    "en": "Interests and follow-up questions",
+    "zh-Hant": "興趣與延續話題",
+    "ja": "趣味と会話を続ける質問",
+    "ko": "취미와 이어 묻기",
+    "fr": "Loisirs et questions pour poursuivre",
+    "es": "Aficiones y preguntas para continuar"
+  },
+  "people.task3": {
+    "en": "Make plans and say goodbye",
+    "zh-Hant": "相約見面與道別",
+    "ja": "約束と別れの挨拶",
+    "ko": "약속과 작별 인사",
+    "fr": "Prendre rendez-vous et se quitter",
+    "es": "Quedar y despedirse"
+  },
+  "work.task1": {
+    "en": "Introductions and meeting times",
+    "zh-Hant": "自我介紹與約定時間",
+    "ja": "自己紹介と打ち合わせの時刻",
+    "ko": "소개와 모임 시간",
+    "fr": "Présentations et horaires de réunion",
+    "es": "Presentaciones y horarios de reunión"
+  },
+  "work.task2": {
+    "en": "Messages and clear information",
+    "zh-Hant": "訊息與清楚表達",
+    "ja": "メッセージと確認",
+    "ko": "메시지와 명확한 전달",
+    "fr": "Messages et informations claires",
+    "es": "Mensajes e información clara"
+  },
+  "work.task3": {
+    "en": "Telephone calls and deadlines",
+    "zh-Hant": "電話與完成期限",
+    "ja": "電話と締め切り",
+    "ko": "전화와 마감일",
+    "fr": "Téléphone et délais",
+    "es": "Teléfono y plazos"
+  },
+  "listen": {
+    "en": "Listen and speak clearly",
+    "zh-Hant": "聽清楚，說清楚",
+    "ja": "よく聞いてはっきり話す",
+    "ko": "듣고 또박또박 말하기",
+    "fr": "Écouter et parler clairement",
+    "es": "Escuchar y hablar con claridad"
+  },
+  "read": {
+    "en": "Read for information",
+    "zh-Hant": "閱讀並找出資訊",
+    "ja": "読んで情報を見つける",
+    "ko": "읽고 정보 찾기",
+    "fr": "Lire pour s'informer",
+    "es": "Leer para obtener información"
+  },
+  "conversation": {
+    "en": "Put it into conversation",
+    "zh-Hant": "在對話中運用",
+    "ja": "会話で使う",
+    "ko": "대화에 활용하기",
+    "fr": "Mettre en pratique en conversation",
+    "es": "Usarlo en una conversación"
+  },
+  "apply": {
+    "en": "Read, build and write",
+    "zh-Hant": "閱讀、組句與寫作",
+    "ja": "読む・文を作る・書く",
+    "ko": "읽기, 문장 구성, 쓰기",
+    "fr": "Lire, construire et écrire",
+    "es": "Leer, construir y escribir"
+  },
+  "review": {
+    "en": "Review and independent practice",
+    "zh-Hant": "複習與獨立練習",
+    "ja": "復習と自分で練習",
+    "ko": "복습과 독립 연습",
+    "fr": "Révision et pratique autonome",
+    "es": "Repaso y práctica autónoma"
+  },
+  "goal.words": {
+    "en": "Recognise the key words, hear them and say them clearly.",
+    "zh-Hant": "認識關鍵詞，聆聽並清楚說出。",
+    "ja": "大切な単語を理解し、聞いてはっきり言いましょう。",
+    "ko": "핵심 단어를 알아보고 듣고 또박또박 말해 보세요.",
+    "fr": "Reconnaissez les mots clés, écoutez-les et prononcez-les clairement.",
+    "es": "Reconoce las palabras clave, escúchalas y pronúncialas con claridad."
+  },
+  "goal.task": {
+    "en": "Practise the question and response, then put a useful sentence in order.",
+    "zh-Hant": "練習問題及回答，再按順序組成實用句子。",
+    "ja": "質問と答えを練習し、役立つ文を正しい順に並べましょう。",
+    "ko": "질문과 답을 연습한 뒤 유용한 문장을 순서대로 배열하세요.",
+    "fr": "Pratiquez la question et la réponse, puis remettez une phrase utile dans l'ordre.",
+    "es": "Practica la pregunta y la respuesta y ordena una frase útil."
+  },
+  "goal.listen": {
+    "en": "Listen for the important words and details before choosing an answer.",
+    "zh-Hant": "先聽出關鍵詞及細節，再選答案。",
+    "ja": "答えを選ぶ前に、大切な言葉と細かい情報を聞き取りましょう。",
+    "ko": "답을 고르기 전에 중요한 단어와 세부 정보를 들어 보세요.",
+    "fr": "Repérez les mots et les détails importants avant de choisir une réponse.",
+    "es": "Escucha las palabras y los detalles importantes antes de elegir una respuesta."
+  },
+  "goal.read": {
+    "en": "Read a short text and find evidence for your answer.",
+    "zh-Hant": "閱讀短文，找出支持答案的內容。",
+    "ja": "短い文を読み、答えの根拠を見つけましょう。",
+    "ko": "짧은 글을 읽고 답의 근거를 찾으세요.",
+    "fr": "Lisez un court texte et trouvez ce qui justifie votre réponse.",
+    "es": "Lee un texto breve y encuentra pruebas que apoyen tu respuesta."
+  },
+  "goal.conversation": {
+    "en": "Respond to six prompts. Listen again and try without reading the model.",
+    "zh-Hant": "回應六個提示。再聽一次，嘗試不看範例回答。",
+    "ja": "六つの問いかけに答えましょう。もう一度聞き、例を見ずに答えてみましょう。",
+    "ko": "여섯 가지 말에 답해 보세요. 다시 듣고 예문을 보지 않고 답해 보세요.",
+    "fr": "Répondez à six interventions. Réécoutez et essayez sans lire le modèle.",
+    "es": "Responde a seis intervenciones. Escucha de nuevo e inténtalo sin leer el modelo."
+  },
+  "goal.apply": {
+    "en": "Understand a practical text, build sentences and create your own version offline.",
+    "zh-Hant": "理解實用短文，組句，再離線寫出自己的版本。",
+    "ja": "実用的な文章を理解し、文を作ってから、自分の例を紙に書きましょう。",
+    "ko": "실용적인 글을 이해하고 문장을 만든 뒤 종이에 나만의 글을 써 보세요.",
+    "fr": "Comprenez un texte pratique, construisez des phrases, puis rédigez votre version sur papier.",
+    "es": "Comprende un texto práctico, construye frases y escribe tu propia versión en papel."
+  },
+  "goal.review": {
+    "en": "Recall useful language and check reading, listening and sentence order.",
+    "zh-Hant": "回想實用表達，檢查閱讀、聆聽及句子順序。",
+    "ja": "役立つ表現を思い出し、読む力・聞く力・語順を確認しましょう。",
+    "ko": "유용한 표현을 떠올리고 읽기, 듣기, 어순을 확인하세요.",
+    "fr": "Retrouvez les expressions utiles et vérifiez la lecture, l'écoute et l'ordre des mots.",
+    "es": "Recuerda expresiones útiles y comprueba la lectura, la escucha y el orden de las palabras."
+  },
+  "out.tip": {
+    "en": "Check the destination, direction and departure time separately. Practise the polite request as a whole phrase.",
+    "zh-Hant": "分別確認目的地、方向及出發時間。把禮貌請求當作完整語句練習。",
+    "ja": "目的地、方向、出発時刻を別々に確認しましょう。丁寧な頼み方はまとまりで練習しましょう。",
+    "ko": "목적지, 방향, 출발 시간을 각각 확인하세요. 정중한 요청은 문장 전체로 연습하세요.",
+    "fr": "Vérifiez séparément la destination, la direction et l'heure. Pratiquez la demande polie en entier.",
+    "es": "Comprueba por separado el destino, la dirección y la hora. Practica la petición cortés completa."
+  },
+  "people.tip": {
+    "en": "Answer, add one detail and ask a question back. Follow the model's level of politeness; names and personal details can be fictional.",
+    "zh-Hant": "先回答，加一項細節，再問對方一個問題。留意範例的禮貌程度；可使用虛構姓名及資料。",
+    "ja": "答えに一つ情報を加え、相手にも質問しましょう。例の丁寧さに合わせ、名前などは架空でも構いません。",
+    "ko": "답에 내용을 하나 더하고 상대에게도 질문하세요. 예문의 높임말을 따르고 이름과 정보는 가상으로 정해도 됩니다.",
+    "fr": "Répondez, ajoutez un détail et posez une question en retour. Respectez le registre du modèle ; les informations peuvent être fictives.",
+    "es": "Responde, añade un detalle y devuelve una pregunta. Sigue el registro del modelo; puedes inventar los datos personales."
+  },
+  "work.tip": {
+    "en": "Make the request clear and confirm the time or deadline. Use a greeting and a closing in a message. Children can act out a school project.",
+    "zh-Hant": "清楚提出請求，確認時間或期限。訊息要有開首問候和結尾。兒童可用學校專題作情境。",
+    "ja": "用件を明確にし、時刻や締め切りを確認しましょう。メッセージには挨拶と結びを入れましょう。子どもは学校の活動で練習できます。",
+    "ko": "요청을 명확히 하고 시간이나 마감일을 확인하세요. 메시지에는 인사와 맺음말을 넣으세요. 어린이는 학교 활동으로 연습해도 됩니다.",
+    "fr": "Formulez clairement la demande et confirmez l'heure ou le délai. Saluez au début et à la fin du message. Les enfants peuvent simuler un projet scolaire.",
+    "es": "Expresa claramente la petición y confirma la hora o el plazo. Incluye saludo y despedida. Los niños pueden representar un proyecto escolar."
+  },
+  "practice.words": {
+    "en": "Make six word cards. Say a word and find its card; younger learners may draw with an adult.",
+    "zh-Hant": "製作六張詞卡，說出詞語並找出相應卡片；幼童可與成人一起畫圖。",
+    "ja": "単語カードを六枚作り、聞いた単語のカードを選びましょう。小さい子は大人と絵を描いても構いません。",
+    "ko": "단어 카드 여섯 장을 만들고 말한 단어의 카드를 찾으세요. 어린이는 어른과 그림을 그려도 됩니다.",
+    "fr": "Créez six cartes de mots, puis dites un mot et trouvez sa carte. Les petits peuvent dessiner avec un adulte.",
+    "es": "Crea seis tarjetas, di una palabra y encuentra su tarjeta. Los pequeños pueden dibujar con un adulto."
+  },
+  "practice.task": {
+    "en": "Swap roles with a partner. Change one place, time or personal detail and repeat the exchange.",
+    "zh-Hant": "與同伴交換角色，改一個地點、時間或個人資料，再練習對話。",
+    "ja": "相手と役割を交代し、場所・時刻・自己紹介の情報を一つ変えて話しましょう。",
+    "ko": "짝과 역할을 바꾸고 장소, 시간 또는 개인 정보를 하나 바꾸어 대화하세요.",
+    "fr": "Échangez les rôles, changez un lieu, une heure ou un détail personnel, puis rejouez la scène.",
+    "es": "Intercambia los papeles, cambia un lugar, una hora o un dato personal y repite el diálogo."
+  },
+  "practice.listen": {
+    "en": "Listen, pause, repeat and compare. Keep words clear; speed is not the goal.",
+    "zh-Hant": "聽、停、重複，再比較。以清楚表達為目標，不用追求速度。",
+    "ja": "聞いて、止めて、繰り返し、比べましょう。速さより明瞭さを大切にしましょう。",
+    "ko": "듣고, 멈추고, 따라 말하고 비교하세요. 속도보다 명확한 발음이 중요해요.",
+    "fr": "Écoutez, faites une pause, répétez et comparez. Visez la clarté plutôt que la vitesse.",
+    "es": "Escucha, pausa, repite y compara. Busca claridad, no velocidad."
+  },
+  "practice.read": {
+    "en": "Point to the words that prove each answer. Read the text aloud once more.",
+    "zh-Hant": "指出支持每個答案的詞語，再朗讀一次短文。",
+    "ja": "答えの根拠となる言葉を指し、もう一度音読しましょう。",
+    "ko": "각 답의 근거가 되는 단어를 짚고 글을 다시 소리 내어 읽으세요.",
+    "fr": "Montrez les mots qui justifient chaque réponse, puis relisez à voix haute.",
+    "es": "Señala las palabras que justifican cada respuesta y vuelve a leer en voz alta."
+  },
+  "practice.conversation": {
+    "en": "Act out the exchange without the screen. Ask a partner to check whether your meaning is clear.",
+    "zh-Hant": "不看螢幕演練對話，請同伴確認意思是否清楚。",
+    "ja": "画面を見ずに会話し、意味が伝わったか相手に確認しましょう。",
+    "ko": "화면 없이 대화하고 뜻이 잘 전달됐는지 짝에게 확인하세요.",
+    "fr": "Jouez la scène sans écran et demandez à votre partenaire si le message est clair.",
+    "es": "Representa el diálogo sin pantalla y pide a tu compañero que compruebe si se entiende."
+  },
+  "out.practice": {
+    "en": "Draw a route and write a departure notice with a destination and time. Older learners add a platform and return date. Ask a partner to follow it.",
+    "zh-Hant": "畫路線，寫目的地及出發時間；年長學習者加上站台和回程日期，請同伴按資料行動。",
+    "ja": "道順と行き先・出発時刻を書きましょう。年長者はホームと帰る日も加え、相手に確認してもらいましょう。",
+    "ko": "길을 그리고 목적지와 출발 시간을 쓰세요. 나이가 많은 학습자는 승강장과 돌아올 날짜도 넣고 짝에게 확인받으세요.",
+    "fr": "Dessinez un itinéraire et écrivez une destination et une heure. Les plus grands ajoutent un quai et une date de retour. Faites vérifier par un partenaire.",
+    "es": "Dibuja una ruta y escribe el destino y la hora. Los mayores añaden el andén y la fecha de vuelta. Pide a un compañero que lo compruebe."
+  },
+  "people.practice": {
+    "en": "Create a fictional profile with a name, place and interest. Add an invitation and practise a friendly goodbye. Younger learners can dictate or draw.",
+    "zh-Hant": "創作虛構人物，寫姓名、居住地及興趣，加上邀請和道別；幼童可口述或畫圖。",
+    "ja": "架空の名前・住む場所・趣味を書き、誘いと別れの挨拶を練習しましょう。小さい子は口述や絵でも構いません。",
+    "ko": "가상의 이름, 사는 곳, 취미를 쓰고 초대와 작별 인사를 연습하세요. 어린이는 말하거나 그려도 됩니다.",
+    "fr": "Inventez un profil avec un nom, un lieu et un loisir. Ajoutez une invitation et un au revoir. Les petits peuvent dicter ou dessiner.",
+    "es": "Inventa un perfil con nombre, lugar y afición. Añade una invitación y una despedida. Los pequeños pueden dictar o dibujar."
+  },
+  "work.practice": {
+    "en": "Write a message with a greeting, purpose, meeting time, requested action and closing. Read it to a partner. Children can invite their team to a school activity.",
+    "zh-Hant": "寫一則有問候、目的、時間、請求和結尾的訊息，讀給同伴聽；兒童可邀請組員參加學校活動。",
+    "ja": "挨拶・目的・時刻・依頼・結びを入れたメッセージを書き、相手に読みましょう。子どもは学校の活動への誘いでも構いません。",
+    "ko": "인사, 목적, 시간, 요청, 맺음말이 있는 메시지를 쓰고 짝에게 읽어 주세요. 어린이는 학교 활동 초대장을 써도 됩니다.",
+    "fr": "Écrivez un message avec salutation, objectif, heure, demande et conclusion. Lisez-le à un partenaire. Les enfants peuvent inviter leur équipe à une activité scolaire.",
+    "es": "Escribe un mensaje con saludo, propósito, hora, petición y despedida. Léelo a un compañero. Los niños pueden invitar a su equipo a una actividad escolar."
+  },
+  "practice.review": {
+    "en": "Try again tomorrow without the model. A partner or teacher should review your original writing; the app checks only the model sentence order.",
+    "zh-Hant": "明天不看範例再試。原創寫作請同伴或老師回饋；應用程式只檢查範例句的順序。",
+    "ja": "明日、例を見ずにもう一度試しましょう。自由作文は相手や先生に見てもらいましょう。アプリは例文の語順だけを確認します。",
+    "ko": "내일 예문 없이 다시 해 보세요. 자유 작문은 짝이나 교사의 피드백을 받으세요. 앱은 예문의 어순만 확인해요.",
+    "fr": "Réessayez demain sans modèle. Faites relire votre rédaction par un partenaire ou un professeur ; l'application vérifie seulement l'ordre de la phrase modèle.",
+    "es": "Inténtalo mañana sin el modelo. Pide revisión de tu redacción a un compañero o profesor; la aplicación solo comprueba el orden de la frase modelo."
+  },
+  "q.destination": {
+    "en": "Where is the traveller going?",
+    "zh-Hant": "旅客要去哪裡？",
+    "ja": "どこへ行きますか。",
+    "ko": "여행자는 어디로 가나요?",
+    "fr": "Où va le voyageur ?",
+    "es": "¿Adónde va la persona?"
+  },
+  "q.departure": {
+    "en": "What time is the departure?",
+    "zh-Hant": "幾點出發？",
+    "ja": "何時に出発しますか。",
+    "ko": "몇 시에 출발하나요?",
+    "fr": "À quelle heure est le départ ?",
+    "es": "¿A qué hora es la salida?"
+  },
+  "q.home": {
+    "en": "Where does the person live?",
+    "zh-Hant": "這個人住在哪裡？",
+    "ja": "どこに住んでいますか。",
+    "ko": "어디에 사나요?",
+    "fr": "Où habite cette personne ?",
+    "es": "¿Dónde vive esta persona?"
+  },
+  "q.sport": {
+    "en": "Which sport does the person play?",
+    "zh-Hant": "這個人參加哪項運動？",
+    "ja": "何のスポーツをしますか。",
+    "ko": "어떤 운동을 하나요?",
+    "fr": "Quel sport pratique cette personne ?",
+    "es": "¿Qué deporte practica esta persona?"
+  },
+  "q.meeting": {
+    "en": "What time is the meeting?",
+    "zh-Hant": "幾點見面？",
+    "ja": "何時に会いますか。",
+    "ko": "몇 시에 만나나요?",
+    "fr": "À quelle heure est le rendez-vous ?",
+    "es": "¿A qué hora es la reunión?"
+  },
+  "q.finish": {
+    "en": "On which day can the speaker finish?",
+    "zh-Hant": "說話的人哪天能完成？",
+    "ja": "いつ仕上げられますか。",
+    "ko": "언제 끝낼 수 있나요?",
+    "fr": "Quel jour la personne peut-elle terminer ?",
+    "es": "¿Qué día puede terminar?"
+  },
+  "evidence": {
+    "en": "Find the matching detail in the passage, then read the whole sentence again.",
+    "zh-Hant": "在短文找出相應細節，再讀一次完整句子。",
+    "ja": "文の中から該当する情報を見つけ、文全体をもう一度読みましょう。",
+    "ko": "글에서 해당 정보를 찾고 문장 전체를 다시 읽으세요.",
+    "fr": "Repérez le détail correspondant dans le texte, puis relisez toute la phrase.",
+    "es": "Encuentra el detalle correspondiente en el texto y vuelve a leer la frase completa."
+  }
+}

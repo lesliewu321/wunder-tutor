@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-09-25T08:47:08.980Z",
+  "languages": [
+    "en",
+    "zh",
+    "ja",
+    "ko",
+    "fr",
+    "es"
+  ],
+  "newLessons": 162,
+  "ageBandVersions": 486,
+  "exerciseInstances": 3186,
+  "tests": {
+    "passed": 356,
+    "skipped": 1,
+    "separateTranslationExportPassed": 1
+  },
+  "contentCheck": "passed",
+  "translations": "passed for all six non-English interface locales",
+  "productionBuild": "passed; existing large-chunk warning remains",
+  "browser": {
+    "checkedAt": "2026-09-25T08:31:21.194Z",
+    "courses": [
+      {
+        "language": "en",
+        "topicCard": true,
+        "nineLessons": true,
+        "readingAnswers": true,
+        "sentenceBuilding": true
+      },
+      {
+        "language": "zh",
+        "topicCard": true,
+        "nineLessons": true,
+        "readingAnswers": true,
+        "sentenceBuilding": true
+      },
+      {
+        "language": "ja",
+        "topicCard": true,
+        "nineLessons": true,
+        "readingAnswers": true,
+        "sentenceBuilding": true
+      },
+      {
+        "language": "ko",
+        "topicCard": true,
+        "nineLessons": true,
+        "readingAnswers": true,
+        "sentenceBuilding": true
+      },
+      {
+        "language": "fr",
+        "topicCard": true,
+        "nineLessons": true,
+        "readingAnswers": true,
+        "sentenceBuilding": true
+      },
+      {
+        "language": "es",
+        "topicCard": true,
+        "nineLessons": true,
+        "readingAnswers": true,
+        "sentenceBuilding": true
+      }
+    ],
+    "mobileWidth": 390,
+    "mobileOverflow": false,
+    "workEmail": true,
+    "pageErrors": []
+  },
+  "editorialReview": "independent language-teacher review pending",
+  "published": false,
+  "sha256": {
+    "astra-lessons/courses/en-communication.json": "ad3f5ecd30362a361aefc48acd960eb2e38b0038fcb92cd35305c518af5e87c4",
+    "astra-lessons/courses/zh-communication.json": "9cc8463991b15407df5c3c5b60a3afe5db4f3089c96278a289192847ddb6266a",
+    "astra-lessons/courses/ja-communication.json": "bdbb4a3b320809f5e8716cbd8a2b7a9c762c5df949c50bcd92faf0c370a06c04",
+    "astra-lessons/courses/ko-communication.json": "631cd1247eff312f0575d98f87a551bb2d86ca3736fbade55351f718ac7a1f80",
+    "astra-lessons/courses/fr-communication.json": "85c329fbd6da1450ff73c2eadecc2f7296fb242d3dbc616db547efb55fc67610",
+    "astra-lessons/courses/es-communication.json": "e7e8eb7efcc936d5daadc706721d96972872a4df5b98f59939efc973ad85e687"
+  },
+  "typecheck": "passed"
+}
